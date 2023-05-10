@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>287567bf-8cb3-401b-8f0b-72d4987b4dbd</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>414e59d5-7288-44f1-ad0c-7082a07f2d6c</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dds;dlg;fbx;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ImaseLib">
+      <UniqueIdentifier>{863b81c6-c9d0-4817-b163-293a34004f4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NecromaLib">
+      <UniqueIdentifier>{0845ca53-23df-4c91-b3cc-258c8e4308b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NecromaLib\GameData">
+      <UniqueIdentifier>{d450f301-c053-4dae-b800-9e1a0ddae9a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NecromaLib\Singleton">
+      <UniqueIdentifier>{d4a4b601-55c3-41ba-8510-1d18ef9346a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NecromaLib\SceneObjct">
+      <UniqueIdentifier>{76d764f7-0348-4f1b-aac2-b537ce6909e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{72bc1efb-2a83-43c2-8016-cdbc14c7a00f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene">
+      <UniqueIdentifier>{4121fd5b-12ff-4c6b-b651-0a810c01c260}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\TitleScene">
+      <UniqueIdentifier>{da221e4c-db08-4bc5-822d-4a2ac25296a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\ResultScene">
+      <UniqueIdentifier>{e04d9985-abef-476a-ac9f-0675e651e90a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NecromaLib\GameData\Sprite">
+      <UniqueIdentifier>{1603b344-486b-4a29-9e0e-4c4fb90b6988}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NecromaLib\GameData\GameObject">
+      <UniqueIdentifier>{4042d110-6e46-44e1-9585-be35ecd62fe5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene\Alchemi">
+      <UniqueIdentifier>{566fcc0d-2852-40e0-9214-9f9b0ba460cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene\Field">
+      <UniqueIdentifier>{34774e26-b274-4e1c-a80c-738b33451d71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene\Enemy">
+      <UniqueIdentifier>{92b77667-5e23-4737-9ddc-8b1f14b5b0a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene\UI">
+      <UniqueIdentifier>{4f8ea88c-f323-42ff-883a-637912a8af5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene\Alchemi\AlchemicalDevice">
+      <UniqueIdentifier>{8ab8b3ba-9aff-40a4-96d0-78d828540561}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene\Camera">
+      <UniqueIdentifier>{35179abd-03bf-4c75-97d2-230d9818fd22}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="StepTimer.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceResources.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Icon\Icon.h" />
+    <ClInclude Include="imaseLib\DebugCamera.h">
+      <Filter>ImaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="imaseLib\DebugFont.h">
+      <Filter>ImaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\GameData\Collider.h">
+      <Filter>NecromaLib\GameData</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\GameData\Easing.h">
+      <Filter>NecromaLib\GameData</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\GameData\ScreenToWorld.h">
+      <Filter>NecromaLib\GameData</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\SceneObject\Fade.h">
+      <Filter>NecromaLib\SceneObjct</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\SceneObject\SceneObj.h">
+      <Filter>NecromaLib\SceneObjct</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\SceneObject\SceneManager.h">
+      <Filter>NecromaLib\SceneObjct</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\Singleton\DeltaTime.h">
+      <Filter>NecromaLib\Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\Singleton\ShareData.h">
+      <Filter>NecromaLib\Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\PlayScene.h">
+      <Filter>Scene\PlayScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\TitleScene\TitleScene.h">
+      <Filter>Scene\TitleScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\ResultScene\ResultScene.h">
+      <Filter>Scene\ResultScene</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\GameData\SpriteCutter.h">
+      <Filter>NecromaLib\GameData\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\GameData\GameObject3D.h">
+      <Filter>NecromaLib\GameData\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\GameData\GameObject2D.h">
+      <Filter>NecromaLib\GameData\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Field\Field.h">
+      <Filter>Scene\PlayScene\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Enemy\EnemyManager.h">
+      <Filter>Scene\PlayScene\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.h">
+      <Filter>Scene\PlayScene\Alchemi\AlchemicalDevice</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\GameData\Camera.h">
+      <Filter>ImaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Camera\MoveCamera.h">
+      <Filter>Scene\PlayScene\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\Singleton\InputSupport.h">
+      <Filter>NecromaLib\Singleton</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="DeviceResources.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="imaseLib\DebugCamera.cpp">
+      <Filter>ImaseLib</Filter>
+    </ClCompile>
+    <ClCompile Include="imaseLib\DebugFont.cpp">
+      <Filter>ImaseLib</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\GameData\Collider.cpp">
+      <Filter>NecromaLib\GameData</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\GameData\Easing.cpp">
+      <Filter>NecromaLib\GameData</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\GameData\ScreenToWorld.cpp">
+      <Filter>NecromaLib\GameData</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\SceneObject\Fade.cpp">
+      <Filter>NecromaLib\SceneObjct</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\SceneObject\SceneObj.cpp">
+      <Filter>NecromaLib\SceneObjct</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\SceneObject\SceneManager.cpp">
+      <Filter>NecromaLib\SceneObjct</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\Singleton\DeltaTime.cpp">
+      <Filter>NecromaLib\Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\Singleton\ShareData.cpp">
+      <Filter>NecromaLib\Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\PlayScene.cpp">
+      <Filter>Scene\PlayScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\TitleScene\TitleScene.cpp">
+      <Filter>Scene\TitleScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\ResultScene\ResultScene.cpp">
+      <Filter>Scene\ResultScene</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\GameData\SpriteCutter.cpp">
+      <Filter>NecromaLib\GameData\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\GameData\GameObject3D.cpp">
+      <Filter>NecromaLib\GameData\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\GameData\GameObject2D.cpp">
+      <Filter>NecromaLib\GameData\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Field\Field.cpp">
+      <Filter>Scene\PlayScene\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Enemy\EnemyManager.cpp">
+      <Filter>Scene\PlayScene\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.cpp">
+      <Filter>Scene\PlayScene\Alchemi\AlchemicalDevice</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\GameData\Camera.cpp">
+      <Filter>ImaseLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Camera\MoveCamera.cpp">
+      <Filter>Scene\PlayScene\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\Singleton\InputSupport.cpp">
+      <Filter>NecromaLib\Singleton</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource.rc" />
+    <ResourceCompile Include="Resources\Icon\Icon.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="directx.ico">
+      <Filter>Assets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="settings.manifest">
+      <Filter>Assets</Filter>
+    </Manifest>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>
