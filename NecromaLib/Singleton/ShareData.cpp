@@ -7,7 +7,9 @@ ShareData::ShareData():
 	m_debugFont{nullptr},
 	m_commonStates(),
 	m_deviceResources(),
-	m_spriteBatch()
+	m_spriteBatch(),
+	m_camera(),
+	m_effectFactory()
 {
 
 }

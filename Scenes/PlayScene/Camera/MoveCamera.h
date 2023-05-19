@@ -30,6 +30,8 @@ private:
 	DirectX::SimpleMath::Vector3 m_Eye;			// カメラの座標
 	DirectX::SimpleMath::Vector3 m_Target;		// 注視点
 
+	float m_time;								// 引きで使うタイマー
+
 	// マウスポインタのドラッグ開始位置からの変位(相対値)
 	void DraggedDistance(int x, int y);
 

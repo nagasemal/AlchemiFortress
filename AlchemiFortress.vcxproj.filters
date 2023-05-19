@@ -41,9 +41,6 @@
     <Filter Include="NecromaLib\GameData\GameObject">
       <UniqueIdentifier>{4042d110-6e46-44e1-9585-be35ecd62fe5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\PlayScene\Alchemi">
-      <UniqueIdentifier>{566fcc0d-2852-40e0-9214-9f9b0ba460cd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene\PlayScene\Field">
       <UniqueIdentifier>{34774e26-b274-4e1c-a80c-738b33451d71}</UniqueIdentifier>
     </Filter>
@@ -53,11 +50,20 @@
     <Filter Include="Scene\PlayScene\UI">
       <UniqueIdentifier>{4f8ea88c-f323-42ff-883a-637912a8af5a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\PlayScene\Alchemi\AlchemicalDevice">
-      <UniqueIdentifier>{8ab8b3ba-9aff-40a4-96d0-78d828540561}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene\PlayScene\Camera">
       <UniqueIdentifier>{35179abd-03bf-4c75-97d2-230d9818fd22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene\Mouse">
+      <UniqueIdentifier>{df3a8aba-0830-48b5-9388-d7e81d61b9ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene\AlchemicalMachine">
+      <UniqueIdentifier>{566fcc0d-2852-40e0-9214-9f9b0ba460cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene\AlchemicalMachine\AM_list">
+      <UniqueIdentifier>{8ab8b3ba-9aff-40a4-96d0-78d828540561}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene\AlchemicalMachine\Object">
+      <UniqueIdentifier>{aca008df-7843-4611-83f2-44e8e78777f5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -124,9 +130,6 @@
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyManager.h">
       <Filter>Scene\PlayScene\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.h">
-      <Filter>Scene\PlayScene\Alchemi\AlchemicalDevice</Filter>
-    </ClInclude>
     <ClInclude Include="NecromaLib\GameData\Camera.h">
       <Filter>ImaseLib</Filter>
     </ClInclude>
@@ -135,6 +138,36 @@
     </ClInclude>
     <ClInclude Include="NecromaLib\Singleton\InputSupport.h">
       <Filter>NecromaLib\Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Mouse\MousePointer.h">
+      <Filter>Scene\PlayScene\Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.h">
+      <Filter>Scene\PlayScene\AlchemicalMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Attacker.h">
+      <Filter>Scene\PlayScene\AlchemicalMachine\AM_list</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineManager.h">
+      <Filter>Scene\PlayScene\AlchemicalMachine\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineObject.h">
+      <Filter>Scene\PlayScene\AlchemicalMachine\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_None.h">
+      <Filter>Scene\PlayScene\AlchemicalMachine\AM_list</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Defenser.h">
+      <Filter>Scene\PlayScene\AlchemicalMachine\AM_list</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\UI\MachineExplanation.h">
+      <Filter>Scene\PlayScene\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\UI\MachineSelect.h">
+      <Filter>Scene\PlayScene\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\UI\MachineSelectManager.h">
+      <Filter>Scene\PlayScene\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -198,9 +231,6 @@
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyManager.cpp">
       <Filter>Scene\PlayScene\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.cpp">
-      <Filter>Scene\PlayScene\Alchemi\AlchemicalDevice</Filter>
-    </ClCompile>
     <ClCompile Include="NecromaLib\GameData\Camera.cpp">
       <Filter>ImaseLib</Filter>
     </ClCompile>
@@ -209,6 +239,36 @@
     </ClCompile>
     <ClCompile Include="NecromaLib\Singleton\InputSupport.cpp">
       <Filter>NecromaLib\Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Mouse\MousePointer.cpp">
+      <Filter>Scene\PlayScene\Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_Attacker.cpp">
+      <Filter>Scene\PlayScene\AlchemicalMachine\AM_list</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.cpp">
+      <Filter>Scene\PlayScene\AlchemicalMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineManager.cpp">
+      <Filter>Scene\PlayScene\AlchemicalMachine\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineObject.cpp">
+      <Filter>Scene\PlayScene\AlchemicalMachine\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_None.cpp">
+      <Filter>Scene\PlayScene\AlchemicalMachine\AM_list</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_Defenser.cpp">
+      <Filter>Scene\PlayScene\AlchemicalMachine\AM_list</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\UI\MachineExplanation.cpp">
+      <Filter>Scene\PlayScene\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\UI\MachineSelect.cpp">
+      <Filter>Scene\PlayScene\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\UI\MachineSelectManager.cpp">
+      <Filter>Scene\PlayScene\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

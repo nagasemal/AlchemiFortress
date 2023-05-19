@@ -21,6 +21,9 @@ public:
 	// •`‰æ
 	void Draw() override;
 
+	// UIŒn•`‰æ
+	void DrawUI() override;
+
 	// I—¹ˆ—
 	void Finalize() override;
 

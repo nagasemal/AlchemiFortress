@@ -9,6 +9,9 @@ private:
 	DirectX::Keyboard::KeyboardStateTracker m_keyboardTracker;
 	DirectX::Mouse::ButtonStateTracker m_mouseTracker;
 
+	//ワールド空間座標上のマウス
+	DirectX::SimpleMath::Vector3 m_WorldScreenMouse;
+
 public:
 	~InputSupport() = default;
 
@@ -19,6 +22,8 @@ public:
 	static void Destroy();
 
 	static InputSupport& GetInstance() { return *instance; }
+
+	void Update();
 
 	//===[ キーボード ]===//
 	void SetKeybordState(DirectX::Keyboard::KeyboardStateTracker tracker)	{m_keyboardTracker = tracker; }

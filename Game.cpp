@@ -94,6 +94,8 @@ void Game::Update(DX::StepTimer const& timer)
     auto mouseState = Mouse::Get().GetState();
     m_mouseTracker.Update(mouseState);
     pIS->SetMouseState(m_mouseTracker);
+    // スクリーン座標からワールド空間座標への返還を常に行う
+    pIS->Update();
 
 }
 #pragma endregion

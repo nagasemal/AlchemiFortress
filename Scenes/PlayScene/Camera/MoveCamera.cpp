@@ -18,6 +18,7 @@ MoveCamera::MoveCamera()
 	, m_View(DirectX::SimpleMath::Matrix::Identity)
 	, m_Eye(0.0f, 0.0f, 0.0f)
 	, m_Target{ 0.f }
+	, m_time()
 {
 }
 
@@ -30,6 +31,7 @@ void MoveCamera::Initialize()
 	m_AngleX = m_AngleY = 0.0f;
 	m_PrevX  = m_PrevY  = 0;
 	m_ScrollWheelValue = 0;
+	m_time = 0;
 
 
 	m_View	    = DirectX::SimpleMath::Matrix::Identity;
@@ -41,17 +43,15 @@ void MoveCamera::Initialize()
 
 void MoveCamera::Update()
 {
-
-	static float time;
 	auto state = InputSupport::GetInstance().GetMouseState().GetLastState();
 
 	// ŠJnˆø‚­ˆ×‚Ìˆ—
-	if (time <= 1)
+	if (m_time <= 1)
 	{
-		time += DeltaTime::GetInstance().GetDeltaTime();
+		m_time += DeltaTime::GetInstance().GetDeltaTime();
 
-		m_Move.y = time * 1.2;
-		m_Move.z = time * 1.3;
+		m_Move.y = m_time * 1.2;
+		m_Move.z = m_time * 1.3;
 
 	}
 

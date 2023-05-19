@@ -5,7 +5,8 @@
 
 InputSupport* InputSupport::instance = nullptr;
 
-InputSupport::InputSupport()
+InputSupport::InputSupport():
+	m_WorldScreenMouse()
 {
 }
 
@@ -26,15 +27,20 @@ void InputSupport::Destroy()
 	}
 }
 
-DirectX::SimpleMath::Vector3 InputSupport::GetMousePosWolrd()
+void InputSupport::Update()
 {
 	ShareData& pSD = ShareData::GetInstance();
 	DX::DeviceResources* pDR = pSD.GetDeviceResources();
 
 	// •ÏŠ·‚µ‚Ä“n‚·
-	return CalcScreenToXZN(	m_mouseTracker.GetLastState().x,
-							m_mouseTracker.GetLastState().y,
-							pDR->GetOutputSize().right,
-							pDR->GetOutputSize().bottom,
-							pSD.GetView(), pSD.GetProjection());
+	m_WorldScreenMouse = CalcScreenToXZN(m_mouseTracker.GetLastState().x,
+										 m_mouseTracker.GetLastState().y,
+										 pDR->GetOutputSize().right,
+										 pDR->GetOutputSize().bottom,
+										 pSD.GetView(), pSD.GetProjection());
+}
+
+DirectX::SimpleMath::Vector3 InputSupport::GetMousePosWolrd()
+{
+	return m_WorldScreenMouse;
 }

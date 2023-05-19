@@ -179,7 +179,7 @@ bool CircleCollider(Circle circle1, Circle circle2)
 {
 	//íÜêSì_ÇÃç∑
 	DirectX::SimpleMath::Vector3 lengthVec = circle1.p - circle2.p;
-	float centerDifference = sqrtf(lengthVec.x * lengthVec.x + lengthVec.y * lengthVec.y);
+	float centerDifference = sqrtf(lengthVec.x * lengthVec.x + lengthVec.y * lengthVec.y + lengthVec.z * lengthVec.z);
 
 	//îºåaÇÃòa
 	float sumRadius = circle1.r + circle2.r;
@@ -190,8 +190,7 @@ bool CircleCollider(Circle circle1, Circle circle2)
 	return false;
 }
 
-//ì_Ç∆â~ÇÃìñÇΩÇËîªíË
-bool PointInCricle(Circle circle, DirectX::SimpleMath::Vector3 point)
+bool PointerToCircle(Circle circle, DirectX::SimpleMath::Vector3 point)
 {
 	Circle pointCircle(point, 0.0f);
 

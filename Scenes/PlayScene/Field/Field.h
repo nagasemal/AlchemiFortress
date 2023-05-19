@@ -19,12 +19,17 @@ public:
 	// 終了処理
 	void Finalize()		override;
 
+/*===[　アクセサ　]===*/
+public:
+
+	bool		GetHitMouse()	const { return m_hitMouseFlag; }
+
 private:
 
 	// 床モデル
 	std::unique_ptr<DirectX::Model> m_Model;
 
 	// マウスとの衝突時
-	bool m_hitFlag_mouse;
+	bool		m_hitMouseFlag;
 
 };

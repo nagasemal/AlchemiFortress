@@ -105,6 +105,12 @@ void SceneManager::Render()
 		m_Scene->Draw();
 	}
 
+	// 実態があれば描画
+	if (m_Scene != nullptr)
+	{
+		m_Scene->DrawUI();
+	}
+
 	// フェード用Render
 	m_Fade->Render();
 

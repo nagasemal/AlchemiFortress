@@ -4,8 +4,10 @@
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/InputSupport.h"
 
+#define RAGE 20.f
+
 Field::Field():
-	m_hitFlag_mouse()
+	m_hitMouseFlag()
 {
 }
 
@@ -20,19 +22,20 @@ void Field::Initialize()
 	m_Model = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *pSD.GetEffectFactory());
 
 	m_data.pos		= DirectX::SimpleMath::Vector3(0,-3,0);
-	m_data.rage		= DirectX::SimpleMath::Vector3(20,3,20);
+	m_data.rage		= DirectX::SimpleMath::Vector3(RAGE,3,RAGE);
 }
 
 void Field::Update()
 {
-	m_hitFlag_mouse = false;
+	m_hitMouseFlag = false;
 
-	ObjectData3D mouseWolrd;
-	mouseWolrd.pos = InputSupport::GetInstance().GetMousePosWolrd();
-	mouseWolrd.rage = DirectX::SimpleMath::Vector3(4.f,4.f,4.f);
+	DirectX::SimpleMath::Vector3 mouseWolrdPos = InputSupport::GetInstance().GetMousePosWolrd();
 
+	// 1.5は丁度良い数字だったため
+	Circle objectData = Circle(m_data.pos, RAGE * 1.5f);
 
-	if (HitObject(mouseWolrd)) m_hitFlag_mouse = true;
+	// フィールドとマウスポインターの当たり判定
+	if (PointerToCircle(objectData,mouseWolrdPos)) m_hitMouseFlag = true;
 
 }
 
@@ -44,9 +47,7 @@ void Field::Draw()
 	/*===[ デバッグ文字描画 ]===*/
 	std::wostringstream oss;
 	oss << "Filed-";
-
-	if (m_hitFlag_mouse) oss << "Hit";
-
+	if (m_hitMouseFlag) oss << "Hit";
 	pSD.GetDebugFont()->AddString(oss.str().c_str(), DirectX::SimpleMath::Vector2(0.f, 80.f));
 
 	// モデル情報(位置,大きさ)

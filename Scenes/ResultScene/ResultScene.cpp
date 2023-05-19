@@ -26,6 +26,10 @@ void ResultScene::Draw()
 	ShareData::GetInstance().GetDebugFont()->AddString(oss.str().c_str(), DirectX::SimpleMath::Vector2(0.f, 60.f));
 }
 
+void ResultScene::DrawUI()
+{
+}
+
 void ResultScene::Finalize()
 {
 }

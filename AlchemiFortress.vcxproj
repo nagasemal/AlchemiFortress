@@ -197,11 +197,20 @@
     <ClInclude Include="NecromaLib\Singleton\ShareData.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resources\Icon\Icon.h" />
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineManager.h" />
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineObject.h" />
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Attacker.h" />
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Defenser.h" />
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_None.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.h" />
     <ClInclude Include="Scenes\PlayScene\Camera\MoveCamera.h" />
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyManager.h" />
     <ClInclude Include="Scenes\PlayScene\Field\Field.h" />
+    <ClInclude Include="Scenes\PlayScene\Mouse\MousePointer.h" />
     <ClInclude Include="Scenes\PlayScene\PlayScene.h" />
+    <ClInclude Include="Scenes\PlayScene\UI\MachineExplanation.h" />
+    <ClInclude Include="Scenes\PlayScene\UI\MachineSelect.h" />
+    <ClInclude Include="Scenes\PlayScene\UI\MachineSelectManager.h" />
     <ClInclude Include="Scenes\ResultScene\ResultScene.h" />
     <ClInclude Include="Scenes\TitleScene\TitleScene.h" />
     <ClInclude Include="StepTimer.h" />
@@ -231,11 +240,20 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineManager.cpp" />
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineObject.cpp" />
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_Attacker.cpp" />
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_Defenser.cpp" />
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_None.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.cpp" />
     <ClCompile Include="Scenes\PlayScene\Camera\MoveCamera.cpp" />
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyManager.cpp" />
     <ClCompile Include="Scenes\PlayScene\Field\Field.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Mouse\MousePointer.cpp" />
     <ClCompile Include="Scenes\PlayScene\PlayScene.cpp" />
+    <ClCompile Include="Scenes\PlayScene\UI\MachineExplanation.cpp" />
+    <ClCompile Include="Scenes\PlayScene\UI\MachineSelect.cpp" />
+    <ClCompile Include="Scenes\PlayScene\UI\MachineSelectManager.cpp" />
     <ClCompile Include="Scenes\ResultScene\ResultScene.cpp" />
     <ClCompile Include="Scenes\TitleScene\TitleScene.cpp" />
   </ItemGroup>

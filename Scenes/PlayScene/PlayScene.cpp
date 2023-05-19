@@ -11,15 +11,21 @@ PlayScene::~PlayScene()
 
 void PlayScene::Initialize()
 {
+	m_playerBase	= std::make_unique<PlayerBase>();
+	m_playerBase	->Initialize();
 
-	m_playerBase = std::make_unique<PlayerBase>();
-	m_playerBase ->Initialize();
+	m_field			= std::make_unique<Field>();
+	m_field			->Initialize();
 
-	m_field		 = std::make_unique<Field>();
-	m_field		 ->Initialize();
+	m_mousePointer	= std::make_unique<MousePointer>();
+	m_mousePointer	->Initialize();
 
-	m_moveCamera = std::make_unique<MoveCamera>();
-	m_moveCamera ->Initialize();
+	m_AM_Manager	= std::make_unique<AlchemicalMachineManager>();
+	m_AM_Manager	->ModeLoader();
+	m_AM_Manager	->Initialize();
+
+	m_moveCamera	= std::make_unique<MoveCamera>();
+	m_moveCamera	->Initialize();
 
 }
 
@@ -28,7 +34,11 @@ GAME_SCENE PlayScene::Update()
 	ShareData& pSD = ShareData::GetInstance();
 
 	m_moveCamera	->Update();
+
+	m_playerBase	->Update();
 	m_field			->Update();
+	m_mousePointer  ->Update();
+	m_AM_Manager	->Update(m_field->GetHitMouse(),m_playerBase->GetHitMouse(),m_mousePointer.get());
 
 	// ƒJƒƒ‰‚ð“®‚©‚·
 	pSD.GetCamera()->SetViewMatrix		(m_moveCamera->GetViewMatrix());
@@ -57,13 +67,23 @@ void PlayScene::Draw()
 
 	pSD.GetSpriteBatch()->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
-	m_playerBase->Draw();
-	m_field->Draw();
+	m_playerBase		->Draw();
+	m_field				->Draw();
+	m_mousePointer		->Draw();
+	m_AM_Manager		->Render();
 
 	pSD.GetSpriteBatch()->End();
 
 }
 
+void PlayScene::DrawUI()
+{
+
+	m_AM_Manager		->DrawUI();
+
+}
+
 void PlayScene::Finalize()
 {
+
 }

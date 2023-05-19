@@ -18,6 +18,10 @@ protected:
 	{
 		SimpleMath::Vector3 pos;
 		SimpleMath::Vector3 rage;
+
+		ObjectData3D(DirectX::SimpleMath::Vector3 pos  = DirectX::SimpleMath::Vector3::Zero,
+					 DirectX::SimpleMath::Vector3 rage = DirectX::SimpleMath::Vector3::Zero) 
+					 { this->pos = pos, this->rage = rage; }
 	};
 
 	ObjectData3D m_data;
@@ -39,11 +43,13 @@ public:
 	virtual void Finalize() = 0;
 
 	// ポジションと大きさをもった構造体を渡す
-	ObjectData3D GetData() { return m_data; }
+	ObjectData3D GetData()							{ return m_data; }
 
-	SimpleMath::Vector3 GetRage() { return m_data.rage; }
-	SimpleMath::Vector3 GetPos() { return m_data.pos; }
+	SimpleMath::Vector3 GetRage()					{ return m_data.rage; }
+	SimpleMath::Vector3 GetPos()					{ return m_data.pos; }
 
 	int  HitObject(ObjectData3D dataA);
+
+	Circle GetCircle()		const					{ return Circle(m_data.pos, m_data.rage.x * 1.5f); }
 
 };

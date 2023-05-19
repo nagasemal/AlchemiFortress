@@ -38,6 +38,9 @@ public:
 	// •`‰æ
 	virtual void Draw() = 0;
 
+	// UIŒn•`‰æ
+	virtual void DrawUI() = 0;
+
 	// I—¹ˆ—
 	virtual void Finalize() = 0;
 

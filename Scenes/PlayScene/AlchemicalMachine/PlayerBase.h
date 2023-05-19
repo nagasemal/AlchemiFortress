@@ -32,18 +32,20 @@ public:
  /*===[　アクセサ　]===*/
 public:
 
-	int			GetBaseLv() const { return m_baseLv;}
-	float		GetHP()		const { return m_hp; }
-	float		GetExp()	const { return m_exp; }
+	int			GetBaseLv()		const { return m_baseLv;}
+	float		GetHP()			const { return m_hp; }
+	float		GetExp()		const { return m_exp; }
+	bool		GetHitMouse()	const { return m_hitMouseFlag; }
 
 	void		PulsExp(float pulsExp)	{ m_exp += pulsExp;}
-	void		Damage(float damage)	{ m_hp -= damage;  }
+	void		Damage(float damage)	{ m_hp  -= damage;  }
 
 private:
 
-	int			m_baseLv;	//  拠点Lv
-	float		m_hp;		//  拠点Hp
-	float		m_exp;		//  現在の経験値量
+	int			m_baseLv;				//  拠点Lv
+	float		m_hp;					//  拠点Hp
+	float		m_exp;					//  現在の経験値量
+	bool		m_hitMouseFlag;			//  マウスが当たっているか否か
 
 	std::unique_ptr<DirectX::Model> m_baseModel;	//  拠点の3Dモデル
 
