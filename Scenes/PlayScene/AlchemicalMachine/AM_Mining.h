@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
-// File: AM_Upper.h
+// File: AM_Mining.h
 //
-//　範囲内のアルケミカルマシンに対して
-//  強化効果を発揮する
+//　範囲内の鉱物に対して
+//  効果を発揮する
 // 
 // Date: 2023.5.29
 // Author: Kazuma Nagase
@@ -13,11 +13,11 @@
 #include "AlchemicalMachineObject.h"
 #include <Scenes/PlayScene/Mouse/MousePointer.h>
 
-class AM_Upper : public AlchemicalMachineObject
+class AM_Mining : public AlchemicalMachineObject
 {
 public:
-	AM_Upper();
-	~AM_Upper();
+	AM_Mining();
+	~AM_Mining();
 
 	// 初期化
 	void Initialize()					override;

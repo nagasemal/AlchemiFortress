@@ -172,6 +172,9 @@
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Upper.h">
       <Filter>Scene\PlayScene\AlchemicalMachine\AM_list</Filter>
     </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Mining.h">
+      <Filter>Scene\PlayScene\AlchemicalMachine\AM_list</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -274,6 +277,9 @@
       <Filter>Scene\PlayScene\UI</Filter>
     </ClCompile>
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_Upeer.cpp">
+      <Filter>Scene\PlayScene\AlchemicalMachine\AM_list</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_Mining.cpp">
       <Filter>Scene\PlayScene\AlchemicalMachine\AM_list</Filter>
     </ClCompile>
   </ItemGroup>

@@ -14,6 +14,8 @@
 #include "AM_None.h"
 #include "AM_Attacker.h"
 #include "AM_Defenser.h"
+#include "AM_Upper.h"
+#include "AM_Mining.h"
 #include "Scenes/PlayScene/Mouse/MousePointer.h"
 #include "Scenes/PlayScene/UI/MachineExplanation.h"
 #include "Scenes/PlayScene/UI/MachineSelectManager.h"

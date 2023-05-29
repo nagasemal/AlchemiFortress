@@ -234,7 +234,7 @@ void AlchemicalMachineManager::SelectMachins(int num)
 		break;
 
 	case AlchemicalMachineObject::MACHINE_TYPE::MINING:
-		m_AMObject[num] = std::make_unique<AM_None>();
+		m_AMObject[num] = std::make_unique<AM_Mining>();
 		break;
 
 	case AlchemicalMachineObject::MACHINE_TYPE::RECOVERY:
@@ -242,7 +242,7 @@ void AlchemicalMachineManager::SelectMachins(int num)
 		break;
 
 	case AlchemicalMachineObject::MACHINE_TYPE::UPEER:
-		m_AMObject[num] = std::make_unique<AM_None>();
+		m_AMObject[num] = std::make_unique<AM_Upper>();
 		break;
 
 	default:
