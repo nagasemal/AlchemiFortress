@@ -9,9 +9,11 @@
 //--------------------------------------------------------------------------------------
 
 #pragma once
+#include <map>
 #include <string>
-#include "AM_Attacker.h"
 #include "AM_None.h"
+#include "AM_Attacker.h"
+#include "AM_Defenser.h"
 #include "Scenes/PlayScene/Mouse/MousePointer.h"
 #include "Scenes/PlayScene/UI/MachineExplanation.h"
 #include "Scenes/PlayScene/UI/MachineSelectManager.h"
@@ -49,6 +51,9 @@ private:
 
 	// 回す
 	void MovingMachine(int number);
+
+	// 選択されているオブジェクトに則したクラスをm_AMObjectに入れる
+	void SelectMachins(int num);
 
 private:
 

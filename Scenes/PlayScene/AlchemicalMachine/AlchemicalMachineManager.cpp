@@ -3,7 +3,7 @@
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/InputSupport.h"
 
-#define SPEED 0.01f
+#define SPEED 0.005f
 
 AlchemicalMachineManager::AlchemicalMachineManager():
 	m_allHitObjectToMouse(),
@@ -20,23 +20,24 @@ void AlchemicalMachineManager::ModeLoader()
 
 	ShareData& pSD = ShareData::GetInstance();
 
-	m_Model[AlchemicalMachineObject::MACHINE_TYPE::NONE]		= DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *pSD.GetEffectFactory());
+	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
+	fx->SetDirectory(L"Resources/Models");
 
-	m_Model[AlchemicalMachineObject::MACHINE_TYPE::ATTACKER]	= DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *pSD.GetEffectFactory());
+	m_Model[AlchemicalMachineObject::MACHINE_TYPE::NONE]		= DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Siroma.cmo", *fx);
 
-	m_Model[AlchemicalMachineObject::MACHINE_TYPE::DEFENSER]	= DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *pSD.GetEffectFactory());
+	m_Model[AlchemicalMachineObject::MACHINE_TYPE::ATTACKER]	= DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
 
-	m_Model[AlchemicalMachineObject::MACHINE_TYPE::MINING]	= DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *pSD.GetEffectFactory());
+	m_Model[AlchemicalMachineObject::MACHINE_TYPE::DEFENSER]	= DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
 
-	m_Model[AlchemicalMachineObject::MACHINE_TYPE::RECOVERY]	= DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *pSD.GetEffectFactory());
+	m_Model[AlchemicalMachineObject::MACHINE_TYPE::MINING]		= DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
 
-	m_Model[AlchemicalMachineObject::MACHINE_TYPE::UPEER]		= DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *pSD.GetEffectFactory());
+	m_Model[AlchemicalMachineObject::MACHINE_TYPE::RECOVERY]	= DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
+
+	m_Model[AlchemicalMachineObject::MACHINE_TYPE::UPEER]		= DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
 }
 
 void AlchemicalMachineManager::Initialize()
 {
-
-
 	for (int i = 0; i < AM_MAXNUM; i++)
 	{
 		// 仮取得
@@ -66,6 +67,9 @@ void AlchemicalMachineManager::Update(bool hitFiledToMouse, bool hitBaseToMouse,
 
 	// 全てのアルケミカルマシンToマウスを判定する
 	m_allHitObjectToMouse = false;
+
+	// セレクトマネージャーのアップデートを回す
+	m_selectManager->Update();
 
 	// 何もないところで左クリックをすると選択状態が解除される
 	if (leftRelease)
@@ -108,12 +112,12 @@ void AlchemicalMachineManager::Update(bool hitFiledToMouse, bool hitBaseToMouse,
 		pMP->ObjectDragMode();
 	}
 
-	// フィールド上　左クリックをした瞬間　対象オブジェクトが他のオブジェクトに入っていない
+	// フィールド上　左クリックをした瞬間　選択ボックスに触れていない　対象オブジェクトが他のオブジェクトに入っていない
 	//　ならばオブジェクトを出す
-	if (hitFiledToMouse && !hitBaseToMouse && !m_allHitObjectToMouse && leftRelease)
+	if (!hitBaseToMouse && !m_allHitObjectToMouse && !m_selectManager->GetHitMouseToSelectBoxEven() && hitFiledToMouse && leftRelease)
 	{
 		// 本取得
-		m_AMObject[amNum] = std::make_unique<AM_Attacker>();
+		SelectMachins(amNum);
 		m_AMObject[amNum]->Initialize();
 
 		m_AMObject[amNum]->SummonAM(pINP.GetMousePosWolrd());
@@ -136,11 +140,6 @@ void AlchemicalMachineManager::Update(bool hitFiledToMouse, bool hitBaseToMouse,
 
 	// 離したのでマウスの当たり判定を元の大きさに戻す
 	if(leftRelease)  pMP->ReleaseLeftButtom();
-
-
-	// セレクトマネージャーのアップデートを回す
-	m_selectManager->Update();
-
 }
 
 void AlchemicalMachineManager::Render()
@@ -174,7 +173,10 @@ void AlchemicalMachineManager::DrawUI()
 	ShareData& pSD = ShareData::GetInstance();
 
 	// オブジェクトセレクトのrenderを呼び出す
-	m_selectManager->ModelRender(m_Model->get());
+	for (int i = 0; i < (int)AlchemicalMachineObject::MACHINE_TYPE::NUM; i++)
+	{
+		m_selectManager->ModelRender(m_Model[i].get(), i);
+	}
 
 	// UIの表示 m_selectNumberが-1 = 選択されていない
 	if (m_selectNumber != -1)
@@ -205,10 +207,46 @@ void AlchemicalMachineManager::Finalize()
 
 void AlchemicalMachineManager::MovingMachine(int number)
 {
+	// 0,0,0を中心に回転移動
 	DirectX::SimpleMath::Matrix matrix = DirectX::SimpleMath::Matrix::Identity;
 
 	matrix *= DirectX::SimpleMath::Matrix::CreateRotationY(SPEED);
 
 	m_AMObject[number]->SetPos(DirectX::SimpleMath::Vector3::Transform(m_AMObject[number]->GetPos(), matrix));
+
+}
+
+void AlchemicalMachineManager::SelectMachins(int num)
+{
+	// TODO:より良い方法を模索したい 
+	switch (m_selectManager->GetSelectMachineType())
+	{
+	case AlchemicalMachineObject::MACHINE_TYPE::NONE:
+		m_AMObject[num] = std::make_unique<AM_None>();
+		break;
+
+	case AlchemicalMachineObject::MACHINE_TYPE::ATTACKER:
+		m_AMObject[num] = std::make_unique<AM_Attacker>();
+		break;
+
+	case AlchemicalMachineObject::MACHINE_TYPE::DEFENSER:
+		m_AMObject[num] = std::make_unique<AM_Defenser>();
+		break;
+
+	case AlchemicalMachineObject::MACHINE_TYPE::MINING:
+		m_AMObject[num] = std::make_unique<AM_None>();
+		break;
+
+	case AlchemicalMachineObject::MACHINE_TYPE::RECOVERY:
+		m_AMObject[num] = std::make_unique<AM_None>();
+		break;
+
+	case AlchemicalMachineObject::MACHINE_TYPE::UPEER:
+		m_AMObject[num] = std::make_unique<AM_None>();
+		break;
+
+	default:
+		break;
+	}
 
 }

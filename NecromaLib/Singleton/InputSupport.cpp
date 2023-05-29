@@ -44,3 +44,8 @@ DirectX::SimpleMath::Vector3 InputSupport::GetMousePosWolrd()
 {
 	return m_WorldScreenMouse;
 }
+
+DirectX::SimpleMath::Vector2 InputSupport::GetMousePosScreen()
+{
+	return {(float)m_mouseTracker.GetLastState().x, (float)m_mouseTracker.GetLastState().y };
+}

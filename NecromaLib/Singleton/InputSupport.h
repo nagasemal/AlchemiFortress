@@ -36,4 +36,7 @@ public:
 	//===[ マウス座標(ワールド空間) ]===//
 	DirectX::SimpleMath::Vector3 GetMousePosWolrd();
 
+	//===[ マウス座標(スクリーン空間) ]===//
+	DirectX::SimpleMath::Vector2 GetMousePosScreen();
+
 };

@@ -202,6 +202,7 @@
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Attacker.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Defenser.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_None.h" />
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Upper.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.h" />
     <ClInclude Include="Scenes\PlayScene\Camera\MoveCamera.h" />
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyManager.h" />
@@ -245,6 +246,7 @@
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_Attacker.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_Defenser.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_None.cpp" />
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_Upeer.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.cpp" />
     <ClCompile Include="Scenes\PlayScene\Camera\MoveCamera.cpp" />
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyManager.cpp" />
