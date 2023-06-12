@@ -20,6 +20,10 @@ void AM_Mining::Update()
 	m_magicCircle.p = m_data.pos;
 }
 
+void AM_Mining::SelectUpdate()
+{
+}
+
 void AM_Mining::Draw()
 {
 }
@@ -39,5 +43,9 @@ bool AM_Mining::BulletRequest(std::list<EnemyObject>* enemys)
 
 Bullet AM_Mining::GetBulletData()
 {
-	return Bullet(0.f, 0.f, 0.f, m_data.pos, DirectX::SimpleMath::Vector3());
+	return Bullet(0.f, 0.f, 0.f, m_color, m_data.pos, DirectX::SimpleMath::Vector3());
+}
+
+void AM_Mining::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
+{
 }

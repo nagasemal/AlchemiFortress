@@ -62,4 +62,5 @@ void Field::Draw()
 
 void Field::Finalize()
 {
+	m_Model.reset();
 }

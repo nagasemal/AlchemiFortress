@@ -21,7 +21,7 @@ void EnemyManager::Initialize()
 	ShareData& pSD = ShareData::GetInstance();
 
 	m_testBox = GeometricPrimitive::CreateBox(pSD.GetContext(), DirectX::SimpleMath::Vector3(1,1,1));
-
+	m_enemyObject = std::make_unique<std::list<EnemyObject>>();
 }
 
 void EnemyManager::Update(DirectX::SimpleMath::Vector3 basePos)
@@ -35,22 +35,22 @@ void EnemyManager::Update(DirectX::SimpleMath::Vector3 basePos)
 	if (m_timer >= 5.0f)
 	{
 
-		m_enemyObject.push_back(GetEnemyStatus(EnemyObject::EnemyType::NONE));
+		m_enemyObject->push_back(*std::make_unique<EnemyObject>(GetEnemyStatus(EnemyObject::EnemyType::NONE)));
 
 		m_timer = 0.0f;
 
 	}
 
 	// 更新処理
-	for (std::list<EnemyObject>::iterator it = m_enemyObject.begin(); it != m_enemyObject.end(); it++)
+	for (std::list<EnemyObject>::iterator it = m_enemyObject->begin(); it != m_enemyObject->end(); it++)
 	{
 		it->Update();
 
 		// 子クラスからfalseで消す
-		if ((it)->GotoTarget(DirectX::SimpleMath::Vector3::Zero))
+		if ((it)->GotoTarget(basePos))
 		{
-			it = m_enemyObject.erase(it);
-			if (it == m_enemyObject.end()) break;
+			it = m_enemyObject->erase(it);
+			if (it == m_enemyObject->end()) break;
 		}
 	}
 }
@@ -62,10 +62,10 @@ void EnemyManager::Render()
 
 	/*===[ デバッグ文字描画 ]===*/
 	std::wostringstream oss;
-	oss << "EnemyNum - " << m_enemyObject.size();
+	oss << "EnemyNum - " << m_enemyObject->size();
 	pSD.GetDebugFont()->AddString(oss.str().c_str(), DirectX::SimpleMath::Vector2(400.f, 20.f));
 
-	for (std::list<EnemyObject>::iterator it = m_enemyObject.begin(); it != m_enemyObject.end(); it++)
+	for (std::list<EnemyObject>::iterator it = m_enemyObject->begin(); it != m_enemyObject->end(); it++)
 	{
 		it->Draw();
 		it->Render(m_testBox.get());
@@ -75,10 +75,13 @@ void EnemyManager::Render()
 
 void EnemyManager::Finalize()
 {
-	for (std::list<EnemyObject>::iterator it = m_enemyObject.begin(); it != m_enemyObject.end(); it++)
+	for (std::list<EnemyObject>::iterator it = m_enemyObject->begin(); it != m_enemyObject->end(); it++)
 	{
 		it->Finalize();
 	}
+
+	m_enemyObject.reset();
+	m_testBox.reset();
 }
 
 EnemyObject EnemyManager::GetEnemyStatus(EnemyObject::EnemyType type)
@@ -98,7 +101,7 @@ EnemyObject EnemyManager::GetEnemyStatus(EnemyObject::EnemyType type)
 void EnemyManager::HitAMObejct(AlchemicalMachineObject* alchemicalMachines)
 {
 	//　現存存在するエネミー分回す
-	for (std::list<EnemyObject>::iterator it = m_enemyObject.begin(); it != m_enemyObject.end(); it++)
+	for (std::list<EnemyObject>::iterator it = m_enemyObject->begin(); it != m_enemyObject->end(); it++)
 	{
 		if (CircleCollider(it->GetCircle(), alchemicalMachines->GetCircle()))
 		{

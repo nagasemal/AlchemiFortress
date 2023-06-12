@@ -36,7 +36,6 @@ GAME_SCENE PlayScene::Update()
 	ShareData& pSD = ShareData::GetInstance();
 
 	m_moveCamera	->Update();
-
 	m_playerBase	->Update();
 	m_field			->Update();
 	m_mousePointer  ->Update();
@@ -120,8 +119,20 @@ void PlayScene::DrawUI()
 void PlayScene::Finalize()
 {
 	m_playerBase		->Finalize();
+	m_playerBase.reset();
+
 	m_field				->Finalize();
+	m_field.reset();
+
 	m_mousePointer		->Finalize();
+	m_mousePointer.reset();
+	
 	m_AM_Manager		->Finalize();
+	m_AM_Manager.reset();
+
 	m_enemyManager		->Finalize();
+	m_enemyManager.reset();
+
+	m_moveCamera.reset();
+
 }

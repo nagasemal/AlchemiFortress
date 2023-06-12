@@ -9,7 +9,7 @@ class Bullet : public GameObjct3D
 public:
 
 public:
-	Bullet(float speed, float damage, float life, DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 targetVector);
+	Bullet(float speed, float damage, float life,DirectX::SimpleMath::Color color, DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 targetVector);
 	~Bullet();
 
 	// èâä˙âª
@@ -42,6 +42,7 @@ private:
 	float m_damage;
 	float m_life;
 
+	DirectX::SimpleMath::Color m_color;
 	DirectX::SimpleMath::Vector3 m_startPos;
 	DirectX::SimpleMath::Vector3 m_targetVectol;
 

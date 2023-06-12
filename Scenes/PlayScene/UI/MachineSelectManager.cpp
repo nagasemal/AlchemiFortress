@@ -95,4 +95,7 @@ void MachineSelectManager::Finalize()
 		m_machineSelect[i]->Finalize();
 	}
 
+	m_camera.reset();
+	m_boxTextuer.Reset();
+
 }

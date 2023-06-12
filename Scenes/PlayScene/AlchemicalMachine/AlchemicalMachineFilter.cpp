@@ -25,6 +25,7 @@ AlchemicalMachineFilter::AlchemicalMachineFilter():
 
 AlchemicalMachineFilter::~AlchemicalMachineFilter()
 {
+
 }
 
 //AlchemicalMachineObject* alchemicalMachine[AlchemicalMachineObject::MACHINE_TYPE::NUM]
@@ -49,7 +50,7 @@ AlchemicalMachineObject* AlchemicalMachineFilter::HandOverAMClass(AlchemicalMach
 	case AlchemicalMachineObject::NONE:
 		return new AM_None;
 	case AlchemicalMachineObject::ATTACKER:
-		return new AM_Attacker;
+		return new AM_Attacker(AlchemicalMachineObject::NOMAL);
 	case AlchemicalMachineObject::DEFENSER:
 		return new AM_Defenser;
 	case AlchemicalMachineObject::MINING:
@@ -63,4 +64,21 @@ AlchemicalMachineObject* AlchemicalMachineFilter::HandOverAMClass(AlchemicalMach
 		break;
 	}
 
+}
+
+void AlchemicalMachineFilter::Finalize()
+{
+	m_model[AlchemicalMachineObject::MACHINE_TYPE::NONE].reset();
+
+	m_model[AlchemicalMachineObject::MACHINE_TYPE::ATTACKER].reset();
+
+	m_model[AlchemicalMachineObject::MACHINE_TYPE::DEFENSER].reset();
+
+	m_model[AlchemicalMachineObject::MACHINE_TYPE::MINING].reset();
+
+	m_model[AlchemicalMachineObject::MACHINE_TYPE::RECOVERY].reset();
+
+	m_model[AlchemicalMachineObject::MACHINE_TYPE::UPEER].reset();
+	
+	m_model->reset();
 }

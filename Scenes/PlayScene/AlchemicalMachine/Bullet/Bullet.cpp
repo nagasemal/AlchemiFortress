@@ -3,11 +3,14 @@
 #include "NecromaLib/Singleton/DeltaTime.h"
 #include "NecromaLib/GameData/Easing.h"
 
-Bullet::Bullet(float speed, float damage, float life, DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 targetVector)
+Bullet::Bullet(float speed, float damage, float life,DirectX::SimpleMath::Color color, DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 targetVector)
 {
 	m_speed = speed;
 	m_damage = damage;
 	m_life = life;
+
+	m_color = color;
+
 	m_data.pos = pos;
 	m_startPos = pos;
 	m_data.rage = DirectX::SimpleMath::Vector3(1, 1, 1);
@@ -53,7 +56,7 @@ void Bullet::Render(GeometricPrimitive* geo)
 
 	DirectX::SimpleMath::Matrix textBox = DirectX::SimpleMath::Matrix::CreateTranslation(m_data.pos.x, 1 , m_data.pos.z);
 
-	geo->Draw(textBox, pSD.GetView(), pSD.GetProjection(), Colors::Red);
+	geo->Draw(textBox, pSD.GetView(), pSD.GetProjection(), m_color);
 
 }
 

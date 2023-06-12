@@ -63,6 +63,7 @@ public:
 	// Projections—ñ
 	DirectX::SimpleMath::Matrix GetProjection()			{ return m_camera->GetProjectionMatrix(); }
 
+
 private:
 	ShareData();
 	static ShareData*				instance;
@@ -78,6 +79,5 @@ private:
 	DirectX::SpriteBatch*			m_spriteBatch;
 
 	DirectX::EffectFactory*			m_effectFactory;
-
 
 };

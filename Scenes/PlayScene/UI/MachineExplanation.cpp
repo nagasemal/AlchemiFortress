@@ -101,4 +101,5 @@ void MachineExplanation::DisplayObject(DirectX::Model* model)
 void MachineExplanation::Finalize()
 {
 	m_texture.Reset();
+	m_camera.reset();
 }

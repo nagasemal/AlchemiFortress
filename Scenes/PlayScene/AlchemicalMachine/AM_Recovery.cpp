@@ -21,6 +21,10 @@ void AM_Recovery::Update()
 	m_magicCircle.p = m_data.pos;
 }
 
+void AM_Recovery::SelectUpdate()
+{
+}
+
 void AM_Recovery::Draw()
 {
 }
@@ -40,5 +44,9 @@ bool AM_Recovery::BulletRequest(std::list<EnemyObject>* enemys)
 
 Bullet AM_Recovery::GetBulletData()
 {
-	return Bullet(0.f, 0.f, 0.f, m_data.pos, DirectX::SimpleMath::Vector3());
+	return Bullet(0.f, 0.f, 0.f, m_color, m_data.pos, DirectX::SimpleMath::Vector3());
+}
+
+void AM_Recovery::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
+{
 }

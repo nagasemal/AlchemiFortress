@@ -58,6 +58,8 @@ void AlchemicalMachineManager::Initialize()
 
 	m_testBox = GeometricPrimitive::CreateSphere(pSD.GetContext());
 
+	m_bullets = std::make_unique<std::list<Bullet>>();
+
 }
 
 void AlchemicalMachineManager::Update(bool hitFiledToMouse, bool hitBaseToMouse, MousePointer* pMP, std::list<EnemyObject> enemys)
@@ -142,6 +144,7 @@ void AlchemicalMachineManager::Update(bool hitFiledToMouse, bool hitBaseToMouse,
 
 		// 召喚したオブジェクトを選択状態としてみなす
 		m_selectNumber = amNum;
+
 	}
 
 	// 選択状態のオブジェクトがある
@@ -149,6 +152,9 @@ void AlchemicalMachineManager::Update(bool hitFiledToMouse, bool hitBaseToMouse,
 	{
 		// 説明文のアップデート処理を回す
 		m_machineExplanation->Update();
+
+		// 選択済みのオブジェクトの特殊アップデートを回す
+		m_AMObject[m_selectNumber]->SelectUpdate();
 
 	}
 	else
@@ -160,14 +166,14 @@ void AlchemicalMachineManager::Update(bool hitFiledToMouse, bool hitBaseToMouse,
 	if(leftRelease)  pMP->ReleaseLeftButtom();
 
 	// バレットの更新処理
-	for (std::list<Bullet>::iterator it = m_bullets.begin(); it != m_bullets.end(); it++)
+	for (std::list<Bullet>::iterator it = m_bullets->begin(); it != m_bullets->end(); it++)
 	{
 		it->Update();
 		// 子クラスからfalseで消す
 		if ((it)->deleteRequest())
 		{
-			it = m_bullets.erase(it);
-			if (it == m_bullets.end()) break;
+			it = m_bullets->erase(it);
+			if (it == m_bullets->end()) break;
 		}
 	}
 
@@ -179,7 +185,7 @@ void AlchemicalMachineManager::MajicBulletUpdate(int index, std::list<EnemyObjec
 
 	if (m_AMObject[index]->BulletRequest(&enemys))
 	{
-		m_bullets.push_back(m_AMObject[index]->GetBulletData());
+		m_bullets->push_back(*std::make_unique<Bullet>(m_AMObject[index]->GetBulletData()));
 	}
 
 }
@@ -208,7 +214,7 @@ void AlchemicalMachineManager::Render()
 	}
 
 	// バレットの描画処理
-	for (std::list<Bullet>::iterator it = m_bullets.begin(); it != m_bullets.end(); it++)
+	for (std::list<Bullet>::iterator it = m_bullets->begin(); it != m_bullets->end(); it++)
 	{
 		it->Render(m_testBox.get());
 	}
@@ -223,6 +229,7 @@ void AlchemicalMachineManager::DrawUI()
 	for (int i = 0; i < (int)AlchemicalMachineObject::MACHINE_TYPE::NUM; i++)
 	{
 		m_selectManager->ModelRender(m_AMFilter->HandOverAMModel((AlchemicalMachineObject::MACHINE_TYPE)i), i);
+
 	}
 
 	// UIの表示 m_selectNumberが-1 = 選択されていない
@@ -231,6 +238,8 @@ void AlchemicalMachineManager::DrawUI()
 		/*===[ 確認用モデルの表示 ]===*/
 		m_machineExplanation->Draw();
 		m_machineExplanation->DisplayObject(m_AMFilter->HandOverAMModel(m_AMObject[m_selectNumber]->GetModelID()));
+
+		m_AMObject[m_selectNumber]->RenderUI(m_selectManager->GetTextuer());
 
 		/*===[ データの表示 ]===*/
 		std::wostringstream oss;
@@ -247,17 +256,26 @@ void AlchemicalMachineManager::Finalize()
 	{
 		m_AMObject[i]->Finalize();
 
-		m_AMObject[i].release();
+		m_AMObject[i].reset();
+
+		delete m_AMObject[i].get();
 	}
 
-	for (std::list<Bullet>::iterator it = m_bullets.begin(); it != m_bullets.end(); it++)
+	for (std::list<Bullet>::iterator it = m_bullets->begin(); it != m_bullets->end(); it++)
 	{
 		it->Finalize();
 	}
 
-	m_bullets.clear();
+	m_bullets->clear();
 
 	m_selectManager->Finalize();
+	m_selectManager.reset();
+
+	m_machineExplanation->Finalize();
+	m_machineExplanation.reset();
+
+	m_AMFilter.reset();
+	m_testBox.reset();
 
 }
 

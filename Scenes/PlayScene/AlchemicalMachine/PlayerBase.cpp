@@ -60,4 +60,6 @@ void PlayerBase::Draw()
 
 void PlayerBase::Finalize()
 {
+	m_baseModel.reset();
+	m_testBox.reset();
 }

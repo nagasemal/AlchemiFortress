@@ -37,6 +37,8 @@ public:
 	/// <returns></returns>
 	AlchemicalMachineObject* HandOverAMClass(AlchemicalMachineObject::MACHINE_TYPE type);
 
+	void Finalize();
+
 private:
 
 	std::unique_ptr<DirectX::Model> m_model[AlchemicalMachineObject::MACHINE_TYPE::NUM];

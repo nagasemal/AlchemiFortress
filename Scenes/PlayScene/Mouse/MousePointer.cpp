@@ -114,6 +114,10 @@ void MousePointer::Draw()
 
 void MousePointer::Finalize()
 {
+	m_Texture.Reset();
+	m_InputLayout.Reset();
+	m_Batch.reset();
+	m_BatchEffect.reset();
 }
 
 void MousePointer::ObjectDragMode()

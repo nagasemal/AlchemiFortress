@@ -196,6 +196,9 @@
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\Bullet\Bullet.h">
       <Filter>Scene\PlayScene\AlchemicalMachine\Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\UI\SelectionBox.h">
+      <Filter>Scene\PlayScene\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -320,6 +323,9 @@
     </ClCompile>
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\Bullet\Bullet.cpp">
       <Filter>Scene\PlayScene\AlchemicalMachine\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\UI\SelectionBox.cpp">
+      <Filter>Scene\PlayScene\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

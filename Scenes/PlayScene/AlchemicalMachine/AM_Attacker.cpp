@@ -3,10 +3,13 @@
 #include "NecromaLib/Singleton/InputSupport.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
 
-AM_Attacker::AM_Attacker():
-	 m_speed(),
+AM_Attacker::AM_Attacker(MACHINE_ELEMENT element):
+	m_speed(1.0f),
+	m_bulletlife(2.0f),
+	m_power(5.0f),
 	m_timer(),
-	m_targetPos()
+	m_targetPos(),
+	m_element(element)
 {
 }
 
@@ -21,41 +24,78 @@ void AM_Attacker::Initialize()
 	m_machineID = MACHINE_TYPE::ATTACKER;
 	m_objectName = "Attacker";
 
+	m_selectBox[0] = std::make_unique<SelectionBox>(DirectX::SimpleMath::Vector2(140, 600), DirectX::SimpleMath::Vector2(64, 64));
+	m_selectBox[1] = std::make_unique<SelectionBox>(DirectX::SimpleMath::Vector2(200, 600), DirectX::SimpleMath::Vector2(64, 64));
+	m_selectBox[2] = std::make_unique<SelectionBox>(DirectX::SimpleMath::Vector2(260, 600), DirectX::SimpleMath::Vector2(64, 64));
+	m_selectBox[3] = std::make_unique<SelectionBox>(DirectX::SimpleMath::Vector2(320, 600), DirectX::SimpleMath::Vector2(64, 64));
+
+	m_color = DirectX::SimpleMath::Color(1, 1, 1, 1);
+
 }
 
 void AM_Attacker::Update()
 {
-
 	m_magicCircle.p = m_data.pos;
 	m_magicCircle.r = 5.f;
+}
 
-	//// 更新処理
-	//for (std::list<Bullet>::iterator it = m_bullets.begin(); it != m_bullets.end(); it++)
-	//{
-	//	it->Update();
-	//	// 子クラスからfalseで消す
-	//	if ((it)->deleteRequest())
-	//	{
-	//		it = m_bullets.erase(it);
-	//		if (it == m_bullets.end()) break;
-	//	}
-	//}
+void AM_Attacker::SelectUpdate()
+{
+	// 選択状態がノーマルの時ならば、属性選択モード
+	if (m_element == NOMAL)
+	{
+		m_selectBox[0]->HitMouse();
+		m_selectBox[1]->HitMouse();
+		m_selectBox[2]->HitMouse();
+		m_selectBox[3]->HitMouse();
 
+		//　火属性取得
+		if (m_selectBox[0]->ClickMouse())
+		{
+			m_color = DirectX::SimpleMath::Color(1, 0, 0, 1);
+
+			m_element = FLAME;
+
+		}
+		//　水属性取得
+		if (m_selectBox[1]->ClickMouse())
+		{
+			m_color = DirectX::SimpleMath::Color(0, 0, 1, 1);
+
+			m_element = AQUA;
+		}
+		//　風属性取得
+		if (m_selectBox[2]->ClickMouse())
+		{
+			m_color = DirectX::SimpleMath::Color(0, 1, 0, 1);
+
+			m_element = WIND;
+
+		}
+		//　土属性取得
+		if (m_selectBox[3]->ClickMouse())
+		{
+			m_color = DirectX::SimpleMath::Color(1, 0.5f, 0, 1);
+
+			m_element = EARTH;
+		}
+	}
 }
 
 void AM_Attacker::Draw()
 {
-	// 更新処理
-	//for (std::list<Bullet>::iterator it = m_bullets.begin(); it != m_bullets.end(); it++)
-	//{
-	//	it->Render(m_testBox.get());
-	//}
 
+	ShareData& pSD = ShareData::GetInstance();
+
+	/*===[ データの表示 ]===*/
+	std::wostringstream oss;
+	oss << "Element - " << m_element;
+	pSD.GetDebugFont()->AddString(oss.str().c_str(), DirectX::SimpleMath::Vector2(120.f, 360.f));
 }
 
 void AM_Attacker::Finalize()
 {
-
+	m_selectBox->reset();
 }
 
 void AM_Attacker::AllAlchemicalMachine(AlchemicalMachineObject* object, int maxNum)
@@ -111,5 +151,13 @@ bool AM_Attacker::BulletRequest(std::list<EnemyObject>* enemys)
 
 Bullet AM_Attacker::GetBulletData()
 {
-	return Bullet(2.f, 10.f, 5.f, m_data.pos,m_targetPos);
+	return Bullet(m_speed,m_power,m_bulletlife, m_color, m_data.pos,m_targetPos);
+}
+
+void AM_Attacker::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		m_selectBox[i]->DrawUI(texture);
+	}
 }

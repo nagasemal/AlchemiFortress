@@ -21,6 +21,10 @@ void AM_Defenser::Update()
 	m_magicCircle.p = m_data.pos;
 }
 
+void AM_Defenser::SelectUpdate()
+{
+}
+
 void AM_Defenser::Draw()
 {
 }
@@ -40,5 +44,9 @@ bool AM_Defenser::BulletRequest(std::list<EnemyObject>* enemys)
 
 Bullet AM_Defenser::GetBulletData()
 {
-	return Bullet(0.f,0.f,0.f,m_data.pos,DirectX::SimpleMath::Vector3());
+	return Bullet(0.f,0.f,0.f, m_color,m_data.pos,DirectX::SimpleMath::Vector3());
+}
+
+void AM_Defenser::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
+{
 }

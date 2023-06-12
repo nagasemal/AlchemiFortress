@@ -29,11 +29,11 @@ public:
 
 public:
 
-	std::list<EnemyObject>* GetEnemyData() { return &m_enemyObject; }
+	std::list<EnemyObject>* GetEnemyData() { return m_enemyObject.get(); }
 
 private:
 
-	std::list<EnemyObject> m_enemyObject;
+	std::unique_ptr<std::list<EnemyObject>> m_enemyObject;
 
 	//===後で消すテスト用変数
 	std::unique_ptr<DirectX::GeometricPrimitive> m_testBox;	//  仮置き四角モデル

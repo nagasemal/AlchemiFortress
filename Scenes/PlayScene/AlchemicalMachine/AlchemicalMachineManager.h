@@ -49,7 +49,7 @@ public:
 	AlchemicalMachineObject* GetAlchemicalMachineObject()				{ return m_AMObject->get(); }
 	AlchemicalMachineObject* GetAlchemicalMachineObject(int index)		{ return m_AMObject[index].get();}
 
-	std::list<Bullet>* GetBullet()										{ return &m_bullets;}
+	std::list<Bullet>* GetBullet()										{ return m_bullets.get();}
 
 private:
 
@@ -68,7 +68,7 @@ private:
 	std::unique_ptr<AlchemicalMachineObject> m_AMObject[AM_MAXNUM];
 
 	// アルケミカルマシン(アタックタイプ)から射出される弾のリスト
-	std::list<Bullet>	m_bullets;
+	std::unique_ptr<std::list<Bullet>>	m_bullets;
 
 	// アルケミカルマシンモデルの受け渡し
 	std::unique_ptr<AlchemicalMachineFilter> m_AMFilter;
@@ -77,7 +77,6 @@ private:
 
 	// 現在選択されているオブジェクトの番号
 	int m_selectNumber;
-
 
 	//===後で消すテスト用変数
 	std::unique_ptr<DirectX::GeometricPrimitive> m_testBox;	//  仮置き弾モデル

@@ -25,17 +25,22 @@ public:
 	// 更新
 	void Update()						override;
 
+	// 選択時に更新される処理
+	void SelectUpdate()					override;
+
 	// 描画　(UI関係)
 	void Draw()							override;
 
 	// 終了処理
 	void Finalize()						override;
 
-		void AllAlchemicalMachine(AlchemicalMachineObject* object, int maxNum)			override;
+	void AllAlchemicalMachine(AlchemicalMachineObject* object, int maxNum)			override;
 
-		bool BulletRequest(std::list<EnemyObject>* enemys) override;
+	bool BulletRequest(std::list<EnemyObject>* enemys) override;
 
-		Bullet GetBulletData() override;
+	Bullet GetBulletData() override;
+
+	void RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture) override;
 
 public:
 

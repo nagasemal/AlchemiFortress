@@ -57,6 +57,9 @@ void EnemyObject::Render(GeometricPrimitive* geo)
 
 void EnemyObject::Finalize()
 {
+
+
+
 }
 
 bool EnemyObject::GotoTarget(DirectX::SimpleMath::Vector3 target)

@@ -21,6 +21,10 @@ void AM_None::Update()
 	m_magicCircle.p = m_data.pos;
 }
 
+void AM_None::SelectUpdate()
+{
+}
+
 void AM_None::Draw()
 {
 }
@@ -40,5 +44,9 @@ bool AM_None::BulletRequest(std::list<EnemyObject>* enemys)
 
 Bullet AM_None::GetBulletData()
 {
-	return Bullet(0.f, 0.f, 0.f, m_data.pos, DirectX::SimpleMath::Vector3());
+	return Bullet(0.f, 0.f, 0.f, m_color, m_data.pos, DirectX::SimpleMath::Vector3());
+}
+
+void AM_None::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
+{
 }

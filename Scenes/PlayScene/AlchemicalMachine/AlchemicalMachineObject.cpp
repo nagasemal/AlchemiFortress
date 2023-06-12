@@ -15,7 +15,8 @@ AlchemicalMachineObject::AlchemicalMachineObject():
 	m_machineID(MACHINE_TYPE::NONE),
 	m_lv(1),
 	m_machineEffectNum(),
-	m_span()
+	m_span(),
+	m_color()
 {
 }
 
@@ -45,7 +46,6 @@ bool AlchemicalMachineObject::OnCollisionEnter_MagicCircle(GameObjct3D* object)
 
 void AlchemicalMachineObject::ModelRender(DirectX::Model* model)
 {
-
 	ShareData& pSD = ShareData::GetInstance();
 
 	// ƒ‚ƒfƒ‹î•ñ(ˆÊ’u,‘å‚«‚³)
@@ -54,7 +54,6 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model)
 	modelData *= DirectX::SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y, m_data.pos.z);
 
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection());
-
 }
 
 void AlchemicalMachineObject::SummonAM(DirectX::SimpleMath::Vector3 pos)

@@ -104,5 +104,4 @@ private:
 
     /*====[　シーンマネージャークラス　]====*/
     std::unique_ptr<SceneManager> m_SceneManager;
-
 };

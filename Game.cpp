@@ -8,6 +8,8 @@
 #include "NecromaLib/Singleton/InputSupport.h"
 #include "NecromaLib/Singleton/ShareData.h"
 
+#include <WICTextureLoader.h>
+
 
 extern void ExitGame() noexcept;
 
@@ -245,7 +247,6 @@ void Game::CreateDeviceDependentResources()
     mCamera = std::make_unique<Camera>();
 
     pSD->SetCamera(mCamera.get());
-
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.

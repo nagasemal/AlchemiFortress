@@ -4,7 +4,9 @@
 #include "Scenes/PlayScene/Mouse/MousePointer.h"
 #include "Scenes/PlayScene/Enemy/EnemyObject.h"
 #include "Scenes/PlayScene/AlchemicalMachine/Bullet/Bullet.h"
+#include "Scenes/PlayScene/UI/SelectionBox.h"
 #include <list>
+#include <vector>
 
 class EnemyObject;
 class Bullet;
@@ -26,6 +28,18 @@ public:
 		NUM
 	};
 
+public:
+
+	enum MACHINE_ELEMENT : int
+	{
+		NOMAL	= 0,
+		FLAME	= 1,
+		AQUA	= 2,
+		WIND	= 3,
+		EARTH	= 4
+	};
+
+
 	// オブジェクトの現在状況の取得
 	enum STATE_NAME : int
 	{
@@ -46,6 +60,12 @@ public:
 
 	// アルケミカルマシンの弾情報を得る
 	virtual Bullet GetBulletData() = 0;
+
+	// 選択時の特別なアップデート処理
+	virtual void SelectUpdate() = 0;
+
+	// 選択時、マウス選択可能なUIの表示に使用
+	virtual void RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture) = 0;
 
 	// 他のオブジェクト同士の当たり判定
 	void HitToObject(MousePointer* pMP);
@@ -103,5 +123,8 @@ protected:
 	Circle m_magicCircle;
 
 	std::string m_objectName;
+
+	// オブジェクトの色
+	DirectX::SimpleMath::Color m_color;
 
 };
