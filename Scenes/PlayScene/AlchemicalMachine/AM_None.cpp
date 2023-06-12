@@ -35,10 +35,16 @@ void AM_None::Finalize()
 
 void AM_None::AllAlchemicalMachine(AlchemicalMachineObject* object, int maxNum)
 {
+	// åxçêè¡Çµ
+	object;
+	maxNum;
 }
 
 bool AM_None::BulletRequest(std::list<EnemyObject>* enemys)
 {
+	// åxçêè¡Çµ
+	enemys;
+
 	return false;
 }
 

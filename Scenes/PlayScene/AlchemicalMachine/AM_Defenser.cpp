@@ -35,10 +35,17 @@ void AM_Defenser::Finalize()
 
 void AM_Defenser::AllAlchemicalMachine(AlchemicalMachineObject* object, int maxNum)
 {
+	// åxçêè¡Çµ
+	object;
+	maxNum;
+
 }
 
 bool AM_Defenser::BulletRequest(std::list<EnemyObject>* enemys)
 {
+	// åxçêè¡Çµ
+	enemys;
+
 	return false;
 }
 

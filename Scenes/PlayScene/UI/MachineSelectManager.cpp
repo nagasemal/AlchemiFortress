@@ -80,10 +80,10 @@ void MachineSelectManager::Render()
 }
 
 // ‚Î‚®‚è‚»‚¤B AlchemicalMachinManager‚Å—v‘f•ª‰ñ‚µ‚Ä‚¢‚é
-void MachineSelectManager::ModelRender(DirectX::Model* model,int index)
+void MachineSelectManager::ModelRender(DirectX::Model* model,int index, DirectX::Model* secondModel)
 {
 
-	m_machineSelect[index]->DisplayObject(m_boxTextuer,model, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
+	m_machineSelect[index]->DisplayObject(m_boxTextuer,model, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix(),secondModel);
 
 }
 

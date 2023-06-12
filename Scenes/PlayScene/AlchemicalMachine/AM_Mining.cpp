@@ -34,10 +34,16 @@ void AM_Mining::Finalize()
 
 void AM_Mining::AllAlchemicalMachine(AlchemicalMachineObject* object, int maxNum)
 {
+	// åxçêè¡Çµ
+	object;
+	maxNum;
 }
 
 bool AM_Mining::BulletRequest(std::list<EnemyObject>* enemys)
 {
+	// åxçêè¡Çµ
+	enemys;
+
 	return false;
 }
 

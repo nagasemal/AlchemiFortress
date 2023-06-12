@@ -21,7 +21,7 @@ public:
 	void Finalize()				override;
 
 	// ƒ‚ƒfƒ‹‚ğ•`‰æ‚·‚é‚½‚ß‚ÌŠÖ”
-	void DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture,DirectX::Model* model,DirectX::SimpleMath::Matrix view,DirectX::SimpleMath::Matrix proj);
+	void DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture,DirectX::Model* model,DirectX::SimpleMath::Matrix view,DirectX::SimpleMath::Matrix proj, DirectX::Model* secondModel = nullptr);
 
 public:
 

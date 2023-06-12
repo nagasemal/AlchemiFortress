@@ -74,7 +74,7 @@ public:
 	bool OnCollisionEnter_MagicCircle(GameObjct3D* object);
 	
 	// モデル描画系
-	void ModelRender(DirectX::Model* model);
+	void ModelRender(DirectX::Model* model,DirectX::Model* ring = nullptr);
 
 	void SummonAM(DirectX::SimpleMath::Vector3 pos);
 
@@ -90,6 +90,7 @@ public:
 	float GetSpan()									{ return m_span;}
 	int	  GetLv()									{ return m_lv; }
 	Circle GetMagicCircle()							{ return m_magicCircle; }
+	DirectX::SimpleMath::Color GetColor()			{ return m_color; }
 
 	void SetPos(DirectX::SimpleMath::Vector3 pos)	{ m_data.pos = pos; }
 	void SetMagicCircle(Circle circle)				{ m_magicCircle = circle;}
@@ -118,6 +119,9 @@ protected:
 
 	// マウスが当たっているか否か
 	bool m_hitMouseFlag;
+
+	// Y軸回転させるための変数
+	float m_rotateAnimation;
 
 	// 効果範囲
 	Circle m_magicCircle;

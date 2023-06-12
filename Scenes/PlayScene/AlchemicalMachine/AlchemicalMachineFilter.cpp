@@ -12,15 +12,18 @@ AlchemicalMachineFilter::AlchemicalMachineFilter():
 
 	m_model[AlchemicalMachineObject::MACHINE_TYPE::NONE] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Siroma.cmo", *fx);
 
-	m_model[AlchemicalMachineObject::MACHINE_TYPE::ATTACKER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
+	m_model[AlchemicalMachineObject::MACHINE_TYPE::ATTACKER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Attacker.cmo", *fx);
 
-	m_model[AlchemicalMachineObject::MACHINE_TYPE::DEFENSER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
+	m_model[AlchemicalMachineObject::MACHINE_TYPE::DEFENSER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Siroma.cmo", *fx);
 
-	m_model[AlchemicalMachineObject::MACHINE_TYPE::MINING] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
+	m_model[AlchemicalMachineObject::MACHINE_TYPE::MINING] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Siroma.cmo", *fx);
 
-	m_model[AlchemicalMachineObject::MACHINE_TYPE::RECOVERY] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
+	m_model[AlchemicalMachineObject::MACHINE_TYPE::RECOVERY] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Siroma.cmo", *fx);
 
-	m_model[AlchemicalMachineObject::MACHINE_TYPE::UPEER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
+	m_model[AlchemicalMachineObject::MACHINE_TYPE::UPEER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Upper.cmo", *fx);
+
+	m_ringModel = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Ring.cmo", *fx);
+
 }
 
 AlchemicalMachineFilter::~AlchemicalMachineFilter()
@@ -58,12 +61,20 @@ AlchemicalMachineObject* AlchemicalMachineFilter::HandOverAMClass(AlchemicalMach
 	case AlchemicalMachineObject::RECOVERY:
 		return new AM_Recovery;
 	case AlchemicalMachineObject::UPEER:
-		return new AM_Upper;
+		return new AM_Upper(AlchemicalMachineObject::NOMAL);
 	default:
 		return new AM_None;
 		break;
 	}
 
+}
+
+Model* AlchemicalMachineFilter::GetRingModel(AlchemicalMachineObject::MACHINE_TYPE type)
+{
+
+	if (type != AlchemicalMachineObject::ATTACKER) return nullptr;
+
+	return m_ringModel.get();
 }
 
 void AlchemicalMachineFilter::Finalize()

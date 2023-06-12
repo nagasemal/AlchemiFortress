@@ -35,10 +35,16 @@ void AM_Recovery::Finalize()
 
 void AM_Recovery::AllAlchemicalMachine(AlchemicalMachineObject* object, int maxNum)
 {
+	// åxçêè¡Çµ
+	object;
+	maxNum;
 }
 
 bool AM_Recovery::BulletRequest(std::list<EnemyObject>* enemys)
 {
+
+	// åxçêè¡Çµ
+	enemys;
 	return false;
 }
 

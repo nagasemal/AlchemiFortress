@@ -19,7 +19,10 @@ void Field::Initialize()
 {
 	ShareData& pSD = ShareData::GetInstance();
 
-	m_Model = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *pSD.GetEffectFactory());
+	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
+	fx->SetDirectory(L"Resources/Models");
+
+	m_Model = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
 
 	m_data.pos		= DirectX::SimpleMath::Vector3(0,-3,0);
 	m_data.rage		= DirectX::SimpleMath::Vector3(RAGE,3,RAGE);

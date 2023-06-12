@@ -21,6 +21,9 @@ void AM_Attacker::Initialize()
 {
 	ShareData& pSD = ShareData::GetInstance();
 
+	// 警告消し
+	pSD.GetDevice();
+
 	m_machineID = MACHINE_TYPE::ATTACKER;
 	m_objectName = "Attacker";
 
@@ -37,6 +40,7 @@ void AM_Attacker::Update()
 {
 	m_magicCircle.p = m_data.pos;
 	m_magicCircle.r = 5.f;
+
 }
 
 void AM_Attacker::SelectUpdate()
@@ -49,6 +53,7 @@ void AM_Attacker::SelectUpdate()
 		m_selectBox[2]->HitMouse();
 		m_selectBox[3]->HitMouse();
 
+		//　　外部ファイルから読み込めるようにしたい
 		//　火属性取得
 		if (m_selectBox[0]->ClickMouse())
 		{
@@ -127,7 +132,6 @@ bool AM_Attacker::BulletRequest(std::list<EnemyObject>* enemys)
 			// 5秒毎に生成
 			if (m_timer >= 0.5f)
 			{
-
 				m_timer = 0.0f;
 				m_targetPos = it->GetPos();
 				return true;

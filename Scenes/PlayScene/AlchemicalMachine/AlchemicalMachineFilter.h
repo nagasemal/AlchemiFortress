@@ -37,10 +37,15 @@ public:
 	/// <returns></returns>
 	AlchemicalMachineObject* HandOverAMClass(AlchemicalMachineObject::MACHINE_TYPE type);
 
+	// –{‘Ì‚Æ‚Í•Ê‚Å“®‚­ƒŠƒ“ƒOƒ‚ƒfƒ‹‚ð“n‚µ‚Ü‚·
+	Model* GetRingModel(AlchemicalMachineObject::MACHINE_TYPE type);
+
 	void Finalize();
 
 private:
 
 	std::unique_ptr<DirectX::Model> m_model[AlchemicalMachineObject::MACHINE_TYPE::NUM];
+
+	std::unique_ptr<DirectX::Model> m_ringModel;
 
 };

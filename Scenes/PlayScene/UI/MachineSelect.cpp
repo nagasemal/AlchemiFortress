@@ -49,7 +49,7 @@ void MachineSelect::Finalize()
 {
 }
 
-void MachineSelect::DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture, DirectX::Model* model, DirectX::SimpleMath::Matrix view, DirectX::SimpleMath::Matrix proj)
+void MachineSelect::DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture, DirectX::Model* model, DirectX::SimpleMath::Matrix view, DirectX::SimpleMath::Matrix proj, DirectX::Model* secondModel)
 {
 	ShareData& pSD = ShareData::GetInstance();
 	auto pSB = pSD.GetSpriteBatch();
@@ -90,7 +90,21 @@ void MachineSelect::DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceVie
 
 	modelData *= DirectX::SimpleMath::Matrix::CreateTranslation(worldPos);
 
+	model->UpdateEffects([&](IEffect* effect)
+		{
+			// ライト
+			auto lights = dynamic_cast<IEffectLights*>(effect);
+			// 色変更
+			lights->SetLightDiffuseColor(0, Colors::White);
+		});
+
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, view, proj);
+
+	// セカンドモデルが存在するのならば実行
+	if (secondModel != nullptr)
+	{
+		secondModel->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, view, proj);
+	}
 
 }
 

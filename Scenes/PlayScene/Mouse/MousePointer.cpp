@@ -69,7 +69,7 @@ void MousePointer::Draw()
 
 	ShareData& pSD = ShareData::GetInstance();
 
-	auto device = pSD.GetDevice();
+	//auto device = pSD.GetDevice();
 	auto context = pSD.GetContext();
 	auto states = pSD.GetCommonStates();
 

@@ -309,9 +309,6 @@
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_Recovery.cpp">
       <Filter>Scene\PlayScene\AlchemicalMachine\AM_list</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\PlayScene\ObjectDataHolder.cpp">
-      <Filter>Scene\PlayScene</Filter>
-    </ClCompile>
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineFilter.cpp">
       <Filter>Scene\PlayScene\AlchemicalMachine\Object</Filter>
     </ClCompile>
@@ -326,6 +323,9 @@
     </ClCompile>
     <ClCompile Include="Scenes\PlayScene\UI\SelectionBox.cpp">
       <Filter>Scene\PlayScene\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\ObjectDataHolder.cpp">
+      <Filter>Scene\PlayScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

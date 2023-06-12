@@ -79,7 +79,7 @@ void EnemyManager::Finalize()
 	{
 		it->Finalize();
 	}
-
+	m_enemyObject->clear();
 	m_enemyObject.reset();
 	m_testBox.reset();
 }

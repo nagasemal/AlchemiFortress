@@ -71,7 +71,7 @@ void MachineExplanation::Draw()
 	pSB->End();
 }
 
-void MachineExplanation::DisplayObject(DirectX::Model* model)
+void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* secondModel,DirectX::SimpleMath::Color color)
 {
 
 	ShareData& pSD = ShareData::GetInstance();
@@ -94,7 +94,21 @@ void MachineExplanation::DisplayObject(DirectX::Model* model)
 
 	modelData *= DirectX::SimpleMath::Matrix::CreateTranslation(worldPos);
 
+	model->UpdateEffects([&](IEffect* effect)
+		{
+			// ライト
+			auto lights = dynamic_cast<IEffectLights*>(effect);
+			// 色変更
+			lights->SetLightDiffuseColor(0, color);
+		});
+
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
+
+	// セカンドモデルが存在するならば実行
+	if (secondModel != nullptr)
+	{
+		secondModel->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
+	}
 
 }
 

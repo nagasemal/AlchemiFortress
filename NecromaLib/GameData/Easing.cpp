@@ -79,9 +79,9 @@ float Easing::Angle(float a1, float a2, float b1, float b2)
 
 	if (r < 0)
 	{
-		r = r + 2 * PI;
+		r = r + 2.f * (float)PI;
 	}
-	return floorf(r * 360 / (2 * PI));
+	return floorf(r * 360 / (2.f * (float)PI));
 }
 
 #pragma region Sine
@@ -89,7 +89,7 @@ float Easing::Angle(float a1, float a2, float b1, float b2)
 
 float Easing::EaseInSine(float a, float b, float t)
 {
-	t = 1.f - cosf((t * PI) / 2.f);
+	t = 1.f - cosf((t * (float)PI) / 2.f);
 
 	float p;
 	p = Leap(a, b, t);
@@ -99,7 +99,7 @@ float Easing::EaseInSine(float a, float b, float t)
 
 float Easing::EaseOutSine(float a, float b, float t)
 {
-	t = sinf((t * PI) / 2.f);
+	t = sinf((t * (float)PI) / 2.f);
 
 	float p;
 	p = Leap(a, b, t);
@@ -109,7 +109,7 @@ float Easing::EaseOutSine(float a, float b, float t)
 
 float Easing::EaseInOutSine(float a, float b, float t)
 {
-	t = -(cosf(PI * t) - 1.f) / 2.f;
+	t = -(cosf((float)PI * t) - 1.f) / 2.f;
 
 	float p;
 	p = Leap(a, b, t);

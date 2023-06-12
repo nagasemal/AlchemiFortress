@@ -21,7 +21,7 @@ public:
 	void Finalize()				override;
 
 	// ƒ‚ƒfƒ‹‚ğ•`‰æ‚·‚é‚½‚ß‚ÌŠÖ”
-	void DisplayObject(DirectX::Model* model);
+	void DisplayObject(DirectX::Model* model,DirectX::Model* secondModel = nullptr,DirectX::SimpleMath::Color color = DirectX::SimpleMath::Color(1.f,1.f,1.f,1.f));
 
 	void ResetMoveTime() { m_moveTime = 0; }
 

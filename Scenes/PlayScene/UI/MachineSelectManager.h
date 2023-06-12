@@ -17,7 +17,7 @@ public:
 
 	void Render();
 
-	void ModelRender(DirectX::Model* model,int index);
+	void ModelRender(DirectX::Model* model,int index,DirectX::Model* secondModel = nullptr);
 
 	void Finalize();
 

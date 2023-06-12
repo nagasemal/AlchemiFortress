@@ -50,8 +50,8 @@ void MoveCamera::Update()
 	{
 		m_time += DeltaTime::GetInstance().GetDeltaTime();
 
-		m_Move.y = m_time * 1.2;
-		m_Move.z = m_time * 1.3;
+		m_Move.y = m_time * 1.2f;
+		m_Move.z = m_time * 1.3f;
 
 	}
 
@@ -109,7 +109,7 @@ void MoveCamera::CalculateViewMatrix()
 	DirectX::SimpleMath::Vector3     up(0.0f, 1.0f, 0.0f);
 
 	eye = DirectX::SimpleMath::Vector3::Transform(eye, rt.Invert());
-	eye *= (DEFAULT_CAMERA_DISTANCE - m_ScrollWheelValue / 100);
+	eye *= (DEFAULT_CAMERA_DISTANCE - (float)m_ScrollWheelValue / 100);
 	up = DirectX::SimpleMath::Vector3::Transform(up, rt.Invert());
 
 	m_Eye		= eye;

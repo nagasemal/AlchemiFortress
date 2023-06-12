@@ -200,7 +200,8 @@ void AlchemicalMachineManager::Render()
 		if (m_AMObject[i]->GetActiv())
 		{
 			// モデルの描画			オブジェクトに割り当てられたIDをもとにモデル配列からデータを取り出す
-			m_AMObject[i]->ModelRender(m_AMFilter->HandOverAMModel(m_AMObject[i]->GetModelID()));
+			m_AMObject[i]->ModelRender(m_AMFilter->HandOverAMModel(m_AMObject[i]->GetModelID()),
+									   m_AMFilter->GetRingModel(m_AMObject[i]->GetModelID()));
 			m_AMObject[i]->Draw();
 
 			if (m_AMObject[i]->GetHitMouse())
@@ -228,7 +229,8 @@ void AlchemicalMachineManager::DrawUI()
 	// オブジェクトセレクトのrenderを呼び出す
 	for (int i = 0; i < (int)AlchemicalMachineObject::MACHINE_TYPE::NUM; i++)
 	{
-		m_selectManager->ModelRender(m_AMFilter->HandOverAMModel((AlchemicalMachineObject::MACHINE_TYPE)i), i);
+		m_selectManager->ModelRender(m_AMFilter->HandOverAMModel((AlchemicalMachineObject::MACHINE_TYPE)i), i,
+									 m_AMFilter->GetRingModel((AlchemicalMachineObject::MACHINE_TYPE)i));
 
 	}
 
@@ -237,7 +239,9 @@ void AlchemicalMachineManager::DrawUI()
 	{
 		/*===[ 確認用モデルの表示 ]===*/
 		m_machineExplanation->Draw();
-		m_machineExplanation->DisplayObject(m_AMFilter->HandOverAMModel(m_AMObject[m_selectNumber]->GetModelID()));
+		m_machineExplanation->DisplayObject(m_AMFilter->HandOverAMModel(m_AMObject[m_selectNumber]->GetModelID()),
+											m_AMFilter->GetRingModel(m_AMObject[m_selectNumber]->GetModelID()),
+											m_AMObject[m_selectNumber]->GetColor());
 
 		m_AMObject[m_selectNumber]->RenderUI(m_selectManager->GetTextuer());
 
@@ -267,6 +271,7 @@ void AlchemicalMachineManager::Finalize()
 	}
 
 	m_bullets->clear();
+	m_bullets.reset();
 
 	m_selectManager->Finalize();
 	m_selectManager.reset();

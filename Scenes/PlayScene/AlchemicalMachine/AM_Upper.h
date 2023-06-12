@@ -16,7 +16,7 @@
 class AM_Upper : public AlchemicalMachineObject
 {
 public:
-	AM_Upper();
+	AM_Upper(MACHINE_ELEMENT element);
 	~AM_Upper();
 
 	// 初期化
@@ -45,5 +45,10 @@ public:
 public:
 
 private:
+
+	MACHINE_ELEMENT m_element;
+
+	// 選択可能オブジェクト
+	std::unique_ptr<SelectionBox> m_selectBox[4];
 
 };
