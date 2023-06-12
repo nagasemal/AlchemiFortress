@@ -38,6 +38,11 @@ void AlchemicalMachineObject::HitToObject(MousePointer* pMP)
 
 }
 
+bool AlchemicalMachineObject::OnCollisionEnter_MagicCircle(GameObjct3D* object)
+{
+	return 	CircleCollider(m_magicCircle, object->GetCircle());
+}
+
 void AlchemicalMachineObject::ModelRender(DirectX::Model* model)
 {
 

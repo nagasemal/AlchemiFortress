@@ -15,26 +15,26 @@ AlchemicalMachineManager::~AlchemicalMachineManager()
 {
 }
 
-void AlchemicalMachineManager::ModeLoader()
-{
-
-	ShareData& pSD = ShareData::GetInstance();
-
-	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
-	fx->SetDirectory(L"Resources/Models");
-
-	m_Model[AlchemicalMachineObject::MACHINE_TYPE::NONE]		= DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Siroma.cmo", *fx);
-
-	m_Model[AlchemicalMachineObject::MACHINE_TYPE::ATTACKER]	= DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
-
-	m_Model[AlchemicalMachineObject::MACHINE_TYPE::DEFENSER]	= DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
-
-	m_Model[AlchemicalMachineObject::MACHINE_TYPE::MINING]		= DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
-
-	m_Model[AlchemicalMachineObject::MACHINE_TYPE::RECOVERY]	= DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
-
-	m_Model[AlchemicalMachineObject::MACHINE_TYPE::UPEER]		= DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
-}
+//void AlchemicalMachineManager::ModeLoader()
+//{
+//
+//	ShareData& pSD = ShareData::GetInstance();
+//
+//	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
+//	fx->SetDirectory(L"Resources/Models");
+//
+//	m_Model[AlchemicalMachineObject::MACHINE_TYPE::NONE]		=	 DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Siroma.cmo", *fx);
+//
+//	m_Model[AlchemicalMachineObject::MACHINE_TYPE::ATTACKER]	=	 DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
+//
+//	m_Model[AlchemicalMachineObject::MACHINE_TYPE::DEFENSER]	=	 DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
+//
+//	m_Model[AlchemicalMachineObject::MACHINE_TYPE::MINING]		=	 DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
+//
+//	m_Model[AlchemicalMachineObject::MACHINE_TYPE::RECOVERY]	=	 DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
+//
+//	m_Model[AlchemicalMachineObject::MACHINE_TYPE::UPEER]		=	 DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
+//}
 
 void AlchemicalMachineManager::Initialize()
 {
@@ -52,9 +52,15 @@ void AlchemicalMachineManager::Initialize()
 	m_selectManager->TextuerLoader();
 	m_selectManager->Initialize();
 
+	m_AMFilter = std::make_unique<AlchemicalMachineFilter>();
+
+	ShareData& pSD = ShareData::GetInstance();
+
+	m_testBox = GeometricPrimitive::CreateSphere(pSD.GetContext());
+
 }
 
-void AlchemicalMachineManager::Update(bool hitFiledToMouse, bool hitBaseToMouse, MousePointer* pMP)
+void AlchemicalMachineManager::Update(bool hitFiledToMouse, bool hitBaseToMouse, MousePointer* pMP, std::list<EnemyObject> enemys)
 {
 
 	InputSupport& pINP = InputSupport::GetInstance();
@@ -77,32 +83,43 @@ void AlchemicalMachineManager::Update(bool hitFiledToMouse, bool hitBaseToMouse,
 		m_selectNumber = -1;
 	}
 
-	//　現在存在するマシンにを動かすための処理
+	//　現在存在するマシンを動かすための処理
 	for (int i = 0; i < AM_MAXNUM; i++)
 	{
-		//　存在していれば処理を続ける
-		if (m_AMObject[i]->GetActiv())
+		//　存在していれば処理を続ける 存在しなくなった = 以降存在しないので回す必要もない
+		if (!m_AMObject[i]->GetActiv()) break;
+
+		amNum++;
+		m_AMObject[i]->Update();
+		m_AMObject[i]->HitToObject(pMP);
+		MajicBulletUpdate(i,enemys);
+
+
+		MovingMachine(i);
+
+		// オブジェクトにマウスが入っているかどうか
+		if (m_AMObject[i]->GetHitMouse())
 		{
-			amNum++;
-			m_AMObject[i]->Update();
-			m_AMObject[i]->HitToObject(pMP);
+			m_allHitObjectToMouse = true;
 
-			MovingMachine(i);
-
-			// オブジェクトにマウスが入っているかどうか
-			if (m_AMObject[i]->GetHitMouse())
+			// クリックで選択状態に移行
+			if (leftRelease)
 			{
-				m_allHitObjectToMouse = true;
-
-				// クリックで選択状態に移行
-				if (leftRelease)
-				{
-					m_selectNumber = i;
-					m_machineExplanation->ResetMoveTime();
-				}
-
+				m_selectNumber = i;
+				m_machineExplanation->ResetMoveTime();
 			}
 
+		}
+
+		// ToDO::ベタ打ちコード		修正必須
+		//　A選択時B変化
+		bool powerUp = false;
+
+		if (m_selectManager->GetSelectMachineType() == AlchemicalMachineObject::MACHINE_TYPE::ATTACKER 
+		 && m_AMObject[i]->GetModelID() == AlchemicalMachineObject::MACHINE_TYPE::UPEER)
+		{
+			// 効果範囲内にマウスが入っている
+			if (m_AMObject[i]->OnCollisionEnter_MagicCircle(pMP)) 		powerUp = true;
 		}
 	}
 
@@ -117,9 +134,10 @@ void AlchemicalMachineManager::Update(bool hitFiledToMouse, bool hitBaseToMouse,
 	if (!hitBaseToMouse && !m_allHitObjectToMouse && !m_selectManager->GetHitMouseToSelectBoxEven() && hitFiledToMouse && leftRelease)
 	{
 		// 本取得
-		SelectMachins(amNum);
+		m_AMObject[amNum].reset(m_AMFilter->HandOverAMClass(m_selectManager->GetSelectMachineType()));
+		// 初期化
 		m_AMObject[amNum]->Initialize();
-
+		// 召喚
 		m_AMObject[amNum]->SummonAM(pINP.GetMousePosWolrd());
 
 		// 召喚したオブジェクトを選択状態としてみなす
@@ -140,6 +158,30 @@ void AlchemicalMachineManager::Update(bool hitFiledToMouse, bool hitBaseToMouse,
 
 	// 離したのでマウスの当たり判定を元の大きさに戻す
 	if(leftRelease)  pMP->ReleaseLeftButtom();
+
+	// バレットの更新処理
+	for (std::list<Bullet>::iterator it = m_bullets.begin(); it != m_bullets.end(); it++)
+	{
+		it->Update();
+		// 子クラスからfalseで消す
+		if ((it)->deleteRequest())
+		{
+			it = m_bullets.erase(it);
+			if (it == m_bullets.end()) break;
+		}
+	}
+
+
+}
+
+void AlchemicalMachineManager::MajicBulletUpdate(int index, std::list<EnemyObject> enemys)
+{
+
+	if (m_AMObject[index]->BulletRequest(&enemys))
+	{
+		m_bullets.push_back(m_AMObject[index]->GetBulletData());
+	}
+
 }
 
 void AlchemicalMachineManager::Render()
@@ -152,7 +194,8 @@ void AlchemicalMachineManager::Render()
 		if (m_AMObject[i]->GetActiv())
 		{
 			// モデルの描画			オブジェクトに割り当てられたIDをもとにモデル配列からデータを取り出す
-			m_AMObject[i]->ModelRender(m_Model[m_AMObject[i]->GetModelID()].get());
+			m_AMObject[i]->ModelRender(m_AMFilter->HandOverAMModel(m_AMObject[i]->GetModelID()));
+			m_AMObject[i]->Draw();
 
 			if (m_AMObject[i]->GetHitMouse())
 			{
@@ -160,11 +203,15 @@ void AlchemicalMachineManager::Render()
 				std::wostringstream oss;
 				oss << "object - " << i;
 				pSD.GetDebugFont()->AddString(oss.str().c_str(), DirectX::SimpleMath::Vector2(60.f, 560.f));
-
 			}
 		}
 	}
 
+	// バレットの描画処理
+	for (std::list<Bullet>::iterator it = m_bullets.begin(); it != m_bullets.end(); it++)
+	{
+		it->Render(m_testBox.get());
+	}
 }
 
 void AlchemicalMachineManager::DrawUI()
@@ -175,7 +222,7 @@ void AlchemicalMachineManager::DrawUI()
 	// オブジェクトセレクトのrenderを呼び出す
 	for (int i = 0; i < (int)AlchemicalMachineObject::MACHINE_TYPE::NUM; i++)
 	{
-		m_selectManager->ModelRender(m_Model[i].get(), i);
+		m_selectManager->ModelRender(m_AMFilter->HandOverAMModel((AlchemicalMachineObject::MACHINE_TYPE)i), i);
 	}
 
 	// UIの表示 m_selectNumberが-1 = 選択されていない
@@ -183,7 +230,7 @@ void AlchemicalMachineManager::DrawUI()
 	{
 		/*===[ 確認用モデルの表示 ]===*/
 		m_machineExplanation->Draw();
-		m_machineExplanation->DisplayObject(m_Model[m_AMObject[m_selectNumber]->GetModelID()].get());
+		m_machineExplanation->DisplayObject(m_AMFilter->HandOverAMModel(m_AMObject[m_selectNumber]->GetModelID()));
 
 		/*===[ データの表示 ]===*/
 		std::wostringstream oss;
@@ -199,7 +246,16 @@ void AlchemicalMachineManager::Finalize()
 	for (int i = 0; i < AM_MAXNUM; i++)
 	{
 		m_AMObject[i]->Finalize();
+
+		m_AMObject[i].release();
 	}
+
+	for (std::list<Bullet>::iterator it = m_bullets.begin(); it != m_bullets.end(); it++)
+	{
+		it->Finalize();
+	}
+
+	m_bullets.clear();
 
 	m_selectManager->Finalize();
 
@@ -212,41 +268,42 @@ void AlchemicalMachineManager::MovingMachine(int number)
 
 	matrix *= DirectX::SimpleMath::Matrix::CreateRotationY(SPEED);
 
+	// 回転後の座標を代入
 	m_AMObject[number]->SetPos(DirectX::SimpleMath::Vector3::Transform(m_AMObject[number]->GetPos(), matrix));
 
 }
 
-void AlchemicalMachineManager::SelectMachins(int num)
-{
-	// TODO:より良い方法を模索したい 
-	switch (m_selectManager->GetSelectMachineType())
-	{
-	case AlchemicalMachineObject::MACHINE_TYPE::NONE:
-		m_AMObject[num] = std::make_unique<AM_None>();
-		break;
-
-	case AlchemicalMachineObject::MACHINE_TYPE::ATTACKER:
-		m_AMObject[num] = std::make_unique<AM_Attacker>();
-		break;
-
-	case AlchemicalMachineObject::MACHINE_TYPE::DEFENSER:
-		m_AMObject[num] = std::make_unique<AM_Defenser>();
-		break;
-
-	case AlchemicalMachineObject::MACHINE_TYPE::MINING:
-		m_AMObject[num] = std::make_unique<AM_Mining>();
-		break;
-
-	case AlchemicalMachineObject::MACHINE_TYPE::RECOVERY:
-		m_AMObject[num] = std::make_unique<AM_None>();
-		break;
-
-	case AlchemicalMachineObject::MACHINE_TYPE::UPEER:
-		m_AMObject[num] = std::make_unique<AM_Upper>();
-		break;
-
-	default:
-		break;
-	}
-
-}
+//void AlchemicalMachineManager::SelectMachins(int num)
+//{
+//	// TODO:より良い方法を模索したい 
+//	switch (m_selectManager->GetSelectMachineType())
+//	{
+//	case AlchemicalMachineObject::MACHINE_TYPE::NONE:
+//		m_AMObject[num] = std::make_unique<AM_None>();
+//		break;
+//
+//	case AlchemicalMachineObject::MACHINE_TYPE::ATTACKER:
+//		m_AMObject[num] = std::make_unique<AM_Attacker>();
+//		break;
+//
+//	case AlchemicalMachineObject::MACHINE_TYPE::DEFENSER:
+//		m_AMObject[num] = std::make_unique<AM_Defenser>();
+//		break;
+//
+//	case AlchemicalMachineObject::MACHINE_TYPE::MINING:
+//		m_AMObject[num] = std::make_unique<AM_Mining>();
+//		break;
+//
+//	case AlchemicalMachineObject::MACHINE_TYPE::RECOVERY:
+//		m_AMObject[num] = std::make_unique<AM_Recovery>();
+//		break;
+//
+//	case AlchemicalMachineObject::MACHINE_TYPE::UPEER:
+//		m_AMObject[num] = std::make_unique<AM_Upper>();
+//		break;
+//
+//	default:
+//		break;
+//	}
+//
+//}

@@ -81,8 +81,8 @@ void MachineSelect::DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceVie
 
 	// ƒ[ƒ‹ƒhÀ•W•ÔŠÒ
 	DirectX::SimpleMath::Vector3 worldPos = CalcScreenToXZN(
-		m_data.pos.x,
-		m_data.pos.y,
+		(int)m_data.pos.x,
+		(int)m_data.pos.y,
 		(int)pDR->GetOutputSize().right,
 		(int)pDR->GetOutputSize().bottom,
 		view,

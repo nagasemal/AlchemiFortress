@@ -18,6 +18,7 @@ void AM_Defenser::Initialize()
 
 void AM_Defenser::Update()
 {
+	m_magicCircle.p = m_data.pos;
 }
 
 void AM_Defenser::Draw()
@@ -26,4 +27,18 @@ void AM_Defenser::Draw()
 
 void AM_Defenser::Finalize()
 {
+}
+
+void AM_Defenser::AllAlchemicalMachine(AlchemicalMachineObject* object, int maxNum)
+{
+}
+
+bool AM_Defenser::BulletRequest(std::list<EnemyObject>* enemys)
+{
+	return false;
+}
+
+Bullet AM_Defenser::GetBulletData()
+{
+	return Bullet(0.f,0.f,0.f,m_data.pos,DirectX::SimpleMath::Vector3());
 }

@@ -11,11 +11,14 @@
 #pragma once
 #include "NecromaLib/GameData/GameObject3D.h"
 #include "AlchemicalMachineObject.h"
-#include <Scenes/PlayScene/Mouse/MousePointer.h>
+#include "Scenes/PlayScene/Mouse/MousePointer.h"
+#include <list>
+
 
 class AM_Attacker : public AlchemicalMachineObject
 {
 public:
+
 	AM_Attacker();
 	~AM_Attacker();
 
@@ -31,12 +34,24 @@ public:
 	// 終了処理
 	void Finalize()						override;
 
+	void AllAlchemicalMachine(AlchemicalMachineObject* object, int maxNum)			override;
+
+	bool BulletRequest(std::list<EnemyObject>* enemys)		override;
+
+	Bullet GetBulletData()				override;
+
 //　アクセサ
 public:
 
 
 private:
 
+	float	m_timer;
 	float	m_speed;		// 攻撃の速度
+
+	DirectX::SimpleMath::Vector3 m_targetPos;
+
+	//std::list<Bullet> m_bullets;
+
 
 };

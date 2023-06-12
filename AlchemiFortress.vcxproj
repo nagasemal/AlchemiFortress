@@ -188,6 +188,7 @@
     <ClInclude Include="NecromaLib\GameData\GameObject3D.h" />
     <ClInclude Include="NecromaLib\GameData\GameObject2D.h" />
     <ClInclude Include="NecromaLib\GameData\ScreenToWorld.h" />
+    <ClInclude Include="NecromaLib\GameData\SCVLoder.h" />
     <ClInclude Include="NecromaLib\GameData\SpriteCutter.h" />
     <ClInclude Include="NecromaLib\SceneObject\Fade.h" />
     <ClInclude Include="NecromaLib\SceneObject\SceneManager.h" />
@@ -197,6 +198,7 @@
     <ClInclude Include="NecromaLib\Singleton\ShareData.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resources\Icon\Icon.h" />
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineFilter.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineManager.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineObject.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Attacker.h" />
@@ -204,11 +206,15 @@
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Mining.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_None.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Upper.h" />
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\Bullet\Bullet.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.h" />
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Recovery.h" />
     <ClInclude Include="Scenes\PlayScene\Camera\MoveCamera.h" />
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyManager.h" />
+    <ClInclude Include="Scenes\PlayScene\Enemy\EnemyObject.h" />
     <ClInclude Include="Scenes\PlayScene\Field\Field.h" />
     <ClInclude Include="Scenes\PlayScene\Mouse\MousePointer.h" />
+    <ClInclude Include="Scenes\PlayScene\ObjectDataHolder.h" />
     <ClInclude Include="Scenes\PlayScene\PlayScene.h" />
     <ClInclude Include="Scenes\PlayScene\UI\MachineExplanation.h" />
     <ClInclude Include="Scenes\PlayScene\UI\MachineSelect.h" />
@@ -229,6 +235,7 @@
     <ClCompile Include="NecromaLib\GameData\GameObject3D.cpp" />
     <ClCompile Include="NecromaLib\GameData\GameObject2D.cpp" />
     <ClCompile Include="NecromaLib\GameData\ScreenToWorld.cpp" />
+    <ClCompile Include="NecromaLib\GameData\SCVLoder.cpp" />
     <ClCompile Include="NecromaLib\GameData\SpriteCutter.cpp" />
     <ClCompile Include="NecromaLib\SceneObject\Fade.cpp" />
     <ClCompile Include="NecromaLib\SceneObject\SceneManager.cpp" />
@@ -242,18 +249,23 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineFilter.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineManager.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineObject.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_Attacker.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_Defenser.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_Mining.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_None.cpp" />
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_Recovery.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_Upeer.cpp" />
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\Bullet\Bullet.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.cpp" />
     <ClCompile Include="Scenes\PlayScene\Camera\MoveCamera.cpp" />
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyManager.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Enemy\EnemyObject.cpp" />
     <ClCompile Include="Scenes\PlayScene\Field\Field.cpp" />
     <ClCompile Include="Scenes\PlayScene\Mouse\MousePointer.cpp" />
+    <ClCompile Include="Scenes\PlayScene\ObjectDataHolder.cpp" />
     <ClCompile Include="Scenes\PlayScene\PlayScene.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\MachineExplanation.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\MachineSelect.cpp" />

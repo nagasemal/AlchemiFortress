@@ -22,6 +22,7 @@ public:
 
 	static DirectX::SimpleMath::Vector3 Sleap(DirectX::SimpleMath::Vector3 a, DirectX::SimpleMath::Vector3 b, float time);
 
+	// ‹——£Œ¸Š‚È‚­“®‚¯‚Ü‚·B­‚µd‚¢B
 	static DirectX::SimpleMath::Vector3 Moveing(DirectX::SimpleMath::Vector3 a, DirectX::SimpleMath::Vector3 b);
 	static float Angle(float a1, float a2, float b1, float b2);
 

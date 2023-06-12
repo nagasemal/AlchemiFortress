@@ -136,7 +136,6 @@ void SceneManager::CreateScene()
 	// ŸƒV[ƒ“‚Ìì¬
 	switch (m_NextScene)
 	{
-		DeleteScene();
 
 	case GAME_SCENE::TITLE:
 	{

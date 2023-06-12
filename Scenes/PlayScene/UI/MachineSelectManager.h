@@ -25,6 +25,7 @@ public:
 
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetTextuer()	{ return m_boxTextuer;}
 
+	// 選択中のマシンのタイプを返す
 	AlchemicalMachineObject::MACHINE_TYPE GetSelectMachineType()	{ return m_selectMachineType; }
 
 	bool GetHitMouseToSelectBox(int index)							{ return m_machineSelect[index]->GetHitMouseFlag();}

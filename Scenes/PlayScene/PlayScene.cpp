@@ -21,11 +21,13 @@ void PlayScene::Initialize()
 	m_mousePointer	->Initialize();
 
 	m_AM_Manager	= std::make_unique<AlchemicalMachineManager>();
-	m_AM_Manager	->ModeLoader();
 	m_AM_Manager	->Initialize();
 
 	m_moveCamera	= std::make_unique<MoveCamera>();
 	m_moveCamera	->Initialize();
+
+	m_enemyManager  = std::make_unique<EnemyManager>();
+	m_enemyManager	->Initialize();
 
 }
 
@@ -38,7 +40,37 @@ GAME_SCENE PlayScene::Update()
 	m_playerBase	->Update();
 	m_field			->Update();
 	m_mousePointer  ->Update();
-	m_AM_Manager	->Update(m_field->GetHitMouse(),m_playerBase->GetHitMouse(),m_mousePointer.get());
+
+	m_enemyManager->Update(m_playerBase->GetPos());
+	m_AM_Manager	->Update(m_field->GetHitMouse(),m_playerBase->GetHitMouse(),m_mousePointer.get(),*m_enemyManager.get()->GetEnemyData());
+
+	// エネミーにアルケミカルマシンのポインターを渡す(当たり判定に使用)
+	//for (int i = 0; i < AlchemicalMachineManager::AM_MAXNUM; i++)
+	//{
+	//	AlchemicalMachineObject* alchemicalMachine = m_AM_Manager->GetAlchemicalMachineObject(i);
+	//	if (!alchemicalMachine->GetActiv()) break;
+	//	m_enemyManager->HitAMObejct(alchemicalMachine);
+	//}
+
+	// エネミーToバレット(二重for)
+	// ダングリング対策
+	if (!m_AM_Manager->GetBullet()->empty() && !m_enemyManager->GetEnemyData()->empty())
+	{
+		for (std::list<Bullet>::iterator bulletIt = m_AM_Manager->GetBullet()->begin(); bulletIt != m_AM_Manager->GetBullet()->end(); bulletIt++)
+		{
+			for (std::list<EnemyObject>::iterator enemyIt = m_enemyManager->GetEnemyData()->begin(); enemyIt != m_enemyManager->GetEnemyData()->end(); enemyIt++)
+			{
+				// 当たり判定処理
+				if (CircleCollider(bulletIt->GetCircle(), enemyIt->GetCircle()))
+				{
+
+					bulletIt->SetLife(0);
+					enemyIt->SetHp(enemyIt->GetHp() - bulletIt->GetDamage());
+
+				}
+			}
+		}
+	}
 
 	// カメラを動かす
 	pSD.GetCamera()->SetViewMatrix		(m_moveCamera->GetViewMatrix());
@@ -70,7 +102,9 @@ void PlayScene::Draw()
 	m_playerBase		->Draw();
 	m_field				->Draw();
 	m_mousePointer		->Draw();
+
 	m_AM_Manager		->Render();
+	m_enemyManager		->Render();
 
 	pSD.GetSpriteBatch()->End();
 
@@ -85,5 +119,9 @@ void PlayScene::DrawUI()
 
 void PlayScene::Finalize()
 {
-
+	m_playerBase		->Finalize();
+	m_field				->Finalize();
+	m_mousePointer		->Finalize();
+	m_AM_Manager		->Finalize();
+	m_enemyManager		->Finalize();
 }

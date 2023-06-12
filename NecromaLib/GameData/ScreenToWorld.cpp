@@ -35,8 +35,10 @@ DirectX::SimpleMath::Vector3 CalcScreenToXZN(int sX, int sY, int screen_W, int s
 {
 	DirectX::SimpleMath::Vector3 nearPos, farPos, ray = DirectX::SimpleMath::Vector3::Zero;
 
+	// 最近点
 	nearPos = CalcScreenToWorldN(sX, sY, 0.0f, screen_W, screen_H, view, prj);
 
+	// 最遠点
 	farPos = CalcScreenToWorldN(sX, sY, 1.0f, screen_W, screen_H, view, prj);
 
 	ray = farPos - nearPos;
@@ -44,6 +46,7 @@ DirectX::SimpleMath::Vector3 CalcScreenToXZN(int sX, int sY, int screen_W, int s
 
 	DirectX::SimpleMath::Vector3 pOut = DirectX::SimpleMath::Vector3::Zero;
 
+	// カメラから見てYが無限に続くかどうか　交点が存在するかどうか
 	if (ray.y <= 0)
 	{
 		// 床交点

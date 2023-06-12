@@ -83,7 +83,7 @@ void MachineSelectManager::Render()
 void MachineSelectManager::ModelRender(DirectX::Model* model,int index)
 {
 
-		m_machineSelect[index]->DisplayObject(m_boxTextuer,model, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
+	m_machineSelect[index]->DisplayObject(m_boxTextuer,model, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
 
 }
 

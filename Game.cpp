@@ -78,7 +78,6 @@ void Game::Update(DX::StepTimer const& timer)
     DeltaTime* pDeltaT = &DeltaTime::GetInstance();
     InputSupport* pIS = &InputSupport::GetInstance();
 
-
     float elapsedTime = float(timer.GetElapsedSeconds());
     pDeltaT->SetDeltaTime(elapsedTime);
 

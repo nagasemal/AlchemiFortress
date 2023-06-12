@@ -31,6 +31,12 @@ public:
 	// I—¹ˆ—
 	void Finalize()						override;
 
+	void AllAlchemicalMachine(AlchemicalMachineObject* object, int maxNum)			override;
+
+	bool BulletRequest(std::list<EnemyObject>* enemys) override;
+
+
+	Bullet GetBulletData() override;
 public:
 
 private:

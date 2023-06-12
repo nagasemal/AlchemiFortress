@@ -10,6 +10,7 @@
 #include "Field/Field.h"
 #include "Mouse/MousePointer.h"
 #include "AlchemicalMachine/AlchemicalMachineManager.h"
+#include "Enemy/EnemyManager.h"
 
 class PlayScene : public SceneObj
 {
@@ -37,14 +38,16 @@ public:
 
 private:
 
-	std::unique_ptr<PlayerBase> m_playerBase;
+	std::unique_ptr<PlayerBase>					m_playerBase;
 
-	std::unique_ptr<Field> m_field;
+	std::unique_ptr<Field>						m_field;
 
-	std::unique_ptr<MousePointer> m_mousePointer;
+	std::unique_ptr<MousePointer>				m_mousePointer;
 
-	std::unique_ptr<AlchemicalMachineManager> m_AM_Manager;
+	std::unique_ptr<AlchemicalMachineManager>	m_AM_Manager;
 
-	std::unique_ptr<MoveCamera> m_moveCamera;
+	std::unique_ptr<MoveCamera>					m_moveCamera;
+
+	std::unique_ptr<EnemyManager>				m_enemyManager;
 
 };

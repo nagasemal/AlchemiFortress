@@ -84,7 +84,7 @@ void MachineExplanation::DisplayObject(DirectX::Model* model)
 	modelData *= SimpleMath::Matrix::CreateRotationX(-20);
 	modelData *= SimpleMath::Matrix::CreateRotationZ(m_moveTime);
 
-	// ワールド座標返還
+	// ワールド座標変換
 	DirectX::SimpleMath::Vector3 worldPos = CalcScreenToXZN(m_data.pos.x + 72,
 															m_data.pos.y + 72,
 															pDR->GetOutputSize().right,

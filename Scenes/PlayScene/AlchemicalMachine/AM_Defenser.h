@@ -30,6 +30,12 @@ public:
 	// 終了処理
 	void Finalize()						override;
 
+	void AllAlchemicalMachine(AlchemicalMachineObject* object, int maxNum)			override;
+
+	bool BulletRequest(std::list<EnemyObject>* enemys) override;
+
+	Bullet GetBulletData() override;
+
 	//　アクセサ
 public:
 

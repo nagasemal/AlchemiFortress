@@ -65,6 +65,9 @@
     <Filter Include="Scene\PlayScene\AlchemicalMachine\Object">
       <UniqueIdentifier>{aca008df-7843-4611-83f2-44e8e78777f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene\PlayScene\AlchemicalMachine\Bullet">
+      <UniqueIdentifier>{81ac7f36-b157-4e6a-885f-9b04974d19af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -175,6 +178,24 @@
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Mining.h">
       <Filter>Scene\PlayScene\AlchemicalMachine\AM_list</Filter>
     </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Recovery.h">
+      <Filter>Scene\PlayScene\AlchemicalMachine\AM_list</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\ObjectDataHolder.h">
+      <Filter>Scene\PlayScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineFilter.h">
+      <Filter>Scene\PlayScene\AlchemicalMachine\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Enemy\EnemyObject.h">
+      <Filter>Scene\PlayScene\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\GameData\SCVLoder.h">
+      <Filter>NecromaLib\GameData</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\Bullet\Bullet.h">
+      <Filter>Scene\PlayScene\AlchemicalMachine\Bullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -281,6 +302,24 @@
     </ClCompile>
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_Mining.cpp">
       <Filter>Scene\PlayScene\AlchemicalMachine\AM_list</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_Recovery.cpp">
+      <Filter>Scene\PlayScene\AlchemicalMachine\AM_list</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\ObjectDataHolder.cpp">
+      <Filter>Scene\PlayScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineFilter.cpp">
+      <Filter>Scene\PlayScene\AlchemicalMachine\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Enemy\EnemyObject.cpp">
+      <Filter>Scene\PlayScene\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\GameData\SCVLoder.cpp">
+      <Filter>NecromaLib\GameData</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\Bullet\Bullet.cpp">
+      <Filter>Scene\PlayScene\AlchemicalMachine\Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

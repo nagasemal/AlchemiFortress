@@ -2,6 +2,12 @@
 #include "NecromaLib/GameData/GameObject3D.h"
 
 #include "Scenes/PlayScene/Mouse/MousePointer.h"
+#include "Scenes/PlayScene/Enemy/EnemyObject.h"
+#include "Scenes/PlayScene/AlchemicalMachine/Bullet/Bullet.h"
+#include <list>
+
+class EnemyObject;
+class Bullet;
 
 class AlchemicalMachineObject : public GameObjct3D
 {
@@ -32,13 +38,26 @@ public:
 	AlchemicalMachineObject();
 	~AlchemicalMachineObject();
 
+	// 全てのマシンの情報をポインタとして受け取る(マシン同士で作用するものがあるため)
+	virtual void AllAlchemicalMachine(AlchemicalMachineObject* object,int maxNum) = 0;
+
+	// 全てのエネミーの情報を受け取る バレット射出のRequestを送る
+	virtual bool BulletRequest(std::list<EnemyObject>* enemys) = 0;
+
+	// アルケミカルマシンの弾情報を得る
+	virtual Bullet GetBulletData() = 0;
+
 	// 他のオブジェクト同士の当たり判定
 	void HitToObject(MousePointer* pMP);
+
+	// 効果範囲内に3Dオブジェクトが入った
+	bool OnCollisionEnter_MagicCircle(GameObjct3D* object);
 	
 	// モデル描画系
 	void ModelRender(DirectX::Model* model);
 
 	void SummonAM(DirectX::SimpleMath::Vector3 pos);
+
 
 // アクセサ
 public:
@@ -46,13 +65,16 @@ public:
 	bool GetActiv()									{ return m_activ; }
 	bool GetHitMouse()								{ return m_hitMouseFlag;}
 	std::string GetObjectName()						{ return m_objectName; }
-	MACHINE_TYPE GetModelID()							{ return m_machineID;}
+	MACHINE_TYPE GetModelID()						{ return m_machineID;}
 	float GetMachineEffectNum()						{ return m_machineEffectNum; }
 	float GetSpan()									{ return m_span;}
 	int	  GetLv()									{ return m_lv; }
+	Circle GetMagicCircle()							{ return m_magicCircle; }
 
 	void SetPos(DirectX::SimpleMath::Vector3 pos)	{ m_data.pos = pos; }
 	void SetMagicCircle(Circle circle)				{ m_magicCircle = circle;}
+
+private:
 
 protected:
 
