@@ -14,8 +14,8 @@ void PlayScene::Initialize()
 	m_playerBase	= std::make_unique<PlayerBase>();
 	m_playerBase	->Initialize();
 
-	m_field			= std::make_unique<Field>();
-	m_field			->Initialize();
+	m_fieldManager = std::make_unique<FieldObjectManager>();
+	m_fieldManager ->Initialize();
 
 	m_mousePointer	= std::make_unique<MousePointer>();
 	m_mousePointer	->Initialize();
@@ -37,35 +37,25 @@ GAME_SCENE PlayScene::Update()
 
 	m_moveCamera	->Update();
 	m_playerBase	->Update();
-	m_field			->Update();
+	m_fieldManager  ->Update();
 	m_mousePointer  ->Update();
 
-	m_enemyManager->Update(m_playerBase->GetPos());
-	m_AM_Manager	->Update(m_field->GetHitMouse(),m_playerBase->GetHitMouse(),m_mousePointer.get(),*m_enemyManager.get()->GetEnemyData());
-
-	// エネミーにアルケミカルマシンのポインターを渡す(当たり判定に使用)
-	//for (int i = 0; i < AlchemicalMachineManager::AM_MAXNUM; i++)
-	//{
-	//	AlchemicalMachineObject* alchemicalMachine = m_AM_Manager->GetAlchemicalMachineObject(i);
-	//	if (!alchemicalMachine->GetActiv()) break;
-	//	m_enemyManager->HitAMObejct(alchemicalMachine);
-	//}
+	m_enemyManager	->Update(m_playerBase->GetPos());
+	m_AM_Manager	->Update(m_fieldManager.get(), m_playerBase->GetHitMouse(), m_mousePointer.get(), *m_enemyManager.get()->GetEnemyData());
 
 	// エネミーToバレット(二重for)
 	// ダングリング対策
 	if (!m_AM_Manager->GetBullet()->empty() && !m_enemyManager->GetEnemyData()->empty())
 	{
-		for (std::list<Bullet>::iterator bulletIt = m_AM_Manager->GetBullet()->begin(); bulletIt != m_AM_Manager->GetBullet()->end(); bulletIt++)
+		for (std::list<std::unique_ptr<Bullet>>::iterator bulletIt = m_AM_Manager->GetBullet()->begin(); bulletIt != m_AM_Manager->GetBullet()->end(); bulletIt++)
 		{
 			for (std::list<EnemyObject>::iterator enemyIt = m_enemyManager->GetEnemyData()->begin(); enemyIt != m_enemyManager->GetEnemyData()->end(); enemyIt++)
 			{
 				// 当たり判定処理
-				if (CircleCollider(bulletIt->GetCircle(), enemyIt->GetCircle()))
+				if (CircleCollider(bulletIt->get()->GetCircle(), enemyIt->GetCircle()))
 				{
-
-					bulletIt->SetLife(0);
-					enemyIt->SetHp(enemyIt->GetHp() - bulletIt->GetDamage());
-
+					bulletIt->get()->SetLife(0);
+					enemyIt->SetHp(enemyIt->GetHp() - (int)bulletIt->get()->GetDamage());
 				}
 			}
 		}
@@ -99,7 +89,7 @@ void PlayScene::Draw()
 	pSD.GetSpriteBatch()->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
 	m_playerBase		->Draw();
-	m_field				->Draw();
+	m_fieldManager      ->Draw();
 	m_mousePointer		->Draw();
 
 	m_AM_Manager		->Render();
@@ -121,8 +111,8 @@ void PlayScene::Finalize()
 	m_playerBase		->Finalize();
 	m_playerBase.reset();
 
-	m_field				->Finalize();
-	m_field.reset();
+	m_fieldManager      ->Finalize();
+	m_fieldManager.reset();
 
 	m_mousePointer		->Finalize();
 	m_mousePointer.reset();

@@ -7,7 +7,7 @@
 
 // ゲームのオブジェクト
 #include "AlchemicalMachine/PlayerBase.h"
-#include "Field/Field.h"
+#include "Field/FieldObjectManager.h"
 #include "Mouse/MousePointer.h"
 #include "AlchemicalMachine/AlchemicalMachineManager.h"
 #include "Enemy/EnemyManager.h"
@@ -40,7 +40,7 @@ private:
 
 	std::unique_ptr<PlayerBase>					m_playerBase;
 
-	std::unique_ptr<Field>						m_field;
+	std::unique_ptr<FieldObjectManager>			m_fieldManager;
 
 	std::unique_ptr<MousePointer>				m_mousePointer;
 

@@ -5,8 +5,11 @@
 #include "Scenes/PlayScene/Enemy/EnemyObject.h"
 #include "Scenes/PlayScene/AlchemicalMachine/Bullet/Bullet.h"
 #include "Scenes/PlayScene/UI/SelectionBox.h"
+#include "Scenes/PlayScene/Field/FieldObjectManager.h"
 #include <list>
 #include <vector>
+
+#include "Scenes/DataManager.h"
 
 class EnemyObject;
 class Bullet;
@@ -36,7 +39,8 @@ public:
 		FLAME	= 1,
 		AQUA	= 2,
 		WIND	= 3,
-		EARTH	= 4
+		EARTH	= 4,
+		SUM
 	};
 
 
@@ -53,10 +57,13 @@ public:
 	~AlchemicalMachineObject();
 
 	// 全てのマシンの情報をポインタとして受け取る(マシン同士で作用するものがあるため)
-	virtual void AllAlchemicalMachine(AlchemicalMachineObject* object,int maxNum) = 0;
+	virtual void AllAlchemicalMachine(AlchemicalMachineObject* object) = 0;
 
 	// 全てのエネミーの情報を受け取る バレット射出のRequestを送る
 	virtual bool BulletRequest(std::list<EnemyObject>* enemys) = 0;
+
+	// フィールド上のオブジェクトの情報を受け取る(結晶、敵の巣穴等)
+	virtual void AllFieldObject(FieldObjectManager* fieldManager) = 0;
 
 	// アルケミカルマシンの弾情報を得る
 	virtual Bullet GetBulletData() = 0;
@@ -66,6 +73,9 @@ public:
 
 	// 選択時、マウス選択可能なUIの表示に使用
 	virtual void RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture) = 0;
+
+	// LvUp専用処理
+	virtual void LvUp() = 0;
 
 	// 他のオブジェクト同士の当たり判定
 	void HitToObject(MousePointer* pMP);
@@ -91,6 +101,8 @@ public:
 	int	  GetLv()									{ return m_lv; }
 	Circle GetMagicCircle()							{ return m_magicCircle; }
 	DirectX::SimpleMath::Color GetColor()			{ return m_color; }
+	bool GetPowerUpFlag()							{ return m_powerUPFlag; }
+	MACHINE_ELEMENT GetElement()					{ return m_element; }
 
 	void SetPos(DirectX::SimpleMath::Vector3 pos)	{ m_data.pos = pos; }
 	void SetMagicCircle(Circle circle)				{ m_magicCircle = circle;}
@@ -117,6 +129,9 @@ protected:
 	// 存在しているか否か
 	bool m_activ;
 
+	// 何かしらの影響で強化を受けているか
+	bool m_powerUPFlag;
+
 	// マウスが当たっているか否か
 	bool m_hitMouseFlag;
 
@@ -130,5 +145,8 @@ protected:
 
 	// オブジェクトの色
 	DirectX::SimpleMath::Color m_color;
+
+	// オブジェクトの属性
+	MACHINE_ELEMENT m_element;
 
 };

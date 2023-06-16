@@ -32,6 +32,7 @@ void SelectionBox::Draw()
 
 void SelectionBox::Finalize()
 {
+	delete this;
 }
 
 void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)

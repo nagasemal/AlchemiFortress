@@ -58,11 +58,11 @@ void AlchemicalMachineManager::Initialize()
 
 	m_testBox = GeometricPrimitive::CreateSphere(pSD.GetContext());
 
-	m_bullets = std::make_unique<std::list<Bullet>>();
+	//m_bullets = std::make_unique<std::list<Bullet>>();
 
 }
 
-void AlchemicalMachineManager::Update(bool hitFiledToMouse, bool hitBaseToMouse, MousePointer* pMP, std::list<EnemyObject> enemys)
+void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, bool hitBaseToMouse, MousePointer* pMP, std::list<EnemyObject> enemys)
 {
 
 	InputSupport& pINP = InputSupport::GetInstance();
@@ -80,7 +80,7 @@ void AlchemicalMachineManager::Update(bool hitFiledToMouse, bool hitBaseToMouse,
 	m_selectManager->Update();
 
 	// 何もないところで左クリックをすると選択状態が解除される
-	if (leftRelease)
+	if (leftRelease && !m_machineExplanation->OnMouse())
 	{
 		m_selectNumber = -1;
 	}
@@ -94,9 +94,6 @@ void AlchemicalMachineManager::Update(bool hitFiledToMouse, bool hitBaseToMouse,
 		amNum++;
 		m_AMObject[i]->Update();
 		m_AMObject[i]->HitToObject(pMP);
-		MajicBulletUpdate(i,enemys);
-
-
 		MovingMachine(i);
 
 		// オブジェクトにマウスが入っているかどうか
@@ -110,19 +107,18 @@ void AlchemicalMachineManager::Update(bool hitFiledToMouse, bool hitBaseToMouse,
 				m_selectNumber = i;
 				m_machineExplanation->ResetMoveTime();
 			}
-
 		}
 
-		// ToDO::ベタ打ちコード		修正必須
-		//　A選択時B変化
-		bool powerUp = false;
-
-		if (m_selectManager->GetSelectMachineType() == AlchemicalMachineObject::MACHINE_TYPE::ATTACKER 
-		 && m_AMObject[i]->GetModelID() == AlchemicalMachineObject::MACHINE_TYPE::UPEER)
+		// 他のアルケミカルマシンの情報を渡す
+		for (int j = 0; j < AM_MAXNUM; j++)
 		{
-			// 効果範囲内にマウスが入っている
-			if (m_AMObject[i]->OnCollisionEnter_MagicCircle(pMP)) 		powerUp = true;
+			m_AMObject[i]->AllAlchemicalMachine(m_AMObject[j].get());
 		}
+
+		// フィールド上のオブジェクトを渡す
+		m_AMObject[i]->AllFieldObject(fieldManager);
+
+		MajicBulletUpdate(i, enemys);
 	}
 
 	// ドラッグ中は配置箇所を決める
@@ -131,9 +127,14 @@ void AlchemicalMachineManager::Update(bool hitFiledToMouse, bool hitBaseToMouse,
 		pMP->ObjectDragMode();
 	}
 
-	// フィールド上　左クリックをした瞬間　選択ボックスに触れていない　対象オブジェクトが他のオブジェクトに入っていない
+	// フィールド上　選択ボックスに触れていない　説明ボックスに触れていない　左クリックを離した瞬間　対象オブジェクトが他のオブジェクトに入っていない 
 	//　ならばオブジェクトを出す
-	if (!hitBaseToMouse && !m_allHitObjectToMouse && !m_selectManager->GetHitMouseToSelectBoxEven() && hitFiledToMouse && leftRelease)
+	if (!hitBaseToMouse &&
+		!m_allHitObjectToMouse &&
+		!m_selectManager->GetHitMouseToSelectBoxEven() &&
+		fieldManager->GetFieldObject()->GetHitMouse() &&
+		leftRelease &&
+		!m_machineExplanation->OnMouse())
 	{
 		// 本取得
 		m_AMObject[amNum].reset(m_AMFilter->HandOverAMClass(m_selectManager->GetSelectMachineType()));
@@ -147,6 +148,7 @@ void AlchemicalMachineManager::Update(bool hitFiledToMouse, bool hitBaseToMouse,
 
 	}
 
+
 	// 選択状態のオブジェクトがある
 	if (m_selectNumber != -1)
 	{
@@ -155,6 +157,12 @@ void AlchemicalMachineManager::Update(bool hitFiledToMouse, bool hitBaseToMouse,
 
 		// 選択済みのオブジェクトの特殊アップデートを回す
 		m_AMObject[m_selectNumber]->SelectUpdate();
+
+		if (mouse.rightButton == mouse.RELEASED)
+		{
+			m_AMObject[m_selectNumber]->LvUp();
+		}
+
 
 	}
 	else
@@ -166,18 +174,16 @@ void AlchemicalMachineManager::Update(bool hitFiledToMouse, bool hitBaseToMouse,
 	if(leftRelease)  pMP->ReleaseLeftButtom();
 
 	// バレットの更新処理
-	for (std::list<Bullet>::iterator it = m_bullets->begin(); it != m_bullets->end(); it++)
+	for (std::list<std::unique_ptr<Bullet>>::iterator it = m_bullets.begin(); it != m_bullets.end(); it++)
 	{
-		it->Update();
+		it->get()->Update();
 		// 子クラスからfalseで消す
-		if ((it)->deleteRequest())
+		if ((it)->get()->deleteRequest())
 		{
-			it = m_bullets->erase(it);
-			if (it == m_bullets->end()) break;
+			it = m_bullets.erase(it);
+			if (it == m_bullets.end()) break;
 		}
 	}
-
-
 }
 
 void AlchemicalMachineManager::MajicBulletUpdate(int index, std::list<EnemyObject> enemys)
@@ -185,7 +191,7 @@ void AlchemicalMachineManager::MajicBulletUpdate(int index, std::list<EnemyObjec
 
 	if (m_AMObject[index]->BulletRequest(&enemys))
 	{
-		m_bullets->push_back(*std::make_unique<Bullet>(m_AMObject[index]->GetBulletData()));
+		m_bullets.push_back(std::make_unique<Bullet>(m_AMObject[index]->GetBulletData()));
 	}
 
 }
@@ -193,6 +199,16 @@ void AlchemicalMachineManager::MajicBulletUpdate(int index, std::list<EnemyObjec
 void AlchemicalMachineManager::Render()
 {
 	ShareData& pSD = ShareData::GetInstance();
+	DataManager& pDM = *DataManager::GetInstance();
+
+	/*===[ デバッグ文字描画 ]===*/
+	std::wostringstream crystalNum;
+	crystalNum << "Crystal - " << pDM.GetNowCrystal();
+	pSD.GetDebugFont()->AddString(crystalNum.str().c_str(), DirectX::SimpleMath::Vector2(200.f, 60.f));
+
+	std::wostringstream mpNum;
+	mpNum << "NowMP - " << pDM.GetNowMP();
+	pSD.GetDebugFont()->AddString(mpNum.str().c_str(), DirectX::SimpleMath::Vector2(200.f, 80.f));
 
 	for (int i = 0; i < AM_MAXNUM; i++)
 	{
@@ -215,9 +231,9 @@ void AlchemicalMachineManager::Render()
 	}
 
 	// バレットの描画処理
-	for (std::list<Bullet>::iterator it = m_bullets->begin(); it != m_bullets->end(); it++)
+	for (std::list<std::unique_ptr<Bullet>>::iterator it = m_bullets.begin(); it != m_bullets.end(); it++)
 	{
-		it->Render(m_testBox.get());
+		it->get()->Render(m_testBox.get());
 	}
 }
 
@@ -241,7 +257,7 @@ void AlchemicalMachineManager::DrawUI()
 		m_machineExplanation->Draw();
 		m_machineExplanation->DisplayObject(m_AMFilter->HandOverAMModel(m_AMObject[m_selectNumber]->GetModelID()),
 											m_AMFilter->GetRingModel(m_AMObject[m_selectNumber]->GetModelID()),
-											m_AMObject[m_selectNumber]->GetColor());
+											m_AMObject[m_selectNumber].get());
 
 		m_AMObject[m_selectNumber]->RenderUI(m_selectManager->GetTextuer());
 
@@ -249,6 +265,29 @@ void AlchemicalMachineManager::DrawUI()
 		std::wostringstream oss;
 		oss << "Type - " << m_AMObject[m_selectNumber]->GetObjectName().c_str();
 		pSD.GetDebugFont()->AddString(oss.str().c_str(), DirectX::SimpleMath::Vector2(120.f, 320.f));
+
+		/*===[ デバッグ文字描画 ]===*/
+		if (m_AMObject[m_selectNumber]->GetModelID() == AlchemicalMachineObject::ATTACKER)
+		{
+			std::wostringstream oss2;
+			oss2 << "Damage - " << dynamic_cast<AM_Attacker*>(m_AMObject[m_selectNumber].get())->GetBulletStatus().damage;
+			pSD.GetDebugFont()->AddString(oss2.str().c_str(), DirectX::SimpleMath::Vector2(150.f, 400.f));
+			std::wostringstream oss3;
+			oss3 << "Speed - " << dynamic_cast<AM_Attacker*>(m_AMObject[m_selectNumber].get())->GetBulletStatus().speed;
+			pSD.GetDebugFont()->AddString(oss3.str().c_str(), DirectX::SimpleMath::Vector2(150.f, 420.f));
+			std::wostringstream oss4;
+			oss4 << "Life - " << dynamic_cast<AM_Attacker*>(m_AMObject[m_selectNumber].get())->GetBulletStatus().life;
+			pSD.GetDebugFont()->AddString(oss4.str().c_str(), DirectX::SimpleMath::Vector2(150.f, 440.f));
+			std::wostringstream oss5;
+			oss5 << "Span - " << dynamic_cast<AM_Attacker*>(m_AMObject[m_selectNumber].get())->GetBulletStatus().span;
+			pSD.GetDebugFont()->AddString(oss5.str().c_str(), DirectX::SimpleMath::Vector2(150.f, 460.f));
+			std::wostringstream oss6;
+			oss6 << "LossMP - " << dynamic_cast<AM_Attacker*>(m_AMObject[m_selectNumber].get())->GetBulletStatus().lossMp;
+			pSD.GetDebugFont()->AddString(oss6.str().c_str(), DirectX::SimpleMath::Vector2(150.f, 480.f));
+			std::wostringstream oss7;
+			oss7 << "NextCrystal - " << dynamic_cast<AM_Attacker*>(m_AMObject[m_selectNumber].get())->GetNextLvCrystal();
+			pSD.GetDebugFont()->AddString(oss7.str().c_str(), DirectX::SimpleMath::Vector2(150.f, 500.f));
+		}
 
 		return;
 	}
@@ -265,13 +304,12 @@ void AlchemicalMachineManager::Finalize()
 		delete m_AMObject[i].get();
 	}
 
-	for (std::list<Bullet>::iterator it = m_bullets->begin(); it != m_bullets->end(); it++)
+	for (std::list<std::unique_ptr<Bullet>>::iterator it = m_bullets.begin(); it != m_bullets.end(); it++)
 	{
-		it->Finalize();
+		it->get()->Finalize();
 	}
 
-	m_bullets->clear();
-	m_bullets.reset();
+	m_bullets.clear();
 
 	m_selectManager->Finalize();
 	m_selectManager.reset();

@@ -78,9 +78,13 @@ void EnemyManager::Finalize()
 	for (std::list<EnemyObject>::iterator it = m_enemyObject->begin(); it != m_enemyObject->end(); it++)
 	{
 		it->Finalize();
+		//delete& it;
 	}
 	m_enemyObject->clear();
 	m_enemyObject.reset();
+
+	delete m_enemyObject.get();
+
 	m_testBox.reset();
 }
 

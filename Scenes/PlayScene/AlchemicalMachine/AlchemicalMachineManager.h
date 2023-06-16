@@ -16,6 +16,7 @@
 #include "Scenes/PlayScene/Enemy/EnemyObject.h"
 #include "AlchemicalMachineFilter.h"
 #include "Scenes/PlayScene/AlchemicalMachine/Bullet/Bullet.h"
+#include "Scenes/PlayScene/Field/FieldObjectManager.h"
 
 class AlchemicalMachineManager
 {
@@ -25,7 +26,7 @@ public:
 
 	void Initialize();
 
-	void Update(bool hitFiledToMouse,bool hitBaseToMouse,MousePointer* pMP, std::list<EnemyObject> enemys);
+	void Update(FieldObjectManager* fieldManager,bool hitBaseToMouse,MousePointer* pMP, std::list<EnemyObject> enemys);
 
 	// 弾丸の処理
 	void MajicBulletUpdate(int index, std::list<EnemyObject> enemys);
@@ -49,7 +50,7 @@ public:
 	AlchemicalMachineObject* GetAlchemicalMachineObject()				{ return m_AMObject->get(); }
 	AlchemicalMachineObject* GetAlchemicalMachineObject(int index)		{ return m_AMObject[index].get();}
 
-	std::list<Bullet>* GetBullet()										{ return m_bullets.get();}
+	std::list<std::unique_ptr<Bullet>>* GetBullet()										{ return &m_bullets;}
 
 private:
 
@@ -67,8 +68,9 @@ private:
 	// アルケミカルマシン確保
 	std::unique_ptr<AlchemicalMachineObject> m_AMObject[AM_MAXNUM];
 
+
 	// アルケミカルマシン(アタックタイプ)から射出される弾のリスト
-	std::unique_ptr<std::list<Bullet>>	m_bullets;
+	std::list<std::unique_ptr<Bullet>>	m_bullets;
 
 	// アルケミカルマシンモデルの受け渡し
 	std::unique_ptr<AlchemicalMachineFilter> m_AMFilter;

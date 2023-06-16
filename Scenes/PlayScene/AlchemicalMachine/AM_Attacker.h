@@ -12,6 +12,7 @@
 #include "NecromaLib/GameData/GameObject3D.h"
 #include "AlchemicalMachineObject.h"
 #include "Scenes/PlayScene/Mouse/MousePointer.h"
+#include "Scenes/PlayScene/AlchemicalMachine/Bullet/BulletDataBase.h"
 #include <list>
 
 
@@ -37,28 +38,44 @@ public:
 	// 終了処理
 	void Finalize()						override;
 
-	void AllAlchemicalMachine(AlchemicalMachineObject* object, int maxNum)			override;
+	void AllAlchemicalMachine(AlchemicalMachineObject* object)				override;
 
-	bool BulletRequest(std::list<EnemyObject>* enemys)		override;
+	bool BulletRequest(std::list<EnemyObject>* enemys)						override;
 
-	Bullet GetBulletData()				override;
+	void AllFieldObject(FieldObjectManager* fieldManager)					override;
+
+	Bullet GetBulletData()													override;
 
 	void RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture) override;
 
+	//  ===LvUp効果===
+	// 攻撃力　　
+    // 弾速　　　
+    // 飛距離　　
+    // 消費魔力　
+	// 発射間隔　
+	// 効果範囲　
+	void LvUp() override;
+
 //　アクセサ
 public:
+
+	BulletStatus GetBulletStatus() { return m_bulletStatus;}
+
+	int GetNextLvCrystal()			{ return (15 * m_lv) * (5 * m_lv); }
+
+private:
+
 
 
 private:
 
 	float	m_timer;
-	float	m_speed;		// 攻撃の速度
-	float	m_power;		// 攻撃の威力
-	float	m_bulletlife;	// 弾の命
+
+	BulletStatus m_bulletStatus;		// バレットデータ
+	BulletStatus m_saveBulletStatus;	// 加工元のバレットデータ
 
 	DirectX::SimpleMath::Vector3 m_targetPos;
-	
-	MACHINE_ELEMENT m_element;
 
 	//std::list<Bullet> m_bullets;
 

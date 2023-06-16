@@ -33,11 +33,10 @@ void AM_Defenser::Finalize()
 {
 }
 
-void AM_Defenser::AllAlchemicalMachine(AlchemicalMachineObject* object, int maxNum)
+void AM_Defenser::AllAlchemicalMachine(AlchemicalMachineObject* object)
 {
 	// åxçêè¡Çµ
 	object;
-	maxNum;
 
 }
 
@@ -49,6 +48,10 @@ bool AM_Defenser::BulletRequest(std::list<EnemyObject>* enemys)
 	return false;
 }
 
+void AM_Defenser::AllFieldObject(FieldObjectManager* fieldManager)
+{
+}
+
 Bullet AM_Defenser::GetBulletData()
 {
 	return Bullet(0.f,0.f,0.f, m_color,m_data.pos,DirectX::SimpleMath::Vector3());
@@ -56,4 +59,11 @@ Bullet AM_Defenser::GetBulletData()
 
 void AM_Defenser::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
 {
+}
+
+void AM_Defenser::LvUp()
+{
+
+	m_lv++;
+
 }

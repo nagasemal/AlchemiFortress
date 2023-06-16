@@ -103,6 +103,16 @@ void MachineSelect::DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceVie
 	// セカンドモデルが存在するのならば実行
 	if (secondModel != nullptr)
 	{
+
+		secondModel->UpdateEffects([&](IEffect* effect)
+			{
+				// 今回はライトだけ欲しい
+				auto lights = dynamic_cast<IEffectLights*>(effect);
+
+				// 色変更
+				lights->SetLightDiffuseColor(0, DirectX::SimpleMath::Color(0.0f, 0.0f, 0.0f, 1.0f));
+			});
+
 		secondModel->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, view, proj);
 	}
 

@@ -8,8 +8,16 @@ class Bullet : public GameObjct3D
 {
 public:
 
+	struct BulletData
+	{
+		float speed;
+		float damage;
+		float life;
+	};
+
 public:
 	Bullet(float speed, float damage, float life,DirectX::SimpleMath::Color color, DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 targetVector);
+	Bullet(BulletData data, DirectX::SimpleMath::Color color, DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 targetVector);
 	~Bullet();
 
 	// èâä˙âª
@@ -31,16 +39,14 @@ public:
 
 public:
 
-	void SetLife(float life)	{ m_life = life; }
+	void SetLife(float life)	{ m_bulletData.life = life; }
 
-	float GetDamage()			{ return m_damage;}
-	float GetLife()				{ return m_life; }
+	float GetDamage()			{ return m_bulletData.damage;}
+	float GetLife()				{ return m_bulletData.life; }
 
 private:
 
-	float m_speed;
-	float m_damage;
-	float m_life;
+	BulletData  m_bulletData;
 
 	DirectX::SimpleMath::Color m_color;
 	DirectX::SimpleMath::Vector3 m_startPos;

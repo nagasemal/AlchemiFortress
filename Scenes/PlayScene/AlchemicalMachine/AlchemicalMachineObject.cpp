@@ -17,8 +17,10 @@ AlchemicalMachineObject::AlchemicalMachineObject():
 	m_lv(1),
 	m_machineEffectNum(),
 	m_span(),
-	m_color(),
-	m_rotateAnimation()
+	m_color(1,1,1,1),
+	m_rotateAnimation(),
+	m_element(MACHINE_ELEMENT::NOMAL),
+	m_powerUPFlag()
 {
 }
 
@@ -78,6 +80,15 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 		(m_data.pos.x,
 		 m_data.pos.y + (sinf(m_rotateAnimation) * 0.5f),
 		 m_data.pos.z);
+
+		// エフェクトの設定
+		ring->UpdateEffects([&](IEffect* effect)
+		{
+			// 今回はライトだけ欲しい
+			auto lights = dynamic_cast<IEffectLights*>(effect);
+			// 色変更
+			lights->SetLightDiffuseColor(0,DirectX::SimpleMath::Color((float)m_powerUPFlag,(float)m_powerUPFlag,0.0f,1.0f));
+		});
 
 		ring->Draw(pSD.GetContext(), *pSD.GetCommonStates(), ringData, pSD.GetView(), pSD.GetProjection());
 

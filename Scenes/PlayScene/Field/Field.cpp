@@ -3,7 +3,6 @@
 
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/InputSupport.h"
-
 #define RAGE 20.f
 
 Field::Field():
@@ -17,13 +16,6 @@ Field::~Field()
 
 void Field::Initialize()
 {
-	ShareData& pSD = ShareData::GetInstance();
-
-	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
-	fx->SetDirectory(L"Resources/Models");
-
-	m_Model = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
-
 	m_data.pos		= DirectX::SimpleMath::Vector3(0,-3,0);
 	m_data.rage		= DirectX::SimpleMath::Vector3(RAGE,3,RAGE);
 }
@@ -53,17 +45,20 @@ void Field::Draw()
 	if (m_hitMouseFlag) oss << "Hit";
 	pSD.GetDebugFont()->AddString(oss.str().c_str(), DirectX::SimpleMath::Vector2(0.f, 80.f));
 
+}
+
+void Field::Render(DirectX::Model* model)
+{
+
+	ShareData& pSD = ShareData::GetInstance();
+
 	// ƒ‚ƒfƒ‹î•ñ(ˆÊ’u,‘å‚«‚³)
 	DirectX::SimpleMath::Matrix modelData = DirectX::SimpleMath::Matrix::Identity;
 	modelData = DirectX::SimpleMath::Matrix::CreateScale(m_data.rage);
-
 	modelData *= DirectX::SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y, m_data.pos.z);
-
-	m_Model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection());
-
+	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection());
 }
 
 void Field::Finalize()
 {
-	m_Model.reset();
 }

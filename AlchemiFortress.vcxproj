@@ -198,6 +198,7 @@
     <ClInclude Include="NecromaLib\Singleton\ShareData.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resources\Icon\Icon.h" />
+    <ClInclude Include="Scenes\DataManager.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineFilter.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineManager.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineObject.h" />
@@ -207,14 +208,17 @@
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_None.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Upper.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\Bullet\Bullet.h" />
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\Bullet\BulletDataBase.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Recovery.h" />
     <ClInclude Include="Scenes\PlayScene\Camera\MoveCamera.h" />
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyManager.h" />
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyObject.h" />
+    <ClInclude Include="Scenes\PlayScene\Field\Crystal\Crystal.h" />
     <ClInclude Include="Scenes\PlayScene\Field\Field.h" />
+    <ClInclude Include="Scenes\PlayScene\Field\FieldObjectManager.h" />
+    <ClInclude Include="Scenes\PlayScene\Field\FieldObjectType.h" />
     <ClInclude Include="Scenes\PlayScene\Mouse\MousePointer.h" />
-    <ClInclude Include="Scenes\PlayScene\ObjectDataHolder.h" />
     <ClInclude Include="Scenes\PlayScene\PlayScene.h" />
     <ClInclude Include="Scenes\PlayScene\UI\MachineExplanation.h" />
     <ClInclude Include="Scenes\PlayScene\UI\MachineSelect.h" />
@@ -250,6 +254,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Scenes\DataManager.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineFilter.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineManager.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineObject.cpp" />
@@ -260,13 +265,16 @@
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_Recovery.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_Upeer.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\Bullet\Bullet.cpp" />
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\Bullet\BulletDataBase.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.cpp" />
     <ClCompile Include="Scenes\PlayScene\Camera\MoveCamera.cpp" />
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyManager.cpp" />
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyObject.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Field\Crystal\Crystal.cpp" />
     <ClCompile Include="Scenes\PlayScene\Field\Field.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Field\FieldObjectManager.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Field\FieldObjectType.cpp" />
     <ClCompile Include="Scenes\PlayScene\Mouse\MousePointer.cpp" />
-    <ClCompile Include="Scenes\PlayScene\ObjectDataHolder.cpp" />
     <ClCompile Include="Scenes\PlayScene\PlayScene.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\MachineExplanation.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\MachineSelect.cpp" />

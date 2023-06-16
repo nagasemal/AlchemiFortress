@@ -5,9 +5,22 @@
 
 Bullet::Bullet(float speed, float damage, float life,DirectX::SimpleMath::Color color, DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 targetVector)
 {
-	m_speed = speed;
-	m_damage = damage;
-	m_life = life;
+	m_bulletData.speed = speed;
+	m_bulletData.damage = damage;
+	m_bulletData.life = life;
+
+	m_color = color;
+
+	m_data.pos = pos;
+	m_startPos = pos;
+	m_data.rage = DirectX::SimpleMath::Vector3(1, 1, 1);
+
+	m_targetVectol = targetVector;
+}
+
+Bullet::Bullet(BulletData data, DirectX::SimpleMath::Color color, DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 targetVector)
+{
+	m_bulletData = data;
 
 	m_color = color;
 
@@ -31,13 +44,17 @@ void Bullet::Update()
 {
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
 
-	m_life -= deltaTime;
+	m_bulletData.life -= deltaTime;
 
 	DirectX::SimpleMath::Vector3 vec = m_targetVectol - m_startPos;
 
 	vec.y = m_data.pos.y;
 
-	m_data.pos += vec * (m_speed * deltaTime);
+	DirectX::SimpleMath::Vector3 nomalizeVec = vec * (m_bulletData.speed * deltaTime);
+
+	//nomalizeVec.Normalize();
+
+	m_data.pos += nomalizeVec;
 
 }
 
@@ -62,5 +79,5 @@ void Bullet::Render(GeometricPrimitive* geo)
 
 bool Bullet::deleteRequest()
 {
-	return m_life <= 0;
+	return m_bulletData.life <= 0;
 }

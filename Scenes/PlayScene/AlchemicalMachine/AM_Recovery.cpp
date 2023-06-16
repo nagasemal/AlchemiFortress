@@ -33,11 +33,10 @@ void AM_Recovery::Finalize()
 {
 }
 
-void AM_Recovery::AllAlchemicalMachine(AlchemicalMachineObject* object, int maxNum)
+void AM_Recovery::AllAlchemicalMachine(AlchemicalMachineObject* object)
 {
 	// åxçêè¡Çµ
 	object;
-	maxNum;
 }
 
 bool AM_Recovery::BulletRequest(std::list<EnemyObject>* enemys)
@@ -48,11 +47,19 @@ bool AM_Recovery::BulletRequest(std::list<EnemyObject>* enemys)
 	return false;
 }
 
+void AM_Recovery::AllFieldObject(FieldObjectManager* fieldManager)
+{
+}
+
 Bullet AM_Recovery::GetBulletData()
 {
 	return Bullet(0.f, 0.f, 0.f, m_color, m_data.pos, DirectX::SimpleMath::Vector3());
 }
 
 void AM_Recovery::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
+{
+}
+
+void AM_Recovery::LvUp()
 {
 }

@@ -22,6 +22,9 @@ SceneManager::SceneManager():
 	Fade::Create();
 	m_Fade = Fade::GetInstance();
 
+	DataManager::Create();
+	m_DataManager = DataManager::GetInstance();
+
 }
 
 //-------------------------------------------------------------------
@@ -30,6 +33,8 @@ SceneManager::SceneManager():
 SceneManager::~SceneManager()
 {
 	Fade::Destroy();
+
+	DataManager::Destroy();
 }
 
 //-------------------------------------------------------------------

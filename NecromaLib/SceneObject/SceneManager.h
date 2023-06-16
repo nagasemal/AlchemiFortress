@@ -9,6 +9,7 @@
 
 #include "Fade.h"
 #include "SceneObj.h"
+#include "Scenes/DataManager.h"
 
 class SceneManager
 {
@@ -37,6 +38,11 @@ private:
     SceneObj* m_Scene;
 
     Fade* m_Fade;
+
+    // 共有する変数の管理
+    DataManager* m_DataManager;
+
+    
 
     // スプライトバッチ
     std::unique_ptr<DirectX::SpriteBatch> m_SpriteBatch;

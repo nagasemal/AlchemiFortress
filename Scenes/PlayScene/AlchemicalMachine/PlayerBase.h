@@ -13,6 +13,7 @@
 
 class PlayerBase : public GameObjct3D
 {
+
 public:
 	PlayerBase();
 	~PlayerBase();

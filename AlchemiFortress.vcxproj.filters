@@ -68,6 +68,9 @@
     <Filter Include="Scene\PlayScene\AlchemicalMachine\Bullet">
       <UniqueIdentifier>{81ac7f36-b157-4e6a-885f-9b04974d19af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{714a1525-2c33-4c3c-a13f-d212778a58f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -181,9 +184,6 @@
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Recovery.h">
       <Filter>Scene\PlayScene\AlchemicalMachine\AM_list</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\PlayScene\ObjectDataHolder.h">
-      <Filter>Scene\PlayScene</Filter>
-    </ClInclude>
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineFilter.h">
       <Filter>Scene\PlayScene\AlchemicalMachine\Object</Filter>
     </ClInclude>
@@ -198,6 +198,21 @@
     </ClInclude>
     <ClInclude Include="Scenes\PlayScene\UI\SelectionBox.h">
       <Filter>Scene\PlayScene\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Field\Crystal\Crystal.h">
+      <Filter>Scene\PlayScene\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Field\FieldObjectType.h">
+      <Filter>Scene\PlayScene\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Field\FieldObjectManager.h">
+      <Filter>Scene\PlayScene\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\DataManager.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\Bullet\BulletDataBase.h">
+      <Filter>Scene\PlayScene\AlchemicalMachine\Bullet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -324,8 +339,20 @@
     <ClCompile Include="Scenes\PlayScene\UI\SelectionBox.cpp">
       <Filter>Scene\PlayScene\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\PlayScene\ObjectDataHolder.cpp">
-      <Filter>Scene\PlayScene</Filter>
+    <ClCompile Include="Scenes\PlayScene\Field\Crystal\Crystal.cpp">
+      <Filter>Scene\PlayScene\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Field\FieldObjectType.cpp">
+      <Filter>Scene\PlayScene\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Field\FieldObjectManager.cpp">
+      <Filter>Scene\PlayScene\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\DataManager.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\Bullet\BulletDataBase.cpp">
+      <Filter>Scene\PlayScene\AlchemicalMachine\Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
