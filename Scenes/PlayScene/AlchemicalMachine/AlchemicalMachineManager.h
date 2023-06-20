@@ -28,9 +28,6 @@ public:
 
 	void Update(FieldObjectManager* fieldManager,bool hitBaseToMouse,MousePointer* pMP, std::list<EnemyObject> enemys);
 
-	// 弾丸の処理
-	void MajicBulletUpdate(int index, std::list<EnemyObject> enemys);
-
 	void Render();
 
 	void DrawUI();
@@ -53,6 +50,13 @@ public:
 	std::list<std::unique_ptr<Bullet>>* GetBullet()										{ return &m_bullets;}
 
 private:
+
+	// 専用の更新処理を回す
+	void Update_Attacker(int index, std::list<EnemyObject> enemys);
+
+	void Update_Mining(int index, FieldObjectManager* fieldManager);
+
+	void Update_Recovery();
 
 	// 回す
 	void MovingMachine(int number);
@@ -79,6 +83,12 @@ private:
 
 	// 現在選択されているオブジェクトの番号
 	int m_selectNumber;
+
+	// Mpが追加されるまでの時間
+	float m_mpPulsTimer;
+
+	// 現在保有しているアルケミカルマシンの個数
+	int m_AMnums[AlchemicalMachineObject::MACHINE_TYPE::NUM];
 
 	//===後で消すテスト用変数
 	std::unique_ptr<DirectX::GeometricPrimitive> m_testBox;	//  仮置き弾モデル

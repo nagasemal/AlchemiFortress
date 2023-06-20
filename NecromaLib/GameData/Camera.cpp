@@ -56,7 +56,7 @@ void Camera::CalculateProjectionMatrix()
 	constexpr float fieldOfView = XMConvertToRadians(45.0f);    // ‰æŠp
 	float aspectRatio = width / height;							// ‰æ–Êc‰¡”ä
 	float nearPlane = 1.0f;                                     // ƒJƒƒ‰‚©‚çˆê”Ô‹ß‚¢“Š‰e–Ê
-	float farPlane = 100.0f;                                    // ƒJƒƒ‰‚©‚çˆê”Ô‰“‚¢“Š‰e–Ê
+	float farPlane = 300.0f;                                    // ƒJƒƒ‰‚©‚çˆê”Ô‰“‚¢“Š‰e–Ê
 
 	mProjection = SimpleMath::Matrix::CreatePerspectiveFieldOfView(fieldOfView, aspectRatio, nearPlane, farPlane);
 

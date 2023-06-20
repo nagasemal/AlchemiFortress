@@ -35,7 +35,9 @@ void SelectionBox::Finalize()
 	delete this;
 }
 
-void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
+void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture,
+						  Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsTexture,
+						  RECT rect)
 {
 	ShareData& pSD = ShareData::GetInstance();
 	auto pSB = pSD.GetSpriteBatch();
@@ -55,6 +57,12 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textu
 
 	// 選択BOX
 	pSB->Draw(texture.Get(), box_Pos, &srcRect, colour, 0.0f, DirectX::XMFLOAT2(64 / 2, 64 / 2), 1.0f);
+
+	// 中に表示するテクスチャがある場合
+	if (pulsTexture)
+	{
+		pSB->Draw(pulsTexture.Get(), box_Pos, &rect, colour, 0.0f, DirectX::XMFLOAT2(64 / 2, 64 / 2), 0.8f);
+	}
 
 	pSB->End();
 }

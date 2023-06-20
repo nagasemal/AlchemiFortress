@@ -34,10 +34,12 @@ void MachineSelectManager::Initialize()
 	for (int i = 0; i < AlchemicalMachineObject::MACHINE_TYPE::NUM; i++)
 	{
 		m_machineSelect[i] = std::make_unique<MachineSelect>();
-		m_machineSelect[i]->Initialize();
 
 		m_machineSelect[i]->SetMachineType((AlchemicalMachineObject::MACHINE_TYPE)i);
 		m_machineSelect[i]->SetPosition({ POS.x + DIRECTION * i , POS.y });
+
+		m_machineSelect[i]->Initialize();
+
 	}
 
 	m_selectBoxAll = false;

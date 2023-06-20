@@ -93,28 +93,6 @@ void AM_Upper::Finalize()
 	}
 }
 
-void AM_Upper::AllAlchemicalMachine(AlchemicalMachineObject* object)
-{	
-}
-
-bool AM_Upper::BulletRequest(std::list<EnemyObject>* enemys)
-{
-
-	// åxçêè¡Çµ
-	enemys;
-
-	return false;
-}
-
-void AM_Upper::AllFieldObject(FieldObjectManager* fieldManager)
-{
-}
-
-Bullet AM_Upper::GetBulletData()
-{
-	return Bullet(0.f, 0.f, 0.f, m_color, m_data.pos, DirectX::SimpleMath::Vector3());
-}
-
 void AM_Upper::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
 {
 

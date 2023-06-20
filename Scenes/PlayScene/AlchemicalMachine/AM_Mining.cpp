@@ -45,20 +45,6 @@ void AM_Mining::Finalize()
 {
 }
 
-void AM_Mining::AllAlchemicalMachine(AlchemicalMachineObject* object)
-{
-	// åxçêè¡Çµ
-	object;
-}
-
-bool AM_Mining::BulletRequest(std::list<EnemyObject>* enemys)
-{
-	// åxçêè¡Çµ
-	enemys;
-
-	return false;
-}
-
 void AM_Mining::AllFieldObject(FieldObjectManager* fieldManager)
 {
 	DataManager* pDM = DataManager::GetInstance();
@@ -78,11 +64,6 @@ void AM_Mining::AllFieldObject(FieldObjectManager* fieldManager)
 			}
 		}
 	}
-}
-
-Bullet AM_Mining::GetBulletData()
-{
-	return Bullet(0.f, 0.f, 0.f, m_color, m_data.pos, DirectX::SimpleMath::Vector3());
 }
 
 void AM_Mining::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)

@@ -196,6 +196,7 @@
     <ClInclude Include="NecromaLib\Singleton\DeltaTime.h" />
     <ClInclude Include="NecromaLib\Singleton\InputSupport.h" />
     <ClInclude Include="NecromaLib\Singleton\ShareData.h" />
+    <ClInclude Include="NecromaLib\Singleton\SpriteLoder.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resources\Icon\Icon.h" />
     <ClInclude Include="Scenes\DataManager.h" />
@@ -248,6 +249,7 @@
     <ClCompile Include="NecromaLib\Singleton\DeltaTime.cpp" />
     <ClCompile Include="NecromaLib\Singleton\InputSupport.cpp" />
     <ClCompile Include="NecromaLib\Singleton\ShareData.cpp" />
+    <ClCompile Include="NecromaLib\Singleton\SpriteLoder.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

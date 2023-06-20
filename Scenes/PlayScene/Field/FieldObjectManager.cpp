@@ -32,6 +32,7 @@ void FieldObjectManager::Initialize()
 
 			// åıÇÃìñÇΩÇËï˚ïœçX
 			lights->SetAmbientLightColor(DirectX::SimpleMath::Color(0.4f, 0.4f, 1.f, 0.2f));
+
 		});
 
 	// ê∂ê¨

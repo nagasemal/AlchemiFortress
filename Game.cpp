@@ -7,6 +7,7 @@
 #include "NecromaLib/Singleton/DeltaTime.h"
 #include "NecromaLib/Singleton/InputSupport.h"
 #include "NecromaLib/Singleton/ShareData.h"
+#include "NecromaLib/Singleton/SpriteLoder.h"
 
 #include <WICTextureLoader.h>
 
@@ -29,6 +30,7 @@ Game::Game() noexcept(false)
     DeltaTime::Create();
     InputSupport::Create();
     ShareData::Create();
+    SpriteLoder::Create();
 }
 Game::~Game()
 {
@@ -36,6 +38,11 @@ Game::~Game()
     DeltaTime::Destroy();
     InputSupport::Destroy();
     ShareData::Destroy();
+
+    SpriteLoder& pSL = SpriteLoder::GetInstance();
+    pSL.Finalize();
+
+    SpriteLoder::Destroy();
 
     m_SceneManager.get()->Finalize();
     m_SceneManager.reset();
@@ -53,6 +60,9 @@ void Game::Initialize(HWND window, int width, int height)
 
     m_deviceResources->CreateWindowSizeDependentResources();
     CreateWindowSizeDependentResources();
+
+    SpriteLoder& pSL = SpriteLoder::GetInstance();
+    pSL.Loading();
 
     // TODO: Change the timer settings if you want something other than the default variable timestep mode.
     // e.g. for 60 FPS fixed timestep update logic, call:

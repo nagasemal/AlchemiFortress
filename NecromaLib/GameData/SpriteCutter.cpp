@@ -21,10 +21,10 @@ RECT SpriteCutter(int wight, int height, int key[], int beside, int vertical, in
 RECT SpriteCutter(int wight, int height, int beside, int vertical)
 {
 	RECT rect;
-	rect.top = 0 + (height * vertical);
+	rect.top	= 0 + (height * vertical);
 	rect.bottom = height + (height * vertical);
-	rect.left = 0 + (wight * beside);
-	rect.right = wight + (wight * beside);
+	rect.left	= 0 + (wight * beside);
+	rect.right	= wight + (wight * beside);
 
 	return rect;
 }

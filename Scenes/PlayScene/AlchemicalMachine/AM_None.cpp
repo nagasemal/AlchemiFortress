@@ -33,29 +33,6 @@ void AM_None::Finalize()
 {
 }
 
-void AM_None::AllAlchemicalMachine(AlchemicalMachineObject* object)
-{
-	// åxçêè¡Çµ
-	object;
-}
-
-bool AM_None::BulletRequest(std::list<EnemyObject>* enemys)
-{
-	// åxçêè¡Çµ
-	enemys;
-
-	return false;
-}
-
-void AM_None::AllFieldObject(FieldObjectManager* fieldManager)
-{
-}
-
-Bullet AM_None::GetBulletData()
-{
-	return Bullet(0.f, 0.f, 0.f, m_color, m_data.pos, DirectX::SimpleMath::Vector3());
-}
-
 void AM_None::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
 {
 }

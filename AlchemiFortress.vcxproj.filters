@@ -214,6 +214,9 @@
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\Bullet\BulletDataBase.h">
       <Filter>Scene\PlayScene\AlchemicalMachine\Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="NecromaLib\Singleton\SpriteLoder.h">
+      <Filter>NecromaLib\Singleton</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -353,6 +356,9 @@
     </ClCompile>
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\Bullet\BulletDataBase.cpp">
       <Filter>Scene\PlayScene\AlchemicalMachine\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\Singleton\SpriteLoder.cpp">
+      <Filter>NecromaLib\Singleton</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

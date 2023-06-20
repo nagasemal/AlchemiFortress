@@ -56,17 +56,17 @@ public:
 	AlchemicalMachineObject();
 	~AlchemicalMachineObject();
 
-	// 全てのマシンの情報をポインタとして受け取る(マシン同士で作用するものがあるため)
-	virtual void AllAlchemicalMachine(AlchemicalMachineObject* object) = 0;
+	//// 全てのマシンの情報をポインタとして受け取る(マシン同士で作用するものがあるため)
+	//virtual void AllAlchemicalMachine(AlchemicalMachineObject* object) = 0;
 
-	// 全てのエネミーの情報を受け取る バレット射出のRequestを送る
-	virtual bool BulletRequest(std::list<EnemyObject>* enemys) = 0;
+	//// 全てのエネミーの情報を受け取る バレット射出のRequestを送る
+	//virtual bool BulletRequest(std::list<EnemyObject>* enemys) = 0;
 
-	// フィールド上のオブジェクトの情報を受け取る(結晶、敵の巣穴等)
-	virtual void AllFieldObject(FieldObjectManager* fieldManager) = 0;
+	//// フィールド上のオブジェクトの情報を受け取る(結晶、敵の巣穴等)
+	//virtual void AllFieldObject(FieldObjectManager* fieldManager) = 0;
 
-	// アルケミカルマシンの弾情報を得る
-	virtual Bullet GetBulletData() = 0;
+	//// アルケミカルマシンの弾情報を得る
+	//virtual Bullet GetBulletData() = 0;
 
 	// 選択時の特別なアップデート処理
 	virtual void SelectUpdate() = 0;

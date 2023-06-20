@@ -1,12 +1,17 @@
 #include "pch.h"
+#include "NecromaLib/GameData/SpriteCutter.h"
 #include "MachineSelect.h"
 #include "NecromaLib/GameData/ScreenToWorld.h"
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/InputSupport.h"
+#include "NecromaLib/Singleton/SpriteLoder.h"
 
 
 #define IMAGE_WIGHT		 64
 #define IMAGE_HEIGHT	 64
+
+#define BOX_DISTANS_X 68
+#define BOX_DISTANS_Y 80
 
 MachineSelect::MachineSelect():
 	m_hitMouseFlag(),
@@ -21,6 +26,14 @@ MachineSelect::~MachineSelect()
 void MachineSelect::Initialize()
 {
 	m_data.rage = { 64,64 };
+
+	for (int i = 0; i < 3; i++)
+	{
+		m_selectionBox[i] = std::make_unique<SelectionBox>(DirectX::SimpleMath::Vector2((m_data.pos.x - BOX_DISTANS_X) + (i * BOX_DISTANS_X),m_data.pos.y + BOX_DISTANS_Y),
+														   DirectX::SimpleMath::Vector2(1, 1));
+
+		m_selectionBox[i]->Initialize();
+	}
 }
 
 void MachineSelect::Update()
@@ -28,13 +41,16 @@ void MachineSelect::Update()
 	InputSupport&	pIS = InputSupport::GetInstance();
 
 	bool leftFlag = pIS.GetMouseState().leftButton == Mouse::ButtonStateTracker::PRESSED;
+	bool onMouseFlag = HitObject(pIS.GetMousePosScreen());
 
+	// 何処かをクリックしたら解除 フィールド上である場合はその限りではない
 	if (leftFlag)
 	{
 		m_hitMouseFlag = false;
 	}
 
-	if (HitObject(pIS.GetMousePosScreen()) && leftFlag)
+	// 対象をクリックしたらTrueにする
+	if (onMouseFlag && leftFlag)
 	{
 		m_hitMouseFlag = true;
 	}
@@ -47,6 +63,10 @@ void MachineSelect::Draw()
 
 void MachineSelect::Finalize()
 {
+	//for (int i = 0; i < 3; i++)
+	//{
+	//	m_selectionBox[i]->Finalize();
+	//}
 }
 
 void MachineSelect::DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture, DirectX::Model* model, DirectX::SimpleMath::Matrix view, DirectX::SimpleMath::Matrix proj, DirectX::Model* secondModel)
@@ -54,6 +74,9 @@ void MachineSelect::DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceVie
 	ShareData& pSD = ShareData::GetInstance();
 	auto pSB = pSD.GetSpriteBatch();
 	auto pDR = pSD.GetDeviceResources();
+
+	SpriteLoder& pSL = SpriteLoder::GetInstance();
+
 
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
@@ -71,6 +94,20 @@ void MachineSelect::DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceVie
 	pSB->Draw(texture.Get(), box_Pos, &srcRect, colour, 0.0f, DirectX::XMFLOAT2(IMAGE_WIGHT / 2, IMAGE_HEIGHT / 2), 1.5f);
 
 	pSB->End();
+
+	// 必要素材を表示する
+	if (m_hitMouseFlag)
+	{
+
+		RECT rect[3] = {SpriteCutter(64, 64, 0, 0), // 必要魔力量
+						SpriteCutter(64, 64, 1, 0), // 必要結晶数
+						SpriteCutter(64, 64, m_selectMachineType, 1)}; // 必要魔法
+
+		for (int i = 0; i < 3; i++)
+		{
+			m_selectionBox[i]->DrawUI(texture.Get(),pSL.GetElementTexture(),rect[i]);
+		}
+	}
 
 
 	// モデル情報(位置,大きさ)
@@ -90,7 +127,7 @@ void MachineSelect::DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceVie
 
 	modelData *= DirectX::SimpleMath::Matrix::CreateTranslation(worldPos);
 
-	model->UpdateEffects([&](IEffect* effect)
+	model->UpdateEffects([](IEffect* effect)
 		{
 			// ライト
 			auto lights = dynamic_cast<IEffectLights*>(effect);
@@ -115,6 +152,5 @@ void MachineSelect::DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceVie
 
 		secondModel->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, view, proj);
 	}
-
 }
 

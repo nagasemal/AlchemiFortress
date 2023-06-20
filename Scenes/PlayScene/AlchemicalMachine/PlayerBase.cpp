@@ -22,7 +22,7 @@ void PlayerBase::Initialize()
 
 	ShareData& pSD = ShareData::GetInstance();
 
-	m_baseLv = 0;
+	m_baseLv = 1;
 	m_exp = 0;
 
 	m_data.pos  = DirectX::SimpleMath::Vector3::Zero;

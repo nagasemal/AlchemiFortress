@@ -1,6 +1,7 @@
 #pragma once
 #include "NecromaLib/GameData/GameObject2D.h"
 #include "Scenes/PlayScene/AlchemicalMachine/AlchemicalMachineObject.h"
+#include "SelectionBox.h"
 
 class MachineSelect : public GameObjct2D
 {
@@ -37,5 +38,7 @@ private:
 	bool m_hitMouseFlag;
 
 	AlchemicalMachineObject::MACHINE_TYPE m_selectMachineType;
+
+	std::unique_ptr<SelectionBox> m_selectionBox[3];
 
 };

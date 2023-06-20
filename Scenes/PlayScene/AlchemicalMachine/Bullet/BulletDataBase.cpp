@@ -7,19 +7,19 @@
 BulletStatus dataBase[AlchemicalMachineObject::MACHINE_ELEMENT::SUM]
 {
 	// 無属性	攻撃△　生存時間〇　スピード〇　発射間隔△　消費魔力◎
-	{10.0f,5.0f,3.0f,1.2f,8.0f},
+	{20.0f,5.0f,3.0f,1.0f,8.0f},
 
 	// 火属性	攻撃〇　生存時間△　スピード〇　発射間隔〇　消費魔力△
-	{15.0f,3.5f,3.0f,1.0f,20.0f },
+	{25.0f,3.5f,3.0f,0.8f,20.0f },
 
 	// 水属性	攻撃△　生存時間◎　スピード△　発射間隔△　消費魔力◎
-	{10.0f,8.0f,2.5f,1.2f,8.0f},
+	{20.0f,8.0f,2.5f,1.0f,8.0f},
 
 	// 風属性	攻撃×　生存時間〇　スピード〇　発射間隔◎　消費魔力〇
-	{5.0f,5.0f,6.5f,0.6f,10.0f },
+	{10.0f,5.0f,6.5f,0.4f,10.0f },
 
 	// 土属性	攻撃◎　生存時間〇　スピード△　発射間隔×　消費魔力〇
-	{20.0f,4.0f,2.5f,1.8f,10.0f},
+	{30.0f,4.0f,2.5f,1.2f,10.0f},
 };
 
 BulletStatus GetBaseBulletStatus(AlchemicalMachineObject::MACHINE_ELEMENT element)

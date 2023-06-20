@@ -41,7 +41,11 @@ GAME_SCENE PlayScene::Update()
 	m_mousePointer  ->Update();
 
 	m_enemyManager	->Update(m_playerBase->GetPos());
-	m_AM_Manager	->Update(m_fieldManager.get(), m_playerBase->GetHitMouse(), m_mousePointer.get(), *m_enemyManager.get()->GetEnemyData());
+
+	m_AM_Manager	->Update(m_fieldManager.get(),
+							 m_playerBase->GetHitMouse(),
+							 m_mousePointer.get(),
+							*m_enemyManager.get()->GetEnemyData());
 
 	// エネミーToバレット(二重for)
 	// ダングリング対策

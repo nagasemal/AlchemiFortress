@@ -16,7 +16,7 @@ EnemyObject::EnemyObject(EnemyType type, DirectX::SimpleMath::Vector3 startPos, 
 {
 
 	m_data.pos = startPos;
-	m_data.rage = DirectX::SimpleMath::Vector3(1, 1, 1);
+	m_data.rage = DirectX::SimpleMath::Vector3(0.25, 1, 0.25);
 
 }
 

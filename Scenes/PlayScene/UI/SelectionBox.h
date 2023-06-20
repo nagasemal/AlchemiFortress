@@ -8,6 +8,7 @@
 //--------------------------------------------------------------------------------------
 #pragma once
 #include "NecromaLib/GameData/GameObject2D.h"
+#include "Scenes/PlayScene/AlchemicalMachine/AlchemicalMachineObject.h"
 
 class SelectionBox : public GameObjct2D
 {
@@ -27,7 +28,9 @@ public:
 	// 終了処理
 	void Finalize()				override;
 
-	void DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture);
+	void DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture,
+				Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsTexture = nullptr,
+				RECT rect = {0,0,64,64});
 
 	// マウスが触れた処理
 	bool HitMouse();

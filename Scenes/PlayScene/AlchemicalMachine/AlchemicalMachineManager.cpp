@@ -2,12 +2,18 @@
 #include "AlchemicalMachineManager.h"
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/InputSupport.h"
+#include "NecromaLib/Singleton/DeltaTime.h"
 
-#define SPEED 0.005f
+#define SPEED 0.0025f
+
+#define MPPLUSTIME 1.0f
+#define MPPLUSNUM  1.0f
 
 AlchemicalMachineManager::AlchemicalMachineManager():
 	m_allHitObjectToMouse(),
-	m_selectNumber(-1)
+	m_selectNumber(-1),
+	m_mpPulsTimer(),
+	m_AMnums()
 {
 }
 
@@ -56,9 +62,7 @@ void AlchemicalMachineManager::Initialize()
 
 	ShareData& pSD = ShareData::GetInstance();
 
-	m_testBox = GeometricPrimitive::CreateSphere(pSD.GetContext());
-
-	//m_bullets = std::make_unique<std::list<Bullet>>();
+	m_testBox = GeometricPrimitive::CreateSphere(pSD.GetContext(),0.75f);
 
 }
 
@@ -66,9 +70,14 @@ void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, bool hit
 {
 
 	InputSupport& pINP = InputSupport::GetInstance();
+	DataManager& pDM = *DataManager::GetInstance();
+
 	auto mouse = pINP.GetMouseState();
 	bool leftRelease	= mouse.leftButton == mouse.RELEASED;
 	bool leftDrag		= mouse.leftButton == mouse.HELD;
+
+	// Mp追加までの時間計測
+	m_mpPulsTimer += DeltaTime::GetInstance().GetDeltaTime();
 
 	// 現在出ているアルケミカルマシンの数
 	int amNum = 0;
@@ -96,6 +105,9 @@ void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, bool hit
 		m_AMObject[i]->HitToObject(pMP);
 		MovingMachine(i);
 
+		Update_Attacker(i, enemys);
+		Update_Mining(i, fieldManager);
+
 		// オブジェクトにマウスが入っているかどうか
 		if (m_AMObject[i]->GetHitMouse())
 		{
@@ -108,17 +120,14 @@ void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, bool hit
 				m_machineExplanation->ResetMoveTime();
 			}
 		}
+	}
 
-		// 他のアルケミカルマシンの情報を渡す
-		for (int j = 0; j < AM_MAXNUM; j++)
-		{
-			m_AMObject[i]->AllAlchemicalMachine(m_AMObject[j].get());
-		}
-
-		// フィールド上のオブジェクトを渡す
-		m_AMObject[i]->AllFieldObject(fieldManager);
-
-		MajicBulletUpdate(i, enemys);
+	// MP追加処理
+	if (m_mpPulsTimer >= MPPLUSTIME)
+	{
+		m_mpPulsTimer = 0;
+		pDM.SetNowMP(pDM.GetNowMP() + (MPPLUSNUM * amNum));
+		Update_Recovery();
 	}
 
 	// ドラッグ中は配置箇所を決める
@@ -128,7 +137,7 @@ void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, bool hit
 	}
 
 	// フィールド上　選択ボックスに触れていない　説明ボックスに触れていない　左クリックを離した瞬間　対象オブジェクトが他のオブジェクトに入っていない 
-	//　ならばオブジェクトを出す
+	//　ならばオブジェクトを出す　　より良い方法を模索していきたい
 	if (!hitBaseToMouse &&
 		!m_allHitObjectToMouse &&
 		!m_selectManager->GetHitMouseToSelectBoxEven() &&
@@ -136,16 +145,28 @@ void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, bool hit
 		leftRelease &&
 		!m_machineExplanation->OnMouse())
 	{
+
+		// 召喚できるオブジェクトの数が足りない場合は召喚しない
+		if (m_AMnums[m_selectManager->GetSelectMachineType()] <= 0)
+		{
+			pMP->ReleaseLeftButtom();
+			return;
+		}
+
 		// 本取得
 		m_AMObject[amNum].reset(m_AMFilter->HandOverAMClass(m_selectManager->GetSelectMachineType()));
+		
 		// 初期化
 		m_AMObject[amNum]->Initialize();
+		
 		// 召喚
 		m_AMObject[amNum]->SummonAM(pINP.GetMousePosWolrd());
-
+		
 		// 召喚したオブジェクトを選択状態としてみなす
 		m_selectNumber = amNum;
-
+		
+		// 召喚したオブジェクトの保有数を一つ減らす
+		m_AMnums[m_selectManager->GetSelectMachineType()]--;
 	}
 
 
@@ -184,16 +205,6 @@ void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, bool hit
 			if (it == m_bullets.end()) break;
 		}
 	}
-}
-
-void AlchemicalMachineManager::MajicBulletUpdate(int index, std::list<EnemyObject> enemys)
-{
-
-	if (m_AMObject[index]->BulletRequest(&enemys))
-	{
-		m_bullets.push_back(std::make_unique<Bullet>(m_AMObject[index]->GetBulletData()));
-	}
-
 }
 
 void AlchemicalMachineManager::Render()
@@ -319,6 +330,51 @@ void AlchemicalMachineManager::Finalize()
 
 	m_AMFilter.reset();
 	m_testBox.reset();
+
+}
+
+void AlchemicalMachineManager::Update_Attacker(int index, std::list<EnemyObject> enemys)
+{
+	if (m_AMObject[index]->GetModelID() != AlchemicalMachineObject::ATTACKER) return;
+
+	AM_Attacker* attacker = dynamic_cast<AM_Attacker*>(m_AMObject[index].get());
+
+	// 他のアルケミカルマシンの情報を渡す
+	for (int j = 0; j < AM_MAXNUM; j++)
+	{
+		attacker->AllAlchemicalMachine(m_AMObject[j].get());
+	}
+
+	// 弾を発射する
+	if (attacker->BulletRequest(&enemys))
+	{
+		m_bullets.push_back(std::make_unique<Bullet>(attacker->GetBulletData()));
+	}
+}
+
+void AlchemicalMachineManager::Update_Mining(int index, FieldObjectManager* fieldManager)
+{
+	if (m_AMObject[index]->GetModelID() != AlchemicalMachineObject::MINING) return;
+
+	AM_Mining* mining = dynamic_cast<AM_Mining*>(m_AMObject[index].get());
+
+	mining->AllFieldObject(fieldManager);
+
+}
+
+void AlchemicalMachineManager::Update_Recovery()
+{
+	DataManager& pDM = *DataManager::GetInstance();
+
+	for (int i = 0; i < AM_MAXNUM; i++)
+	{
+
+		if (m_AMObject[i]->GetModelID() != AlchemicalMachineObject::RECOVERY) return;
+
+		AM_Recovery* recovery = dynamic_cast<AM_Recovery*>(m_AMObject[i].get());
+
+		recovery->MPPuls(&pDM);
+	}
 
 }
 

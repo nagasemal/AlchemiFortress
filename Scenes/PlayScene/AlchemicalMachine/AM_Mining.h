@@ -34,13 +34,7 @@ public:
 	// èIóπèàóù
 	void Finalize()						override;
 
-	void AllAlchemicalMachine(AlchemicalMachineObject* object)				override;
-
-	bool BulletRequest(std::list<EnemyObject>* enemys)						override;
-
-	void AllFieldObject(FieldObjectManager* fieldManager)					override;
-
-	Bullet GetBulletData() override;
+	void AllFieldObject(FieldObjectManager* fieldManager);
 
 	void RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture) override;
 

@@ -109,8 +109,8 @@ void EnemyManager::HitAMObejct(AlchemicalMachineObject* alchemicalMachines)
 	{
 		if (CircleCollider(it->GetCircle(), alchemicalMachines->GetCircle()))
 		{
-
-
+			// ”½”­
+			it->GotoTarget(-alchemicalMachines->GetPos());
 
 		}
 	}

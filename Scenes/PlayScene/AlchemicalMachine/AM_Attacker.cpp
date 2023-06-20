@@ -173,13 +173,9 @@ bool AM_Attacker::BulletRequest(std::list<EnemyObject>* enemys)
 
 }
 
-void AM_Attacker::AllFieldObject(FieldObjectManager* fieldManager)
-{
-}
-
 Bullet AM_Attacker::GetBulletData()
 {
-	Bullet::BulletData data;
+	Bullet::BulletData data = {};
 	data.damage	 = m_bulletStatus.damage;
 	data.life	 = m_bulletStatus.life;
 	data.speed	 = m_bulletStatus.speed;

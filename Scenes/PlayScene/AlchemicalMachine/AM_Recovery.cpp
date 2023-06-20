@@ -19,6 +19,7 @@ void AM_Recovery::Initialize()
 void AM_Recovery::Update()
 {
 	m_magicCircle.p = m_data.pos;
+
 }
 
 void AM_Recovery::SelectUpdate()
@@ -33,33 +34,20 @@ void AM_Recovery::Finalize()
 {
 }
 
-void AM_Recovery::AllAlchemicalMachine(AlchemicalMachineObject* object)
-{
-	// åxçêè¡Çµ
-	object;
-}
-
-bool AM_Recovery::BulletRequest(std::list<EnemyObject>* enemys)
-{
-
-	// åxçêè¡Çµ
-	enemys;
-	return false;
-}
-
-void AM_Recovery::AllFieldObject(FieldObjectManager* fieldManager)
-{
-}
-
-Bullet AM_Recovery::GetBulletData()
-{
-	return Bullet(0.f, 0.f, 0.f, m_color, m_data.pos, DirectX::SimpleMath::Vector3());
-}
-
 void AM_Recovery::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
 {
 }
 
 void AM_Recovery::LvUp()
 {
+
+	m_lv++;
+
+}
+
+void AM_Recovery::MPPuls(DataManager* pDM)
+{
+
+	pDM->SetNowMP(pDM->GetNowMP() + m_lv);
+
 }

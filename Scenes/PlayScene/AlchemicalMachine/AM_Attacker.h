@@ -38,14 +38,6 @@ public:
 	// 終了処理
 	void Finalize()						override;
 
-	void AllAlchemicalMachine(AlchemicalMachineObject* object)				override;
-
-	bool BulletRequest(std::list<EnemyObject>* enemys)						override;
-
-	void AllFieldObject(FieldObjectManager* fieldManager)					override;
-
-	Bullet GetBulletData()													override;
-
 	void RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture) override;
 
 	//  ===LvUp効果===
@@ -56,6 +48,15 @@ public:
 	// 発射間隔　
 	// 効果範囲　
 	void LvUp() override;
+
+	// 全てのアルケミカルマシンの情報を受け取る
+	void AllAlchemicalMachine(AlchemicalMachineObject* object);
+
+	// 射出のリクエストを出す
+	bool BulletRequest(std::list<EnemyObject>* enemys);
+
+	// 
+	Bullet GetBulletData();
 
 //　アクセサ
 public:
