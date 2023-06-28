@@ -16,7 +16,7 @@
 class AM_Upper : public AlchemicalMachineObject
 {
 public:
-	AM_Upper(MACHINE_ELEMENT element);
+	AM_Upper();
 	~AM_Upper();
 
 	// ‰Šú‰»

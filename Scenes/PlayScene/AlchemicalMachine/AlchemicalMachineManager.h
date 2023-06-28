@@ -18,6 +18,8 @@
 #include "Scenes/PlayScene/AlchemicalMachine/Bullet/Bullet.h"
 #include "Scenes/PlayScene/Field/FieldObjectManager.h"
 
+class AlchemicalMachineObject;
+
 class AlchemicalMachineManager
 {
 public:
@@ -26,7 +28,7 @@ public:
 
 	void Initialize();
 
-	void Update(FieldObjectManager* fieldManager,bool hitBaseToMouse,MousePointer* pMP, std::list<EnemyObject> enemys);
+	void Update(FieldObjectManager* fieldManager,MousePointer* pMP, std::list<EnemyObject> enemys);
 
 	void Render();
 
@@ -44,8 +46,8 @@ public:
 
 	bool GetHitMouseFlag(int number)									{ return m_AMObject[number]->GetHitMouse();}
 
-	AlchemicalMachineObject* GetAlchemicalMachineObject()				{ return m_AMObject->get(); }
-	AlchemicalMachineObject* GetAlchemicalMachineObject(int index)		{ return m_AMObject[index].get();}
+	std::vector<std::shared_ptr<AlchemicalMachineObject>> GetAlchemicalMachineObject()		{ return m_AMObject; }
+	std::shared_ptr<AlchemicalMachineObject>* GetAlchemicalMachineObject(int index)			{ return &m_AMObject[index];}
 
 	std::list<std::unique_ptr<Bullet>>* GetBullet()						{ return &m_bullets;}
 
@@ -60,6 +62,8 @@ private:
 
 	// 回す
 	void MovingMachine(int number);
+
+	void CreateAMMachine(int lv);
 
 private:
 
@@ -85,8 +89,7 @@ private:
 	std::unique_ptr<MachineExplanation> m_machineExplanation;
 
 	// アルケミカルマシン確保
-	std::unique_ptr<AlchemicalMachineObject> m_AMObject[AM_MAXNUM];
-
+	std::vector<std::shared_ptr<AlchemicalMachineObject>> m_AMObject;
 
 	// アルケミカルマシン(アタックタイプ)から射出される弾のリスト
 	std::list<std::unique_ptr<Bullet>>	m_bullets;

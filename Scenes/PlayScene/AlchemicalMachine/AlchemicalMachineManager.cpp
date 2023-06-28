@@ -9,6 +9,16 @@
 #define MPPLUSTIME 1.0f
 #define MPPLUSNUM  1.0f
 
+// 円周の一番小さい場合におけるマシンの最大数
+#define CIRCLE_MAX_MIN  4
+// 円周の一番小さい場合における直径
+#define CIRCLE_RAGE_MIN 4
+
+// 円周の一番大きい場合におけるマシンの最大数
+#define CIRCLE_MAX_MAX 50
+// 円周の一番大きい場合における直径
+#define CIRCLE_RAGE_MAX 20
+
 AlchemicalMachineManager::AlchemicalMachineManager():
 	m_allHitObjectToMouse(),
 	m_selectNumber(-1),
@@ -44,12 +54,13 @@ AlchemicalMachineManager::~AlchemicalMachineManager()
 
 void AlchemicalMachineManager::Initialize()
 {
-	for (int i = 0; i < AM_MAXNUM; i++)
-	{
-		// 仮取得
-		m_AMObject[i] = std::make_unique<AM_None>();
-		m_AMObject[i]->Initialize();
-	}
+	//for (int i = 0; i < AM_MAXNUM; i++)
+	//{		
+	//	// 仮取得
+	//	m_AMObject.push_back(std::shared_ptr<AM_Mining>()/*m_AMFilter->HandOverAMClass(AlchemicalMachineObject::NONE)*/);
+	//	m_AMObject[i]->Initialize();
+	//}
+
 
 	m_machineExplanation = std::make_unique<MachineExplanation>();
 	m_machineExplanation->Initialize();
@@ -64,25 +75,11 @@ void AlchemicalMachineManager::Initialize()
 
 	m_testBox = GeometricPrimitive::CreateSphere(pSD.GetContext(),0.75f);
 
-	for (int i = 0; i < 5; i++)
-	{
-		for (int j = 0; j < 2 + i; j++)
-		{
-			// 本取得
-			m_AMObject[j].reset(m_AMFilter->HandOverAMClass(AlchemicalMachineObject::NONE));
-
-			// 初期化
-			m_AMObject[j]->Initialize();
-
-			// 召喚
-			m_AMObject[j]->SummonAM(SetVelocityCircle(j, (5), (6 + (i * 2))));
-		}
-
-	}
+	CreateAMMachine(1);
 
 }
 
-void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, bool hitBaseToMouse, MousePointer* pMP, std::list<EnemyObject> enemys)
+void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, MousePointer* pMP, std::list<EnemyObject> enemys)
 {
 
 	InputSupport& pINP = InputSupport::GetInstance();
@@ -111,10 +108,10 @@ void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, bool hit
 	}
 
 	//　現在存在するマシンを動かすための処理
-	for (int i = 0; i < AM_MAXNUM; i++)
+	for (int i = 0; i < m_AMObject.size(); i++)
 	{
 		//　存在していれば処理を続ける 存在しなくなった = 以降存在しないので回す必要もない
-		if (!m_AMObject[i]->GetActiv()) break;
+		if (!m_AMObject[i]->GetActive()) break;
 
 		amNum++;
 		m_AMObject[i]->Update();
@@ -142,7 +139,7 @@ void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, bool hit
 	if (m_mpPulsTimer >= MPPLUSTIME)
 	{
 		m_mpPulsTimer = 0;
-		pDM.SetNowMP(pDM.GetNowMP() + (MPPLUSNUM * amNum));
+		pDM.SetNowMP(pDM.GetNowMP() + ((int)MPPLUSNUM * amNum));
 		Update_Recovery();
 	}
 
@@ -152,15 +149,21 @@ void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, bool hit
 		pMP->ObjectDragMode();
 	}
 
-	// フィールド上　選択ボックスに触れていない　説明ボックスに触れていない　左クリックを離した瞬間　対象オブジェクトが他のオブジェクトに入っていない 
-	//　ならばオブジェクトを出す　　より良い方法を模索していきたい
-	if (!hitBaseToMouse &&
-		!m_allHitObjectToMouse &&
+	// フィールド上
+	// 選択ボックスUIに触れていない
+	// 左クリックを離した瞬間
+	// 対象オブジェクトに触れている
+	// 説明UIに触れていない
+	// MachineType::Noneを選択している場合
+	//　に左ボタンを離すとオブジェクトを入れ替える
+	if (m_allHitObjectToMouse &&
 		!m_selectManager->GetHitMouseToSelectBoxEven() &&
 		fieldManager->GetFieldObject()->GetHitMouse() &&
-		leftRelease &&
-		!m_machineExplanation->OnMouse())
+		!m_machineExplanation->OnMouse()&&
+		leftRelease)
 	{
+
+		if (m_AMObject[m_selectNumber]->GetModelID() != AlchemicalMachineObject::NONE)return;
 
 		// 召喚できるオブジェクトの数が足りない場合は召喚しない
 		if (m_AMnums[m_selectManager->GetSelectMachineType()] <= 0)
@@ -169,22 +172,21 @@ void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, bool hit
 			return;
 		}
 
+		// 位置情報を取得
+		DirectX::SimpleMath::Vector3 savePos = m_AMObject[m_selectNumber]->GetData().pos;
+
 		// 本取得
-		m_AMObject[amNum].reset(m_AMFilter->HandOverAMClass(m_selectManager->GetSelectMachineType()));
+		m_AMObject[m_selectNumber] = m_AMFilter->HandOverAMClass(m_selectManager->GetSelectMachineType());
 		
 		// 初期化
-		m_AMObject[amNum]->Initialize();
+		m_AMObject[m_selectNumber]->Initialize();
 		
 		// 召喚
-		m_AMObject[amNum]->SummonAM(pINP.GetMousePosWolrd());
-		
-		// 召喚したオブジェクトを選択状態としてみなす
-		m_selectNumber = amNum;
+		m_AMObject[m_selectNumber]->SummonAM(savePos);
 		
 		// 召喚したオブジェクトの保有数を一つ減らす
 		m_AMnums[m_selectManager->GetSelectMachineType()]--;
 	}
-
 
 	// 選択状態のオブジェクトがある
 	if (m_selectNumber != -1)
@@ -237,10 +239,10 @@ void AlchemicalMachineManager::Render()
 	mpNum << "NowMP - " << pDM.GetNowMP();
 	pSD.GetDebugFont()->AddString(mpNum.str().c_str(), DirectX::SimpleMath::Vector2(200.f, 80.f));
 
-	for (int i = 0; i < AM_MAXNUM; i++)
+	for (int i = 0; i < m_AMObject.size(); i++)
 	{
 		// 存在しているかチェック
-		if (m_AMObject[i]->GetActiv())
+		if (m_AMObject[i]->GetActive())
 		{
 			// モデルの描画			オブジェクトに割り当てられたIDをもとにモデル配列からデータを取り出す
 			m_AMObject[i]->ModelRender(m_AMFilter->HandOverAMModel(m_AMObject[i]->GetModelID()),
@@ -280,6 +282,9 @@ void AlchemicalMachineManager::DrawUI()
 	// UIの表示 m_selectNumberが-1 = 選択されていない
 	if (m_selectNumber != -1)
 	{
+		// 選択したモデルのIDがNoneなら表示しない
+		if (m_AMObject[m_selectNumber]->GetModelID() == AlchemicalMachineObject::NONE) return;
+
 		/*===[ 確認用モデルの表示 ]===*/
 		m_machineExplanation->Draw();
 		m_machineExplanation->DisplayObject(m_AMFilter->HandOverAMModel(m_AMObject[m_selectNumber]->GetModelID()),
@@ -296,23 +301,25 @@ void AlchemicalMachineManager::DrawUI()
 		/*===[ デバッグ文字描画 ]===*/
 		if (m_AMObject[m_selectNumber]->GetModelID() == AlchemicalMachineObject::ATTACKER)
 		{
+			AM_Attacker* attacker = dynamic_cast<AM_Attacker*>(m_AMObject[m_selectNumber].get());
+
 			std::wostringstream oss2;
-			oss2 << "Damage - " << dynamic_cast<AM_Attacker*>(m_AMObject[m_selectNumber].get())->GetBulletStatus().damage;
+			oss2 << "Damage - " << attacker->GetBulletStatus().damage;
 			pSD.GetDebugFont()->AddString(oss2.str().c_str(), DirectX::SimpleMath::Vector2(150.f, 400.f));
 			std::wostringstream oss3;
-			oss3 << "Speed - " << dynamic_cast<AM_Attacker*>(m_AMObject[m_selectNumber].get())->GetBulletStatus().speed;
+			oss3 << "Speed - " <<  attacker->GetBulletStatus().speed;
 			pSD.GetDebugFont()->AddString(oss3.str().c_str(), DirectX::SimpleMath::Vector2(150.f, 420.f));
 			std::wostringstream oss4;
-			oss4 << "Life - " << dynamic_cast<AM_Attacker*>(m_AMObject[m_selectNumber].get())->GetBulletStatus().life;
+			oss4 << "Life - " << attacker->GetBulletStatus().life;
 			pSD.GetDebugFont()->AddString(oss4.str().c_str(), DirectX::SimpleMath::Vector2(150.f, 440.f));
 			std::wostringstream oss5;
-			oss5 << "Span - " << dynamic_cast<AM_Attacker*>(m_AMObject[m_selectNumber].get())->GetBulletStatus().span;
+			oss5 << "Span - " << attacker->GetBulletStatus().span;
 			pSD.GetDebugFont()->AddString(oss5.str().c_str(), DirectX::SimpleMath::Vector2(150.f, 460.f));
 			std::wostringstream oss6;
-			oss6 << "LossMP - " << dynamic_cast<AM_Attacker*>(m_AMObject[m_selectNumber].get())->GetBulletStatus().lossMp;
+			oss6 << "LossMP - " << attacker->GetBulletStatus().lossMp;
 			pSD.GetDebugFont()->AddString(oss6.str().c_str(), DirectX::SimpleMath::Vector2(150.f, 480.f));
 			std::wostringstream oss7;
-			oss7 << "NextCrystal - " << dynamic_cast<AM_Attacker*>(m_AMObject[m_selectNumber].get())->GetNextLvCrystal();
+			oss7 << "NextCrystal - " << attacker->GetNextLvCrystal();
 			pSD.GetDebugFont()->AddString(oss7.str().c_str(), DirectX::SimpleMath::Vector2(150.f, 500.f));
 		}
 
@@ -322,14 +329,14 @@ void AlchemicalMachineManager::DrawUI()
 
 void AlchemicalMachineManager::Finalize()
 {
-	for (int i = 0; i < AM_MAXNUM; i++)
+	for (int i = 0; i < m_AMObject.size(); i++)
 	{
 		m_AMObject[i]->Finalize();
-
 		m_AMObject[i].reset();
-
-		delete m_AMObject[i].get();
 	}
+
+	m_AMObject.clear();
+	m_AMObject.shrink_to_fit();
 
 	for (std::list<std::unique_ptr<Bullet>>::iterator it = m_bullets.begin(); it != m_bullets.end(); it++)
 	{
@@ -356,7 +363,7 @@ void AlchemicalMachineManager::Update_Attacker(int index, std::list<EnemyObject>
 	AM_Attacker* attacker = dynamic_cast<AM_Attacker*>(m_AMObject[index].get());
 
 	// 他のアルケミカルマシンの情報を渡す
-	for (int j = 0; j < AM_MAXNUM; j++)
+	for (int j = 0; j < m_AMObject.size(); j++)
 	{
 		attacker->AllAlchemicalMachine(m_AMObject[j].get());
 	}
@@ -382,7 +389,7 @@ void AlchemicalMachineManager::Update_Recovery()
 {
 	DataManager& pDM = *DataManager::GetInstance();
 
-	for (int i = 0; i < AM_MAXNUM; i++)
+	for (int i = 0; i < m_AMObject.size(); i++)
 	{
 
 		if (m_AMObject[i]->GetModelID() != AlchemicalMachineObject::RECOVERY) return;
@@ -403,6 +410,22 @@ void AlchemicalMachineManager::MovingMachine(int number)
 
 	// 回転後の座標を代入
 	m_AMObject[number]->SetPos(DirectX::SimpleMath::Vector3::Transform(m_AMObject[number]->GetPos(), matrix));
+
+}
+
+// Lvに応じて置ける場所が増える為、設定をする
+void AlchemicalMachineManager::CreateAMMachine(int lv)
+{
+	int counter = 0;
+
+	for (int j = 0; j < 5 * lv; j++)
+	{
+		m_AMObject.push_back(m_AMFilter->HandOverAMClass(AlchemicalMachineObject::NONE));
+		m_AMObject[counter]->Initialize();
+		m_AMObject[counter]->SummonAM(SetVelocityCircle(j, 5 * lv, lv * 3.5f));
+
+		counter++;
+	}
 
 }
 

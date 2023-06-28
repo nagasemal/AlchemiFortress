@@ -6,7 +6,6 @@
 #include "Camera/MoveCamera.h"
 
 // ゲームのオブジェクト
-#include "AlchemicalMachine/PlayerBase.h"
 #include "Field/FieldObjectManager.h"
 #include "Mouse/MousePointer.h"
 #include "AlchemicalMachine/AlchemicalMachineManager.h"
@@ -37,8 +36,6 @@ public:
 	void Finalize() override;
 
 private:
-
-	std::unique_ptr<PlayerBase>					m_playerBase;
 
 	std::unique_ptr<FieldObjectManager>			m_fieldManager;
 

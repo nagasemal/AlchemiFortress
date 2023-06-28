@@ -37,9 +37,11 @@ void FieldObjectManager::Initialize()
 
 	// 生成
 	m_field = std::make_unique<Field>();
+	m_playerBase = std::make_unique<PlayerBase>();
 	m_crystals = std::make_unique<std::list<Crystal>>();
 
 	m_field->Initialize();
+	m_playerBase->Initialize();
 
 	CrystalSpawn(5);
 
@@ -58,6 +60,9 @@ void FieldObjectManager::Update()
 	// 床の更新処理
 	m_field->Update();
 
+	// プレイヤー拠点の更新処理
+	m_playerBase->Update();
+
 	// クリスタルの更新処理
 	for (std::list<Crystal>::iterator it = m_crystals->begin(); it != m_crystals->end(); it++)
 	{
@@ -69,6 +74,9 @@ void FieldObjectManager::Draw()
 {
 	// 床の描画処理
 	m_field->Render(m_floorModel.get());
+
+	// プレイヤー拠点の描画処理
+	m_playerBase->Draw();
 
 	// クリスタルの描画処理
 	for (std::list<Crystal>::iterator it = m_crystals->begin(); it != m_crystals->end(); it++)
@@ -82,8 +90,11 @@ void FieldObjectManager::Finalize()
 {
 	// 床の削除処理
 	m_field->Finalize();
-
 	m_field.reset();
+
+	// プレイヤー拠点の更新処理
+	m_playerBase->Finalize();
+	m_playerBase.reset();
 
 	// クリスタルの描画処理
 	for (std::list<Crystal>::iterator it = m_crystals->begin(); it != m_crystals->end(); it++)

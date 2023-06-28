@@ -10,6 +10,9 @@
 #pragma once
 #include "Scenes/PlayScene/Field/Field.h"
 #include "Scenes/PlayScene/Field/Crystal/Crystal.h"
+
+// ToDo場所変え必須
+#include "Scenes/PlayScene/AlchemicalMachine/PlayerBase.h"
 #include <list>
 
 class FieldObjectManager
@@ -28,8 +31,9 @@ public:
 	// 結晶の生成
 	void CrystalSpawn(int num);
 
-	Field* GetFieldObject()													{ return m_field.get();}
-	std::list<Crystal>* GetCrystalObject()									{ return m_crystals.get();}
+	Field* GetFieldObject()						{ return m_field.get();}
+	PlayerBase* GetPlayerBase()					{ return m_playerBase.get(); }
+	std::list<Crystal>* GetCrystalObject()		{ return m_crystals.get();}
 
 private:
 
@@ -38,8 +42,11 @@ private:
 	// 結晶モデル
 	std::unique_ptr<DirectX::Model> m_crystalModel;
 
-	//フィールドオブジェクト
+	// フィールドオブジェクト
 	std::unique_ptr<Field> m_field;
+
+	// プレイヤーの拠点
+	std::unique_ptr<PlayerBase> m_playerBase;
 
 	// 結晶配列
 	std::unique_ptr<std::list<Crystal>> m_crystals;

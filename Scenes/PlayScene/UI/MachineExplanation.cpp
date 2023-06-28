@@ -89,8 +89,8 @@ void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* se
 	modelData *= SimpleMath::Matrix::CreateRotationZ(m_moveTime);
 
 	// ƒ[ƒ‹ƒhÀ•W•ÏŠ·
-	DirectX::SimpleMath::Vector3 worldPos = CalcScreenToXZN(m_data.pos.x - 74.f,
-															m_data.pos.y - 64.f,
+	DirectX::SimpleMath::Vector3 worldPos = CalcScreenToXZN((int)m_data.pos.x - 74,
+															(int)m_data.pos.y - 64,
 															pDR->GetOutputSize().right,
 															pDR->GetOutputSize().bottom,
 															m_camera->GetViewMatrix(),

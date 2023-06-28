@@ -10,8 +10,10 @@
 
 #pragma once
 #include "NecromaLib/GameData/GameObject3D.h"
+#include "Scenes/PlayScene/Field/FieldObjectType.h"
 
-class PlayerBase : public GameObjct3D
+
+class PlayerBase : public FieldObject
 {
 
 public:
@@ -26,6 +28,8 @@ public:
 
 	// •`‰æ
 	void Draw()			override;
+
+	void Render(DirectX::Model* model) override;
 
 	// I—¹ˆ—
 	void Finalize()		override;

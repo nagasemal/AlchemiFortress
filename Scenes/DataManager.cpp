@@ -6,7 +6,7 @@ DataManager* DataManager::instance = nullptr;
 DataManager::DataManager() :
 	m_nowMP(1000),
 	m_nowCrystal(1000),
-	m_nowEnemyKill()
+	m_nowEnemyKill(0)
 {
 
 }

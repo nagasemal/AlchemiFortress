@@ -2,6 +2,7 @@
 #include "EnemyManager.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
 #include "Scenes/PlayScene/AlchemicalMachine/AlchemicalMachineManager.h"
+#include "Scenes/DataManager.h"
 #include <algorithm>
 #include <random>
 
@@ -28,6 +29,8 @@ void EnemyManager::Update(DirectX::SimpleMath::Vector3 basePos)
 {
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
 
+	DataManager& pDM = *DataManager::GetInstance();
+
 	m_timer += deltaTime;
 	m_totalTimer += deltaTime;
 
@@ -49,6 +52,7 @@ void EnemyManager::Update(DirectX::SimpleMath::Vector3 basePos)
 		// ŽqƒNƒ‰ƒX‚©‚çfalse‚ÅÁ‚·
 		if ((it)->GotoTarget(basePos))
 		{
+			pDM.SetNowEnemyKill(pDM.GetNowEnemyKill() + 1);
 			it = m_enemyObject->erase(it);
 			if (it == m_enemyObject->end()) break;
 		}

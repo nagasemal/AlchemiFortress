@@ -40,7 +40,7 @@ private:
 /*===[　アクセサ　]===*/
 public:
 
-	bool					GetHitMouse()		const	{ return m_hitMouseFlag; }
+	bool		GetHitMouse()		const	{ return m_hitMouseFlag; }
 
 private:
 

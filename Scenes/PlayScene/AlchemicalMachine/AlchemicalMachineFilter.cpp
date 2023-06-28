@@ -10,7 +10,7 @@ AlchemicalMachineFilter::AlchemicalMachineFilter():
 	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
 	fx->SetDirectory(L"Resources/Models");
 
-	m_model[AlchemicalMachineObject::MACHINE_TYPE::NONE] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Siroma.cmo", *fx);
+	m_model[AlchemicalMachineObject::MACHINE_TYPE::NONE] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_None.cmo", *fx);
 
 	m_model[AlchemicalMachineObject::MACHINE_TYPE::ATTACKER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Attacker.cmo", *fx);
 
@@ -46,24 +46,24 @@ Model* AlchemicalMachineFilter::HandOverAMModel(AlchemicalMachineObject::MACHINE
 	return m_model[type].get();
 }
 
-AlchemicalMachineObject* AlchemicalMachineFilter::HandOverAMClass(AlchemicalMachineObject::MACHINE_TYPE type)
+std::unique_ptr<AlchemicalMachineObject> AlchemicalMachineFilter::HandOverAMClass(AlchemicalMachineObject::MACHINE_TYPE type)
 {
 	switch (type)
 	{
 	case AlchemicalMachineObject::NONE:
-		return new AM_None;
+		return std::make_unique<AM_None>();
 	case AlchemicalMachineObject::ATTACKER:
-		return new AM_Attacker(AlchemicalMachineObject::NOMAL);
+		return std::make_unique<AM_Attacker>();
 	case AlchemicalMachineObject::DEFENSER:
-		return new AM_Defenser;
+		return std::make_unique<AM_Defenser>();
 	case AlchemicalMachineObject::MINING:
-		return new AM_Mining;
+		return std::make_unique<AM_Mining>();
 	case AlchemicalMachineObject::RECOVERY:
-		return new AM_Recovery;
+		return std::make_unique<AM_Recovery>();
 	case AlchemicalMachineObject::UPEER:
-		return new AM_Upper(AlchemicalMachineObject::NOMAL);
+		return std::make_unique<AM_Upper>();
 	default:
-		return new AM_None;
+		return std::make_unique<AM_None>();
 		break;
 	}
 

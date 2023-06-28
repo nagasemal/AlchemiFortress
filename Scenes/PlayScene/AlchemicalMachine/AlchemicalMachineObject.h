@@ -54,16 +54,7 @@ public:
 	};
 
 	AlchemicalMachineObject();
-	~AlchemicalMachineObject();
-
-	//// 全てのマシンの情報をポインタとして受け取る(マシン同士で作用するものがあるため)
-	//virtual void AllAlchemicalMachine(AlchemicalMachineObject* object) = 0;
-	//// 全てのエネミーの情報を受け取る バレット射出のRequestを送る
-	//virtual bool BulletRequest(std::list<EnemyObject>* enemys) = 0;
-	//// フィールド上のオブジェクトの情報を受け取る(結晶、敵の巣穴等)
-	//virtual void AllFieldObject(FieldObjectManager* fieldManager) = 0;
-	//// アルケミカルマシンの弾情報を得る
-	//virtual Bullet GetBulletData() = 0;
+	virtual ~AlchemicalMachineObject() {};
 
 	// 選択時の特別なアップデート処理
 	virtual void SelectUpdate() = 0;
@@ -83,23 +74,24 @@ public:
 	// モデル描画系
 	void ModelRender(DirectX::Model* model,DirectX::Model* ring = nullptr);
 
+	// 召喚
 	void SummonAM(DirectX::SimpleMath::Vector3 pos);
 
 
 // アクセサ
 public:
 
-	bool GetActiv()									{ return m_activ; }
-	bool GetHitMouse()								{ return m_hitMouseFlag;}
-	std::string GetObjectName()						{ return m_objectName; }
-	MACHINE_TYPE GetModelID()						{ return m_machineID;}
-	float GetMachineEffectNum()						{ return m_machineEffectNum; }
-	float GetSpan()									{ return m_span;}
-	int	  GetLv()									{ return m_lv; }
-	Circle GetMagicCircle()							{ return m_magicCircle; }
-	DirectX::SimpleMath::Color GetColor()			{ return m_color; }
-	bool GetPowerUpFlag()							{ return m_powerUPFlag; }
-	MACHINE_ELEMENT GetElement()					{ return m_element; }
+	const bool GetActive()									const { return m_active; }
+	const bool GetHitMouse()								const { return m_hitMouseFlag;}
+	const std::string GetObjectName()						const { return m_objectName; }
+	const MACHINE_TYPE GetModelID()							const { return m_machineID;}
+	const float GetMachineEffectNum()						const { return m_machineEffectNum; }
+	const float GetSpan()									const { return m_span;}
+	const int	  GetLv()									const { return m_lv; }
+	const Circle GetMagicCircle()							const { return m_magicCircle; }
+	const DirectX::SimpleMath::Color GetColor()				const { return m_color; }
+	const bool GetPowerUpFlag()								const { return m_powerUPFlag; }
+	const MACHINE_ELEMENT GetElement()						const { return m_element; }
 
 	void SetPos(DirectX::SimpleMath::Vector3 pos)	{ m_data.pos = pos; }
 	void SetMagicCircle(Circle circle)				{ m_magicCircle = circle;}
@@ -124,7 +116,7 @@ protected:
 	float m_span;
 
 	// 存在しているか否か
-	bool m_activ;
+	bool m_active;
 
 	// 何かしらの影響で強化を受けているか
 	bool m_powerUPFlag;

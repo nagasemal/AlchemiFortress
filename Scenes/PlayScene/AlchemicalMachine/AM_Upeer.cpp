@@ -1,9 +1,8 @@
 #include "pch.h"
 #include "AM_Upper.h"
 
-AM_Upper::AM_Upper(MACHINE_ELEMENT element)
+AM_Upper::AM_Upper()
 {
-	m_element = element;
 }
 
 AM_Upper::~AM_Upper()
@@ -87,10 +86,10 @@ void AM_Upper::Draw()
 
 void AM_Upper::Finalize()
 {
-	for (int i = 0; i < 4; i++)
-	{
-		m_selectBox[i]->Finalize();
-	}
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	m_selectBox[i]->Finalize();
+	//}
 }
 
 void AM_Upper::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)

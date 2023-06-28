@@ -10,7 +10,7 @@
 
 AlchemicalMachineObject::AlchemicalMachineObject():
 	m_hp(),
-	m_activ(),
+	m_active(),
 	m_hitMouseFlag(),
 	m_objectName(),
 	m_magicCircle(),
@@ -22,10 +22,6 @@ AlchemicalMachineObject::AlchemicalMachineObject():
 	m_rotateAnimation(),
 	m_element(MACHINE_ELEMENT::NOMAL),
 	m_powerUPFlag()
-{
-}
-
-AlchemicalMachineObject::~AlchemicalMachineObject()
 {
 }
 
@@ -67,7 +63,9 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 		modelData *= DirectX::SimpleMath::Matrix::CreateFromQuaternion(LookAt({0,0,0}));
 	}
 
+	// 常に右回りに回転
 	modelData *= DirectX::SimpleMath::Matrix::CreateRotationY(m_rotateAnimation);
+	// 常に縦に揺れる
 	modelData *= DirectX::SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y + (sinf(m_rotateAnimation) * 0.5f), m_data.pos.z);
 
 	// エフェクトの設定
@@ -82,6 +80,7 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection());
 
+	// 追加パーツが存在する場合
 	if (ring != nullptr)
 	{
 		DirectX::SimpleMath::Matrix ringData = DirectX::SimpleMath::Matrix::Identity;
@@ -112,6 +111,6 @@ void AlchemicalMachineObject::SummonAM(DirectX::SimpleMath::Vector3 pos)
 {
 	m_data.rage = AM_RAGE;
 	m_data.pos = pos;
-	m_activ = true;
+	m_active = true;
 
 }

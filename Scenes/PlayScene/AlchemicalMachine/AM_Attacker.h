@@ -20,7 +20,7 @@ class AM_Attacker : public AlchemicalMachineObject
 {
 public:
 
-	AM_Attacker(MACHINE_ELEMENT element);
+	AM_Attacker();
 	~AM_Attacker();
 
 	// ‰Šú‰»

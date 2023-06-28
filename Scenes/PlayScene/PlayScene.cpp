@@ -11,8 +11,6 @@ PlayScene::~PlayScene()
 
 void PlayScene::Initialize()
 {
-	m_playerBase	= std::make_unique<PlayerBase>();
-	m_playerBase	->Initialize();
 
 	m_fieldManager = std::make_unique<FieldObjectManager>();
 	m_fieldManager ->Initialize();
@@ -36,14 +34,12 @@ GAME_SCENE PlayScene::Update()
 	ShareData& pSD = ShareData::GetInstance();
 
 	m_moveCamera	->Update();
-	m_playerBase	->Update();
 	m_fieldManager  ->Update();
 	m_mousePointer  ->Update();
 
-	m_enemyManager	->Update(m_playerBase->GetPos());
+	m_enemyManager	->Update(m_fieldManager->GetPlayerBase()->GetPos());
 
 	m_AM_Manager	->Update(m_fieldManager.get(),
-							 m_playerBase->GetHitMouse(),
 							 m_mousePointer.get(),
 							*m_enemyManager.get()->GetEnemyData());
 
@@ -71,7 +67,7 @@ GAME_SCENE PlayScene::Update()
 	pSD.GetCamera()->SetEyePosition		(m_moveCamera->GetEyePosition());
 
 	// ‹’“_‚ÌHP‚ª0‚É‚È‚Á‚½‚çƒŠƒUƒ‹ƒg‚ÖØ‚è‘Ö‚¦‚é
-	if (m_playerBase->GetHP() <= 0)
+	if (m_fieldManager->GetPlayerBase()->GetHP() <= 0)
 	{
 		return GAME_SCENE::RESULT;
 	}
@@ -92,7 +88,6 @@ void PlayScene::Draw()
 
 	pSD.GetSpriteBatch()->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
-	m_playerBase		->Draw();
 	m_fieldManager      ->Draw();
 	m_mousePointer		->Draw();
 
@@ -112,9 +107,6 @@ void PlayScene::DrawUI()
 
 void PlayScene::Finalize()
 {
-	m_playerBase		->Finalize();
-	m_playerBase.reset();
-
 	m_fieldManager      ->Finalize();
 	m_fieldManager.reset();
 

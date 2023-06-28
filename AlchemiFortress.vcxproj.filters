@@ -71,6 +71,12 @@
     <Filter Include="Shader">
       <UniqueIdentifier>{714a1525-2c33-4c3c-a13f-d212778a58f1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene\PlayScene\Field\Object">
+      <UniqueIdentifier>{a67cd01d-5c36-4512-aedd-e21967c4b66f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene\Field\Field_ObjectList">
+      <UniqueIdentifier>{fa8d0d13-c546-4593-8105-67147769cd3c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -130,9 +136,6 @@
     <ClInclude Include="NecromaLib\GameData\GameObject2D.h">
       <Filter>NecromaLib\GameData\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\PlayScene\Field\Field.h">
-      <Filter>Scene\PlayScene\Field</Filter>
-    </ClInclude>
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyManager.h">
       <Filter>Scene\PlayScene\Enemy</Filter>
     </ClInclude>
@@ -147,9 +150,6 @@
     </ClInclude>
     <ClInclude Include="Scenes\PlayScene\Mouse\MousePointer.h">
       <Filter>Scene\PlayScene\Mouse</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.h">
-      <Filter>Scene\PlayScene\AlchemicalMachine</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Attacker.h">
       <Filter>Scene\PlayScene\AlchemicalMachine\AM_list</Filter>
@@ -199,15 +199,6 @@
     <ClInclude Include="Scenes\PlayScene\UI\SelectionBox.h">
       <Filter>Scene\PlayScene\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\PlayScene\Field\Crystal\Crystal.h">
-      <Filter>Scene\PlayScene\Field</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\PlayScene\Field\FieldObjectType.h">
-      <Filter>Scene\PlayScene\Field</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\PlayScene\Field\FieldObjectManager.h">
-      <Filter>Scene\PlayScene\Field</Filter>
-    </ClInclude>
     <ClInclude Include="Scenes\DataManager.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -222,6 +213,21 @@
     </ClInclude>
     <ClInclude Include="NecromaLib\GameData\BinaryFile.h">
       <Filter>NecromaLib\GameData</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Field\FieldObjectManager.h">
+      <Filter>Scene\PlayScene\Field\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Field\FieldObjectType.h">
+      <Filter>Scene\PlayScene\Field\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Field\Crystal\Crystal.h">
+      <Filter>Scene\PlayScene\Field\Field_ObjectList</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Field\Field.h">
+      <Filter>Scene\PlayScene\Field\Field_ObjectList</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.h">
+      <Filter>Scene\PlayScene\Field\Field_ObjectList</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -279,9 +285,6 @@
     <ClCompile Include="NecromaLib\GameData\GameObject2D.cpp">
       <Filter>NecromaLib\GameData\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\PlayScene\Field\Field.cpp">
-      <Filter>Scene\PlayScene\Field</Filter>
-    </ClCompile>
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyManager.cpp">
       <Filter>Scene\PlayScene\Enemy</Filter>
     </ClCompile>
@@ -299,9 +302,6 @@
     </ClCompile>
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AM_Attacker.cpp">
       <Filter>Scene\PlayScene\AlchemicalMachine\AM_list</Filter>
-    </ClCompile>
-    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.cpp">
-      <Filter>Scene\PlayScene\AlchemicalMachine</Filter>
     </ClCompile>
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineManager.cpp">
       <Filter>Scene\PlayScene\AlchemicalMachine\Object</Filter>
@@ -348,15 +348,6 @@
     <ClCompile Include="Scenes\PlayScene\UI\SelectionBox.cpp">
       <Filter>Scene\PlayScene\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\PlayScene\Field\Crystal\Crystal.cpp">
-      <Filter>Scene\PlayScene\Field</Filter>
-    </ClCompile>
-    <ClCompile Include="Scenes\PlayScene\Field\FieldObjectType.cpp">
-      <Filter>Scene\PlayScene\Field</Filter>
-    </ClCompile>
-    <ClCompile Include="Scenes\PlayScene\Field\FieldObjectManager.cpp">
-      <Filter>Scene\PlayScene\Field</Filter>
-    </ClCompile>
     <ClCompile Include="Scenes\DataManager.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
@@ -371,6 +362,21 @@
     </ClCompile>
     <ClCompile Include="NecromaLib\GameData\BinaryFile.cpp">
       <Filter>NecromaLib\GameData</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Field\FieldObjectManager.cpp">
+      <Filter>Scene\PlayScene\Field\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Field\FieldObjectType.cpp">
+      <Filter>Scene\PlayScene\Field\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Field\Crystal\Crystal.cpp">
+      <Filter>Scene\PlayScene\Field\Field_ObjectList</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Field\Field.cpp">
+      <Filter>Scene\PlayScene\Field\Field_ObjectList</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.cpp">
+      <Filter>Scene\PlayScene\Field\Field_ObjectList</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

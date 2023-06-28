@@ -58,6 +58,13 @@ void PlayerBase::Draw()
 
 }
 
+void PlayerBase::Render(DirectX::Model* model)
+{
+
+
+
+}
+
 void PlayerBase::Finalize()
 {
 	m_baseModel.reset();

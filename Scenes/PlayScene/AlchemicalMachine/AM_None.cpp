@@ -19,6 +19,13 @@ void AM_None::Initialize()
 void AM_None::Update()
 {
 	m_magicCircle.p = m_data.pos;
+
+	m_color = DirectX::SimpleMath::Color(1, 1, 1, 1);
+
+	if (m_hitMouseFlag)
+	{
+		m_color = DirectX::SimpleMath::Color(1, 1, 0, 0);
+	}
 }
 
 void AM_None::SelectUpdate()

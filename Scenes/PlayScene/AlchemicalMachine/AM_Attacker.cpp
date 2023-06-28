@@ -3,13 +3,13 @@
 #include "NecromaLib/Singleton/InputSupport.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
 
-AM_Attacker::AM_Attacker(MACHINE_ELEMENT element):
+AM_Attacker::AM_Attacker():
 	m_timer(),
 	m_targetPos(),
 	m_saveBulletStatus(),
 	m_bulletStatus()
 {
-	m_element = element;
+
 }
 
 AM_Attacker::~AM_Attacker()
@@ -117,16 +117,16 @@ void AM_Attacker::Draw()
 
 void AM_Attacker::Finalize()
 {
-	for (int i = 0; i < 4; i++)
-	{
-		m_selectBox[i]->Finalize();
-	}
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	//m_selectBox[i]->Finalize();
+	//}
 }
 
 void AM_Attacker::AllAlchemicalMachine(AlchemicalMachineObject* object)
 {
 		//	存在チェック かつ　アッパー かつ　属性が同じ
-	if(object->GetActiv() && object->GetModelID() == AlchemicalMachineObject::UPEER && object->GetElement() == m_element)
+	if(object->GetActive() && object->GetModelID() == AlchemicalMachineObject::UPEER && object->GetElement() == m_element)
 	{
 		if (CircleCollider(object->GetMagicCircle(), m_magicCircle))
 		{
@@ -162,7 +162,7 @@ bool AM_Attacker::BulletRequest(std::list<EnemyObject>* enemys)
 				m_targetPos = it->GetPos();
 
 				// 消費MPはLvに依存(高いほど消費大)
-				pDM->SetNowMP(pDM->GetNowMP() - m_bulletStatus.lossMp);
+				pDM->SetNowMP(pDM->GetNowMP() - (int)m_bulletStatus.lossMp);
 
 				return true;
 			}
