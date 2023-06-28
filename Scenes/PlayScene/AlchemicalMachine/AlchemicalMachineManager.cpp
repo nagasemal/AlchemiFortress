@@ -13,7 +13,7 @@ AlchemicalMachineManager::AlchemicalMachineManager():
 	m_allHitObjectToMouse(),
 	m_selectNumber(-1),
 	m_mpPulsTimer(),
-	m_AMnums()
+	m_AMnums{6,6,6,6,6,6}
 {
 }
 
@@ -63,6 +63,22 @@ void AlchemicalMachineManager::Initialize()
 	ShareData& pSD = ShareData::GetInstance();
 
 	m_testBox = GeometricPrimitive::CreateSphere(pSD.GetContext(),0.75f);
+
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 2 + i; j++)
+		{
+			// –{Žæ“¾
+			m_AMObject[j].reset(m_AMFilter->HandOverAMClass(AlchemicalMachineObject::NONE));
+
+			// ‰Šú‰»
+			m_AMObject[j]->Initialize();
+
+			// ¢Š«
+			m_AMObject[j]->SummonAM(SetVelocityCircle(j, (5), (6 + (i * 2))));
+		}
+
+	}
 
 }
 

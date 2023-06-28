@@ -47,7 +47,7 @@ public:
 	AlchemicalMachineObject* GetAlchemicalMachineObject()				{ return m_AMObject->get(); }
 	AlchemicalMachineObject* GetAlchemicalMachineObject(int index)		{ return m_AMObject[index].get();}
 
-	std::list<std::unique_ptr<Bullet>>* GetBullet()										{ return &m_bullets;}
+	std::list<std::unique_ptr<Bullet>>* GetBullet()						{ return &m_bullets;}
 
 private:
 
@@ -62,6 +62,21 @@ private:
 	void MovingMachine(int number);
 
 private:
+
+	// ‰~üã‚É•À‚×‚éˆ—
+	DirectX::SimpleMath::Vector3 SetVelocityCircle(int index, int max, float range)
+	{
+
+		float radian = XM_2PI / static_cast<float>(max);
+
+		// ˆê‚Â‚ÌŠp“x‚ª•ª‚©‚ê‚Î‚à‚¤‘S•”‚í‚©‚é
+		float x = range * cosf(radian * index);
+		float z = range * sinf(radian * index);
+
+		DirectX::SimpleMath::Vector3 pos = { x,0,z};
+
+		return pos;
+	}
 
 	std::unique_ptr<MachineSelectManager> m_selectManager;
 

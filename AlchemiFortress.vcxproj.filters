@@ -217,6 +217,12 @@
     <ClInclude Include="NecromaLib\Singleton\SpriteLoder.h">
       <Filter>NecromaLib\Singleton</Filter>
     </ClInclude>
+    <ClInclude Include="NecromaLib\GameData\UserInterfase.h">
+      <Filter>NecromaLib\GameData</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\GameData\BinaryFile.h">
+      <Filter>NecromaLib\GameData</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -360,6 +366,12 @@
     <ClCompile Include="NecromaLib\Singleton\SpriteLoder.cpp">
       <Filter>NecromaLib\Singleton</Filter>
     </ClCompile>
+    <ClCompile Include="NecromaLib\GameData\UserInterfase.cpp">
+      <Filter>NecromaLib\GameData</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\GameData\BinaryFile.cpp">
+      <Filter>NecromaLib\GameData</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -377,5 +389,31 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\Shader\UI.hlsli">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Resources\Shader\Transition.hlsli">
+      <Filter>Shader</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resources\Shader\UI_GS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\UI_PS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\UI_VS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Transition_GS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Transition_PS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Transition_VS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

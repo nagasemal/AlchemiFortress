@@ -22,8 +22,19 @@ public:
 
 	static DirectX::SimpleMath::Vector3 Sleap(DirectX::SimpleMath::Vector3 a, DirectX::SimpleMath::Vector3 b, float time);
 
+	static DirectX::SimpleMath::Matrix CalcLookAt(
+		DirectX::SimpleMath::Matrix matrix,
+		DirectX::SimpleMath::Vector3 pos,
+		DirectX::SimpleMath::Vector3 look,
+		DirectX::SimpleMath::Vector3 up);
+
 	// 距離減衰なく動けます。少し重い。
 	static DirectX::SimpleMath::Vector3 Moveing(DirectX::SimpleMath::Vector3 a, DirectX::SimpleMath::Vector3 b);
+
+	// 向きを出します
+	static float LookAt(DirectX::SimpleMath::Vector3 a, DirectX::SimpleMath::Vector3 b);
+
+
 	static float Angle(float a1, float a2, float b1, float b2);
 
 	static float EaseInSine(float a, float b, float t);

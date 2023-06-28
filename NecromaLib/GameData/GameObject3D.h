@@ -52,4 +52,7 @@ public:
 
 	Circle GetCircle()		const					{ return Circle(m_data.pos, m_data.rage.x * 1.5f); }
 
+	// target‚Ì•ûŒü‚ÖŠp“x‚ðŒü‚¯‚éQuaternion‚ð•Ô‚µ‚Ü‚·
+	DirectX::SimpleMath::Quaternion LookAt(DirectX::SimpleMath::Vector3 target);
+
 };

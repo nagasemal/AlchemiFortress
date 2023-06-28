@@ -205,6 +205,7 @@ void AM_Attacker::LvUp()
 	pDM.SetNowCrystal(pDM.GetNowCrystal() - GetNextLvCrystal());
 
 	m_lv++;
+	// Œ»İƒŒƒxƒ‹‚ÅÄŒvZ
 	m_saveBulletStatus = RecalculationStatus(m_element, m_lv);
 
 }

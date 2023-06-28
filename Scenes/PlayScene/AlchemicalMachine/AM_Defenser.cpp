@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "AM_Defenser.h"
 
-AM_Defenser::AM_Defenser()
+AM_Defenser::AM_Defenser():
+	m_isBreak()
 {
 }
 

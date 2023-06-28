@@ -51,6 +51,28 @@ DirectX::SimpleMath::Vector3 Easing::Sleap(DirectX::SimpleMath::Vector3 a, Direc
 	return out;
 }
 
+DirectX::SimpleMath::Matrix Easing::CalcLookAt(DirectX::SimpleMath::Matrix matrix, DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 look, DirectX::SimpleMath::Vector3 up)
+{
+	DirectX::SimpleMath::Vector3 X, Y, Z, D;
+	D = look - pos;
+	D.Normalize();
+
+	Y.Normalize(up);
+
+	X.Cross(Y,D);
+	X.Normalize();
+
+	Z.Cross(X,Y);
+	Z.Normalize();
+
+	matrix._11 = X.x;	matrix._12 = X.y;	matrix._13 = X.z;	matrix._14 = 0;
+	matrix._21 = Y.x;	matrix._22 = Y.y;	matrix._23 = Y.z;	matrix._24 = 0;
+	matrix._31 = Z.x;	matrix._32 = Z.y;	matrix._33 = Z.z;	matrix._34 = 0;
+	matrix._41 = 0.0f;	matrix._42 = 0.0f;	matrix._43 = 0.0f;	matrix._44 = 1.0f;
+
+	return matrix;
+}
+
 DirectX::SimpleMath::Vector3 Easing::Moveing(DirectX::SimpleMath::Vector3 a, DirectX::SimpleMath::Vector3 b)
 {
 
@@ -72,6 +94,24 @@ DirectX::SimpleMath::Vector3 Easing::Moveing(DirectX::SimpleMath::Vector3 a, Dir
 	return out;
 }
 
+float Easing::LookAt(DirectX::SimpleMath::Vector3 a, DirectX::SimpleMath::Vector3 b)
+{
+	float sb, sbx, sbz, ax, az, bx, bz = 0.f;
+
+	bx = b.x / 2;
+	bz = b.z / 2;
+
+	ax = a.x / 2;
+	az = a.z / 2;
+
+	sbx = ax - bx;
+	sbz = az - bz;
+
+	sb = sqrtf(sbx * sbx + sbz * sbz);
+
+	return sb;
+}
+
 float Easing::Angle(float a1, float a2, float b1, float b2)
 {
 
@@ -81,7 +121,7 @@ float Easing::Angle(float a1, float a2, float b1, float b2)
 	{
 		r = r + 2.f * (float)PI;
 	}
-	return floorf(r * 360 / (2.f * (float)PI));
+	return floorf(r * 180 / (2.f * (float)PI));
 }
 
 #pragma region Sine

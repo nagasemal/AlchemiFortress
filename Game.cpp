@@ -238,6 +238,7 @@ void Game::CreateDeviceDependentResources()
     auto context = m_deviceResources->GetD3DDeviceContext();
 
     m_commonStates = std::make_unique<CommonStates>(device);
+    m_SpriteBatch = std::make_unique<SpriteBatch>(context);
     m_debugFont = std::make_unique<Imase::DebugFont>(device,context,L"Resources/Font/SegoeUI_18.spritefont");
     m_SpriteBatch = std::make_unique<SpriteBatch>(context);
     m_EffectFactory = std::make_unique<DirectX::EffectFactory>(device);
@@ -246,10 +247,9 @@ void Game::CreateDeviceDependentResources()
 
     pSD->SetDebugFont(m_debugFont.get());
     pSD->SetCommonStates(m_commonStates.get());
-    pSD->SetDeviceResources(m_deviceResources.get());
+    pSD->SetDeviceResources(m_deviceResources.get()); 
     pSD->SetSpriteBatch(m_SpriteBatch.get());
     pSD->SetEffectFactory(m_EffectFactory.get());
-
 
     m_SceneManager = std::make_unique<SceneManager>();
     m_SceneManager.get()->Initialize();

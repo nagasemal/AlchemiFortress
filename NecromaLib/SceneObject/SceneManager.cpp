@@ -61,7 +61,6 @@ void SceneManager::Update(const DX::StepTimer& timer)
 	// ESCキーで終了
 	if (pINP->GetKeybordState().IsKeyPressed(Keyboard::Escape)) PostQuitMessage(0);
 
-
 	// 次のシーンが設定されていたらシーン切り替え
 	if (m_NextScene != GAME_SCENE::NONE)
 	{

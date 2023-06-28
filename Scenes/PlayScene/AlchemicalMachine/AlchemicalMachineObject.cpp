@@ -2,6 +2,7 @@
 #include "AlchemicalMachineObject.h"
 #include "NecromaLib/Singleton/InputSupport.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
+#include "NecromaLib/GameData/Easing.h"
 
 
 #define AM_RAGE DirectX::SimpleMath::Vector3(1, 1, 1)
@@ -51,11 +52,21 @@ bool AlchemicalMachineObject::OnCollisionEnter_MagicCircle(GameObjct3D* object)
 void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model* ring)
 {
 	ShareData& pSD = ShareData::GetInstance();
+
+
 	m_rotateAnimation += DeltaTime::GetInstance().GetDeltaTime();
 
 	// モデル情報(位置,大きさ)
 	DirectX::SimpleMath::Matrix modelData = DirectX::SimpleMath::Matrix::Identity;
 	modelData = DirectX::SimpleMath::Matrix::CreateScale(m_data.rage);
+
+	// ディフェンサー型は常に拠点の方向を向く
+	if (m_machineID == DEFENSER)
+	{
+		m_rotateAnimation = 0.0f;
+		modelData *= DirectX::SimpleMath::Matrix::CreateFromQuaternion(LookAt({0,0,0}));
+	}
+
 	modelData *= DirectX::SimpleMath::Matrix::CreateRotationY(m_rotateAnimation);
 	modelData *= DirectX::SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y + (sinf(m_rotateAnimation) * 0.5f), m_data.pos.z);
 

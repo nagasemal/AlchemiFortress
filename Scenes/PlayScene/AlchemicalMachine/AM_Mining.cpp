@@ -27,7 +27,6 @@ void AM_Mining::Initialize()
 
 void AM_Mining::Update()
 {
-
 	m_magicCircle.p = m_data.pos;
 	m_timer += DeltaTime::GetInstance().GetDeltaTime();
 	m_color = DirectX::SimpleMath::Color(1, 1, 1, 1);
@@ -53,7 +52,6 @@ void AM_Mining::AllFieldObject(FieldObjectManager* fieldManager)
 	{
 		if (CircleCollider(it->GetCircle(), m_magicCircle))
 		{
-
 			m_color = DirectX::SimpleMath::Color(1, 0, 1, 1);
 
 			// ‰ñŽûŠJŽn

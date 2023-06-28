@@ -42,6 +42,7 @@ public:
 
 public:
 
+	// ‰ñû‚·‚éƒXƒpƒ“
 	float m_timer;
 
 private:
