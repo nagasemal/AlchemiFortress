@@ -31,6 +31,7 @@ DirectX::SimpleMath::Quaternion GameObjct3D::LookAt(DirectX::SimpleMath::Vector3
     y.Normalize();
 
     DirectX::SimpleMath::Matrix m = DirectX::SimpleMath::Matrix::Identity;
+
     m._11 = x.x; m._12 = y.x; m._13 = z.x;
     m._21 = x.y; m._22 = y.y; m._23 = z.y;
     m._31 = x.z; m._32 = y.z; m._33 = z.z;

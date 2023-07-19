@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Crystal.h"
 
+#include "NecromaLib/Singleton/InputSupport.h"
+
 Crystal::Crystal(DirectX::SimpleMath::Vector3 pos, float rotateY)
 {
 
@@ -9,6 +11,8 @@ Crystal::Crystal(DirectX::SimpleMath::Vector3 pos, float rotateY)
 	m_rotateY = rotateY;
 
 	m_type = CRYSTAL;
+
+	m_selectFlag = false;
 
 }
 
@@ -46,6 +50,33 @@ void Crystal::Render(Model* model)
 bool Crystal::DeleteRequest()
 {
 	return false;
+}
+
+bool Crystal::GetHitMouse()
+{
+	DirectX::SimpleMath::Vector3 mouseWolrdPos = InputSupport::GetInstance().GetMousePosWolrd();
+
+	Circle mouseCircle(mouseWolrdPos, 1.2f);
+
+	InputSupport& pINP = InputSupport::GetInstance();
+	auto mouse = pINP.GetMouseState();
+	bool leftRelease = mouse.leftButton == mouse.RELEASED;
+	bool hitFlag = CircleCollider(GetCircle(), mouseCircle);
+
+	if (leftRelease)
+	{
+
+		if (!hitFlag && m_selectFlag)
+		{
+			m_selectFlag = false;
+		}
+		else if (hitFlag && !m_selectFlag)
+		{
+			m_selectFlag = true;
+		}
+	}
+
+	return 	m_selectFlag;
 }
 
 void Crystal::Finalize()

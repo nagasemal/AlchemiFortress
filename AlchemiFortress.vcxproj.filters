@@ -77,6 +77,30 @@
     <Filter Include="Scene\PlayScene\Field\Field_ObjectList">
       <UniqueIdentifier>{fa8d0d13-c546-4593-8105-67147769cd3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\Shadow">
+      <UniqueIdentifier>{4d23316c-c85f-48fc-a928-8b9f4a508fb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Transition">
+      <UniqueIdentifier>{7f14fb41-8f74-49ee-9b0c-05193f7622cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\UI">
+      <UniqueIdentifier>{30b8b529-0ed1-478e-bb57-cb766dc34f37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene\Shader">
+      <UniqueIdentifier>{96e31071-ac3c-4c1d-93e7-f7831c1eaa7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\MagicCircle">
+      <UniqueIdentifier>{4fd990b9-d319-4bd3-af64-98b49f447c88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\TitleScene\camera">
+      <UniqueIdentifier>{2ee8d8d7-869f-4bbc-86c1-a90d0df76e06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\TitleScene\Call">
+      <UniqueIdentifier>{e2bba3a6-3729-43bd-819d-fb1208969343}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\DisplayMagicCircle">
+      <UniqueIdentifier>{d0a9d934-3894-43c4-a1b2-165e82b3282e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -229,6 +253,42 @@
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.h">
       <Filter>Scene\PlayScene\Field\Field_ObjectList</Filter>
     </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Shadow\DorpShadow.h">
+      <Filter>Scene\PlayScene\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Shadow\Particle.h">
+      <Filter>Scene\PlayScene\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Shadow\ParticleUtility.h">
+      <Filter>Scene\PlayScene\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\UI\Gauge.h">
+      <Filter>Scene\PlayScene\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\GameData\TextRender.h">
+      <Filter>NecromaLib\GameData\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Shadow\MagicCircle.h">
+      <Filter>Scene\PlayScene\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\UI\MachineGauge.h">
+      <Filter>Scene\PlayScene\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\TitleScene\Camera\TitleCamera.h">
+      <Filter>Scene\TitleScene\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\TitleScene\TitleCall\TitileCall.h">
+      <Filter>Scene\TitleScene\Call</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\GameData\Animation.h">
+      <Filter>NecromaLib\GameData</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\UI\DisplayMagicCircle.h">
+      <Filter>Scene\PlayScene\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\UI\Number.h">
+      <Filter>Scene\PlayScene\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -378,6 +438,42 @@
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.cpp">
       <Filter>Scene\PlayScene\Field\Field_ObjectList</Filter>
     </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Shadow\DorpShadow.cpp">
+      <Filter>Scene\PlayScene\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Shadow\Particle.cpp">
+      <Filter>Scene\PlayScene\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Shadow\ParticleUtility.cpp">
+      <Filter>Scene\PlayScene\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\UI\Gauge.cpp">
+      <Filter>Scene\PlayScene\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\GameData\TextRender.cpp">
+      <Filter>NecromaLib\GameData\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Shadow\MagicCircle.cpp">
+      <Filter>Scene\PlayScene\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\UI\MachineGauge.cpp">
+      <Filter>Scene\PlayScene\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\TitleScene\Camera\TitleCamera.cpp">
+      <Filter>Scene\TitleScene\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\TitleScene\TitleCall\TitileCall.cpp">
+      <Filter>Scene\TitleScene\Call</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\GameData\Animation.cpp">
+      <Filter>NecromaLib\GameData</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\UI\DisplayMagicCircle.cpp">
+      <Filter>Scene\PlayScene\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\UI\Number.cpp">
+      <Filter>Scene\PlayScene\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -395,31 +491,67 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Resources\Shader\UI.hlsli">
-      <Filter>Shader</Filter>
+    <None Include="Resources\Shader\Shadow.hlsli">
+      <Filter>Shader\Shadow</Filter>
     </None>
     <None Include="Resources\Shader\Transition.hlsli">
-      <Filter>Shader</Filter>
+      <Filter>Shader\Transition</Filter>
+    </None>
+    <None Include="Resources\Shader\UI.hlsli">
+      <Filter>Shader\UI</Filter>
+    </None>
+    <None Include="Resources\Shader\MagicCircle.hlsli">
+      <Filter>Shader\MagicCircle</Filter>
+    </None>
+    <None Include="Resources\Shader\DisplayMagicCircle.hlsli">
+      <Filter>Shader\DisplayMagicCircle</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\Shader\UI_GS.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shader\UI_PS.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shader\UI_VS.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\Shader\Transition_GS.hlsl">
-      <Filter>Shader</Filter>
+      <Filter>Shader\Transition</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shader\Transition_PS.hlsl">
-      <Filter>Shader</Filter>
+      <Filter>Shader\Transition</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shader\Transition_VS.hlsl">
-      <Filter>Shader</Filter>
+      <Filter>Shader\Transition</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\UI_GS.hlsl">
+      <Filter>Shader\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\UI_PS.hlsl">
+      <Filter>Shader\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\UI_VS.hlsl">
+      <Filter>Shader\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Shadow_GS.hlsl">
+      <Filter>Shader\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Shadow_PS.hlsl">
+      <Filter>Shader\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Shadow_VS.hlsl">
+      <Filter>Shader\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\MagicCircle_GS.hlsl">
+      <Filter>Shader\MagicCircle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\MagicCircle_PS.hlsl">
+      <Filter>Shader\MagicCircle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\MagicCircle_VS.hlsl">
+      <Filter>Shader\MagicCircle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\DisplayMagicCircle_GS.hlsl">
+      <Filter>Shader\DisplayMagicCircle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\DisplayMagicCircle_PS.hlsl">
+      <Filter>Shader\DisplayMagicCircle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\DisplayMagicCircle_VS.hlsl">
+      <Filter>Shader\DisplayMagicCircle</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

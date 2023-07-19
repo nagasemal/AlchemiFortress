@@ -1,5 +1,11 @@
 #include "pch.h"
 #include "AlchemicalMachineFilter.h"
+#include "AM_None.h"
+#include "AM_Attacker.h"
+#include "AM_Defenser.h"
+#include "AM_Mining.h"
+#include "AM_Recovery.h"
+#include "AM_Upper.h"
 
 AlchemicalMachineFilter::AlchemicalMachineFilter():
 	m_model{}
@@ -14,16 +20,19 @@ AlchemicalMachineFilter::AlchemicalMachineFilter():
 
 	m_model[AlchemicalMachineObject::MACHINE_TYPE::ATTACKER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Attacker.cmo", *fx);
 
-	m_model[AlchemicalMachineObject::MACHINE_TYPE::DEFENSER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Difencer.cmo", *fx);
+	m_model[AlchemicalMachineObject::MACHINE_TYPE::DEFENSER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Defencer.cmo", *fx);
 
 	m_model[AlchemicalMachineObject::MACHINE_TYPE::MINING] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Mining.cmo", *fx);
 
-	m_model[AlchemicalMachineObject::MACHINE_TYPE::RECOVERY] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Siroma.cmo", *fx);
+	m_model[AlchemicalMachineObject::MACHINE_TYPE::RECOVERY] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Attacker.cmo", *fx);
 
 	m_model[AlchemicalMachineObject::MACHINE_TYPE::UPEER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Upper.cmo", *fx);
 
-	m_ringModel = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Ring.cmo", *fx);
 
+	// ƒTƒuƒ‚ƒfƒ‹
+	m_subModel[AlchemicalMachineObject::MACHINE_TYPE::ATTACKER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Ring.cmo", *fx);
+
+	m_subModel[AlchemicalMachineObject::MACHINE_TYPE::DEFENSER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Ring.cmo", *fx);
 }
 
 AlchemicalMachineFilter::~AlchemicalMachineFilter()
@@ -74,7 +83,7 @@ Model* AlchemicalMachineFilter::GetRingModel(AlchemicalMachineObject::MACHINE_TY
 
 	if (type != AlchemicalMachineObject::ATTACKER) return nullptr;
 
-	return m_ringModel.get();
+	return m_subModel[type].get();
 }
 
 void AlchemicalMachineFilter::Finalize()

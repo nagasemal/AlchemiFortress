@@ -24,10 +24,14 @@ public:
 	float GetDeltaTime() { return m_deltaTime; }
 	void SetDeltaTime(float time) { m_deltaTime = time; }
 
+	float GetTotalTime() { return m_totalTime; }
+	void SetTotalTime(float time) { m_totalTime = time; }
+
 private:
 	DeltaTime();
 	static DeltaTime* instance;
 
 	float m_deltaTime;
+	float m_totalTime;
 
 };

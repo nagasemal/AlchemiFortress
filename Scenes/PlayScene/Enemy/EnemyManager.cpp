@@ -8,7 +8,8 @@
 
 EnemyManager::EnemyManager():
 	m_timer(),
-	m_totalTimer()
+	m_totalTimer(),
+	m_nextEnemyTime()
 {
 }
 
@@ -23,6 +24,15 @@ void EnemyManager::Initialize()
 
 	m_testBox = GeometricPrimitive::CreateBox(pSD.GetContext(), DirectX::SimpleMath::Vector3(1,1,1));
 	m_enemyObject = std::make_unique<std::list<EnemyObject>>();
+
+	//m_particle_hit = std::make_unique<Particle>(Particle::HIT_BULLET);
+	//m_particle_hit->Initialize();
+
+	m_particle_spawn = std::make_unique<Particle>(Particle::SPAWN_ENEMY);
+	m_particle_spawn->Initialize();
+
+	m_particle_delete = std::make_unique<Particle>(Particle::DELETE_ENEMY);
+	m_particle_delete->Initialize();
 }
 
 void EnemyManager::Update(DirectX::SimpleMath::Vector3 basePos)
@@ -37,26 +47,31 @@ void EnemyManager::Update(DirectX::SimpleMath::Vector3 basePos)
 	// 10秒毎に生成
 	if (m_timer >= 5.0f)
 	{
+		EnemyObject object = GetEnemyStatus(EnemyObject::EnemyType::NONE);
 
-		m_enemyObject->push_back(*std::make_unique<EnemyObject>(GetEnemyStatus(EnemyObject::EnemyType::NONE)));
-
+		m_enemyObject->push_back(*std::make_unique<EnemyObject>(object));
+		// エフェクト表示
+		m_particle_spawn->OnShot(object.GetPos(), true);
 		m_timer = 0.0f;
-
 	}
 
 	// 更新処理
 	for (std::list<EnemyObject>::iterator it = m_enemyObject->begin(); it != m_enemyObject->end(); it++)
 	{
-		it->Update();
-
 		// 子クラスからfalseで消す
 		if ((it)->GotoTarget(basePos))
 		{
 			pDM.SetNowEnemyKill(pDM.GetNowEnemyKill() + 1);
+			m_particle_delete->OnShot(it->GetPos(), true);
 			it = m_enemyObject->erase(it);
 			if (it == m_enemyObject->end()) break;
 		}
+
+		it->Update();
 	}
+
+	m_particle_spawn->UpdateParticle();
+	m_particle_delete->UpdateParticle();
 }
 
 void EnemyManager::Render()
@@ -64,10 +79,14 @@ void EnemyManager::Render()
 
 	ShareData& pSD = ShareData::GetInstance();
 
-	/*===[ デバッグ文字描画 ]===*/
-	std::wostringstream oss;
-	oss << "EnemyNum - " << m_enemyObject->size();
-	pSD.GetDebugFont()->AddString(oss.str().c_str(), DirectX::SimpleMath::Vector2(400.f, 20.f));
+	///*===[ デバッグ文字描画 ]===*/
+	//std::wostringstream oss;
+	//oss << "EnemyNum - " << m_enemyObject->size();
+	//pSD.GetDebugFont()->AddString(oss.str().c_str(), DirectX::SimpleMath::Vector2(400.f, 20.f));
+
+	//m_particle_hit		->Render();
+	m_particle_delete	->Render();
+	m_particle_spawn	->Render();
 
 	for (std::list<EnemyObject>::iterator it = m_enemyObject->begin(); it != m_enemyObject->end(); it++)
 	{

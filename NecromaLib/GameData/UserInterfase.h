@@ -11,36 +11,41 @@
 
 #pragma once
 
-	//UIのアンカーポイントの列挙数
-enum ANCHOR
-{
-	TOP_LEFT = 0,
-	TOP_CENTER,
-	TOP_RIGHT,
-
-	MIDDLE_LEFT,
-	MIDDLE_CENTER,
-	MIDDLE_RIGHT,
-
-	BOTTOM_LEFT,
-	BOTTOM_CENTER,
-	BOTTOM_RIGHT
-
-};
-
 class UserInterface
 {
+public:
+
+	//UIのアンカーポイント
+	enum ANCHOR
+	{
+		TOP_LEFT = 0,
+		TOP_CENTER,
+		TOP_RIGHT,
+
+		MIDDLE_LEFT,
+		MIDDLE_CENTER,
+		MIDDLE_RIGHT,
+
+		BOTTOM_LEFT,
+		BOTTOM_CENTER,
+		BOTTOM_RIGHT
+
+	};
+
 public:
 	//データ受け渡し用コンスタントバッファ(送信側)
 	struct ConstBuffer
 	{
 		DirectX::SimpleMath::Vector4	windowSize;
+		DirectX::SimpleMath::Vector4	color;
 	};
+
 	//変数
 private:
 	DX::DeviceResources* m_pDR;
 
-	Microsoft::WRL::ComPtr<ID3D11Buffer>	m_CBuffer;
+	// コンスタントバッファ
+	Microsoft::WRL::ComPtr<ID3D11Buffer>	m_cBuffer;
 	// 入力レイアウト
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
 
@@ -48,9 +53,11 @@ private:
 	std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColorTexture>> m_batch;
 	//コモンステート
 	std::unique_ptr<DirectX::CommonStates> m_states;
+
 	// テクスチャハンドル
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
 	Microsoft::WRL::ComPtr<ID3D11Resource> m_res;
+
 	// 頂点シェーダ
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> m_vertexShader;
 	// ピクセルシェーダ
@@ -64,6 +71,9 @@ private:
 	DirectX::SimpleMath::Vector2 m_scale;
 	DirectX::SimpleMath::Vector2 m_baseScale;
 	DirectX::SimpleMath::Vector2 m_position;
+	DirectX::SimpleMath::Color m_color;
+	float m_value;	// 明暗
+
 
 	// 表示位置
 	ANCHOR m_anchor;
@@ -102,7 +112,14 @@ public:
 	void SetRenderRatio(float ratio) { m_renderRatio = ratio; }
 	float GetRenderRatio() { return m_renderRatio; }
 
+	void SetValue(float value) { m_value = value;}
+	float GetValue() { return m_value;}
+
+	void SetColor(DirectX::SimpleMath::Color color) { m_color = color;}
+	DirectX::SimpleMath::Color GetColor()			{ return m_color;}
+
 private:
 
 	void CreateShader();
+
 };

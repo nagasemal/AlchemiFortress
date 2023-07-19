@@ -10,7 +10,7 @@ public:
 
 	void Initialize();
 	// 更新処理
-	void Update();
+	void Update(bool scroll,bool move);
 
 	// ビュー行列を取得する
 	DirectX::SimpleMath::Matrix GetViewMatrix() const		{ return m_view; }
@@ -25,6 +25,7 @@ private:
 	float m_angleY;								// 横回転角
 	int m_prevX, m_prevY;						// 前回のマウス座標(X,Y)
 	int m_scrollWheelValue;						// マウスホイールのスクロール値
+	int m_prevWheelValue;						// 前回のスクロール値
 	DirectX::SimpleMath::Vector3 m_move;		// 移動値
 	DirectX::SimpleMath::Matrix m_view;			// 生成されたビュー行列
 	DirectX::SimpleMath::Vector3 m_eye;			// カメラの座標

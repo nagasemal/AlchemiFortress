@@ -90,5 +90,6 @@ namespace DX
 #include "CommonStates.h"
 #include "SimpleMath.h"
 #include <sstream>
+#include "PrimitiveBatch.h"
 #include "GeometricPrimitive.h"
 #include "Model.h"

@@ -1,45 +1,86 @@
 #include "pch.h"
 #include "PlayerBase.h"
 #include "NecromaLib/Singleton/InputSupport.h"
+#include "NecromaLib/Singleton/DeltaTime.h"
+#include "Scenes/DataManager.h"
 
-#define RAGE DirectX::SimpleMath::Vector3(3, 3, 3)
+#define RAGE DirectX::SimpleMath::Vector3(1, 1, 1)
 
-PlayerBase::PlayerBase():
+PlayerBase::PlayerBase() :
 	m_baseLv(),
 	m_hp(1),
 	m_exp(),
 	m_testBox(),
-	m_hitMouseFlag()
+	m_hitMouseFlag(),
+	m_lvUpTiming(),
+	m_invincibleTime()
 {
 }
 
 PlayerBase::~PlayerBase()
 {
-}
+} 
 
 void PlayerBase::Initialize()
 {
 
 	ShareData& pSD = ShareData::GetInstance();
-
 	m_baseLv = 1;
 	m_exp = 0;
+	m_hp = 50;
 
 	m_data.pos  = DirectX::SimpleMath::Vector3::Zero;
 	m_data.rage = RAGE;
 
-	m_testBox = GeometricPrimitive::CreateBox(pSD.GetContext(), m_data.rage);
+	m_testBox = GeometricPrimitive::CreateBox(pSD.GetContext(), m_data.rage * 2.5);
+
+	auto pDataM = DataManager::GetInstance();
+
+	pDataM->MPMAXRecalculation		(m_baseLv);
+	pDataM->CrystalMAXRecalculation	(m_baseLv);
+	pDataM->BaseHPMAXRecalculation	(m_baseLv);
+
+	pDataM->SetNowMP		(pDataM->GetNowMP_MAX() / 2);
+	pDataM->SetNowCrystal	(pDataM->GetNowCrystal_MAX() / 2);
+	pDataM->SetNowBaseHP	(pDataM->GetNowBaseHP_MAX() / 2);
 }
 
 void PlayerBase::Update()
 {
 	InputSupport& pINP = InputSupport::GetInstance();
+	int enemyKillNum = DataManager::GetInstance()->GetNowEnemyKill();
+
+	// ‰¼’u‚«
+	auto mouse = pINP.GetMouseState();
+	bool rightRelease = mouse.rightButton == mouse.RELEASED;
 
 	m_hitMouseFlag = false;
+	m_lvUpTiming = false;
+
+	// –³“GŽžŠÔ‚ÌŒv‘ª
+	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
+	m_invincibleTime += deltaTime;
 
 	DirectX::SimpleMath::Vector3 mouseWolrdPos = InputSupport::GetInstance().GetMousePosWolrd();
 
 	if (PointerToCircle(GetCircle(), mouseWolrdPos)) m_hitMouseFlag = true;
+
+	// ŒÜ‚Ì”{”–ˆ‚ÉLvUP
+	if (enemyKillNum >= (2 * m_baseLv) + (4 * m_baseLv))
+	{
+		m_baseLv++;
+		m_lvUpTiming = true;
+
+		// Å‘å–‚—Í—Ê@Å‘åŒ‹»—Ê@Å‘åHP—Ê ÄŒvŽZ
+		DataManager::GetInstance()->MPMAXRecalculation(m_baseLv);
+		DataManager::GetInstance()->CrystalMAXRecalculation(m_baseLv);
+		DataManager::GetInstance()->BaseHPMAXRecalculation(m_baseLv);
+
+		m_hp = DataManager::GetInstance()->GetNowBaseHP_MAX();
+
+	}
+
+	DataManager::GetInstance()->SetNowBaseHP(m_hp);
 }
 
 void PlayerBase::Draw()
@@ -60,13 +101,20 @@ void PlayerBase::Draw()
 
 void PlayerBase::Render(DirectX::Model* model)
 {
-
-
-
 }
 
 void PlayerBase::Finalize()
 {
 	m_baseModel.reset();
 	m_testBox.reset();
+}
+
+void PlayerBase::Damage(float damage)
+{
+	// –³“GŽžŠÔ‚ª‹K’è‚É’B‚µ‚Ä‚¢‚ê‚Îƒ_ƒ[ƒW‚ðŽó‚¯‚é
+	if (m_invincibleTime >= 1.0f)
+	{
+		m_invincibleTime = 0;
+		m_hp -= damage;
+	}
 }

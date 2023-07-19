@@ -44,6 +44,12 @@ public:
 	// プレイヤー拠点へと向かう
 	bool GotoTarget(DirectX::SimpleMath::Vector3 target);
 
+	// 進まないようにする処理
+	void HitMachine(bool flag);
+
+	// バウンドさせる
+	void Bouns();
+
 // アクセサ
 public:
 
@@ -57,6 +63,8 @@ public:
 	const int GetLv()									{ return m_lv; }
 	// 体力
 	const int GetHp()									{ return m_hp; }
+	// EXP
+	const int GetEXP()									{ return m_exp; }
 	// パワー	
 	const float GetPower()								{ return m_power;}
 	// 目的地までの距離
@@ -68,11 +76,19 @@ public:
 
 private:
 
+	// 攻撃力
 	float m_power;
+	// HP
 	int m_hp;
+	// 現在レベル
 	int m_lv;
+	// 経験値
+	int m_exp;
 	// 速度
 	float m_speed;
+	// 移動を止める
+	bool m_stopFlag;
+
 	// 加速度
 	DirectX::SimpleMath::Vector3 m_accele;
 	// 目的地までの距離

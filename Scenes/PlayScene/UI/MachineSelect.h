@@ -1,7 +1,20 @@
+//--------------------------------------------------------------------------------------
+// File		: MachineSelect.h
+//
+// 選択された際に表示する使用リソースの表示と製造ボタンの処理を行う
+// 
+// 製造ボタン クリック → MachineSelectManager → AlchemicalMachineManagerのm_AMnums[]を1増やす;
+// 
+// Use		: MachineSelectManager
+// Date		: 2023.5.18
+// Author	: Kazuma Nagase
+//--------------------------------------------------------------------------------------
+
 #pragma once
 #include "NecromaLib/GameData/GameObject2D.h"
 #include "Scenes/PlayScene/AlchemicalMachine/AlchemicalMachineObject.h"
 #include "SelectionBox.h"
+#include "Scenes/PlayScene/UI/Number.h"
 
 class MachineSelect : public GameObjct2D
 {
@@ -26,19 +39,46 @@ public:
 
 public:
 
-	bool GetHitMouseFlag() { return m_hitMouseFlag; }
+	// 製造ボタンを押した瞬間を取得
+	bool GetManufacturingFlag()										{ return m_manufacturingFlag; }
 
-	void SetPosition(DirectX::SimpleMath::Vector2 pos) { m_data.pos = pos; }
+	bool GetHitMouseFlag()											{ return m_hitMouseFlag; }
+	void SetHitMouseFlag(bool flag)									{ m_hitMouseFlag = flag; }
+
+	void SetPosition(DirectX::SimpleMath::Vector2 pos)				{ m_data.pos = pos; }
 
 	void SetMachineType(AlchemicalMachineObject::MACHINE_TYPE type) { m_selectMachineType = type;}
 	AlchemicalMachineObject::MACHINE_TYPE GetMachineType()			{ return m_selectMachineType;}
 
+	SelectionBox* GetMachineBox()									{return m_machineBox.get();}
+
+	void SetChangeColorFlag(bool flag)								{ m_changeColorFlag = flag;}
+
 private:
 
+	bool m_onMouseFlag;
 	bool m_hitMouseFlag;
+	bool m_manufacturingFlag;
 
 	AlchemicalMachineObject::MACHINE_TYPE m_selectMachineType;
 
+	// 選択ボックス(マシン)
+	std::unique_ptr<SelectionBox> m_machineBox;
+
+	// 選択ボックス(UI表示用)
 	std::unique_ptr<SelectionBox> m_selectionBox[3];
+
+	// 選択ボックス(製造ボタン用)
+	std::unique_ptr<SelectionBox> m_selectionManufacturing;
+
+	// 必要数表示
+	std::unique_ptr<Number>		  m_numberRender;
+
+	// ボックスの色味
+	DirectX::SimpleMath::Color m_boxColor;
+	bool m_changeColorFlag;
+
+	// 色を変化させる時間変数
+	float m_colorChangeTime;
 
 };

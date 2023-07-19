@@ -38,8 +38,13 @@ public:
 
 	void LvUp() override;
 
+	// 上部へ伸びる長方形のボックス表示
+	void LightLine();
+
 public:
 
 private:
+
+	float m_selectModeTime;
 
 };

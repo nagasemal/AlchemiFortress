@@ -1,7 +1,19 @@
+//--------------------------------------------------------------------------------------
+// File: MachineExplanation.h
+//
+//　スプライトバッチ　使用
+//　アルケミカルマシンの選択時、画面全体に出現させる魔法陣の処理
+// 
+// Use		: AlchemicalMachineManager
+// Date		: 2023.7.17
+// Author	: Kazuma Nagase
+//--------------------------------------------------------------------------------------
+
 #pragma once
 #include "NecromaLib/GameData/GameObject2D.h"
 #include "NecromaLib/GameData/Camera.h"
 #include "Scenes/PlayScene/AlchemicalMachine/AlchemicalMachineObject.h"
+#include "Scenes/PlayScene/UI/MachineGauge.h"
 
 class MachineExplanation : public GameObjct2D
 {
@@ -14,6 +26,9 @@ public:
 
 	// 更新
 	void Update()				override;
+
+	// マシンデーター用のアップデート処理
+	void Update_MachineData(AlchemicalMachineObject* object);
 
 	// 描画
 	void Draw()					override;
@@ -41,6 +56,9 @@ private:
 
 	// テキストボックスのテクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
+
+	// マシンのHPゲージ
+	std::unique_ptr<MachineGauge> m_machineGauge;
 
 	bool m_hitFlag;
 

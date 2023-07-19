@@ -12,6 +12,8 @@
 #include "AlchemicalMachineObject.h"
 #include <Scenes/PlayScene/Mouse/MousePointer.h>
 
+class EnemyManager;
+
 class AM_Defenser : public AlchemicalMachineObject
 {
 public:
@@ -37,8 +39,14 @@ public:
 
 	void LvUp() override;
 
+	// エネミーとの当たり判定
+	void EnemyHit(std::list<EnemyObject>* enemy);
+
 	//　アクセサ
 public:
+
+	// 次回必要となるクリスタルの数
+	const int GetNextLvCrystal() const { return (15 * m_lv) * (5 * m_lv); }
 
 private:
 

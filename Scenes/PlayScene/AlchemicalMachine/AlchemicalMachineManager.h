@@ -13,12 +13,17 @@
 #include "Scenes/PlayScene/Mouse/MousePointer.h"
 #include "Scenes/PlayScene/UI/MachineExplanation.h"
 #include "Scenes/PlayScene/UI/MachineSelectManager.h"
-#include "Scenes/PlayScene/Enemy/EnemyObject.h"
+#include "Scenes/PlayScene/Enemy/EnemyManager.h"
 #include "AlchemicalMachineFilter.h"
 #include "Scenes/PlayScene/AlchemicalMachine/Bullet/Bullet.h"
 #include "Scenes/PlayScene/Field/FieldObjectManager.h"
+#include "Scenes/PlayScene/Shadow/DorpShadow.h"
+#include "Scenes/PlayScene/Shadow/Particle.h"
+#include "Scenes/PlayScene/Shadow/MagicCircle.h"
+
 
 class AlchemicalMachineObject;
+class Number;
 
 class AlchemicalMachineManager
 {
@@ -28,7 +33,7 @@ public:
 
 	void Initialize();
 
-	void Update(FieldObjectManager* fieldManager,MousePointer* pMP, std::list<EnemyObject> enemys);
+	void Update(FieldObjectManager* fieldManager,MousePointer* pMP, EnemyManager* enemys);
 
 	void Render();
 
@@ -38,8 +43,6 @@ public:
 
 
 public:
-
-	static const int AM_MAXNUM = 256;
 
 //アクセサ
 public:
@@ -51,10 +54,16 @@ public:
 
 	std::list<std::unique_ptr<Bullet>>* GetBullet()						{ return &m_bullets;}
 
+	std::unique_ptr<MachineSelectManager>* GetMachineSelect()			{ return &m_selectManager; }
+
 private:
 
 	// 専用の更新処理を回す
-	void Update_Attacker(int index, std::list<EnemyObject> enemys);
+	void Update_None(int baseLv);
+
+	void Update_Attacker(int index, EnemyManager* enemyManager);
+
+	void Update_Defenser(int index, EnemyManager* enemyManager);
 
 	void Update_Mining(int index, FieldObjectManager* fieldManager);
 
@@ -63,7 +72,11 @@ private:
 	// 回す
 	void MovingMachine(int number);
 
-	void CreateAMMachine(int lv);
+	// 円形状にアルケミカルマシン(None)を未使用状態で並べる。
+	void CreateAMMachine();
+
+	// 並べたアルケミカルマシンをlineNumberに応じて使用可能状態に変更する
+	void LvToObjectActives(int lineNumber);
 
 private:
 
@@ -105,10 +118,29 @@ private:
 	// Mpが追加されるまでの時間
 	float m_mpPulsTimer;
 
+	// 前回のマウスホイールの数値
+	int m_saveWheelValue;
+	int m_scrollValue;
+
 	// 現在保有しているアルケミカルマシンの個数
 	int m_AMnums[AlchemicalMachineObject::MACHINE_TYPE::NUM];
 
+	// 所持数を示す
+	std::unique_ptr<Number> m_machineNumRender;
+
 	//===後で消すテスト用変数
 	std::unique_ptr<DirectX::GeometricPrimitive> m_testBox;	//  仮置き弾モデル
+
+	// 丸影
+	std::unique_ptr<DorpShadow> m_dorpShadow;
+
+	// パーティクルクラス
+	std::unique_ptr<Particle> m_particle_hit;
+
+	// 魔法陣クラス(マシン)
+	std::unique_ptr<MagicCircle> m_magicCircle;
+
+	// 魔法陣クラス(フィールド)
+	std::unique_ptr<MagicCircle> m_magicCircle_Field;
 
 };

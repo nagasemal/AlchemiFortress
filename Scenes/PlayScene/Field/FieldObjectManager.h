@@ -15,6 +15,8 @@
 #include "Scenes/PlayScene/AlchemicalMachine/PlayerBase.h"
 #include <list>
 
+#include "Scenes/PlayScene/Shadow/MagicCircle.h"
+
 class FieldObjectManager
 {
 public:
@@ -35,6 +37,8 @@ public:
 	PlayerBase* GetPlayerBase()					{ return m_playerBase.get(); }
 	std::list<Crystal>* GetCrystalObject()		{ return m_crystals.get();}
 
+	bool GetCrystalToMouse()					{ return m_crystalTomouseFlag;}
+
 private:
 
 	// 床モデル
@@ -50,5 +54,8 @@ private:
 
 	// 結晶配列
 	std::unique_ptr<std::list<Crystal>> m_crystals;
+
+	// クリスタルとマウスの当たり判定
+	bool m_crystalTomouseFlag;
 
 };

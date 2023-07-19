@@ -182,6 +182,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="imaseLib\DebugCamera.h" />
     <ClInclude Include="imaseLib\DebugFont.h" />
+    <ClInclude Include="NecromaLib\GameData\Animation.h" />
     <ClInclude Include="NecromaLib\GameData\BinaryFile.h" />
     <ClInclude Include="NecromaLib\GameData\Camera.h" />
     <ClInclude Include="NecromaLib\GameData\Collider.h" />
@@ -191,6 +192,7 @@
     <ClInclude Include="NecromaLib\GameData\ScreenToWorld.h" />
     <ClInclude Include="NecromaLib\GameData\SCVLoder.h" />
     <ClInclude Include="NecromaLib\GameData\SpriteCutter.h" />
+    <ClInclude Include="NecromaLib\GameData\TextRender.h" />
     <ClInclude Include="NecromaLib\GameData\UserInterfase.h" />
     <ClInclude Include="NecromaLib\SceneObject\Fade.h" />
     <ClInclude Include="NecromaLib\SceneObject\SceneManager.h" />
@@ -223,11 +225,21 @@
     <ClInclude Include="Scenes\PlayScene\Field\FieldObjectType.h" />
     <ClInclude Include="Scenes\PlayScene\Mouse\MousePointer.h" />
     <ClInclude Include="Scenes\PlayScene\PlayScene.h" />
+    <ClInclude Include="Scenes\PlayScene\Shadow\DorpShadow.h" />
+    <ClInclude Include="Scenes\PlayScene\Shadow\MagicCircle.h" />
+    <ClInclude Include="Scenes\PlayScene\Shadow\Particle.h" />
+    <ClInclude Include="Scenes\PlayScene\Shadow\ParticleUtility.h" />
+    <ClInclude Include="Scenes\PlayScene\UI\DisplayMagicCircle.h" />
+    <ClInclude Include="Scenes\PlayScene\UI\Gauge.h" />
     <ClInclude Include="Scenes\PlayScene\UI\MachineExplanation.h" />
+    <ClInclude Include="Scenes\PlayScene\UI\MachineGauge.h" />
     <ClInclude Include="Scenes\PlayScene\UI\MachineSelect.h" />
     <ClInclude Include="Scenes\PlayScene\UI\MachineSelectManager.h" />
     <ClInclude Include="Scenes\PlayScene\UI\SelectionBox.h" />
+    <ClInclude Include="Scenes\PlayScene\UI\Number.h" />
     <ClInclude Include="Scenes\ResultScene\ResultScene.h" />
+    <ClInclude Include="Scenes\TitleScene\Camera\TitleCamera.h" />
+    <ClInclude Include="Scenes\TitleScene\TitleCall\TitileCall.h" />
     <ClInclude Include="Scenes\TitleScene\TitleScene.h" />
     <ClInclude Include="StepTimer.h" />
   </ItemGroup>
@@ -237,6 +249,7 @@
     <ClCompile Include="imaseLib\DebugCamera.cpp" />
     <ClCompile Include="imaseLib\DebugFont.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="NecromaLib\GameData\Animation.cpp" />
     <ClCompile Include="NecromaLib\GameData\BinaryFile.cpp" />
     <ClCompile Include="NecromaLib\GameData\Camera.cpp" />
     <ClCompile Include="NecromaLib\GameData\Collider.cpp" />
@@ -246,6 +259,7 @@
     <ClCompile Include="NecromaLib\GameData\ScreenToWorld.cpp" />
     <ClCompile Include="NecromaLib\GameData\SCVLoder.cpp" />
     <ClCompile Include="NecromaLib\GameData\SpriteCutter.cpp" />
+    <ClCompile Include="NecromaLib\GameData\TextRender.cpp" />
     <ClCompile Include="NecromaLib\GameData\UserInterfase.cpp" />
     <ClCompile Include="NecromaLib\SceneObject\Fade.cpp" />
     <ClCompile Include="NecromaLib\SceneObject\SceneManager.cpp" />
@@ -282,11 +296,21 @@
     <ClCompile Include="Scenes\PlayScene\Field\FieldObjectType.cpp" />
     <ClCompile Include="Scenes\PlayScene\Mouse\MousePointer.cpp" />
     <ClCompile Include="Scenes\PlayScene\PlayScene.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Shadow\DorpShadow.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Shadow\MagicCircle.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Shadow\Particle.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Shadow\ParticleUtility.cpp" />
+    <ClCompile Include="Scenes\PlayScene\UI\DisplayMagicCircle.cpp" />
+    <ClCompile Include="Scenes\PlayScene\UI\Gauge.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\MachineExplanation.cpp" />
+    <ClCompile Include="Scenes\PlayScene\UI\MachineGauge.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\MachineSelect.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\MachineSelectManager.cpp" />
+    <ClCompile Include="Scenes\PlayScene\UI\Number.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\SelectionBox.cpp" />
     <ClCompile Include="Scenes\ResultScene\ResultScene.cpp" />
+    <ClCompile Include="Scenes\TitleScene\Camera\TitleCamera.cpp" />
+    <ClCompile Include="Scenes\TitleScene\TitleCall\TitileCall.cpp" />
     <ClCompile Include="Scenes\TitleScene\TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -301,10 +325,64 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\Shader\DisplayMagicCircle.hlsli" />
+    <None Include="Resources\Shader\MagicCircle.hlsli" />
+    <None Include="Resources\Shader\Shadow.hlsli" />
     <None Include="Resources\Shader\Transition.hlsli" />
     <None Include="Resources\Shader\UI.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Resources\Shader\DisplayMagicCircle_GS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\DisplayMagicCircle_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\DisplayMagicCircle_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\MagicCircle_GS.hlsl">
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\MagicCircle_PS.hlsl">
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\MagicCircle_VS.hlsl">
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Shadow_GS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Shadow_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Shadow_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
     <FxCompile Include="Resources\Shader\Transition_GS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
@@ -334,19 +412,19 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shaders%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="Resources\Shader\UI_PS.hlsl">
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shaders%(Filename).cso</ObjectFileOutput>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shaders%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Resources\Shader\UI_VS.hlsl">
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shaders%(Filename).cso</ObjectFileOutput>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shaders%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

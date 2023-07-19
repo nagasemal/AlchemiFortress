@@ -11,6 +11,8 @@
 #include "AlchemicalMachine/AlchemicalMachineManager.h"
 #include "Enemy/EnemyManager.h"
 
+#include "Scenes/PlayScene/UI/Gauge.h"
+
 class PlayScene : public SceneObj
 {
 public:
@@ -35,6 +37,10 @@ public:
 	// 終了処理
 	void Finalize() override;
 
+	void EnemyToAMMachine();
+	void EnemyToPlayerBase();
+	void EnemyToBullet();
+
 private:
 
 	std::unique_ptr<FieldObjectManager>			m_fieldManager;
@@ -47,4 +53,8 @@ private:
 
 	std::unique_ptr<EnemyManager>				m_enemyManager;
 
+	//// テスト用
+	std::unique_ptr<Gauge>						m_gauge;
+
+	std::unique_ptr<DirectX::Model>				m_skySphere;
 };

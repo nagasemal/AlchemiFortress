@@ -10,7 +10,7 @@
 
 #define MAX_RAGE DirectX::SimpleMath::Vector2(450,300)
 
-#define MINI_BOX_POS DirectX::SimpleMath::Vector2(-135,-135)
+#define MINI_BOX_POS DirectX::SimpleMath::Vector2(-85,-95)
 
 MachineExplanation::MachineExplanation():
 	m_moveTime(),
@@ -39,6 +39,10 @@ void MachineExplanation::Initialize()
 
 	m_data.pos  = { 180,550};
 	m_data.rage = { 300,300};
+
+	m_machineGauge = std::make_unique<MachineGauge>();
+	m_machineGauge->AddHPGauge({m_data.pos.x + 50,m_data.pos.y - 110}, { 0.20,0.20 }, UserInterface::MIDDLE_CENTER);
+
 }
 
 void MachineExplanation::Update()
@@ -49,6 +53,13 @@ void MachineExplanation::Update()
 	m_moveTime += deltaTime.GetDeltaTime();
 
 	m_hitFlag = HitObject(pIS.GetMousePosScreen());
+
+}
+
+void MachineExplanation::Update_MachineData(AlchemicalMachineObject* object)
+{
+
+	m_machineGauge->Update(object->GetHP(),object->GetMAXHP());
 
 }
 
@@ -70,9 +81,12 @@ void MachineExplanation::Draw()
 	DirectX::SimpleMath::Vector2 miniBox_pos = { m_data.pos.x + MINI_BOX_POS.x ,m_data.pos.y + MINI_BOX_POS.y };
 
 	// 内部BOX (オブジェクトを配置する箇所)
-	pSB->Draw(m_texture.Get(), miniBox_pos, &srcRect, colour, 0.0f, XMFLOAT2(), 1.5f);
+	pSB->Draw(m_texture.Get(), miniBox_pos, &srcRect, colour, 0.0f, XMFLOAT2(64 / 2,64 / 2), 1.5f);
 
 	pSB->End();
+
+	// HPゲージ
+	m_machineGauge->Render();
 }
 
 void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* secondModel, AlchemicalMachineObject* object)
@@ -89,12 +103,14 @@ void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* se
 	modelData *= SimpleMath::Matrix::CreateRotationZ(m_moveTime);
 
 	// ワールド座標変換
-	DirectX::SimpleMath::Vector3 worldPos = CalcScreenToXZN((int)m_data.pos.x - 74,
+	DirectX::SimpleMath::Vector3 worldPos = CalcScreenToXZN((int)m_data.pos.x - 78,
 															(int)m_data.pos.y - 64,
 															pDR->GetOutputSize().right,
 															pDR->GetOutputSize().bottom,
 															m_camera->GetViewMatrix(),
 															m_camera->GetProjectionMatrix());
+
+	worldPos.z = 2.0f;
 
 	modelData *= DirectX::SimpleMath::Matrix::CreateTranslation(worldPos);
 
@@ -128,6 +144,12 @@ void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* se
 
 bool MachineExplanation::OnMouse()
 {
+
+	if (m_hitFlag)
+	{
+		int a = 0;
+	}
+
 	return m_hitFlag;
 }
 

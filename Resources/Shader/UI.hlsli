@@ -1,6 +1,7 @@
 cbuffer ConstBuffer	: register(b0)
 {
 	float4 windowSize;
+	float4 colors;
 };
 
 struct VS_INPUT

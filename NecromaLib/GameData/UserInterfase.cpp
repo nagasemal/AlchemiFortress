@@ -27,15 +27,15 @@ UserInterface::UserInterface()
 	, m_res(nullptr)
 	, m_scale(SimpleMath::Vector2::One)
 	, m_position(SimpleMath::Vector2::Zero)
+	, m_value(1)
 	, m_anchor(ANCHOR::TOP_LEFT)
 	, m_renderRatio(1.0f)
+	, m_color(1.0f,1.0f,1.0f,1.0f)
 {
-
 }
 
-/// <summary>
+
 /// デストラクタ
-/// </summary>
 UserInterface::~UserInterface()
 {
 }
@@ -104,9 +104,9 @@ void UserInterface::CreateShader()
 	auto device = m_pDR->GetD3DDevice();
 
 	// コンパイルされたシェーダファイルを読み込み
-	BinaryFile VSData = BinaryFile::LoadFile(L"Resources/Shaders/UI_VS.cso");
-	BinaryFile GSData = BinaryFile::LoadFile(L"Resources/Shaders/UI_GS.cso");
-	BinaryFile PSData = BinaryFile::LoadFile(L"Resources/Shaders/UI_PS.cso");
+	BinaryFile VSData = BinaryFile::LoadFile(L"Resources/Shader/UI_VS.cso");
+	BinaryFile GSData = BinaryFile::LoadFile(L"Resources/Shader/UI_GS.cso");
+	BinaryFile PSData = BinaryFile::LoadFile(L"Resources/Shader/UI_PS.cso");
 
 	//インプットレイアウトの作成
 	device->CreateInputLayout(&INPUT_LAYOUT[0],
@@ -141,7 +141,7 @@ void UserInterface::CreateShader()
 	bd.ByteWidth = sizeof(ConstBuffer);
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	bd.CPUAccessFlags = 0;
-	device->CreateBuffer(&bd, nullptr, &m_CBuffer);
+	device->CreateBuffer(&bd, nullptr, &m_cBuffer);
 }
 
 // 描画関数
@@ -157,18 +157,19 @@ void UserInterface::Render()
 	VertexPositionColorTexture vertex[1] = {
 		VertexPositionColorTexture(SimpleMath::Vector3(m_scale.x, m_scale.y, static_cast<float>(m_anchor))
 		, SimpleMath::Vector4(m_position.x, m_position.y, static_cast<float>(m_textureWidth), static_cast<float>(m_textureHeight))
-		, SimpleMath::Vector2(m_renderRatio,0.0f))
+		, SimpleMath::Vector2(m_renderRatio,m_value))
 	};
 
 	//シェーダーに渡す追加のバッファを作成する。(ConstBuffer）
 	ConstBuffer cbuff;
 	cbuff.windowSize = SimpleMath::Vector4(static_cast<float>(m_windowWidth), static_cast<float>(m_windowHeight), 1, 1);
+	cbuff.color = m_color;
 
 	//受け渡し用バッファの内容更新(ConstBufferからID3D11Bufferへの変換）
-	context->UpdateSubresource(m_CBuffer.Get(), 0, NULL, &cbuff, 0, 0);
+	context->UpdateSubresource(m_cBuffer.Get(), 0, NULL, &cbuff, 0, 0);
 
 	//シェーダーにバッファを渡す
-	ID3D11Buffer* cb[1] = { m_CBuffer.Get() };
+	ID3D11Buffer* cb[1] = { m_cBuffer.Get() };
 	context->VSSetConstantBuffers(0, 1, cb);
 	context->GSSetConstantBuffers(0, 1, cb);
 	context->PSSetConstantBuffers(0, 1, cb);
@@ -197,7 +198,6 @@ void UserInterface::Render()
 
 	//ピクセルシェーダにテクスチャを登録する。
 	context->PSSetShaderResources(0, 1, m_texture.GetAddressOf());
-
 
 	//インプットレイアウトの登録
 	context->IASetInputLayout(m_inputLayout.Get());

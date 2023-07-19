@@ -4,6 +4,7 @@
 #include "NecromaLib/Singleton/DeltaTime.h"
 
 #define  CORRECTION_VALUE 0.2f
+#define  MAX_SAVEWHELL -3500
 
 
 const float MoveCamera::DEFAULT_CAMERA_DISTANCE = 15.0f;
@@ -14,11 +15,12 @@ MoveCamera::MoveCamera()
 	, m_prevX(0)
 	, m_prevY(0)
 	, m_move{ 0.f }
-	, m_scrollWheelValue(50)
+	, m_scrollWheelValue(0)
 	, m_view(DirectX::SimpleMath::Matrix::Identity)
 	, m_eye(0.0f, 0.0f, 0.0f)
 	, m_target{ 0.f }
 	, m_time()
+	, m_prevWheelValue()
 {
 }
 
@@ -41,7 +43,7 @@ void MoveCamera::Initialize()
 
 }
 
-void MoveCamera::Update()
+void MoveCamera::Update(bool scroll, bool move)
 {
 	auto state = InputSupport::GetInstance().GetMouseState().GetLastState();
 
@@ -55,23 +57,57 @@ void MoveCamera::Update()
 
 	}
 
-	// マウスの右クリック＆ドラッグでカメラ座標を更新する
-	if (state.rightButton)
+	// カメラ移動をするか否か
+	if (move)
 	{
-		DraggedDistance(state.x, state.y);
-	}
-
+		// マウスの右クリック＆ドラッグでカメラ座標を更新する
+		if (state.rightButton)
+		{
+			DraggedDistance(state.x, state.y);
+		}
 	// マウスの座標を前回の値として保存
 	m_prevX = state.x;
 	m_prevY = state.y;
 
-	// マウスホイールのスクロール値を取得
-	m_scrollWheelValue = state.scrollWheelValue;
-	if (m_scrollWheelValue > 0)
-	{
-		m_scrollWheelValue = 0;
-		DirectX::Mouse::Get().ResetScrollWheelValue();
 	}
+
+	// スクロールをするか否か
+	if (scroll)
+	{
+		int value = state.scrollWheelValue - m_prevWheelValue;
+		int newValue = m_scrollWheelValue + value;
+
+		// 上限下限設定(clamp)
+		if (newValue <= MAX_SAVEWHELL) newValue = MAX_SAVEWHELL;
+		if (newValue > 0) newValue = 0;
+
+		if (newValue != 0 && newValue != MAX_SAVEWHELL)
+		{
+			m_scrollWheelValue = newValue;
+		}
+		else
+		{
+			value = 0;
+		}
+
+		if (m_scrollWheelValue == MAX_SAVEWHELL && value > 0)
+		{
+			m_scrollWheelValue -= value;
+		}
+		else if (m_scrollWheelValue == 0 && value < 0)
+		{
+			m_scrollWheelValue -= value;
+		}
+
+		if (m_scrollWheelValue > 0)
+		{
+			m_scrollWheelValue = 0;
+			DirectX::Mouse::Get().ResetScrollWheelValue();
+		}
+	}
+
+	// 前回の値を保存
+	m_prevWheelValue = state.scrollWheelValue;
 
 	// ビュー行列の算出
 	CalculateViewMatrix();

@@ -16,6 +16,9 @@ Bullet::Bullet(float speed, float damage, float life,DirectX::SimpleMath::Color 
 	m_data.rage = DirectX::SimpleMath::Vector3(1, 1, 1);
 
 	m_targetVectol = targetVector;
+
+	m_enemyHit = false;
+
 }
 
 Bullet::Bullet(BulletData data, DirectX::SimpleMath::Color color, DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 targetVector)
@@ -33,6 +36,7 @@ Bullet::Bullet(BulletData data, DirectX::SimpleMath::Color color, DirectX::Simpl
 
 Bullet::~Bullet()
 {
+
 }
 
 void Bullet::Initialize()
@@ -50,20 +54,23 @@ void Bullet::Update()
 
 	vec.y = m_data.pos.y;
 
-	DirectX::SimpleMath::Vector3 nomalizeVec = vec * (m_bulletData.speed * deltaTime);
+	DirectX::SimpleMath::Vector3 nomalizeVec = vec * deltaTime;
 
-	//nomalizeVec.Normalize();
+	// ê≥ãKâª
+	nomalizeVec.Normalize();
 
-	m_data.pos += nomalizeVec;
+	m_data.pos += (nomalizeVec / 10) * m_bulletData.speed;
 
 }
 
 void Bullet::Draw()
 {
+
 }
 
 void Bullet::Finalize()
 {
+
 }
 
 void Bullet::Render(GeometricPrimitive* geo)

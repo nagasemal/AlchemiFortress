@@ -5,7 +5,8 @@
 #include <algorithm>
 #include <random>
 
-FieldObjectManager::FieldObjectManager()
+FieldObjectManager::FieldObjectManager():
+	m_crystalTomouseFlag()
 {
 }
 
@@ -43,7 +44,7 @@ void FieldObjectManager::Initialize()
 	m_field->Initialize();
 	m_playerBase->Initialize();
 
-	CrystalSpawn(5);
+	CrystalSpawn(30);
 
 	//m_crystals->push_back(*std::make_unique<Crystal>(DirectX::SimpleMath::Vector3(1, -1.0f,5), cos(5)));
 
@@ -63,11 +64,20 @@ void FieldObjectManager::Update()
 	// プレイヤー拠点の更新処理
 	m_playerBase->Update();
 
+	m_crystalTomouseFlag = false;
+
 	// クリスタルの更新処理
 	for (std::list<Crystal>::iterator it = m_crystals->begin(); it != m_crystals->end(); it++)
 	{
 		it->Update();
+
+		// クリスタルがマウスに触れている
+		if (!m_crystalTomouseFlag)
+		{
+			m_crystalTomouseFlag = it->GetHitMouse();
+		}
 	}
+
 }
 
 void FieldObjectManager::Draw()
@@ -83,6 +93,7 @@ void FieldObjectManager::Draw()
 	{
 		it->Render(m_crystalModel.get());
 	}
+
 
 }
 
@@ -110,7 +121,7 @@ void FieldObjectManager::Finalize()
 
 void FieldObjectManager::CrystalSpawn(int num)
 {
-	int rage = 4;
+	int minRage = 2;
 
 	for (int i = 0; i < num; i++)
 	{
@@ -118,7 +129,7 @@ void FieldObjectManager::CrystalSpawn(int num)
 		std::default_random_engine engine(seed());
 		std::uniform_real_distribution<> dist(0, XM_2PI);
 
-		std::uniform_int_distribution<> dist2(rage,m_field->GetCircle().r);
+		std::uniform_int_distribution<> dist2(minRage,m_field->GetCircle().r);
 		std::random_device rd;
 		std::mt19937 gen(rd());
 

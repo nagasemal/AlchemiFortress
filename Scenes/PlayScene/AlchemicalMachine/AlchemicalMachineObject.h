@@ -13,6 +13,7 @@
 
 class EnemyObject;
 class Bullet;
+class SelectionBox;
 
 class AlchemicalMachineObject : public GameObjct3D
 {
@@ -23,10 +24,10 @@ public:
 	{
 		NONE			 = 0,	// 指定なし
 		ATTACKER		 = 1,	// 攻撃型
-		DEFENSER		 = 2,	// 防御型
-		MINING			 = 3,	// 採掘型
-		RECOVERY		 = 4,	// 魔力回収型
-		UPEER			 = 5,	// 範囲内強化型
+		UPEER			 = 2,	// 範囲内強化型
+		DEFENSER		 = 3,	// 防御型
+		MINING			 = 4,	// 採掘型
+		RECOVERY		 = 5,	// 魔力回収型
 
 		NUM
 	};
@@ -65,46 +66,93 @@ public:
 	// LvUp専用処理
 	virtual void LvUp() = 0;
 
+	// 共通してアップデートをかける処理
+	void SelectUpdate_Common();
+
 	// 他のオブジェクト同士の当たり判定
 	void HitToObject(MousePointer* pMP);
 
 	// 効果範囲内に3Dオブジェクトが入った
 	bool OnCollisionEnter_MagicCircle(GameObjct3D* object);
 	
-	// モデル描画系
+	/// <summary>
+	/// モデル描画系
+	/// </summary>
+	/// <param name="model">　　　 ベースのモデル　</param>
+	/// <param name="ring">　　　　追加パーツ</param>
 	void ModelRender(DirectX::Model* model,DirectX::Model* ring = nullptr);
 
 	// 召喚
 	void SummonAM(DirectX::SimpleMath::Vector3 pos);
 
-
 // アクセサ
 public:
 
+	// 存在しているか否か
 	const bool GetActive()									const { return m_active; }
+
+	// マウスが触れているか否か
 	const bool GetHitMouse()								const { return m_hitMouseFlag;}
+
+	// オブジェクトの名前
 	const std::string GetObjectName()						const { return m_objectName; }
+
+	// オブジェクトのタイプ
 	const MACHINE_TYPE GetModelID()							const { return m_machineID;}
+
+	// 現在未使用
 	const float GetMachineEffectNum()						const { return m_machineEffectNum; }
+
+	// 効果発動までの時間
 	const float GetSpan()									const { return m_span;}
+	
+	// 現在レベル
 	const int	  GetLv()									const { return m_lv; }
+
+	// 現在HP
+	const int	  GetHP()									const { return m_hp; }
+
+	// 現在MAXHP
+	const int	  GetMAXHP()								const { return m_maxHp; }
+
+	// 効果範囲
 	const Circle GetMagicCircle()							const { return m_magicCircle; }
-	const DirectX::SimpleMath::Color GetColor()				const { return m_color; }
+
+	// 保有している色情報
+	// HPが0ならば黒を返します
+	const DirectX::SimpleMath::Color GetColor()				const { return m_hp <= 0 ? DirectX::SimpleMath::Color(0, 0, 0, 1): m_color;}
+
+	// 何かの要因で変化を受けている状態
 	const bool GetPowerUpFlag()								const { return m_powerUPFlag; }
+
+	// 現在の属性
 	const MACHINE_ELEMENT GetElement()						const { return m_element; }
 
-	void SetPos(DirectX::SimpleMath::Vector3 pos)	{ m_data.pos = pos; }
-	void SetMagicCircle(Circle circle)				{ m_magicCircle = circle;}
+	// 現在どのライン上に存在しているか
+	const int GetLine()										const { return m_line; }
+
+	void SetPos(DirectX::SimpleMath::Vector3 pos)		{ m_data.pos = pos; }
+	void SetMagicCircle(Circle circle)					{ m_magicCircle = circle;}
+	void SetActive(bool flag)							{ m_active = flag; }
+	void SetLine(int line)								{ m_line = line; }
+	void SetPowerUpFlag(bool flag)						{ m_powerUPFlag = flag; }
+	void SetSelectModeFlag(bool flag)					{ m_selectModeFlag = flag;}
 
 private:
 
 protected:
+
+	// Lvの最大値
+	static const int MAX_LV = 5;
 
 	// マシンID　キーとしてモデルの受け取りを行う
 	MACHINE_TYPE m_machineID;
 
 	// マシンの耐久値
 	int m_hp;
+
+	// マシンの最大耐久値
+	int m_maxHp;
 
 	// マシンのレベル
 	int m_lv;
@@ -120,6 +168,9 @@ protected:
 
 	// 何かしらの影響で強化を受けているか
 	bool m_powerUPFlag;
+
+	// 選択モード時のフラグ
+	bool m_selectModeFlag;
 
 	// マウスが当たっているか否か
 	bool m_hitMouseFlag;
@@ -137,5 +188,14 @@ protected:
 
 	// オブジェクトの属性
 	MACHINE_ELEMENT m_element;
+
+	// オブジェクトのライン位置(どの円形線状にあるか)
+	int m_line;
+
+	// LvUp用の選択ボックス
+	std::unique_ptr<SelectionBox> m_selectLvUpBox;
+
+	// 修理用の選択ボックス
+	std::unique_ptr<SelectionBox> m_repairBox;
 
 };

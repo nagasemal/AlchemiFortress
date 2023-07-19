@@ -3,7 +3,7 @@
 
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/InputSupport.h"
-#define RAGE 20.f
+#define RAGE 100.f
 
 Field::Field():
 	m_hitMouseFlag()

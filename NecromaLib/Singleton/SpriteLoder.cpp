@@ -15,13 +15,44 @@ void SpriteLoder::Loading()
 		m_elementTextures.ReleaseAndGetAddressOf()
 	);
 
+	// 製造の文字テクスチャ
+	DirectX::CreateWICTextureFromFile(
+		ShareData::GetInstance().GetDevice(),
+		L"Resources/Textures/Seizou.png",
+		nullptr,
+		m_ManufacturingTexture.ReleaseAndGetAddressOf()
+	);
 
+	// 数字テクスチャ
+	DirectX::CreateWICTextureFromFile(
+		ShareData::GetInstance().GetDevice(),
+		L"Resources/Textures/number_1.png",
+		nullptr,
+		m_NumberTexture.ReleaseAndGetAddressOf()
+	);
+
+	// 魔法陣テクスチャ
+	DirectX::CreateWICTextureFromFile(
+		ShareData::GetInstance().GetDevice(),
+		L"Resources/Textures/MajicCircle.png",
+		nullptr,
+		m_MagicCircleTexture[0].ReleaseAndGetAddressOf()
+	);
+
+	// 魔法陣テクスチャ2
+	DirectX::CreateWICTextureFromFile(
+		ShareData::GetInstance().GetDevice(),
+		L"Resources/Textures/MagicCircle_2.png",
+		nullptr,
+		m_MagicCircleTexture[1].ReleaseAndGetAddressOf()
+	);
 }
 
 void SpriteLoder::Finalize()
 {
 	// 解放
 	m_elementTextures.Reset();
+	m_ManufacturingTexture.Reset();
 
 }
 

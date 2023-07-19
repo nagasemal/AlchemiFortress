@@ -36,6 +36,8 @@ public:
 	// 親クラスに消す処理を行わせる
 	bool DeleteRequest();
 
+	bool GetHitMouse();
+
 public:
 
 	// オブジェクトタイプを渡す
@@ -44,6 +46,8 @@ public:
 private:
 
 	float m_rotateY;
+
+	bool m_selectFlag;
 
 	OBJECT_TYPE m_type;
 	

@@ -40,10 +40,11 @@ public:
 	int			GetBaseLv()		const { return m_baseLv;}
 	float		GetHP()			const { return m_hp; }
 	float		GetExp()		const { return m_exp; }
-	bool		GetHitMouse()	const { return m_hitMouseFlag; }
+	bool		GetHitMouse()	const { return m_hitMouseFlag;}
+	bool		GetLvUpTiming() const { return m_lvUpTiming; }
 
 	void		PulsExp(float pulsExp)	{ m_exp += pulsExp;}
-	void		Damage(float damage)	{ m_hp  -= damage;  }
+	void		Damage(float damage);
 
 private:
 
@@ -51,6 +52,8 @@ private:
 	float		m_hp;					//  拠点Hp
 	float		m_exp;					//  現在の経験値量
 	bool		m_hitMouseFlag;			//  マウスが当たっているか否か
+	bool		m_lvUpTiming;			//  レベルアップのタイミングフラグ
+	float		m_invincibleTime;		//	無敵時間
 
 	std::unique_ptr<DirectX::Model> m_baseModel;	//  拠点の3Dモデル
 

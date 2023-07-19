@@ -40,9 +40,12 @@ public:
 public:
 
 	void SetLife(float life)	{ m_bulletData.life = life; }
+	void SetEnemyHit(bool flag) { m_enemyHit = flag; }
 
 	float GetDamage()			{ return m_bulletData.damage;}
 	float GetLife()				{ return m_bulletData.life; }
+	bool GetEnemyHit()			{ return m_enemyHit; }
+	DirectX::SimpleMath::Color GetColor()	{ return m_color; }
 
 private:
 
@@ -52,5 +55,5 @@ private:
 	DirectX::SimpleMath::Vector3 m_startPos;
 	DirectX::SimpleMath::Vector3 m_targetVectol;
 
-
+	bool m_enemyHit;
 };

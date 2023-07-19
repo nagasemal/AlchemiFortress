@@ -10,6 +10,7 @@
 
 #pragma once
 #include "EnemyObject.h"
+#include "Scenes/PlayScene/Shadow/Particle.h"
 #include <list>
 
 class EnemyManager
@@ -37,6 +38,13 @@ private:
 
 	//===後で消すテスト用変数
 	std::unique_ptr<DirectX::GeometricPrimitive> m_testBox;	//  仮置き四角モデル
+
+	// パーティクルクラス
+	std::unique_ptr<Particle> m_particle_spawn;
+	std::unique_ptr<Particle> m_particle_delete;
+
+	// ラウンド進行
+	float m_nextEnemyTime;
 
 	float m_timer;
 	float m_totalTimer;

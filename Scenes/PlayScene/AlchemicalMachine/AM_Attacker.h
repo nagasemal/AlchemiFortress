@@ -61,13 +61,10 @@ public:
 //　アクセサ
 public:
 
-	BulletStatus GetBulletStatus() { return m_bulletStatus;}
+	const BulletStatus GetBulletStatus()	const { return m_bulletStatus;}
 
-	int GetNextLvCrystal()			{ return (15 * m_lv) * (5 * m_lv); }
-
-private:
-
-
+	// 次回必要となるクリスタルの数
+	const int GetNextLvCrystal()			const { return (15 * m_lv) * (5 * m_lv); }
 
 private:
 
@@ -77,8 +74,6 @@ private:
 	BulletStatus m_saveBulletStatus;	// 加工元のバレットデータ
 
 	DirectX::SimpleMath::Vector3 m_targetPos;
-
-	//std::list<Bullet> m_bullets;
 
 	// 選択可能オブジェクト
 	std::unique_ptr<SelectionBox> m_selectBox[4];

@@ -1,5 +1,10 @@
 #include "pch.h"
 #include "AM_Upper.h"
+#include "NecromaLib/GameData/SpriteCutter.h"
+#include "NecromaLib/Singleton/SpriteLoder.h"
+
+#define LVUP_MAGNIFICATION_HP 1.25f
+#define STANDARD_HP 30
 
 AM_Upper::AM_Upper()
 {
@@ -14,7 +19,7 @@ void AM_Upper::Initialize()
 	m_machineID = MACHINE_TYPE::UPEER;
 	m_objectName = "Upper";
 
-	m_magicCircle.r = 3.0f;
+	m_magicCircle.r = 8.0f;
 
 	ShareData& pSD = ShareData::GetInstance();
 	// 警告消し
@@ -46,7 +51,7 @@ void AM_Upper::SelectUpdate()
 		m_selectBox[2]->HitMouse();
 		m_selectBox[3]->HitMouse();
 
-		//　　外部ファイルから読み込めるようにしたい
+		//　外部ファイルから読み込めるようにしたい
 		//　火属性取得
 		if (m_selectBox[0]->ClickMouse())
 		{
@@ -95,14 +100,37 @@ void AM_Upper::Finalize()
 void AM_Upper::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
 {
 
+	SpriteLoder& pSL = SpriteLoder::GetInstance();
+	RECT rect_lv = SpriteCutter(64, 64, m_lv, 0);
+	m_selectLvUpBox->DrawUI(texture, pSL.GetNumberTexture(), rect_lv);
+
+
 	if (m_element != NOMAL) return;
 
 	for (int i = 0; i < 4; i++)
 	{
-		m_selectBox[i]->DrawUI(texture);
+		SpriteLoder& pSL = SpriteLoder::GetInstance();
+
+		RECT rect = SpriteCutter(64, 64, 2 + i, 0);
+
+		m_selectBox[i]->DrawUI(texture, pSL.GetElementTexture(), rect);
 	}
 }
 
 void AM_Upper::LvUp()
 {
+	// クリスタルを減らす
+	DataManager& pDM = *DataManager::GetInstance();
+
+	// Lvが上限または変更後のクリスタルが0以下
+	if (m_lv >= MAX_LV || pDM.GetNowCrystal() - GetNextLvCrystal() <= 0) return;
+
+	pDM.SetNowCrystal(pDM.GetNowCrystal() - GetNextLvCrystal());
+
+	m_lv++;
+
+	// HP強化
+	m_maxHp = (int)(STANDARD_HP * LVUP_MAGNIFICATION_HP);
+	// HP回復
+	m_hp = m_maxHp;
 }

@@ -93,6 +93,8 @@ void Game::Update(DX::StepTimer const& timer)
     float elapsedTime = float(timer.GetElapsedSeconds());
     pDeltaT->SetDeltaTime(elapsedTime);
 
+    pDeltaT->SetTotalTime(float(timer.GetTotalTicks()));
+
     m_SceneManager.get()->Update(timer);
 
     //===[ XVˆ— ]===//
