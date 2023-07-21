@@ -29,10 +29,10 @@ AlchemicalMachineObject::AlchemicalMachineObject():
 	m_line()
 {
 	m_selectLvUpBox = std::make_unique<SelectionBox>(DirectX::SimpleMath::Vector2(170, 490),
-		DirectX::SimpleMath::Vector2(64, 64));
+		DirectX::SimpleMath::Vector2(1.0f, 1.0f));
 
 	m_repairBox = std::make_unique<SelectionBox>(DirectX::SimpleMath::Vector2(250, 490),
-		DirectX::SimpleMath::Vector2(64, 64));
+		DirectX::SimpleMath::Vector2(1.0f, 1.0f));
 }
 
 void AlchemicalMachineObject::SelectUpdate_Common()

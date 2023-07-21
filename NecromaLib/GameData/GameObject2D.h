@@ -44,6 +44,27 @@ public:
 	SimpleMath::Vector2 GetRage() { return m_data.rage; }
 	SimpleMath::Vector2 GetPos() { return m_data.pos; }
 
+	// 当たる対象のオブジェクト
 	bool  HitObject(SimpleMath::Vector2 pos);
+
+	/// <summary>
+	/// スプライトバッチでの描画オブジェクトに適した当たり判定
+	/// </summary>
+	/// <param name="pos">対象のオブジェクトのポジション</param>
+	/// <param name="width">横幅</param>
+	/// <param name="height">縦幅</param>
+	/// <param name="percent">0 ~ 1の範囲の拡縮率</param>
+	/// <returns></returns>
+	bool HitObject_RageSet(SimpleMath::Vector2 pos, float width = 64.0f, float height = 64.0f, float percent = 1.0f);
+
+	/// <summary>
+/// スプライトバッチでの描画オブジェクトに適した当たり判定
+/// </summary>
+/// <param name="pos">対象のオブジェクトのポジション</param>
+/// <param name="width">横幅</param>
+/// <param name="height">縦幅</param>
+/// <param name="percent">0 ~ 1の範囲の拡縮率</param>
+/// <returns></returns>
+	bool HitObject_RageSet(SimpleMath::Vector2 pos, float width = 64.0f, float height = 64.0f, DirectX::SimpleMath::Vector2 percent = {1.0f,1.0f});
 
 };

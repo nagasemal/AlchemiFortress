@@ -8,11 +8,11 @@
 #include "NecromaLib/Singleton/DeltaTime.h"
 
 
-#define IMAGE_WIGHT		 64
-#define IMAGE_HEIGHT	 64
+#define IMAGE_WIGHT			64
+#define IMAGE_HEIGHT		64
 
-#define BOX_DISTANS_X 68
-#define BOX_DISTANS_Y 80
+#define BOX_DISTANS_X		68
+#define BOX_DISTANS_Y		80
 
 MachineSelect::MachineSelect():
 	m_hitMouseFlag(),
@@ -31,7 +31,7 @@ MachineSelect::~MachineSelect()
 
 void MachineSelect::Initialize()
 {
-	m_data.rage = { 64,64 };
+	m_data.rage = { 1.0f,1.0f };
 
 	m_machineBox = std::make_unique<SelectionBox>(m_data.pos, m_data.rage);
 	m_machineBox->Initialize();
@@ -40,13 +40,13 @@ void MachineSelect::Initialize()
 	for (int i = 0; i < 3; i++)
 	{
 		m_selectionBox[i] = std::make_unique<SelectionBox>(DirectX::SimpleMath::Vector2((m_data.pos.x - BOX_DISTANS_X) + (i * BOX_DISTANS_X),m_data.pos.y + BOX_DISTANS_Y),
-														   DirectX::SimpleMath::Vector2(1, 1));
+														   DirectX::SimpleMath::Vector2(1.0f, 1.0f));
 		m_selectionBox[i]->Initialize();
 	}
 
 	// 製造ボタン
 	m_selectionManufacturing = std::make_unique<SelectionBox>(DirectX::SimpleMath::Vector2(m_data.pos.x, m_data.pos.y + 150),
-							   DirectX::SimpleMath::Vector2(64, 64));
+							   DirectX::SimpleMath::Vector2(3.0f,1.0f));
 
 	m_selectionManufacturing->Initialize();
 
@@ -126,8 +126,8 @@ void MachineSelect::DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceVie
 	if (m_hitMouseFlag)
 	{
 
-		RECT rect[3] = {SpriteCutter(64, 64, 0, 0),						// 必要魔力量
-						SpriteCutter(64, 64, 1, 0),						// 必要結晶数
+		RECT rect[3] = {SpriteCutter(IMAGE_WIGHT, IMAGE_HEIGHT, 0, 0),						// 必要魔力量
+						SpriteCutter(IMAGE_WIGHT, IMAGE_HEIGHT, 1, 0),						// 必要結晶数
 						SpriteCutter(0, 0, m_selectMachineType, 1)};	// 必要魔法
 
 		for (int i = 0; i < 3; i++)
@@ -162,6 +162,7 @@ void MachineSelect::DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceVie
 			auto lights = dynamic_cast<IEffectLights*>(effect);
 			// 色変更
 			lights->SetLightDiffuseColor(0, Colors::White);
+
 		});
 
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, view, proj);

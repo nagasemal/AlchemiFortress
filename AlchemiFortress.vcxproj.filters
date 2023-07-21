@@ -289,6 +289,9 @@
     <ClInclude Include="Scenes\PlayScene\UI\Number.h">
       <Filter>Scene\PlayScene\UI</Filter>
     </ClInclude>
+    <ClInclude Include="NecromaLib\GameData\CommonStruct.h">
+      <Filter>NecromaLib\GameData\GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />

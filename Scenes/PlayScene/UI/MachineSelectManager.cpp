@@ -6,13 +6,14 @@
 #include "Scenes/PlayScene/UI/DisplayMagicCircle.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
 
-#define POS 		DirectX::SimpleMath::Vector2(64, 64)
+#define POS 		DirectX::SimpleMath::Vector2(532, 64)
 #define DIRECTION	120.f
 
 MachineSelectManager::MachineSelectManager() :
 	m_selectMachineType(AlchemicalMachineObject::MACHINE_TYPE::NONE),
 	m_selectBoxAll(false),
-	m_manufacturingFlag(false)
+	m_manufacturingFlag(false),
+	m_selectNoneFlag(false)
 {
 }
 

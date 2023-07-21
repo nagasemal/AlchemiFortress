@@ -69,7 +69,7 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textu
 	DirectX::SimpleMath::Vector2 box_Pos = { m_data.pos.x,m_data.pos.y };
 
 	// 選択BOX
-	pSB->Draw(texture.Get(), box_Pos, &srcRect, colour, 0.0f, DirectX::XMFLOAT2(64 / 2, 64 / 2), 1.0f);
+	pSB->Draw(texture.Get(), box_Pos, &srcRect, colour, 0.0f, DirectX::XMFLOAT2(64 / 2, 64 / 2), m_data.rage);
 
 	// 中に表示するテクスチャがある場合
 	if (pulsTexture)
@@ -84,7 +84,7 @@ bool SelectionBox::HitMouse()
 {
 
 	InputSupport& pIS = InputSupport::GetInstance();
-	return m_hitMouseFlag = HitObject(pIS.GetMousePosScreen());
+	return m_hitMouseFlag = HitObject_RageSet(pIS.GetMousePosScreen(),64,64,m_data.rage);
 }
 
 bool SelectionBox::ClickMouse()
@@ -126,7 +126,7 @@ bool SelectionBox::ExitMouse()
 
 	if (m_hitMouseFlag)
 	{
-		exitFlag = !HitObject(pIS.GetMousePosScreen());
+		exitFlag = !HitObject_RageSet(pIS.GetMousePosScreen(), 64, 64, m_data.rage);
 	}
 
 	return exitFlag;

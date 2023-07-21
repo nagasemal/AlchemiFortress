@@ -2,6 +2,7 @@
 #include "MoveCamera.h"
 #include "NecromaLib/Singleton/InputSupport.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
+#include "NecromaLib/GameData/Easing.h"
 
 #define  CORRECTION_VALUE 0.2f
 #define  MAX_SAVEWHELL -3500
@@ -19,7 +20,9 @@ MoveCamera::MoveCamera()
 	, m_view(DirectX::SimpleMath::Matrix::Identity)
 	, m_eye(0.0f, 0.0f, 0.0f)
 	, m_target{ 0.f }
+	, m_saveTarget{ 0.f }
 	, m_time()
+	, m_targetChangeTime()
 	, m_prevWheelValue()
 {
 }
@@ -46,6 +49,7 @@ void MoveCamera::Initialize()
 void MoveCamera::Update(bool scroll, bool move)
 {
 	auto state = InputSupport::GetInstance().GetMouseState().GetLastState();
+	auto keyboard = InputSupport::GetInstance().GetKeybordState().GetLastState();
 
 	// 開始時引く為の処理
 	if (m_time <= 1)
@@ -57,11 +61,16 @@ void MoveCamera::Update(bool scroll, bool move)
 
 	}
 
+	m_targetChangeTime += DeltaTime::GetInstance().GetDeltaTime() * 1.15f;
+
+	if (m_targetChangeTime <= 0) m_targetChangeTime = 0;
+	if (m_targetChangeTime >= 1) m_targetChangeTime = 1;
+
 	// カメラ移動をするか否か
 	if (move)
 	{
 		// マウスの右クリック＆ドラッグでカメラ座標を更新する
-		if (state.rightButton)
+		if (state.rightButton && keyboard.LeftShift)
 		{
 			DraggedDistance(state.x, state.y);
 		}
@@ -111,6 +120,13 @@ void MoveCamera::Update(bool scroll, bool move)
 
 	// ビュー行列の算出
 	CalculateViewMatrix();
+}
+
+void MoveCamera::TargetChange(DirectX::SimpleMath::Vector3 targetA, DirectX::SimpleMath::Vector3 targetB)
+{
+	m_target.x = Easing::EaseOutQuint(targetA.x, targetB.x, m_targetChangeTime);
+	m_target.y = Easing::EaseOutBounce(targetA.y, targetB.y, m_targetChangeTime);
+	m_target.z = Easing::EaseOutQuint(targetA.z, targetB.z, m_targetChangeTime);
 }
 
 void MoveCamera::DraggedDistance(int x, int y)

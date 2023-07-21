@@ -29,6 +29,10 @@ public:
 	// 解放
 	void Finalize();
 
+	// 選択ボックスのテクスチャを渡す
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetSelectBoxTexture() { return m_selectBoxTexture; }
+	const wchar_t* GetSelectBoxTexturePath() { return L"Resources/Textures/log.png"; }
+
 	// 属性アイコンを渡す
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetElementTexture() { return m_elementTextures;}
 	const wchar_t* GetElementTexturePath() { return L"Resources/Textures/elementTex.png";}
@@ -48,6 +52,9 @@ public:
 private:
 	SpriteLoder();
 	static SpriteLoder* instance;
+
+	//　選択ボックスのテクスチャ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_selectBoxTexture;
 
 	//　属性アイコンのテクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_elementTextures;

@@ -108,6 +108,9 @@ public:
 	void SetAnchor(ANCHOR anchor);
 	ANCHOR GetAnchor() { return m_anchor; }
 
+	int GetTexture_W() { return m_textureWidth;}
+	int GetTexture_H() { return m_textureHeight; }
+
 	// äÑçá
 	void SetRenderRatio(float ratio) { m_renderRatio = ratio; }
 	float GetRenderRatio() { return m_renderRatio; }

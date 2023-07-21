@@ -11,6 +11,8 @@
 #pragma once
 #include "NecromaLib/GameData/UserInterfase.h"
 
+class SelectionBox;
+
 class Gauge
 {
 private:
@@ -44,17 +46,20 @@ private:
 	std::unique_ptr<UserInterface> m_gauge_Mp;
 	// 背景用
 	std::unique_ptr<UserInterface> m_base_Mp;
-	// フレーム
-	std::unique_ptr<UserInterface> m_falme_Mp;
+	// Mpの画像表示
+	std::unique_ptr<SelectionBox> m_box_mp;
 
 	// クリスタル
 	std::unique_ptr<UserInterface> m_gauge_Crystal;
 	std::unique_ptr<UserInterface> m_base_Crystal;
-	std::unique_ptr<UserInterface> m_falme_Crystal;
+
+	std::unique_ptr<SelectionBox> m_box_Crystal;
+
 
 	// HP
 	std::unique_ptr<UserInterface> m_gauge_Hp;
 	std::unique_ptr<UserInterface> m_base_Hp;
-	std::unique_ptr<UserInterface> m_falme_Hp;
+
+	std::unique_ptr<SelectionBox> m_box_Hp;
 
 };

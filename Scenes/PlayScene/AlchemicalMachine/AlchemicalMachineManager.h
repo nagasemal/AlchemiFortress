@@ -24,6 +24,7 @@
 
 class AlchemicalMachineObject;
 class Number;
+class MoveCamera;
 
 class AlchemicalMachineManager
 {
@@ -33,7 +34,7 @@ public:
 
 	void Initialize();
 
-	void Update(FieldObjectManager* fieldManager,MousePointer* pMP, EnemyManager* enemys);
+	void Update(FieldObjectManager* fieldManager,MousePointer* pMP, EnemyManager* enemys ,MoveCamera* moveCamera);
 
 	void Render();
 
@@ -95,10 +96,10 @@ private:
 		return pos;
 	}
 
+	// アルケミカルマシン選択ボックスの表示
 	std::unique_ptr<MachineSelectManager> m_selectManager;
 
-	//std::unique_ptr<DirectX::Model> m_Model[AlchemicalMachineObject::MACHINE_TYPE::NUM];
-
+	// アルケミカルマシンの説明ボックスの表示
 	std::unique_ptr<MachineExplanation> m_machineExplanation;
 
 	// アルケミカルマシン確保
@@ -109,21 +110,6 @@ private:
 
 	// アルケミカルマシンモデルの受け渡し
 	std::unique_ptr<AlchemicalMachineFilter> m_AMFilter;
-
-	bool m_allHitObjectToMouse;
-
-	// 現在選択されているオブジェクトの番号
-	int m_selectNumber;
-
-	// Mpが追加されるまでの時間
-	float m_mpPulsTimer;
-
-	// 前回のマウスホイールの数値
-	int m_saveWheelValue;
-	int m_scrollValue;
-
-	// 現在保有しているアルケミカルマシンの個数
-	int m_AMnums[AlchemicalMachineObject::MACHINE_TYPE::NUM];
 
 	// 所持数を示す
 	std::unique_ptr<Number> m_machineNumRender;
@@ -142,5 +128,25 @@ private:
 
 	// 魔法陣クラス(フィールド)
 	std::unique_ptr<MagicCircle> m_magicCircle_Field;
+
+
+	bool m_allHitObjectToMouse;
+
+	// 回転を止める
+	bool m_rotationStop;
+
+	// 現在選択されているオブジェクトの番号
+	int m_selectNumber;
+	DirectX::SimpleMath::Vector3 m_prevSelectMachinePos;
+
+	// Mpが追加されるまでの時間
+	float m_mpPulsTimer;
+
+	// 前回のマウスホイールの数値
+	int m_saveWheelValue;
+	int m_scrollValue;
+
+	// 現在保有しているアルケミカルマシンの個数
+	int m_AMnums[AlchemicalMachineObject::MACHINE_TYPE::NUM];
 
 };

@@ -4,6 +4,7 @@
 #include "NecromaLib/Singleton/InputSupport.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
 
+#include "Scenes/PlayScene/Camera/MoveCamera.h"
 #include "AM_None.h"
 #include "AM_Attacker.h"
 #include "AM_Defenser.h"
@@ -31,10 +32,12 @@
 AlchemicalMachineManager::AlchemicalMachineManager():
 	m_allHitObjectToMouse(),
 	m_selectNumber(-1),
+	m_prevSelectMachinePos(0,0,0),
 	m_mpPulsTimer(),
 	m_AMnums{1,1,1,1,1,4},
 	m_saveWheelValue(0),
-	m_scrollValue()
+	m_scrollValue(),
+	m_rotationStop()
 {
 }
 
@@ -77,7 +80,7 @@ void AlchemicalMachineManager::Initialize()
 
 }
 
-void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, MousePointer* pMP, EnemyManager* enemys)
+void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, MousePointer* pMP, EnemyManager* enemys, MoveCamera* moveCamera)
 {
 
 	auto pPlayerBase = fieldManager->GetPlayerBase();
@@ -86,8 +89,12 @@ void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, MousePoi
 	DataManager& pDM = *DataManager::GetInstance();
 
 	auto mouse = pINP.GetMouseState();
+	auto keyboard = pINP.GetKeybordState();
+
 	bool leftRelease	= mouse.leftButton == mouse.RELEASED;
 	bool leftDrag		= mouse.leftButton == mouse.HELD;
+
+	m_rotationStop		= mouse.rightButton == mouse.HELD && !keyboard.GetLastState().LeftShift;
 
 	// Mp追加までの時間計測
 	m_mpPulsTimer += DeltaTime::GetInstance().GetDeltaTime();
@@ -113,7 +120,56 @@ void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, MousePoi
 	// 何もないところで左クリックをすると選択状態が解除される
 	if (leftRelease && !m_machineExplanation->OnMouse())
 	{
+
+		moveCamera->ResetTargetChangeTimer();
+
+		// 選択されたオブジェクトがない場合の処理
+		if (m_selectNumber != -1)
+		{
+			m_prevSelectMachinePos = m_AMObject[m_selectNumber]->GetPos();
+		}
+		else
+		{
+			m_prevSelectMachinePos = DirectX::SimpleMath::Vector3();
+		}
+
 		m_selectNumber = -1;
+
+	}
+
+
+	// 選択状態のオブジェクトがある
+	if (m_selectNumber != -1)
+	{
+
+		// 注視点移動
+		moveCamera->TargetChange(m_prevSelectMachinePos, m_AMObject[m_selectNumber]->GetData().pos);
+
+		//// Noneを弾く
+		//if (m_AMObject[m_selectNumber]->GetModelID() == AlchemicalMachineObject::MACHINE_TYPE::NONE) return;
+
+		// 説明文のアップデート処理を回す
+		m_machineExplanation->Update();
+		m_machineExplanation->Update_MachineData(m_AMObject[m_selectNumber].get());
+
+		// 選択済みのオブジェクトの特殊アップデートを回す
+		m_AMObject[m_selectNumber]->SelectUpdate();
+		m_AMObject[m_selectNumber]->SelectUpdate_Common();
+
+		// 選択オブジェクトに魔法陣展開
+		m_magicCircle->CreateMagicCircle(
+			m_AMObject[m_selectNumber]->GetPos(),
+			m_AMObject[m_selectNumber]->GetMagicCircle().r,
+			m_AMObject[m_selectNumber]->GetColor());
+
+	}
+	else
+	{
+		m_machineExplanation->ResetMoveTime();
+		m_magicCircle->DeleteMagicCircle();
+
+		// 注視点移動
+		moveCamera->TargetChange(m_prevSelectMachinePos, { 0,0,0 });
 	}
 
 	m_dorpShadow->DeleteShadow();
@@ -124,6 +180,19 @@ void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, MousePoi
 		// アルケミカルマシンを中心点を軸に回す
 		MovingMachine(i);
 		m_AMObject[i]->SetSelectModeFlag(m_selectManager->GetHitMouseToSelectBoxEven());
+
+		// オブジェクトにマウスが入っているかどうか
+		if (m_AMObject[i]->GetHitMouse())
+		{
+			m_allHitObjectToMouse = true;
+
+			// クリックで選択状態に移行
+			if (leftRelease && m_selectNumber != i)
+			{
+				m_selectNumber = i;
+				m_machineExplanation->ResetMoveTime();
+			}
+		}
 
 		//　存在していれば処理を続ける
 		if (!m_AMObject[i]->GetActive()) continue;
@@ -142,23 +211,10 @@ void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, MousePoi
 		Update_Attacker(i, enemys);
 		Update_Defenser(i, enemys);
 		Update_Mining(i, fieldManager);
-
-		// オブジェクトにマウスが入っているかどうか
-		if (m_AMObject[i]->GetHitMouse())
-		{
-			m_allHitObjectToMouse = true;
-
-			// クリックで選択状態に移行
-			if (leftRelease)
-			{
-				m_selectNumber = i;
-				m_machineExplanation->ResetMoveTime();
-			}
-		}
 	}
 
 	// MP追加処理
-	if (m_mpPulsTimer >= MPPLUSTIME)
+	if (m_mpPulsTimer >= MPPLUSTIME && !m_rotationStop)
 	{
 		m_mpPulsTimer = 0;
 		pDM.SetNowMP(pDM.GetNowMP() + ((int)MPPLUSNUM * (amNum - amNum_Nomal)));
@@ -178,7 +234,7 @@ void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, MousePoi
 	//　に左ボタンを離すとオブジェクトを入れ替える
 	if (m_allHitObjectToMouse &&
 		fieldManager->GetFieldObject()->GetHitMouse() &&
-		!m_machineExplanation->OnMouse()&&
+		!m_machineExplanation->OnMouse() &&
 		leftRelease)
 	{
 		// MachineType::Noneを選択している場合に限り処理を通す
@@ -199,48 +255,52 @@ void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, MousePoi
 
 		// 本取得
 		m_AMObject[m_selectNumber] = m_AMFilter->HandOverAMClass(m_selectManager->GetSelectMachineType());
-		
+
 		// 初期化
 		m_AMObject[m_selectNumber]->Initialize();
-		
+
 		// Noneと対象のオブジェクトを入れ替える
 		m_AMObject[m_selectNumber]->SummonAM(savePos);
 
 		// ライン情報を引き継ぐ
 		m_AMObject[m_selectNumber]->SetLine(saveLine);
-		
+
 		// 召喚したオブジェクトの保有数を一つ減らす
 		m_AMnums[m_selectManager->GetSelectMachineType()]--;
 	}
 
-	// 製造ボタンが押されたら増やす
+	// 製造ボタンが押されたら所持数を増やす
 	if (m_selectManager->GetManufacturingFlag())
 	{
 		m_AMnums[m_selectManager->GetSelectMachineType()]++;
 	}
 
 	// 選択状態のオブジェクトがある
-	if (m_selectNumber != -1)
-	{
-		// 説明文のアップデート処理を回す
-		m_machineExplanation->Update();
-		m_machineExplanation->Update_MachineData(m_AMObject[m_selectNumber].get());
-
-		// 選択済みのオブジェクトの特殊アップデートを回す
-		m_AMObject[m_selectNumber]->SelectUpdate();
-		m_AMObject[m_selectNumber]->SelectUpdate_Common();
-
-		// 選択オブジェクトに魔法陣展開
-		m_magicCircle->CreateMagicCircle(
-			m_AMObject[m_selectNumber]->GetPos(),
-			m_AMObject[m_selectNumber]->GetMagicCircle().r,
-			m_AMObject[m_selectNumber]->GetColor());
-	}
-	else
-	{
-		m_machineExplanation->ResetMoveTime();
-		m_magicCircle->DeleteMagicCircle();
-	}
+	//if (m_selectNumber != -1)
+	//{
+	//	// 注視点移動
+	//	moveCamera->TargetChange(m_prevSelectMachinePos, m_AMObject[m_selectNumber]->GetData().pos);
+	//	// Noneを弾く
+	//	if (m_AMObject[m_selectNumber]->GetModelID() == AlchemicalMachineObject::MACHINE_TYPE::NONE) return;
+	//	// 説明文のアップデート処理を回す
+	//	m_machineExplanation->Update();
+	//	m_machineExplanation->Update_MachineData(m_AMObject[m_selectNumber].get());
+	//	// 選択済みのオブジェクトの特殊アップデートを回す
+	//	m_AMObject[m_selectNumber]->SelectUpdate();
+	//	m_AMObject[m_selectNumber]->SelectUpdate_Common();
+	//	// 選択オブジェクトに魔法陣展開
+	//	m_magicCircle->CreateMagicCircle(
+	//		m_AMObject[m_selectNumber]->GetPos(),
+	//		m_AMObject[m_selectNumber]->GetMagicCircle().r,
+	//		m_AMObject[m_selectNumber]->GetColor());
+	//}
+	//else
+	//{
+	//	m_machineExplanation->ResetMoveTime();
+	//	m_magicCircle->DeleteMagicCircle();
+	//	// 注視点移動
+	//	moveCamera->TargetChange(m_prevSelectMachinePos, { 0,0,0 });
+	//}
 
 	// 離したのでマウスの当たり判定を元の大きさに戻す
 	if(leftRelease)  pMP->ReleaseLeftButtom();
@@ -264,10 +324,6 @@ void AlchemicalMachineManager::Update(FieldObjectManager* fieldManager, MousePoi
 	m_magicCircle_Field->CreateMagicCircle(
 		DirectX::SimpleMath::Vector3{ 0,MAGICCIRCLE_HEIGHT,0 },
 		pPlayerBase->GetBaseLv() * CIRCLE_LINE_DISTANCE);
-
-	//// クリスタルに触れた際に選択ボックスの色を変える
-	//m_selectManager->GetMachineSelect(AlchemicalMachineObject::MACHINE_TYPE::MINING)
-	//	->SetChangeColorFlag(fieldManager->GetCrystalToMouse());
 }
 
 void AlchemicalMachineManager::Render()
@@ -284,7 +340,6 @@ void AlchemicalMachineManager::Render()
 			m_AMObject[i]->ModelRender(m_AMFilter->HandOverAMModel(m_AMObject[i]->GetModelID()),
 									   m_AMFilter->GetRingModel(m_AMObject[i]->GetModelID()));
 			m_AMObject[i]->Draw();
-
 		}
 	}
 
@@ -323,7 +378,7 @@ void AlchemicalMachineManager::DrawUI()
 
 		// 所持数
 		m_machineNumRender->SetNumber(m_AMnums[i]);
-		m_machineNumRender->SetPosition({120 + 120.0f * i,120.0f});
+		m_machineNumRender->SetPosition({540 + 120.0f * i,120.0f});
 		m_machineNumRender->Render();
 	}
 
@@ -489,6 +544,8 @@ void AlchemicalMachineManager::Update_Recovery()
 
 void AlchemicalMachineManager::MovingMachine(int number)
 {
+
+	if (m_rotationStop) return;
 
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
 

@@ -186,6 +186,7 @@
     <ClInclude Include="NecromaLib\GameData\BinaryFile.h" />
     <ClInclude Include="NecromaLib\GameData\Camera.h" />
     <ClInclude Include="NecromaLib\GameData\Collider.h" />
+    <ClInclude Include="NecromaLib\GameData\CommonStruct.h" />
     <ClInclude Include="NecromaLib\GameData\Easing.h" />
     <ClInclude Include="NecromaLib\GameData\GameObject3D.h" />
     <ClInclude Include="NecromaLib\GameData\GameObject2D.h" />

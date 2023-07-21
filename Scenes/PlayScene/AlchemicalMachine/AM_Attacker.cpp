@@ -36,7 +36,7 @@ void AM_Attacker::Initialize()
 
 	for (int i = 0; i < 4; i++)
 	{
-		m_selectBox[i] = std::make_unique<SelectionBox>(DirectX::SimpleMath::Vector2(80.f + ((float)i * 65.f), 560.f), DirectX::SimpleMath::Vector2(64.f, 64.f));
+		m_selectBox[i] = std::make_unique<SelectionBox>(DirectX::SimpleMath::Vector2(80.f + ((float)i * 65.f), 560.f), DirectX::SimpleMath::Vector2(1.0f, 1.0f));
 	}
 
 	m_color = DirectX::SimpleMath::Color(1, 1, 1, 1);

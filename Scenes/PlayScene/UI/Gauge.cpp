@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "Gauge.h"
+#include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/ShareData.h"
 #include "Scenes/DataManager.h"
+#include "SelectionBox.h"
 
 Gauge::Gauge()
 {
@@ -20,9 +22,9 @@ void Gauge::Initialize()
 	//m_gauge = std::make_unique<UserInterface>();
 	//m_gauge->Create(device, L"Resources/Textures/Seizou.png",{100,300},{1,1},ANCHOR::MIDDLE_CENTER);
 
-    Add_Hp({ width / 1.2f,20 }, { 0.4f,0.4f }, UserInterface::ANCHOR::MIDDLE_CENTER);
-    Add_MP({ width / 1.2f,60 }, { 0.4f,0.4f }, UserInterface::ANCHOR::MIDDLE_CENTER);
-    Add_Crystal({ width / 1.2f,100 }, { 0.4f,0.4f }, UserInterface::ANCHOR::MIDDLE_CENTER);
+    Add_Hp({ 300.0f,50.0f }, { 0.65f,0.5f }, UserInterface::ANCHOR::MIDDLE_CENTER);
+    Add_MP({ 260,100 }, { 0.4f,0.4f }, UserInterface::ANCHOR::MIDDLE_CENTER);
+    Add_Crystal({ 260,130 }, { 0.4f,0.4f }, UserInterface::ANCHOR::MIDDLE_CENTER);
 
 }
 
@@ -50,6 +52,8 @@ void Gauge::Update()
 
 void Gauge::Render()
 {
+    auto pSL = &SpriteLoder::GetInstance();
+
     m_base_Hp->Render();
     m_gauge_Hp->Render();
 
@@ -58,8 +62,6 @@ void Gauge::Render()
 
     m_base_Crystal->Render();
     m_gauge_Crystal->Render();
-
-    //m_falme->Render();
 }
 
 void Gauge::Finalize()
@@ -87,6 +89,7 @@ void Gauge::Add_Crystal(DirectX::SimpleMath::Vector2 position, DirectX::SimpleMa
         , scale
         , anchor);
     m_base_Crystal->SetWindowSize(width, height);
+
 }
 
 void Gauge::Add_Hp(DirectX::SimpleMath::Vector2 position, DirectX::SimpleMath::Vector2 scale, UserInterface::ANCHOR anchor)
@@ -110,6 +113,7 @@ void Gauge::Add_Hp(DirectX::SimpleMath::Vector2 position, DirectX::SimpleMath::V
         , scale
         , anchor);
     m_base_Hp->SetWindowSize(width, height);
+
 }
 
 void Gauge::Add_MP(DirectX::SimpleMath::Vector2 position,DirectX::SimpleMath::Vector2 scale,UserInterface::ANCHOR anchor)

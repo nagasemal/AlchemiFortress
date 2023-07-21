@@ -12,6 +12,8 @@
 
 #define MINI_BOX_POS DirectX::SimpleMath::Vector2(-85,-95)
 
+#define BIG_BOX_RAGEPERCENT 5.0f
+
 MachineExplanation::MachineExplanation():
 	m_moveTime(),
 	m_modelPos(),
@@ -52,7 +54,7 @@ void MachineExplanation::Update()
 
 	m_moveTime += deltaTime.GetDeltaTime();
 
-	m_hitFlag = HitObject(pIS.GetMousePosScreen());
+	m_hitFlag = HitObject_RageSet(pIS.GetMousePosScreen(),64,64, BIG_BOX_RAGEPERCENT);
 
 }
 
@@ -76,7 +78,7 @@ void MachineExplanation::Draw()
 	DirectX::SimpleMath::Color colour = DirectX::SimpleMath::Color(0.8f, 0.8f, 0.8f, 0.8f);
 
 	// BOX•`‰æ
-	pSB->Draw(m_texture.Get(),m_data.pos,&srcRect,colour,0.0f,XMFLOAT2(64 / 2, 64 / 2),5.0f);
+	pSB->Draw(m_texture.Get(),m_data.pos,&srcRect,colour,0.0f,XMFLOAT2(64 / 2, 64 / 2), BIG_BOX_RAGEPERCENT);
 
 	DirectX::SimpleMath::Vector2 miniBox_pos = { m_data.pos.x + MINI_BOX_POS.x ,m_data.pos.y + MINI_BOX_POS.y };
 

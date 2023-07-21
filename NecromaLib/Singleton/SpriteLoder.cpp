@@ -7,6 +7,15 @@ SpriteLoder* SpriteLoder::instance = nullptr;
 
 void SpriteLoder::Loading()
 {
+
+	// 選択ボックスのテクスチャ
+	DirectX::CreateWICTextureFromFile(
+		ShareData::GetInstance().GetDevice(),
+		L"Resources/Textures/log.png",
+		nullptr,
+		m_selectBoxTexture.ReleaseAndGetAddressOf()
+	);
+
 	// テクスチャ
 	DirectX::CreateWICTextureFromFile(
 		ShareData::GetInstance().GetDevice(),

@@ -27,12 +27,8 @@ void PlayScene::Initialize()
 	m_enemyManager  = std::make_unique<EnemyManager>();
 	m_enemyManager	->Initialize();
 
-
 	m_gauge = std::make_unique<Gauge>();
 	m_gauge->Initialize();
-
-	//m_number = std::make_unique<Number>(DirectX::SimpleMath::Vector2{ 200,200 },DirectX::SimpleMath::Vector2{0.25f,0.25f});
-	//m_number->SetNumber(123);
 
 	ShareData& pSD = ShareData::GetInstance();
 	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
@@ -56,12 +52,14 @@ GAME_SCENE PlayScene::Update()
 	ShareData& pSD = ShareData::GetInstance();
 
 	m_moveCamera->Update(!m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven(), true);
+
 	m_fieldManager->Update();
 	m_mousePointer->Update();
 
 	m_AM_Manager->Update(m_fieldManager.get(),
 						 m_mousePointer.get(),
-						 m_enemyManager.get());
+						 m_enemyManager.get(),
+						 m_moveCamera.get());
 
 	m_enemyManager->Update(m_fieldManager->GetPlayerBase()->GetPos());
 
@@ -74,9 +72,6 @@ GAME_SCENE PlayScene::Update()
 
 	// エネミーToプレイヤーベース
 	if (enemyActivs) EnemyToPlayerBase();
-
-	//// エネミーToアルケミカルマシン
-	//if (enemyActivs) EnemyToAMMachine();
 
 	// カメラを動かす
 	pSD.GetCamera()->SetViewMatrix		(m_moveCamera->GetViewMatrix());
