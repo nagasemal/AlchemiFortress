@@ -11,20 +11,12 @@
 #pragma once
 #include "NecromaLib/GameData/GameObject3D.h"
 #include "Scenes/PlayScene/AlchemicalMachine/AlchemicalMachineObject.h"
+#include "NecromaLib/GameData/CommonStruct.h"
 
 class EnemyObject : public GameObjct3D
 {
 public:
-
-	enum EnemyType : int
-	{
-		NONE = 0,
-		
-
-	};
-
-public:
-	EnemyObject(EnemyType type, DirectX::SimpleMath::Vector3 startPos,int lv);
+	EnemyObject(ENEMY_TYPE type, DirectX::SimpleMath::Vector3 startPos,int lv);
 	~EnemyObject();
 
 	// 初期化
@@ -71,6 +63,8 @@ public:
 	const DirectX::SimpleMath::Vector3 GetLengthVec()	{ return m_lengthVec;}
 	// 加速度
 	const DirectX::SimpleMath::Vector3 GetAccele()		{ return m_accele;}
+	// 自身のエネミータイプ
+	const ENEMY_TYPE GetEnemyType()						{ return m_enemyType; }
 
 	EnemyObject* GetEnemyObject()						{ return this;}
 
@@ -88,6 +82,8 @@ private:
 	float m_speed;
 	// 移動を止める
 	bool m_stopFlag;
+	// 自身のタイプ
+	ENEMY_TYPE m_enemyType;
 
 	// 加速度
 	DirectX::SimpleMath::Vector3 m_accele;

@@ -1,0 +1,10 @@
+{
+  "Status": {
+    "ELEMENT": "Earth",
+    "STR": 30.0,
+    "SPEED": 2.5,
+    "SPAN": 0.7,
+    "LIFE": 4.0,
+    "LOSSMP": 12.0,
+  }
+}

@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "AM_None.h"
 
-AM_None::AM_None()
+AM_None::AM_None():
+	m_selectModeTime()
 {
 }
 

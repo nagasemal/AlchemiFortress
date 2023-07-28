@@ -11,6 +11,9 @@
 #include "AlchemicalMachine/AlchemicalMachineManager.h"
 #include "Enemy/EnemyManager.h"
 
+// ミッション
+#include "Scenes/PlayScene/Stage/MissionManager.h"
+
 #include "Scenes/PlayScene/UI/Gauge.h"
 
 class PlayScene : public SceneObj
@@ -52,6 +55,8 @@ private:
 	std::unique_ptr<MoveCamera>					m_moveCamera;
 
 	std::unique_ptr<EnemyManager>				m_enemyManager;
+
+	std::unique_ptr<MissionManager>				m_missionManager;
 
 	//// テスト用
 	std::unique_ptr<Gauge>						m_gauge;

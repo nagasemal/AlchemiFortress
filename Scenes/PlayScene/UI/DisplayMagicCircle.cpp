@@ -171,7 +171,7 @@ void DisplayMagicCircle::Update()
 // 描画関数
 void DisplayMagicCircle::Render()
 {
-	auto device = ShareData::GetInstance().GetDevice();
+	//auto device = ShareData::GetInstance().GetDevice();
 	auto context = ShareData::GetInstance().GetContext();
 	// 頂点情報
 	// Position.xy	:拡縮用スケール
@@ -254,7 +254,7 @@ void DisplayMagicCircle::SpritebatchRender()
 	DirectX::SimpleMath::Vector2 box_Pos = { static_cast<float>(m_windowWidth) / 2,static_cast<float>(m_windowHeight) / 2 };
 
 	// 選択BOX
-	pSB->Draw(SpriteLoder::GetInstance().GetMagicCircleTexture(0).Get(), box_Pos, &srcRect, m_color,m_rotateTime, DirectX::XMFLOAT2(m_textureWidth / 2, m_textureHeight / 2), 1.5f);
+	pSB->Draw(SpriteLoder::GetInstance().GetMagicCircleTexture(0).Get(), box_Pos, &srcRect, m_color,m_rotateTime, DirectX::XMFLOAT2((float)m_textureWidth / 2, (float)m_textureHeight / 2), 1.5f);
 
 	pSB->End();
 }

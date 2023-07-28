@@ -8,6 +8,7 @@
 #include "NecromaLib/Singleton/InputSupport.h"
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
+#include "NecromaLib/Singleton/ShareJsonData.h"
 
 #include <WICTextureLoader.h>
 
@@ -31,6 +32,7 @@ Game::Game() noexcept(false)
     InputSupport::Create();
     ShareData::Create();
     SpriteLoder::Create();
+    ShareJsonData::Create();
 }
 Game::~Game()
 {
@@ -44,9 +46,10 @@ Game::~Game()
 
     SpriteLoder::Destroy();
 
+    ShareJsonData::Destroy();
+
     m_SceneManager.get()->Finalize();
     m_SceneManager.reset();
-
 }
 
 // Initialize the Direct3D resources required to run.
@@ -92,8 +95,6 @@ void Game::Update(DX::StepTimer const& timer)
 
     float elapsedTime = float(timer.GetElapsedSeconds());
     pDeltaT->SetDeltaTime(elapsedTime);
-
-    pDeltaT->SetTotalTime(float(timer.GetTotalTicks()));
 
     m_SceneManager.get()->Update(timer);
 

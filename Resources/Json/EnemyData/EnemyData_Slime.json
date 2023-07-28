@@ -1,0 +1,11 @@
+{
+  "Status": {
+    "ELEMENT":"Normal",
+    "MOVEING":"Standard",
+    "TYPE":"Slime",
+    "HP": 8.0,
+    "STR": 20.0,
+    "SPEED": 2.5,
+    "EXP": 10.0,
+  }
+}

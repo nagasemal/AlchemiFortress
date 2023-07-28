@@ -190,6 +190,8 @@
     <ClInclude Include="NecromaLib\GameData\Easing.h" />
     <ClInclude Include="NecromaLib\GameData\GameObject3D.h" />
     <ClInclude Include="NecromaLib\GameData\GameObject2D.h" />
+    <ClInclude Include="NecromaLib\GameData\JsonLoder.h" />
+    <ClInclude Include="NecromaLib\GameData\picojson.h" />
     <ClInclude Include="NecromaLib\GameData\ScreenToWorld.h" />
     <ClInclude Include="NecromaLib\GameData\SCVLoder.h" />
     <ClInclude Include="NecromaLib\GameData\SpriteCutter.h" />
@@ -201,6 +203,7 @@
     <ClInclude Include="NecromaLib\Singleton\DeltaTime.h" />
     <ClInclude Include="NecromaLib\Singleton\InputSupport.h" />
     <ClInclude Include="NecromaLib\Singleton\ShareData.h" />
+    <ClInclude Include="NecromaLib\Singleton\ShareJsonData.h" />
     <ClInclude Include="NecromaLib\Singleton\SpriteLoder.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resources\Icon\Icon.h" />
@@ -230,6 +233,7 @@
     <ClInclude Include="Scenes\PlayScene\Shadow\MagicCircle.h" />
     <ClInclude Include="Scenes\PlayScene\Shadow\Particle.h" />
     <ClInclude Include="Scenes\PlayScene\Shadow\ParticleUtility.h" />
+    <ClInclude Include="Scenes\PlayScene\Stage\MissionManager.h" />
     <ClInclude Include="Scenes\PlayScene\UI\DisplayMagicCircle.h" />
     <ClInclude Include="Scenes\PlayScene\UI\Gauge.h" />
     <ClInclude Include="Scenes\PlayScene\UI\MachineExplanation.h" />
@@ -257,6 +261,7 @@
     <ClCompile Include="NecromaLib\GameData\Easing.cpp" />
     <ClCompile Include="NecromaLib\GameData\GameObject3D.cpp" />
     <ClCompile Include="NecromaLib\GameData\GameObject2D.cpp" />
+    <ClCompile Include="NecromaLib\GameData\JsonLoder.cpp" />
     <ClCompile Include="NecromaLib\GameData\ScreenToWorld.cpp" />
     <ClCompile Include="NecromaLib\GameData\SCVLoder.cpp" />
     <ClCompile Include="NecromaLib\GameData\SpriteCutter.cpp" />
@@ -268,6 +273,7 @@
     <ClCompile Include="NecromaLib\Singleton\DeltaTime.cpp" />
     <ClCompile Include="NecromaLib\Singleton\InputSupport.cpp" />
     <ClCompile Include="NecromaLib\Singleton\ShareData.cpp" />
+    <ClCompile Include="NecromaLib\Singleton\ShareJsonData.cpp" />
     <ClCompile Include="NecromaLib\Singleton\SpriteLoder.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -301,6 +307,7 @@
     <ClCompile Include="Scenes\PlayScene\Shadow\MagicCircle.cpp" />
     <ClCompile Include="Scenes\PlayScene\Shadow\Particle.cpp" />
     <ClCompile Include="Scenes\PlayScene\Shadow\ParticleUtility.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Stage\MissionManager.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\DisplayMagicCircle.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\Gauge.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\MachineExplanation.cpp" />
@@ -326,6 +333,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\Json\BulletData\BulletData_Aqua.json" />
+    <None Include="Resources\Json\BulletData\BulletData_Earth.json" />
+    <None Include="Resources\Json\BulletData\BulletData_Flame.json" />
+    <None Include="Resources\Json\BulletData\BulletData_Nomal.json" />
+    <None Include="Resources\Json\BulletData\BulletData_Wind.json" />
+    <None Include="Resources\Json\EnemyData\EnemyData_Slime.json" />
+    <None Include="Resources\Json\MachineData\MachineData_Attacker.json" />
+    <None Include="Resources\Json\MachineData\MachineData_Defenser.json" />
+    <None Include="Resources\Json\MachineData\MachineData_Mining.json" />
+    <None Include="Resources\Json\MachineData\MachineData_None.json" />
+    <None Include="Resources\Json\MachineData\MachineData_Recovery.json" />
+    <None Include="Resources\Json\MachineData\MachineData_Upper.json" />
+    <None Include="Resources\Json\StageData\StageData_1.json" />
     <None Include="Resources\Shader\DisplayMagicCircle.hlsli" />
     <None Include="Resources\Shader\MagicCircle.hlsli" />
     <None Include="Resources\Shader\Shadow.hlsli" />

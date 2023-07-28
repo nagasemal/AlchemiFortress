@@ -6,10 +6,15 @@
 #include <algorithm>
 #include <random>
 
-EnemyManager::EnemyManager():
+#include "NecromaLib/Singleton/ShareJsonData.h"
+
+EnemyManager::EnemyManager() :
 	m_timer(),
 	m_totalTimer(),
-	m_nextEnemyTime()
+	m_nextEnemyTime(),
+	m_knokDownEnemyType(ENEMY_TYPE::ENMEY_NONE),
+	m_knokDownFlag(false),
+	m_enemyNums()
 {
 }
 
@@ -40,19 +45,30 @@ void EnemyManager::Update(DirectX::SimpleMath::Vector3 basePos)
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
 
 	DataManager& pDM = *DataManager::GetInstance();
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
+
+	// 毎秒初期化
+	m_knokDownFlag = false;
+	m_knokDownEnemyType = ENEMY_TYPE::ENMEY_NONE;
 
 	m_timer += deltaTime;
 	m_totalTimer += deltaTime;
 
-	// 10秒毎に生成
-	if (m_timer >= 5.0f)
-	{
-		EnemyObject object = GetEnemyStatus(EnemyObject::EnemyType::NONE);
+	// 時間が来たら生成する
 
-		m_enemyObject->push_back(*std::make_unique<EnemyObject>(object));
-		// エフェクト表示
-		m_particle_spawn->OnShot(object.GetPos(), true);
-		m_timer = 0.0f;
+	if (m_enemyNums < pSJD.GetStageData().enemys_Spawn.size())
+	{
+		if (m_timer >= pSJD.GetStageData().enemys_Spawn[m_enemyNums].spawnTime)
+		{
+			EnemyObject object = GetEnemyStatus(ENEMY_TYPE::SLIME, m_enemyNums);
+
+			m_enemyObject->push_back(*std::make_unique<EnemyObject>(object));
+			// エフェクト表示
+			m_particle_spawn->OnShot(object.GetPos(), true);
+
+			// 次のエネミーを呼び出す準備
+			m_enemyNums++;
+		}
 	}
 
 	// 更新処理
@@ -62,6 +78,10 @@ void EnemyManager::Update(DirectX::SimpleMath::Vector3 basePos)
 		if ((it)->GotoTarget(basePos))
 		{
 			pDM.SetNowEnemyKill(pDM.GetNowEnemyKill() + 1);
+
+			m_knokDownFlag = true;
+			m_knokDownEnemyType = it->GetEnemyType();
+
 			m_particle_delete->OnShot(it->GetPos(), true);
 			it = m_enemyObject->erase(it);
 			if (it == m_enemyObject->end()) break;
@@ -111,15 +131,19 @@ void EnemyManager::Finalize()
 	m_testBox.reset();
 }
 
-EnemyObject EnemyManager::GetEnemyStatus(EnemyObject::EnemyType type)
+EnemyObject EnemyManager::GetEnemyStatus(ENEMY_TYPE type,int spawnNumber)
 {
-	std::random_device seed;
-	std::default_random_engine engine(seed());
-	std::uniform_real_distribution<> dist(0, XM_2PI);
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
 
-	float rand = static_cast<float>(dist(engine));
+	//std::random_device seed;
+	//std::default_random_engine engine(seed());
+	//std::uniform_real_distribution<> dist(0, XM_2PI);
+	//float rand = static_cast<float>(dist(engine));
 
-	EnemyObject enemy(type,DirectX::SimpleMath::Vector3(50 * cosf(rand), 0, 50 * sinf(rand)),1);
+	int remoteness = pSJD.GetStageData().enemys_Spawn[spawnNumber].remoteness * 1.5f;
+	float direction = pSJD.GetStageData().enemys_Spawn[spawnNumber].direction;
+
+	EnemyObject enemy(type,DirectX::SimpleMath::Vector3(remoteness * cosf(direction), 0, remoteness * sinf(direction)),1);
 
 	return enemy;
 }

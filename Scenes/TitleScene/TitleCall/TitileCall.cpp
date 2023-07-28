@@ -79,7 +79,7 @@ void TitleCall::SettingAMMachine()
 		for (int j = 0; j < CIRCLE_MAX_MIN * i; j++)
 		{
 			// ƒ}ƒVƒ“‚ð’Ç‰Á
-			m_AMobjects.push_back(m_AMFilter->HandOverAMClass(AlchemicalMachineObject::MACHINE_TYPE(i)));
+			m_AMobjects.push_back(m_AMFilter->HandOverAMClass(MACHINE_TYPE(i)));
 
 			// ‰Šú‰»ˆ—
 			m_AMobjects[counter]->Initialize();

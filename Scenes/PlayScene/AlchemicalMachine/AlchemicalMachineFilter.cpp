@@ -7,6 +7,8 @@
 #include "AM_Recovery.h"
 #include "AM_Upper.h"
 
+#include "NecromaLib/GameData/CommonStruct.h"
+
 AlchemicalMachineFilter::AlchemicalMachineFilter():
 	m_model{}
 {
@@ -16,23 +18,23 @@ AlchemicalMachineFilter::AlchemicalMachineFilter():
 	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
 	fx->SetDirectory(L"Resources/Models");
 
-	m_model[AlchemicalMachineObject::MACHINE_TYPE::NONE] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_None.cmo", *fx);
+	m_model[MACHINE_TYPE::NONE] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_None.cmo", *fx);
 
-	m_model[AlchemicalMachineObject::MACHINE_TYPE::ATTACKER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Attacker.cmo", *fx);
+	m_model[MACHINE_TYPE::ATTACKER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Attacker.cmo", *fx);
 
-	m_model[AlchemicalMachineObject::MACHINE_TYPE::DEFENSER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Defencer.cmo", *fx);
+	m_model[MACHINE_TYPE::DEFENSER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Defencer.cmo", *fx);
 
-	m_model[AlchemicalMachineObject::MACHINE_TYPE::MINING] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Mining.cmo", *fx);
+	m_model[MACHINE_TYPE::MINING] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Mining.cmo", *fx);
 
-	m_model[AlchemicalMachineObject::MACHINE_TYPE::RECOVERY] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Attacker.cmo", *fx);
+	m_model[MACHINE_TYPE::RECOVERY] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Attacker.cmo", *fx);
 
-	m_model[AlchemicalMachineObject::MACHINE_TYPE::UPEER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Upper.cmo", *fx);
+	m_model[MACHINE_TYPE::UPEER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Upper.cmo", *fx);
 
 
 	// ƒTƒuƒ‚ƒfƒ‹
-	m_subModel[AlchemicalMachineObject::MACHINE_TYPE::ATTACKER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Ring.cmo", *fx);
+	m_subModel[MACHINE_TYPE::ATTACKER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Ring.cmo", *fx);
 
-	m_subModel[AlchemicalMachineObject::MACHINE_TYPE::DEFENSER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Ring.cmo", *fx);
+	m_subModel[MACHINE_TYPE::DEFENSER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Ring.cmo", *fx);
 }
 
 AlchemicalMachineFilter::~AlchemicalMachineFilter()
@@ -50,26 +52,26 @@ AlchemicalMachineFilter::~AlchemicalMachineFilter()
 //	new AM_Upper,
 //};
 
-Model* AlchemicalMachineFilter::HandOverAMModel(AlchemicalMachineObject::MACHINE_TYPE type)
+Model* AlchemicalMachineFilter::HandOverAMModel(MACHINE_TYPE type)
 {
 	return m_model[type].get();
 }
 
-std::unique_ptr<AlchemicalMachineObject> AlchemicalMachineFilter::HandOverAMClass(AlchemicalMachineObject::MACHINE_TYPE type)
+std::unique_ptr<AlchemicalMachineObject> AlchemicalMachineFilter::HandOverAMClass(MACHINE_TYPE type)
 {
 	switch (type)
 	{
-	case AlchemicalMachineObject::NONE:
+	case MACHINE_TYPE::NONE:
 		return std::make_unique<AM_None>();
-	case AlchemicalMachineObject::ATTACKER:
+	case MACHINE_TYPE::ATTACKER:
 		return std::make_unique<AM_Attacker>();
-	case AlchemicalMachineObject::DEFENSER:
+	case MACHINE_TYPE::DEFENSER:
 		return std::make_unique<AM_Defenser>();
-	case AlchemicalMachineObject::MINING:
+	case MACHINE_TYPE::MINING:
 		return std::make_unique<AM_Mining>();
-	case AlchemicalMachineObject::RECOVERY:
+	case MACHINE_TYPE::RECOVERY:
 		return std::make_unique<AM_Recovery>();
-	case AlchemicalMachineObject::UPEER:
+	case MACHINE_TYPE::UPEER:
 		return std::make_unique<AM_Upper>();
 	default:
 		return std::make_unique<AM_None>();
@@ -78,27 +80,27 @@ std::unique_ptr<AlchemicalMachineObject> AlchemicalMachineFilter::HandOverAMClas
 
 }
 
-Model* AlchemicalMachineFilter::GetRingModel(AlchemicalMachineObject::MACHINE_TYPE type)
+Model* AlchemicalMachineFilter::GetRingModel(MACHINE_TYPE type)
 {
 
-	if (type != AlchemicalMachineObject::ATTACKER) return nullptr;
+	if (type != MACHINE_TYPE::ATTACKER) return nullptr;
 
 	return m_subModel[type].get();
 }
 
 void AlchemicalMachineFilter::Finalize()
 {
-	m_model[AlchemicalMachineObject::MACHINE_TYPE::NONE].reset();
+	m_model[MACHINE_TYPE::NONE].reset();
 
-	m_model[AlchemicalMachineObject::MACHINE_TYPE::ATTACKER].reset();
+	m_model[MACHINE_TYPE::ATTACKER].reset();
 
-	m_model[AlchemicalMachineObject::MACHINE_TYPE::DEFENSER].reset();
+	m_model[MACHINE_TYPE::DEFENSER].reset();
 
-	m_model[AlchemicalMachineObject::MACHINE_TYPE::MINING].reset();
+	m_model[MACHINE_TYPE::MINING].reset();
 
-	m_model[AlchemicalMachineObject::MACHINE_TYPE::RECOVERY].reset();
+	m_model[MACHINE_TYPE::RECOVERY].reset();
 
-	m_model[AlchemicalMachineObject::MACHINE_TYPE::UPEER].reset();
+	m_model[MACHINE_TYPE::UPEER].reset();
 	
 	m_model->reset();
 }

@@ -76,11 +76,11 @@ void PlayerBase::Update()
 		DataManager::GetInstance()->CrystalMAXRecalculation(m_baseLv);
 		DataManager::GetInstance()->BaseHPMAXRecalculation(m_baseLv);
 
-		m_hp = DataManager::GetInstance()->GetNowBaseHP_MAX();
+		m_hp = (int)DataManager::GetInstance()->GetNowBaseHP_MAX();
 
 	}
 
-	DataManager::GetInstance()->SetNowBaseHP(m_hp);
+	DataManager::GetInstance()->SetNowBaseHP((int)m_hp);
 }
 
 void PlayerBase::Draw()
@@ -101,6 +101,9 @@ void PlayerBase::Draw()
 
 void PlayerBase::Render(DirectX::Model* model)
 {
+
+	model;
+
 }
 
 void PlayerBase::Finalize()

@@ -1,0 +1,6 @@
+CONDITIONS　ステージクリアの条件
+
+MACHINE_SPAWN ： 特定のマシンをVALUE分出してください
+
+ENEMY_NOCKDOWN : 特定のエネミーをVALUE分倒してください
+

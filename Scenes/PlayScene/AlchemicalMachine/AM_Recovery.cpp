@@ -3,8 +3,7 @@
 #include "NecromaLib/GameData/SpriteCutter.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
 
-#define LVUP_MAGNIFICATION_HP 1.25f
-#define STANDARD_HP 30
+#include "NecromaLib/Singleton/ShareJsonData.h"
 
 AM_Recovery::AM_Recovery()
 {
@@ -19,6 +18,14 @@ void AM_Recovery::Initialize()
 
 	m_machineID = MACHINE_TYPE::RECOVERY;
 	m_objectName = "Recovery";
+
+	// Jsonから読み取ったマシンのデータを適応する
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
+
+	m_maxHp = m_hp		 = pSJD.GetMachineData(m_machineID).hp;
+	m_machineEffectValue = pSJD.GetMachineData(m_machineID).effect_value;
+
+
 }
 
 void AM_Recovery::Update()
@@ -45,12 +52,16 @@ void AM_Recovery::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> text
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
 	RECT rect_lv = SpriteCutter(64, 64,m_lv, 0);
 	m_selectLvUpBox->DrawUI(texture, pSL.GetNumberTexture(), rect_lv);
+	m_dismantlingBox->DrawUI(texture);
 }
 
 void AM_Recovery::LvUp()
 {
 	// クリスタルを減らす
 	DataManager& pDM = *DataManager::GetInstance();
+
+	// Jsonから読み取ったマシンのデータを適応する
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
 
 	// Lvが上限または変更後のクリスタルが0以下
 	if (m_lv >= MAX_LV || pDM.GetNowCrystal() - GetNextLvCrystal() <= 0) return;
@@ -60,7 +71,7 @@ void AM_Recovery::LvUp()
 	m_lv++;
 
 	// HP強化
-	m_maxHp = (int)(STANDARD_HP * LVUP_MAGNIFICATION_HP);
+	m_maxHp = (int)(pSJD.GetMachineData(m_machineID).hp * (pSJD.GetMachineData(m_machineID).multiplier_hp * m_lv));
 	// HP回復
 	m_hp = m_maxHp;
 }
@@ -68,6 +79,6 @@ void AM_Recovery::LvUp()
 void AM_Recovery::MPPuls(DataManager* pDM)
 {
 
-	pDM->SetNowMP(pDM->GetNowMP() + m_lv);
+	pDM->SetNowMP(pDM->GetNowMP() + (int)(m_lv * m_machineEffectValue));
 
 }

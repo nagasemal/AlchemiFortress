@@ -42,11 +42,6 @@ public:
 
 public:
 
-	// 次回必要となるクリスタルの数
-	const int GetNextLvCrystal() const { return (15 * m_lv) * (5 * m_lv); }
-
-public:
-
 	// 回収するスパン
 	float m_timer;
 

@@ -21,24 +21,24 @@ public:
     /// </summary>
     /// <param name="type">アルケミカルマシンのタイプ</param>
     /// <returns></returns>
-	DirectX::Model* HandOverAMModel(AlchemicalMachineObject::MACHINE_TYPE type);
+	DirectX::Model* HandOverAMModel(MACHINE_TYPE type);
 
 	/// <summary>
 	/// マシンタイプに応じてAlchemicalMachineObjectを継承したクラスを渡す
 	/// </summary>
 	/// <param name="type">アルケミカルマシンのタイプ</param>
 	/// <returns></returns>
-	std::unique_ptr<AlchemicalMachineObject> HandOverAMClass(AlchemicalMachineObject::MACHINE_TYPE type);
+	std::unique_ptr<AlchemicalMachineObject> HandOverAMClass(MACHINE_TYPE type);
 
 	// 本体とは別で動くリングモデルを渡します
-	Model* GetRingModel(AlchemicalMachineObject::MACHINE_TYPE type);
+	Model* GetRingModel(MACHINE_TYPE type);
 
 	void Finalize();
 
 private:
 
-	std::unique_ptr<DirectX::Model> m_model[AlchemicalMachineObject::MACHINE_TYPE::NUM];
+	std::unique_ptr<DirectX::Model> m_model[MACHINE_TYPE::NUM];
 
-	std::unique_ptr<DirectX::Model> m_subModel[AlchemicalMachineObject::MACHINE_TYPE::NUM];
+	std::unique_ptr<DirectX::Model> m_subModel[MACHINE_TYPE::NUM];
 
 };

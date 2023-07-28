@@ -1,0 +1,33 @@
+{
+	"Conditions_Machine":{
+	  "MACHINE_SPAWN":[
+		  {"TYPE":"Attacker",	"VALUE":1.0}
+
+		]
+	},
+	
+	"Conditions_Enemy":{
+		  "ENEMY_KNOCKDOWN":[
+		  {"TYPE":"Slime",		"VALUE":1.0}
+		]
+	},
+
+	"Conditions_Time":{
+		"TIME":[
+		 {"TYPE":"Standerd",	"VALUE":20.0}
+		]
+	},
+
+	"ENEMY_SPAWNTIME":{
+		"ENEMYS":[
+			{"TYPE":"Slime",		"AZIMUTH":4.5,	"REMOTENESS":5.0,		"SPAWNTIME":5.0,	"CONDITION":"Explanation"}
+		]
+	},
+
+	"ClearData":{
+		"TIME":0.0,
+		"MACHINES":[
+			{"NAME":"None","LV":1,"NUMBER":1,}
+		]
+	}
+}

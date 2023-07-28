@@ -6,11 +6,13 @@
 #include "Scenes/PlayScene/UI/DisplayMagicCircle.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
 
+#include "NecromaLib/Singleton/ShareJsonData.h"
+
 #define POS 		DirectX::SimpleMath::Vector2(532, 64)
 #define DIRECTION	120.f
 
 MachineSelectManager::MachineSelectManager() :
-	m_selectMachineType(AlchemicalMachineObject::MACHINE_TYPE::NONE),
+	m_selectMachineType(MACHINE_TYPE::NONE),
 	m_selectBoxAll(false),
 	m_manufacturingFlag(false),
 	m_selectNoneFlag(false)
@@ -38,11 +40,11 @@ void MachineSelectManager::Initialize()
 	m_camera = std::make_unique<Camera>();
 
 	// Noneを省くために1スタート
-	for (int i = 1; i < AlchemicalMachineObject::MACHINE_TYPE::NUM; i++)
+	for (int i = 1; i < MACHINE_TYPE::NUM; i++)
 	{
 		m_machineSelect[i] = std::make_unique<MachineSelect>();
 
-		m_machineSelect[i]->SetMachineType((AlchemicalMachineObject::MACHINE_TYPE)i);
+		m_machineSelect[i]->SetMachineType((MACHINE_TYPE)i);
 		m_machineSelect[i]->SetPosition({ POS.x + DIRECTION * i , POS.y });
 
 		m_machineSelect[i]->Initialize();
@@ -62,20 +64,26 @@ void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
 	m_selectBoxAll		= false;
 	m_manufacturingFlag = false;
 
-	m_selectMachineType = AlchemicalMachineObject::MACHINE_TYPE::NONE;
+	m_selectMachineType = MACHINE_TYPE::NONE;
+
+
+	auto datas = DataManager::GetInstance();
+	// jsonから読み取った値を使用する
+	auto pSJD = &ShareJsonData::GetInstance();
 
 	// Noneを省くために1スタート
-	for (int i = 1; i < AlchemicalMachineObject::MACHINE_TYPE::NUM; i++)
+	for (int i = 1; i < MACHINE_TYPE::NUM; i++)
 	{
 		// 要素の更新処理
 		m_machineSelect[i]->Update();
 
 		// 要素から製造ボタンが押された判定を受け取る
 		if (m_machineSelect[i]->GetManufacturingFlag() &&
-			DataManager::GetInstance()->GetNowMP() - ReduceResourceTable((AlchemicalMachineObject::MACHINE_TYPE)i) >= 0)
+			datas->GetNowMP()		 - pSJD->GetMachineData((MACHINE_TYPE)i).alchemi_mp >= 0 &&
+			datas->GetNowCrystal()	 - pSJD->GetMachineData((MACHINE_TYPE)i).alchemi_crystal >= 0)
 		{
 			m_manufacturingFlag = true;
-			ReduceResource((AlchemicalMachineObject::MACHINE_TYPE)i);
+			ReduceResource((MACHINE_TYPE)i);
 		}
 
 		// 何かマシンが選択された
@@ -85,7 +93,7 @@ void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
 			m_selectMachineType = m_machineSelect[i]->GetMachineType();
 
 			// 選択状態以外のマシンの選択状態をfalseにする
-			for (int j = 1; j < AlchemicalMachineObject::MACHINE_TYPE::NUM; j++)
+			for (int j = 1; j < MACHINE_TYPE::NUM; j++)
 			{
 				if (j == i) continue;
 
@@ -96,7 +104,7 @@ void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
 	}
 
 	// 何処かのクリスタルが選択されているならば、type：マイニングの選択ボックスの色を変える
-	m_machineSelect[AlchemicalMachineObject::MACHINE_TYPE::MINING]->
+	m_machineSelect[MACHINE_TYPE::MINING]->
 		SetChangeColorFlag(fieldObjectManager->GetCrystalToMouse());
 
 	m_displayMagicCircle->Update();
@@ -105,7 +113,7 @@ void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
 
 void MachineSelectManager::Render()
 {
-	for (int i = 1; i < AlchemicalMachineObject::MACHINE_TYPE::NUM; i++)
+	for (int i = 1; i < MACHINE_TYPE::NUM; i++)
 	{
 		m_machineSelect[i]->Draw();
 	}
@@ -126,7 +134,7 @@ void MachineSelectManager::MagicCircleRender()
 void MachineSelectManager::Finalize()
 {
 
-	for (int i = 1; i < AlchemicalMachineObject::MACHINE_TYPE::NUM; i++)
+	for (int i = 1; i < MACHINE_TYPE::NUM; i++)
 	{
 		m_machineSelect[i]->Finalize();
 	}
@@ -136,24 +144,13 @@ void MachineSelectManager::Finalize()
 
 }
 
-int MachineSelectManager::ReduceResourceTable(AlchemicalMachineObject::MACHINE_TYPE type)
-{
-	int reduceResources[AlchemicalMachineObject::MACHINE_TYPE::NUM] =
-	{
-		0,	// None
-		20, // Attacker
-		20, // Defenser
-		10, // Mining
-		10, // Recovery
-		50, // Upper
-	};
-
-	return reduceResources[type];
-}
-
-void MachineSelectManager::ReduceResource(AlchemicalMachineObject::MACHINE_TYPE type)
+void MachineSelectManager::ReduceResource(MACHINE_TYPE type)
 {
 	auto datas = DataManager::GetInstance();
-	datas->SetNowMP(datas->GetNowMP() - ReduceResourceTable(type));
+	auto pSJD = &ShareJsonData::GetInstance();
+
+	datas->SetNowMP(datas->GetNowMP() - pSJD->GetMachineData(type).alchemi_mp);
+
+	datas->SetNowCrystal(datas->GetNowCrystal() - pSJD->GetMachineData(type).alchemi_crystal);
 
 }

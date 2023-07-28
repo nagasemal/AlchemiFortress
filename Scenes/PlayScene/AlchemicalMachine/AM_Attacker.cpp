@@ -2,11 +2,8 @@
 #include "AM_Attacker.h"
 #include "NecromaLib/Singleton/InputSupport.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
-#include "NecromaLib/GameData/SpriteCutter.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
-
-#define LVUP_MAGNIFICATION_HP 1.25f
-#define STANDARD_HP 30
+#include "NecromaLib/GameData/SpriteCutter.h"
 
 AM_Attacker::AM_Attacker():
 	m_timer(),
@@ -14,7 +11,6 @@ AM_Attacker::AM_Attacker():
 	m_saveBulletStatus(),
 	m_bulletStatus()
 {
-
 }
 
 AM_Attacker::~AM_Attacker()
@@ -23,23 +19,18 @@ AM_Attacker::~AM_Attacker()
 
 void AM_Attacker::Initialize()
 {
-	ShareData& pSD = ShareData::GetInstance();
-
-	// 警告消し
-	pSD.GetDevice();
-
 	m_machineID = MACHINE_TYPE::ATTACKER;
 	m_objectName = "Attacker";
 
-	m_hp = STANDARD_HP;
-	m_maxHp = STANDARD_HP;
+	// Jsonから読み取ったマシンのデータを適応する
+	m_maxHp = m_hp = ShareJsonData::GetInstance().GetMachineData(m_machineID).hp;
 
 	for (int i = 0; i < 4; i++)
 	{
 		m_selectBox[i] = std::make_unique<SelectionBox>(DirectX::SimpleMath::Vector2(80.f + ((float)i * 65.f), 560.f), DirectX::SimpleMath::Vector2(1.0f, 1.0f));
 	}
 
-	m_color = DirectX::SimpleMath::Color(1, 1, 1, 1);
+	m_color = ShareJsonData::GetInstance().GetElementColor(m_element);
 
 	// 1Lv時のバレットのステータスを受け取る
 	m_bulletStatus = RecalculationStatus(m_element,1);
@@ -50,12 +41,17 @@ void AM_Attacker::Initialize()
 
 void AM_Attacker::Update()
 {
+	// Jsonから読み取ったマシンのデータを適応する
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
+
 	// 強化前に戻す
 	m_powerUPFlag = false;
 	m_bulletStatus = m_saveBulletStatus;
 
 	m_magicCircle.p = m_data.pos;
-	m_magicCircle.r = 5.f + (float)(m_lv / 2.0f);
+
+	// 効果範囲を決定する
+	m_magicCircle.r = (float)pSJD.GetMachineData(m_machineID).effect_rage + (float)(m_lv / 2.0f);
 }
 
 void AM_Attacker::SelectUpdate()
@@ -70,44 +66,17 @@ void AM_Attacker::SelectUpdate()
 		m_selectBox[3]->HitMouse();
 
 		//　　外部ファイルから読み込めるようにしたい
-		//　火属性取得
-		if (m_selectBox[0]->ClickMouse())
+		//　Nomalを省くために1からスタート
+		for (int i = 1; i < MACHINE_ELEMENT::Num; i++)
 		{
-			// 情報更新
-			m_color = DirectX::SimpleMath::Color(0.7, 0, 0, 1);
+			if (m_selectBox[i - 1]->ClickMouse())
+			{
+				// 情報更新
+				m_element = (MACHINE_ELEMENT)i;
+				m_color = ShareJsonData::GetInstance().GetElementColor(m_element);
+				m_saveBulletStatus = RecalculationStatus(m_element, m_lv);
 
-			m_element = FLAME;
-
-			m_saveBulletStatus = RecalculationStatus(m_element, m_lv);
-
-		}
-		//　水属性取得
-		if (m_selectBox[1]->ClickMouse())
-		{
-			m_color = DirectX::SimpleMath::Color(0, 0, 0.7, 1);
-
-			m_element = AQUA;
-
-			m_saveBulletStatus = RecalculationStatus(m_element, m_lv);
-		}
-		//　風属性取得
-		if (m_selectBox[2]->ClickMouse())
-		{
-			m_color = DirectX::SimpleMath::Color(0, 0.7, 0, 1);
-
-			m_element = WIND;
-
-			m_saveBulletStatus = RecalculationStatus(m_element, m_lv);
-
-		}
-		//　土属性取得
-		if (m_selectBox[3]->ClickMouse())
-		{
-			m_color = DirectX::SimpleMath::Color(0.7, 0.35f, 0, 1);
-
-			m_element = EARTH;
-
-			m_saveBulletStatus = RecalculationStatus(m_element, m_lv);
+			}
 		}
 	}
 }
@@ -125,10 +94,6 @@ void AM_Attacker::Draw()
 
 void AM_Attacker::Finalize()
 {
-	//for (int i = 0; i < 4; i++)
-	//{
-	//	//m_selectBox[i]->Finalize();
-	//}
 }
 
 void AM_Attacker::AllAlchemicalMachine(AlchemicalMachineObject* object)
@@ -138,7 +103,7 @@ void AM_Attacker::AllAlchemicalMachine(AlchemicalMachineObject* object)
 			m_powerUPFlag = true;
 
 			//強化
-			m_bulletStatus.damage	 = m_saveBulletStatus.damage  * 1.5f;
+			m_bulletStatus.str		 = m_saveBulletStatus.str	  * 1.5f;
 			m_bulletStatus.life		 = m_saveBulletStatus.life	  * 1.5f;
 			m_bulletStatus.speed	 = m_saveBulletStatus.speed	  * 1.5f;
 			m_bulletStatus.span		 = m_saveBulletStatus.span	  * 0.8f;
@@ -159,6 +124,7 @@ bool AM_Attacker::BulletRequest(std::list<EnemyObject>* enemys)
 		// 自機とエネミーの当たり判定
 		if (CircleCollider(it->GetCircle(), GetCircle()))
 		{
+			// ダメージを毎F受ける
 			m_hp -= (int)it->GetPower();
 		}
 
@@ -171,7 +137,7 @@ bool AM_Attacker::BulletRequest(std::list<EnemyObject>* enemys)
 				m_targetPos = it->GetPos();
 
 				// 消費MPはLvに依存(高いほど消費大)
-				pDataM->SetNowMP(pDataM->GetNowMP() - (int)m_bulletStatus.lossMp);
+				pDataM->SetNowMP(pDataM->GetNowMP() - (int)(m_bulletStatus.lossMp * m_lv));
 
 				return true;
 			}
@@ -185,9 +151,9 @@ bool AM_Attacker::BulletRequest(std::list<EnemyObject>* enemys)
 Bullet AM_Attacker::GetBulletData()
 {
 	Bullet::BulletData data = {};
-	data.damage	 = m_bulletStatus.damage;
-	data.life	 = m_bulletStatus.life;
-	data.speed	 = m_bulletStatus.speed;
+	data.damage	 = (float)m_bulletStatus.str;
+	data.life	 = (float)m_bulletStatus.life;
+	data.speed	 = (float)m_bulletStatus.speed;
 
 	return Bullet(data, m_color, m_data.pos,m_targetPos);
 }
@@ -210,12 +176,17 @@ void AM_Attacker::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> text
 
 		m_selectBox[i]->DrawUI(texture, pSL.GetElementTexture(), rect_element);
 	}
+
+	m_dismantlingBox->DrawUI(texture);
 }
 
 void AM_Attacker::LvUp()
 {
 	// クリスタルを減らす
 	DataManager& pDM = *DataManager::GetInstance();
+
+	// Jsonから読み取ったマシンのデータを適応する
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
 
 	// Lvが上限または変更後のクリスタルが0以下
 	if (m_lv >= MAX_LV || pDM.GetNowCrystal() - GetNextLvCrystal() <= 0) return;
@@ -227,7 +198,7 @@ void AM_Attacker::LvUp()
 	m_saveBulletStatus = RecalculationStatus(m_element, m_lv);
 
 	// HP強化
-	m_maxHp = (int)(STANDARD_HP * LVUP_MAGNIFICATION_HP);
+	m_maxHp = (int)(pSJD.GetMachineData(m_machineID).hp * (pSJD.GetMachineData(m_machineID).multiplier_hp * m_lv));
 	// HP回復
 	m_hp = m_maxHp;
 

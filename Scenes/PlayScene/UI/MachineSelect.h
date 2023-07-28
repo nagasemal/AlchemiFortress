@@ -47,8 +47,8 @@ public:
 
 	void SetPosition(DirectX::SimpleMath::Vector2 pos)				{ m_data.pos = pos; }
 
-	void SetMachineType(AlchemicalMachineObject::MACHINE_TYPE type) { m_selectMachineType = type;}
-	AlchemicalMachineObject::MACHINE_TYPE GetMachineType()			{ return m_selectMachineType;}
+	void SetMachineType(MACHINE_TYPE type) { m_selectMachineType = type;}
+	MACHINE_TYPE GetMachineType()			{ return m_selectMachineType;}
 
 	SelectionBox* GetMachineBox()									{return m_machineBox.get();}
 
@@ -60,7 +60,7 @@ private:
 	bool m_hitMouseFlag;
 	bool m_manufacturingFlag;
 
-	AlchemicalMachineObject::MACHINE_TYPE m_selectMachineType;
+	MACHINE_TYPE m_selectMachineType;
 
 	// 選択ボックス(マシン)
 	std::unique_ptr<SelectionBox> m_machineBox;

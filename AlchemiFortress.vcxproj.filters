@@ -101,6 +101,24 @@
     <Filter Include="Shader\DisplayMagicCircle">
       <UniqueIdentifier>{d0a9d934-3894-43c4-a1b2-165e82b3282e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Json">
+      <UniqueIdentifier>{23ede95d-559d-4971-9b04-c706ef4bc64e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Json\BulletData">
+      <UniqueIdentifier>{7595c136-8b8c-4f0c-b11c-2bf180b84ebe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Json\MachineData">
+      <UniqueIdentifier>{24d78aff-2fbd-4f9a-9540-50c18a403fc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Json\StageData">
+      <UniqueIdentifier>{3a593bf9-0913-4ff7-8901-ffddf7c12d32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Json\EnemyData">
+      <UniqueIdentifier>{e1d6a8ad-c43d-46e6-a623-6722c44dd67c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene\Stage">
+      <UniqueIdentifier>{04298bc0-14b1-4814-b453-9b3036e93ecb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -292,6 +310,18 @@
     <ClInclude Include="NecromaLib\GameData\CommonStruct.h">
       <Filter>NecromaLib\GameData\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="NecromaLib\GameData\picojson.h">
+      <Filter>NecromaLib\GameData</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\GameData\JsonLoder.h">
+      <Filter>NecromaLib\GameData</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\Singleton\ShareJsonData.h">
+      <Filter>NecromaLib\Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Stage\MissionManager.h">
+      <Filter>Scene\PlayScene\Stage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -477,6 +507,15 @@
     <ClCompile Include="Scenes\PlayScene\UI\Number.cpp">
       <Filter>Scene\PlayScene\UI</Filter>
     </ClCompile>
+    <ClCompile Include="NecromaLib\GameData\JsonLoder.cpp">
+      <Filter>NecromaLib\GameData</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\Singleton\ShareJsonData.cpp">
+      <Filter>NecromaLib\Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Stage\MissionManager.cpp">
+      <Filter>Scene\PlayScene\Stage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -508,6 +547,45 @@
     </None>
     <None Include="Resources\Shader\DisplayMagicCircle.hlsli">
       <Filter>Shader\DisplayMagicCircle</Filter>
+    </None>
+    <None Include="Resources\Json\BulletData\BulletData_Flame.json">
+      <Filter>Json\BulletData</Filter>
+    </None>
+    <None Include="Resources\Json\BulletData\BulletData_Nomal.json">
+      <Filter>Json\BulletData</Filter>
+    </None>
+    <None Include="Resources\Json\BulletData\BulletData_Aqua.json">
+      <Filter>Json\BulletData</Filter>
+    </None>
+    <None Include="Resources\Json\BulletData\BulletData_Earth.json">
+      <Filter>Json\BulletData</Filter>
+    </None>
+    <None Include="Resources\Json\BulletData\BulletData_Wind.json">
+      <Filter>Json\BulletData</Filter>
+    </None>
+    <None Include="Resources\Json\MachineData\MachineData_Attacker.json">
+      <Filter>Json\MachineData</Filter>
+    </None>
+    <None Include="Resources\Json\MachineData\MachineData_Defenser.json">
+      <Filter>Json\MachineData</Filter>
+    </None>
+    <None Include="Resources\Json\MachineData\MachineData_Mining.json">
+      <Filter>Json\MachineData</Filter>
+    </None>
+    <None Include="Resources\Json\MachineData\MachineData_None.json">
+      <Filter>Json\MachineData</Filter>
+    </None>
+    <None Include="Resources\Json\MachineData\MachineData_Recovery.json">
+      <Filter>Json\MachineData</Filter>
+    </None>
+    <None Include="Resources\Json\MachineData\MachineData_Upper.json">
+      <Filter>Json\MachineData</Filter>
+    </None>
+    <None Include="Resources\Json\EnemyData\EnemyData_Slime.json">
+      <Filter>Json\EnemyData</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\StageData_1.json">
+      <Filter>Json\StageData</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

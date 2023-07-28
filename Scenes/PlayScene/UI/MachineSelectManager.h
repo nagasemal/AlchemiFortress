@@ -13,6 +13,8 @@
 #include "Scenes/PlayScene/UI/MachineSelect.h"
 #include "NecromaLib/GameData/Camera.h"
 
+#include "NecromaLib/GameData/CommonStruct.h"
+
 class FieldObjectManager;
 class DisplayMagicCircle;
 
@@ -50,7 +52,7 @@ public:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetTextuer()	{ return m_boxTextuer;}
 
 	// 選択中のマシンのタイプを返す
-	AlchemicalMachineObject::MACHINE_TYPE GetSelectMachineType()	{ return m_selectMachineType; }
+	MACHINE_TYPE GetSelectMachineType()	{ return m_selectMachineType; }
 
 	// 選択ボックスが押されているかをTypeに応じて返す
 	bool GetHitMouseToSelectBox(int index)							{ return m_machineSelect[index]->GetHitMouseFlag();}
@@ -63,22 +65,19 @@ public:
 	// 一つの要素でもtrueなら
 	bool GetHitMouseToSelectBoxEven()								{ return m_selectBoxAll;}
 
-	// 減らすリソースのテーブル
-	int ReduceResourceTable(AlchemicalMachineObject::MACHINE_TYPE type);
-
 private:
 
 	// リソース群を減らす
-	void ReduceResource(AlchemicalMachineObject::MACHINE_TYPE type);
+	void ReduceResource(MACHINE_TYPE type);
 
 private:
 
 	// モデルを入れる箱のテクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_boxTextuer;
 
-	std::unique_ptr<MachineSelect> m_machineSelect[AlchemicalMachineObject::MACHINE_TYPE::NUM];
+	std::unique_ptr<MachineSelect> m_machineSelect[MACHINE_TYPE::NUM];
 
-	AlchemicalMachineObject::MACHINE_TYPE m_selectMachineType;
+	MACHINE_TYPE m_selectMachineType;
 
 	bool m_selectBoxAll;
 	bool m_manufacturingFlag;

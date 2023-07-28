@@ -10,3 +10,35 @@ struct EnemyParam
 	// 
 
 };
+
+enum MACHINE_ELEMENT : int
+{
+	NOMAL = 0,
+	FLAME = 1,
+	AQUA = 2,
+	WIND = 3,
+	EARTH = 4,
+	Num
+};
+
+// ƒL[‚ð—ñ‹“Œ^‚Æ‚µ‚ÄŽ‚Á‚Ä‚¨‚¯‚é‚æ‚¤‚É‚·‚é
+enum MACHINE_TYPE : int
+{
+	NONE = 0,		// Žw’è‚È‚µ
+	ATTACKER = 1,	// UŒ‚Œ^
+	UPEER = 2,		// ”ÍˆÍ“à‹­‰»Œ^
+	DEFENSER = 3,	// –hŒäŒ^
+	MINING = 4,		// ÌŒ@Œ^
+	RECOVERY = 5,	// –‚—Í‰ñŽûŒ^
+
+	NUM
+};
+
+enum ENEMY_TYPE : int
+{
+
+	ENMEY_NONE = 0,
+	SLIME = 1,
+
+	ENEMY_NUM
+};

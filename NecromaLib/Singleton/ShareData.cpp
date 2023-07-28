@@ -1,5 +1,6 @@
 #include <pch.h>
 #include "ShareData.h"
+#include "ShareJsonData.h"
 
 ShareData* ShareData::instance = nullptr;
 

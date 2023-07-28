@@ -6,6 +6,7 @@
 #include "NecromaLib/Singleton/SpriteLoder.h"
 
 #include "Scenes/DataManager.h"
+#include "NecromaLib/Singleton/ShareJsonData.h"
 
 #define LVUP_MAGNIFICATION_HP 1.25f
 #define STANDARD_HP 100
@@ -24,18 +25,25 @@ void AM_Mining::Initialize()
 	m_machineID = MACHINE_TYPE::MINING;
 	m_objectName = "Mining";
 
-	m_magicCircle.r = 3.5f;
+	// Jsonから読み取ったマシンのデータを適応する
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
 
-	m_machineEffectNum = 20.0f;
+	m_maxHp = m_hp = (int)pSJD.GetMachineData(m_machineID).hp;
+	m_magicCircle.r = (float)pSJD.GetMachineData(m_machineID).effect_rage;
+	m_machineEffectValue = (float)pSJD.GetMachineData(m_machineID).effect_value;
+
 	m_span = 1.0f;
-
-	m_hp = STANDARD_HP;
-	m_maxHp = STANDARD_HP;
 }
 
 void AM_Mining::Update()
 {
+	// Jsonから読み取ったマシンのデータを適応する
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
+
 	m_magicCircle.p = m_data.pos;
+	// 効果範囲を決定する
+	m_magicCircle.r = (float)pSJD.GetMachineData(m_machineID).effect_rage + (float)(m_lv / 2.0f);
+
 	m_timer += DeltaTime::GetInstance().GetDeltaTime();
 	m_color = DirectX::SimpleMath::Color(1, 1, 1, 1);
 }
@@ -67,7 +75,7 @@ void AM_Mining::AllFieldObject(FieldObjectManager* fieldManager)
 			if (m_timer >= m_span)
 			{
 				m_timer = 0.0f;
-				pDM->SetNowCrystal(pDM->GetNowCrystal() + (int)m_machineEffectNum);
+				pDM->SetNowCrystal(pDM->GetNowCrystal() + (int)m_machineEffectValue);
 			}
 		}
 	}
@@ -78,6 +86,7 @@ void AM_Mining::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textur
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
 	RECT rect_lv = SpriteCutter(64, 64, m_lv, 0);
 	m_selectLvUpBox->DrawUI(texture, pSL.GetNumberTexture(), rect_lv);
+	m_dismantlingBox->DrawUI(texture);
 }
 
 void AM_Mining::LvUp()
@@ -85,6 +94,8 @@ void AM_Mining::LvUp()
 
 	// クリスタルを減らす
 	DataManager& pDM = *DataManager::GetInstance();
+	// Jsonから読み取ったマシンのデータを適応する
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
 
 	// Lvが上限または変更後のクリスタルが0以下
 	if (m_lv >= MAX_LV || pDM.GetNowCrystal() - GetNextLvCrystal() <= 0) return;
@@ -94,7 +105,7 @@ void AM_Mining::LvUp()
 	m_lv++;
 
 	// HP強化
-	m_maxHp = (int)(STANDARD_HP * LVUP_MAGNIFICATION_HP);
+	m_maxHp = (int)(pSJD.GetMachineData(m_machineID).hp * (pSJD.GetMachineData(m_machineID).multiplier_hp * m_lv));
 	// HP回復
 	m_hp = m_maxHp;
 

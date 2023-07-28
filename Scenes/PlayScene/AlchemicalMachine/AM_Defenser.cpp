@@ -3,12 +3,7 @@
 #include "Scenes/PlayScene/Enemy/EnemyManager.h"
 #include "NecromaLib/GameData/SpriteCutter.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
-
-#define LVUP_MAGNIFICATION_HP 1.45f
-#define STANDARD_HP 100
-
-// 修理にかかる魔力
-#define REPAIR_HP 50 * m_lv
+#include "NecromaLib/Singleton/ShareJsonData.h"
 
 AM_Defenser::AM_Defenser():
 	m_isBreak()
@@ -24,18 +19,25 @@ void AM_Defenser::Initialize()
 	m_machineID = MACHINE_TYPE::DEFENSER;
 	m_objectName = "Defenser";
 
-	m_hp = STANDARD_HP;
-	m_maxHp = STANDARD_HP;
+	// Jsonから読み取ったマシンのデータを適応する
+	float machineHP = ShareJsonData::GetInstance().GetMachineData(m_machineID).hp;
+
+	m_hp = (int)machineHP;
+	m_maxHp = (int)machineHP;
 
 }
 
 void AM_Defenser::Update()
 {
+	// Jsonから読み取ったマシンのデータを適応する
+	float effectRage = ShareJsonData::GetInstance().GetMachineData(m_machineID).effect_rage;
 
-	m_data.pos.y = -1.0f;
+	m_data.pos.y = 0.0f;
 
 	m_magicCircle.p = m_data.pos;
-	m_magicCircle.r = 2.25f;
+
+	// 効果範囲を決定する
+	m_magicCircle.r = effectRage;
 }
 
 void AM_Defenser::SelectUpdate()
@@ -59,6 +61,7 @@ void AM_Defenser::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> text
 	m_selectLvUpBox->DrawUI(texture, pSL.GetNumberTexture(), rect_lv);
 
 	m_repairBox->DrawUI(texture);
+	m_dismantlingBox->DrawUI(texture);
 
 }
 
@@ -66,6 +69,9 @@ void AM_Defenser::LvUp()
 {
 	// クリスタルを減らす
 	DataManager& pDM = *DataManager::GetInstance();
+
+	// Jsonから読み取ったマシンのデータを適応する
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
 
 	// Lvが上限または変更後のクリスタルが0以下
 	if (m_lv >= MAX_LV || pDM.GetNowCrystal() - GetNextLvCrystal() <= 0) return;
@@ -75,7 +81,7 @@ void AM_Defenser::LvUp()
 	m_lv++;
 
 	// HP強化
-	m_maxHp = (int)(STANDARD_HP * LVUP_MAGNIFICATION_HP);
+	m_maxHp = (int)(pSJD.GetMachineData(m_machineID).hp * (pSJD.GetMachineData(m_machineID).multiplier_hp * m_lv));
 	// HP回復
 	m_hp = m_maxHp;
 
@@ -97,7 +103,7 @@ void AM_Defenser::EnemyHit(std::list<EnemyObject>* enemys)
 			it->Bouns();
 
 			// 体力減少
-			m_hp -= it->GetPower();
+			m_hp -= (int)it->GetPower();
 
 		}
 	}

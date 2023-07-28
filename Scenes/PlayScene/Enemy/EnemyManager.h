@@ -24,11 +24,15 @@ public:
 	void Render();
 	void Finalize();
 
-	EnemyObject GetEnemyStatus(EnemyObject::EnemyType type);
+	EnemyObject GetEnemyStatus(ENEMY_TYPE type,int spawnNumber);
 
 	void HitAMObejct(AlchemicalMachineObject* alchemicalMachines);
 
 public:
+
+
+	const bool GetKnokDownEnemyFlag() const { return m_knokDownFlag; }
+	const ENEMY_TYPE GetKnokDownEnemyType() const { return m_knokDownEnemyType; }
 
 	std::list<EnemyObject>* GetEnemyData() { return m_enemyObject.get(); }
 
@@ -48,5 +52,11 @@ private:
 
 	float m_timer;
 	float m_totalTimer;
+
+	// “|‚³‚ê‚½uŠÔ‚ğæ“¾‚·‚éƒtƒ‰ƒO
+	bool m_knokDownFlag;
+	ENEMY_TYPE m_knokDownEnemyType;
+
+	int m_enemyNums;
 
 };

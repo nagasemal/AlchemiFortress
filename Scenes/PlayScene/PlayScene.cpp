@@ -1,8 +1,15 @@
 #include "pch.h"
 #include "PlayScene.h"
 
+#include "NecromaLib/Singleton/ShareJsonData.h"
+#include "NecromaLib/Singleton/InputSupport.h"
+
 PlayScene::PlayScene()
 {
+
+	ShareJsonData::GetInstance().LoadingJsonFile_Bullet();
+	ShareJsonData::GetInstance().LoadingJsonFile_Machine();
+	ShareJsonData::GetInstance().LoadingJsonFile_Stage(1);
 }
 
 PlayScene::~PlayScene()
@@ -29,6 +36,9 @@ void PlayScene::Initialize()
 
 	m_gauge = std::make_unique<Gauge>();
 	m_gauge->Initialize();
+
+	m_missionManager = std::make_unique<MissionManager>();
+	m_missionManager->Initialize();
 
 	ShareData& pSD = ShareData::GetInstance();
 	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
@@ -65,6 +75,8 @@ GAME_SCENE PlayScene::Update()
 
 	m_gauge->Update();
 
+	m_missionManager->Update(m_AM_Manager.get(),m_enemyManager.get());
+
 	bool enemyActivs = !m_enemyManager->GetEnemyData()->empty();
 	// エネミーToバレット
 	// ダングリング対策
@@ -79,9 +91,21 @@ GAME_SCENE PlayScene::Update()
 	pSD.GetCamera()->SetEyePosition		(m_moveCamera->GetEyePosition());
 
 	// 拠点のHPが0になったらリザルトへ切り替える
-	if (m_fieldManager->GetPlayerBase()->GetHP() <= 0)
+	if (m_fieldManager->GetPlayerBase()->GetHP() <= 0 || m_missionManager->MissionmFailure())
 	{
 		return GAME_SCENE::RESULT;
+	}
+
+	if (m_missionManager->MissionComplete())
+	{
+		return GAME_SCENE::RESULT;
+	}
+
+	InputSupport* pINP = &InputSupport::GetInstance();
+	// マシンのデータ再読み込み
+	if (pINP->GetKeybordState().IsKeyReleased(Keyboard::M))
+	{
+		ShareJsonData::GetInstance().LoadingJsonFile_Machine();
 	}
 
 	return GAME_SCENE();
@@ -118,6 +142,7 @@ void PlayScene::DrawUI()
 {
 	m_AM_Manager		->DrawUI();
 	m_gauge				->Render();
+	m_missionManager->Render();
 }
 
 void PlayScene::Finalize()

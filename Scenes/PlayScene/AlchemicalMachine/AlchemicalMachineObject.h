@@ -11,6 +11,8 @@
 
 #include "Scenes/DataManager.h"
 
+#include "NecromaLib/GameData/CommonStruct.h"
+
 class EnemyObject;
 class Bullet;
 class SelectionBox;
@@ -19,31 +21,9 @@ class AlchemicalMachineObject : public GameObjct3D
 {
 public:
 
-	// キーを列挙型として持っておけるようにする
-	enum MACHINE_TYPE : int
-	{
-		NONE			 = 0,	// 指定なし
-		ATTACKER		 = 1,	// 攻撃型
-		UPEER			 = 2,	// 範囲内強化型
-		DEFENSER		 = 3,	// 防御型
-		MINING			 = 4,	// 採掘型
-		RECOVERY		 = 5,	// 魔力回収型
 
-		NUM
-	};
 
 public:
-
-	enum MACHINE_ELEMENT : int
-	{
-		NOMAL	= 0,
-		FLAME	= 1,
-		AQUA	= 2,
-		WIND	= 3,
-		EARTH	= 4,
-		SUM
-	};
-
 
 	// オブジェクトの現在状況の取得
 	enum STATE_NAME : int
@@ -94,6 +74,9 @@ public:
 	// マウスが触れているか否か
 	const bool GetHitMouse()								const { return m_hitMouseFlag;}
 
+	// 解体された瞬間を返すフラグ
+	const bool GetDismantlingFlag()							const { return m_dismantlingFlag; }
+
 	// オブジェクトの名前
 	const std::string GetObjectName()						const { return m_objectName; }
 
@@ -101,7 +84,7 @@ public:
 	const MACHINE_TYPE GetModelID()							const { return m_machineID;}
 
 	// 現在未使用
-	const float GetMachineEffectNum()						const { return m_machineEffectNum; }
+	const float GetMachineEffectNum()						const { return m_machineEffectValue; }
 
 	// 効果発動までの時間
 	const float GetSpan()									const { return m_span;}
@@ -131,6 +114,15 @@ public:
 	// 現在どのライン上に存在しているか
 	const int GetLine()										const { return m_line; }
 
+	// 次のLVに必要なクリスタルの量
+	const int GetNextLvCrystal();
+
+	// 修繕に必要なクリスタルの量
+	const int GetRepairCrystal();
+
+	// 解体で得られるクリスタルの量
+	const int GetDismantlingCrystal();
+
 	void SetPos(DirectX::SimpleMath::Vector3 pos)		{ m_data.pos = pos; }
 	void SetMagicCircle(Circle circle)					{ m_magicCircle = circle;}
 	void SetActive(bool flag)							{ m_active = flag; }
@@ -158,10 +150,16 @@ protected:
 	int m_lv;
 
 	// マシン特有のデータ(攻撃力や防御性能、採掘速度など)を決定付けるデータ
-	float m_machineEffectNum;
+	float m_machineEffectValue;
 
 	// 次の効果発動までの時間
 	float m_span;
+
+	// Y軸回転させるための変数
+	float m_rotateAnimation;
+
+	// オブジェクトのライン位置(どの円形線状にあるか)
+	int m_line;
 
 	// 存在しているか否か
 	bool m_active;
@@ -175,8 +173,8 @@ protected:
 	// マウスが当たっているか否か
 	bool m_hitMouseFlag;
 
-	// Y軸回転させるための変数
-	float m_rotateAnimation;
+	// 解体されたか否か
+	bool m_dismantlingFlag;
 
 	// 効果範囲
 	Circle m_magicCircle;
@@ -189,13 +187,13 @@ protected:
 	// オブジェクトの属性
 	MACHINE_ELEMENT m_element;
 
-	// オブジェクトのライン位置(どの円形線状にあるか)
-	int m_line;
-
 	// LvUp用の選択ボックス
 	std::unique_ptr<SelectionBox> m_selectLvUpBox;
 
 	// 修理用の選択ボックス
 	std::unique_ptr<SelectionBox> m_repairBox;
+
+	// 解体用の選択ボックス
+	std::unique_ptr<SelectionBox> m_dismantlingBox;
 
 };

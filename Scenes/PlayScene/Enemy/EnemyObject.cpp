@@ -6,7 +6,7 @@
 
 #define GRAVITY 0.2f
 
-EnemyObject::EnemyObject(EnemyType type, DirectX::SimpleMath::Vector3 startPos, int lv) :
+EnemyObject::EnemyObject(ENEMY_TYPE type, DirectX::SimpleMath::Vector3 startPos, int lv) :
 	m_power(1),
 	m_hp(10),
 	m_lv(lv),
@@ -14,7 +14,8 @@ EnemyObject::EnemyObject(EnemyType type, DirectX::SimpleMath::Vector3 startPos, 
 	m_accele(),
 	m_lengthVec(),
 	m_exp(),
-	m_stopFlag()
+	m_stopFlag(),
+	m_enemyType(type)
 {
 
 	m_data.pos = startPos;

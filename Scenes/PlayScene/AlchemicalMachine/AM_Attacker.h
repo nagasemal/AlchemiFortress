@@ -61,17 +61,14 @@ public:
 //　アクセサ
 public:
 
-	const BulletStatus GetBulletStatus()	const { return m_bulletStatus;}
-
-	// 次回必要となるクリスタルの数
-	const int GetNextLvCrystal()			const { return (15 * m_lv) * (5 * m_lv); }
+	const Bullet_Data GetBulletStatus()	const { return m_bulletStatus;}
 
 private:
 
 	float	m_timer;
 
-	BulletStatus m_bulletStatus;		// バレットデータ
-	BulletStatus m_saveBulletStatus;	// 加工元のバレットデータ
+	Bullet_Data m_bulletStatus;		// バレットデータ
+	Bullet_Data m_saveBulletStatus;	// 加工元のバレットデータ
 
 	DirectX::SimpleMath::Vector3 m_targetPos;
 

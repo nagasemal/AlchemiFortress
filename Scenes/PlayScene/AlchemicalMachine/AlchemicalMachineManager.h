@@ -57,6 +57,9 @@ public:
 
 	std::unique_ptr<MachineSelectManager>* GetMachineSelect()			{ return &m_selectManager; }
 
+	// マシンが設置されたことを知らせるフラグ
+	MACHINE_TYPE SpawnMachineNotification() { return m_spawnMachine; }
+
 private:
 
 	// 専用の更新処理を回す
@@ -78,6 +81,11 @@ private:
 
 	// 並べたアルケミカルマシンをlineNumberに応じて使用可能状態に変更する
 	void LvToObjectActives(int lineNumber);
+
+	void SpawnAMMachine(bool leftButtom);
+
+	// 解体時処理(Noneにもどす)
+	void Dismantling(int index);
 
 private:
 
@@ -146,7 +154,10 @@ private:
 	int m_saveWheelValue;
 	int m_scrollValue;
 
+	// マシンが設置されたことを通知する変数
+	MACHINE_TYPE m_spawnMachine;
+
 	// 現在保有しているアルケミカルマシンの個数
-	int m_AMnums[AlchemicalMachineObject::MACHINE_TYPE::NUM];
+	int m_AMnums[MACHINE_TYPE::NUM];
 
 };

@@ -18,7 +18,7 @@ MachineSelect::MachineSelect():
 	m_hitMouseFlag(),
 	m_onMouseFlag(),
 	m_manufacturingFlag(),
-	m_selectMachineType(AlchemicalMachineObject::MACHINE_TYPE::NONE),
+	m_selectMachineType(MACHINE_TYPE::NONE),
 	m_changeColorFlag(),
 	m_boxColor{1.0f,1.0f,1.0f,1.0f},
 	m_colorChangeTime()
@@ -74,10 +74,11 @@ void MachineSelect::Update()
 	if (m_hitMouseFlag)
 	{
 		DeltaTime::GetInstance().SetDeltaTime(deltaTime / 2);
-	}
 
-	m_selectionManufacturing->HitMouse();
-	m_manufacturingFlag = m_selectionManufacturing->ClickMouse();
+		m_selectionManufacturing->HitMouse();
+		m_manufacturingFlag = m_selectionManufacturing->ClickMouse();
+
+	}
 
 }
 

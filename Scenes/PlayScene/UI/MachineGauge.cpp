@@ -13,7 +13,7 @@ MachineGauge::~MachineGauge()
 void MachineGauge::AddHPGauge(DirectX::SimpleMath::Vector2 position, DirectX::SimpleMath::Vector2 scale, UserInterface::ANCHOR anchor)
 {
     auto device = ShareData::GetInstance().GetDeviceResources();
-    int width = device->GetOutputSize().right;
+    int width  = device->GetOutputSize().right;
     int height = device->GetOutputSize().bottom;
 
     m_gauge_Hp = std::make_unique<UserInterface>();
@@ -45,8 +45,6 @@ void MachineGauge::Update(int hp, int maxHp)
 
 void MachineGauge::Render()
 {
-
     m_base_Hp->Render();
     m_gauge_Hp->Render();
-
 }

@@ -70,7 +70,7 @@ void MagicCircle::CreateWorld()
 	DirectX::SimpleMath::Matrix rot = DirectX::SimpleMath::Matrix::CreateRotationX(RAD_90);
 	
 	// èÌÇ…âEâÒÇËÇ…âÒì]
-	rot *= DirectX::SimpleMath::Matrix::CreateRotationY(0.25 * m_animationTime);
+	rot *= DirectX::SimpleMath::Matrix::CreateRotationY(0.25f * m_animationTime);
 
 	m_animationTime += DeltaTime::GetInstance().GetDeltaTime();
 

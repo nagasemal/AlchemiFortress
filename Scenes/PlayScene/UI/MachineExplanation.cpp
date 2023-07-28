@@ -146,12 +146,6 @@ void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* se
 
 bool MachineExplanation::OnMouse()
 {
-
-	if (m_hitFlag)
-	{
-		int a = 0;
-	}
-
 	return m_hitFlag;
 }
 

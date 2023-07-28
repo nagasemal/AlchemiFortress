@@ -9,7 +9,6 @@ static const float4 offset_array[vnum] =
 	float4(rage,  rage, 0.0f, 0.0f),	// âEè„
 	float4(-rage, -rage, 0.0f, 0.0f),	// ç∂â∫
 	float4(rage, -rage, 0.0f, 0.0f),	// âEâ∫
-
 };
 
 [maxvertexcount(vnum)]
@@ -31,10 +30,12 @@ void main(
 		element.Pos = mul(element.Pos, matProj);
 
 		element.Color = input[0].Color;
+
 		element.Tex.x = offset_array[i].x + 0.5f;
 		element.Tex.y = -offset_array[i].y + 0.5f;
 
 		output.Append(element);
 	}
+
 	output.RestartStrip();
 }
