@@ -1,12 +1,9 @@
 #pragma once
 
 #include "NecromaLib/SceneObject/SceneObj.h"
-//#include "NecromaLib/SceneObject/SceneManager.h"
 
-#include "Scenes/TitleScene/TitleCall/TitileCall.h"
+#include "Scenes/Commons/DrawMachine.h"
 #include "Scenes/TitleScene/Camera/TitleCamera.h"
-
-//#include "Scenes/PlayScene/Camera/MoveCamera.h"
 
 class MagicCircle;
 
@@ -36,11 +33,11 @@ public:
 
 private:
 
-	std::unique_ptr<TitleCall>		m_titleCall;
-	std::unique_ptr<TitleCamera>	m_titleCamera;
+	std::unique_ptr<DrawMachine>		m_titleCall;
+	std::unique_ptr<TitleCamera>		m_titleCamera;
 
-	std::unique_ptr<MagicCircle>	m_magicCircle;
+	std::unique_ptr<MagicCircle>		m_magicCircle;
 
-	std::unique_ptr<DirectX::Model>				m_skySphere;
+	std::unique_ptr<DirectX::Model>		m_skySphere;
 
 };

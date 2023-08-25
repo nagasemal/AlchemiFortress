@@ -62,4 +62,8 @@ private:
 	std::unique_ptr<Gauge>						m_gauge;
 
 	std::unique_ptr<DirectX::Model>				m_skySphere;
+
+	// ステージ番号
+	int m_stageNumber;
+
 };

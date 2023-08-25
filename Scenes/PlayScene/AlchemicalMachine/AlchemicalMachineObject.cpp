@@ -5,6 +5,9 @@
 #include "NecromaLib/GameData/Easing.h"
 #include "NecromaLib/Singleton/ShareJsonData.h"
 
+#include "NecromaLib/Singleton/SpriteLoder.h"
+#include "NecromaLib/GameData/SpriteCutter.h"
+
 #define AM_RAGE DirectX::SimpleMath::Vector3(1, 1, 1)
 
 // 修理にかかる魔力
@@ -12,7 +15,7 @@
 
 AlchemicalMachineObject::AlchemicalMachineObject():
 	m_hp(1),
-	m_maxHp(),
+	m_maxHp(1),
 	m_active(),
 	m_hitMouseFlag(),
 	m_selectModeFlag(),
@@ -46,7 +49,7 @@ void AlchemicalMachineObject::SelectUpdate_Common()
 	m_dismantlingFlag = false;
 
 	DataManager& pDataM = *DataManager::GetInstance();
-	auto pSJD = &ShareJsonData::GetInstance();
+	//auto pSJD = &ShareJsonData::GetInstance();
 
 	// LvUp用の選択ボックスの設定
 	m_selectLvUpBox->HitMouse();
@@ -76,12 +79,33 @@ void AlchemicalMachineObject::SelectUpdate_Common()
 
 }
 
+void AlchemicalMachineObject::SelectRenderUI_Common()
+{
+
+	SpriteLoder& pSL = SpriteLoder::GetInstance();
+
+	// LVUP用UI
+	RECT rect_UI = SpriteCutter(64, 64, m_lv, 0);
+	m_selectLvUpBox->DrawUI(pSL.GetSelectBoxTexture(), pSL.GetNumberTexture(), rect_UI);
+
+	// 修繕用UI
+	rect_UI = SpriteCutter(64, 64, SpriteLoder::REPAIR, 0);
+	m_repairBox->DrawUI(pSL.GetSelectBoxTexture(), pSL.GetUIIcons(), rect_UI,
+						DirectX::SimpleMath::Color(0.0f,0.0f,0.0f,1.0f));
+
+	// 解体用UI
+	rect_UI = SpriteCutter(64, 64, SpriteLoder::DISMATIONG, 0);
+	m_dismantlingBox->DrawUI(pSL.GetSelectBoxTexture(), pSL.GetUIIcons(), rect_UI,
+							 DirectX::SimpleMath::Color(0.0f, 0.0f, 0.0f, 1.0f));
+
+}
+
 void AlchemicalMachineObject::HitToObject(MousePointer* pMP)
 {
 
 	m_hitMouseFlag = false;
 
-	InputSupport& pINP = InputSupport::GetInstance();
+	//InputSupport& pINP = InputSupport::GetInstance();
 	Circle mouseWolrdPos = Circle();
 	mouseWolrdPos.p = InputSupport::GetInstance().GetMousePosWolrd();
 	mouseWolrdPos.r = (pMP->GetRage().x + pMP->GetRage().z) / 2;

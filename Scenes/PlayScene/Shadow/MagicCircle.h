@@ -45,6 +45,8 @@ public:
 
 	static const std::vector<D3D11_INPUT_ELEMENT_DESC> INPUT_LAYOUT;
 
+	float GetAnimationTime() { return m_animationTime; }
+
 private:
 
 private:

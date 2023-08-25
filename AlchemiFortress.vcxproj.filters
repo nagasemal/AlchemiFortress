@@ -95,9 +95,6 @@
     <Filter Include="Scene\TitleScene\camera">
       <UniqueIdentifier>{2ee8d8d7-869f-4bbc-86c1-a90d0df76e06}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\TitleScene\Call">
-      <UniqueIdentifier>{e2bba3a6-3729-43bd-819d-fb1208969343}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shader\DisplayMagicCircle">
       <UniqueIdentifier>{d0a9d934-3894-43c4-a1b2-165e82b3282e}</UniqueIdentifier>
     </Filter>
@@ -118,6 +115,18 @@
     </Filter>
     <Filter Include="Scene\PlayScene\Stage">
       <UniqueIdentifier>{04298bc0-14b1-4814-b453-9b3036e93ecb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\SelectScene">
+      <UniqueIdentifier>{7395379b-a64a-4112-aa1c-b48eaad6e95c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\SelectScene\Camera">
+      <UniqueIdentifier>{406f0935-6f11-40d3-bd6b-d0fda660616c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Commons">
+      <UniqueIdentifier>{fc85c9fc-56c0-4763-b3b9-09e3fe145c31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Commons\Mission">
+      <UniqueIdentifier>{0beb3f99-df5b-4de0-a0e9-a5dc2661c683}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -241,9 +250,6 @@
     <ClInclude Include="Scenes\PlayScene\UI\SelectionBox.h">
       <Filter>Scene\PlayScene\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\DataManager.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\Bullet\BulletDataBase.h">
       <Filter>Scene\PlayScene\AlchemicalMachine\Bullet</Filter>
     </ClInclude>
@@ -295,9 +301,6 @@
     <ClInclude Include="Scenes\TitleScene\Camera\TitleCamera.h">
       <Filter>Scene\TitleScene\camera</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\TitleScene\TitleCall\TitileCall.h">
-      <Filter>Scene\TitleScene\Call</Filter>
-    </ClInclude>
     <ClInclude Include="NecromaLib\GameData\Animation.h">
       <Filter>NecromaLib\GameData</Filter>
     </ClInclude>
@@ -321,6 +324,24 @@
     </ClInclude>
     <ClInclude Include="Scenes\PlayScene\Stage\MissionManager.h">
       <Filter>Scene\PlayScene\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\SelectScene\SelectScene.h">
+      <Filter>Scene\SelectScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\SelectScene\SelectCamera.h">
+      <Filter>Scene\SelectScene\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\SelectScene\MissionRender.h">
+      <Filter>Scene\Commons\Mission</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\DataManager.h">
+      <Filter>Scene\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Commons\DrawArrow.h">
+      <Filter>Scene\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Commons\DrawMachine.h">
+      <Filter>Scene\Commons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -441,9 +462,6 @@
     <ClCompile Include="Scenes\PlayScene\UI\SelectionBox.cpp">
       <Filter>Scene\PlayScene\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\DataManager.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\Bullet\BulletDataBase.cpp">
       <Filter>Scene\PlayScene\AlchemicalMachine\Bullet</Filter>
     </ClCompile>
@@ -495,9 +513,6 @@
     <ClCompile Include="Scenes\TitleScene\Camera\TitleCamera.cpp">
       <Filter>Scene\TitleScene\camera</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\TitleScene\TitleCall\TitileCall.cpp">
-      <Filter>Scene\TitleScene\Call</Filter>
-    </ClCompile>
     <ClCompile Include="NecromaLib\GameData\Animation.cpp">
       <Filter>NecromaLib\GameData</Filter>
     </ClCompile>
@@ -515,6 +530,24 @@
     </ClCompile>
     <ClCompile Include="Scenes\PlayScene\Stage\MissionManager.cpp">
       <Filter>Scene\PlayScene\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\SelectScene\SelectScene.cpp">
+      <Filter>Scene\SelectScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\SelectScene\SelectCamera.cpp">
+      <Filter>Scene\SelectScene\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\SelectScene\MissionRender.cpp">
+      <Filter>Scene\Commons\Mission</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\DataManager.cpp">
+      <Filter>Scene\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\Commons\DrawMachine.cpp">
+      <Filter>Scene\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\Commons\DrawArrow.cpp">
+      <Filter>Scene\Commons</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

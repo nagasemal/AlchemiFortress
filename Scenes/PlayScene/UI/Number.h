@@ -28,7 +28,12 @@ public:
 	// ”š‰æ‘œ•`‰æ
 	void Render();
 
+	// Missions
+	void Render_SelectScene(int first,int next);
+
 private:
+
+	void Number_Render(int num,DirectX::SimpleMath::Vector2 pos);
 
 	DirectX::SimpleMath::Vector2 m_position;
 	DirectX::SimpleMath::Vector2 m_rage;

@@ -13,9 +13,6 @@ using namespace DirectX;
 // 定数の初期化
 const float Camera::DEFAULT_CAMERA_DISTANCE = 5.0f;
 
-//-------------------------------------------------------------------
-// コンストラクタ
-//-------------------------------------------------------------------
 Camera::Camera()
 	: mView(DirectX::SimpleMath::Matrix::Identity)
 	, mEye(0.0f, 15.0f, 1.0f)
@@ -27,24 +24,25 @@ Camera::Camera()
 }
 
 
-//-------------------------------------------------------------------
-// デストラクタ
-//-------------------------------------------------------------------
 Camera::~Camera()
 {
 }
 
-//-------------------------------------------------------------------
-// ビュー行列の算出
-//-------------------------------------------------------------------
+void Camera::CameraReset()
+{
+
+	mEye = DirectX::SimpleMath::Vector3(0.0f, 15.0f, 1.0f);
+	mTarget = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
+	mUp = DirectX::SimpleMath::Vector3(0.0f, 1.0f, 0.0f);
+
+}
+
 void Camera::CalculateViewMatrix()
 {
 	mView = DirectX::SimpleMath::Matrix::CreateLookAt(mEye, mTarget, mUp);
 }
 
-//-------------------------------------------------------------------
-// プロジェクション行列の算出
-//-------------------------------------------------------------------
+
 void Camera::CalculateProjectionMatrix()
 {
 	DX::DeviceResources* pDR = ShareData::GetInstance().GetDeviceResources();

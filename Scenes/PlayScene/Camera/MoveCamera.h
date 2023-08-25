@@ -21,6 +21,7 @@ public:
 
 	void SetEyeProsition(DirectX::SimpleMath::Vector3 eye)			{ m_eye = eye;}
 	void SetTargetProsition(DirectX::SimpleMath::Vector3 target)	{ m_target = target; }
+	void SetSaveTargetProsition(DirectX::SimpleMath::Vector3 target) { m_saveTarget = target; }
 
 	void TargetChange(DirectX::SimpleMath::Vector3 targetA, DirectX::SimpleMath::Vector3 targetB);
 	void ResetTargetChangeTimer() { m_targetChangeTime = 0; }

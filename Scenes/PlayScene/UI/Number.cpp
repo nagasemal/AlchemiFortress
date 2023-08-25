@@ -74,3 +74,51 @@ void Number::Render()
 
 	pSB->End();
 }
+
+void Number::Render_SelectScene(int first, int next)
+{
+	Number_Render(first,m_position);
+
+	m_position.x += 32.0f;
+
+	Number_Render(next, m_position);
+
+}
+
+void Number::Number_Render(int num, DirectX::SimpleMath::Vector2 pos)
+{
+
+	ShareData& pSD = ShareData::GetInstance();
+	auto pSB = pSD.GetSpriteBatch();
+
+	DirectX::SimpleMath::Color color(1, 1, 1, 1);
+
+	for (int i = 1; i >= 0; i--)
+	{
+		// 基数　桁数取得
+		int base = 1;
+
+		for (int j = 0; j < i; j++)
+		{
+			// i桁目の数字を[0, 9]の範囲として取得
+			int digit = (num / base) % 10;
+			RECT numRect = SpriteCutter(64, 64, digit, 0);
+
+			pos.x -= ((64 * m_rage.x) * j);
+
+			// 数字描画
+			pSB->Draw(SpriteLoder::GetInstance().GetNumberTexture().Get(),
+				pos,
+				&numRect,
+				color,
+				0.0f,
+				DirectX::XMFLOAT2(64 / 2, 64 / 2),
+				m_rage);
+
+			// 10のi乗を計算
+			base *= 10;
+
+		}
+	}
+
+}

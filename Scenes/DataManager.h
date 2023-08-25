@@ -80,6 +80,10 @@ public:
 	int GetRound()				const	{ return m_round; }
 	void SetRound(int value)			{ m_round = value;}
 
+	// ステージ番号
+	int GetStageNum()			const { return m_stageNum;}
+	void SetStageNum(int stageNum) { this->m_stageNum = stageNum; }
+
 
 private:
 	DataManager();
@@ -106,5 +110,8 @@ private:
 
 	// 現在のラウンド数
 	int m_round;
+
+	// 現在のステージ数
+	int m_stageNum;
 
 };

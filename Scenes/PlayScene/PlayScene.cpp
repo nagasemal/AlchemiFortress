@@ -4,12 +4,18 @@
 #include "NecromaLib/Singleton/ShareJsonData.h"
 #include "NecromaLib/Singleton/InputSupport.h"
 
+#include "NecromaLib/GameData/JsonLoder.h"
+
+#include "Scenes/DataManager.h"
+
 PlayScene::PlayScene()
 {
 
+	m_stageNumber = DataManager::GetInstance()->GetStageNum();
+
 	ShareJsonData::GetInstance().LoadingJsonFile_Bullet();
 	ShareJsonData::GetInstance().LoadingJsonFile_Machine();
-	ShareJsonData::GetInstance().LoadingJsonFile_Stage(1);
+	ShareJsonData::GetInstance().LoadingJsonFile_Stage(m_stageNumber);
 }
 
 PlayScene::~PlayScene()
@@ -98,6 +104,11 @@ GAME_SCENE PlayScene::Update()
 
 	if (m_missionManager->MissionComplete())
 	{
+		// ステージ攻略情報を得る
+		Json::WritingJsonFile_ClearData(m_stageNumber,
+										m_AM_Manager->GetAlchemicalMachineObject(),
+										m_missionManager->GetStartTimer());
+
 		return GAME_SCENE::RESULT;
 	}
 
@@ -142,7 +153,8 @@ void PlayScene::DrawUI()
 {
 	m_AM_Manager		->DrawUI();
 	m_gauge				->Render();
-	m_missionManager->Render();
+	m_missionManager	->Render();
+
 }
 
 void PlayScene::Finalize()
@@ -189,8 +201,10 @@ void PlayScene::EnemyToPlayerBase()
 	{
 		bool hitEnemy;
 
+		hitEnemy = CircleCollider(playerBase->GetCircle(), enemyIt->GetCircle());
+
 		// 当たり判定処理
-		if (hitEnemy = CircleCollider(playerBase->GetCircle(), enemyIt->GetCircle()))
+		if (hitEnemy)
 		{
 			playerBase->Damage(enemyIt->GetPower());
 			enemyIt->HitMachine(hitEnemy);

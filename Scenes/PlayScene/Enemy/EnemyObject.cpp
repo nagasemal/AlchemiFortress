@@ -10,16 +10,19 @@ EnemyObject::EnemyObject(ENEMY_TYPE type, DirectX::SimpleMath::Vector3 startPos,
 	m_power(1),
 	m_hp(10),
 	m_lv(lv),
-	m_speed(6),
+	m_speed(1),
 	m_accele(),
 	m_lengthVec(),
 	m_exp(),
 	m_stopFlag(),
-	m_enemyType(type)
+	m_enemyType(type),
+	m_rotation(),
+	m_moveVec(),
+	m_aliveTimer()
 {
 
 	m_data.pos = startPos;
-	m_data.rage = DirectX::SimpleMath::Vector3(0.25, 1, 0.25);
+	m_data.rage = DirectX::SimpleMath::Vector3(0.25f, 0.25f, 0.25f);
 
 }
 
@@ -35,6 +38,12 @@ void EnemyObject::Initialize()
 void EnemyObject::Update()
 {
 	m_stopFlag = false;
+
+	m_aliveTimer += DeltaTime::GetInstance().GetDeltaTime();
+
+	m_data.rage.y = Easing::EaseInCirc(0.25f, 0.35f, sinf(m_aliveTimer));
+	m_data.rage.z = Easing::EaseInCirc(0.25f, 0.35f, cosf(m_aliveTimer));
+
 }
 
 void EnemyObject::Draw()
@@ -42,14 +51,17 @@ void EnemyObject::Draw()
 
 }
 
-void EnemyObject::Render(GeometricPrimitive* geo)
+void EnemyObject::Render(Model* model)
 {
 
 	ShareData& pSD = ShareData::GetInstance();
 
-	DirectX::SimpleMath::Matrix textBox = DirectX::SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y, m_data.pos.z);
+	DirectX::SimpleMath::Matrix modelMatrix = 
+		SimpleMath::Matrix::CreateFromQuaternion(m_rotation)
+		* DirectX::SimpleMath::Matrix::CreateScale(m_data.rage * 5.0f)
+		* DirectX::SimpleMath::Matrix::CreateTranslation(m_data.pos);
 
-	geo->Draw(textBox, pSD.GetView(), pSD.GetProjection(), Colors::Black);
+	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelMatrix, pSD.GetView(), pSD.GetProjection());
 
 }
 
@@ -64,10 +76,16 @@ bool EnemyObject::GotoTarget(DirectX::SimpleMath::Vector3 target)
 
 	if (m_stopFlag) return m_hp <= 0;
 
+	DirectX::SimpleMath::Vector3 targetDiff = target - m_data.pos;
+	targetDiff.y = 0;
+	targetDiff.Normalize();
+
 	// 速度の計算
 	m_lengthVec = Easing::Moveing(target, m_data.pos);
-
 	m_lengthVec.Normalize();
+
+	// 対象に向ける処理
+	m_rotation = DirectX::SimpleMath::Quaternion::FromToRotation(DirectX::SimpleMath::Vector3::UnitX, targetDiff);
 
 	// 座標の計算
 	m_data.pos	+= m_lengthVec * m_speed * deltaTime;
@@ -75,7 +93,7 @@ bool EnemyObject::GotoTarget(DirectX::SimpleMath::Vector3 target)
 	// 重力計算
 	m_data.pos.y -= GRAVITY;
 
-	if (m_data.pos.y <= 0.5f)	m_data.pos.y = 0.5f;
+	if (m_data.pos.y <= 0.0f)	m_data.pos.y = 0.0f;
 
 	// マネージャー側で消してもらう
 	return m_hp <= 0;

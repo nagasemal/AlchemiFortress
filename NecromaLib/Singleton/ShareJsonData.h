@@ -35,6 +35,9 @@ public:
 	// ステージのjsonファイルを読み込む
 	void LoadingJsonFile_Stage(int number);
 
+	// クリアデータのjsonファイルを読み込む
+	void LoadingJsonFile_ClearData(int number);
+
 public:
 
 	// 属性に対応したバレットのパラメータを渡す
@@ -45,6 +48,9 @@ public:
 
 	// ステージのデータを渡す
 	const Stage_Data GetStageData();
+
+	// ステージのクリアデータを渡す
+	const Stage_ClearData GetClearData();
 
 	// ステージデータの中身を全て消す(メモリ領域の圧迫を防ぐため)
 	void StageDataCleanUP();
@@ -61,5 +67,7 @@ private:
 	Machine_Data m_machineData[MACHINE_TYPE::NUM];
 
 	Stage_Data m_stageData;
+
+	Stage_ClearData m_clearData;
 
 };

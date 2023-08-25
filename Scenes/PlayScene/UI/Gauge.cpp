@@ -19,6 +19,9 @@ void Gauge::Initialize()
     int width = device->GetOutputSize().right;
     int height = device->GetOutputSize().bottom;
 
+    width;
+    height;
+
 	//m_gauge = std::make_unique<UserInterface>();
 	//m_gauge->Create(device, L"Resources/Textures/Seizou.png",{100,300},{1,1},ANCHOR::MIDDLE_CENTER);
 
@@ -52,8 +55,6 @@ void Gauge::Update()
 
 void Gauge::Render()
 {
-    auto pSL = &SpriteLoder::GetInstance();
-
     m_base_Hp->Render();
     m_gauge_Hp->Render();
 

@@ -24,6 +24,7 @@ void FieldObjectManager::Initialize()
 	// モデルの読み込み
 	m_floorModel = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Filed.cmo", *fx);
 	m_crystalModel = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Crystal.cmo", *fx);
+	m_baseModel = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Tower.cmo", *fx);
 
 	// 結晶モデルのエフェクトの設定
 	m_crystalModel->UpdateEffects([&](IEffect* effect)
@@ -86,7 +87,7 @@ void FieldObjectManager::Draw()
 	m_field->Render(m_floorModel.get());
 
 	// プレイヤー拠点の描画処理
-	m_playerBase->Draw();
+	m_playerBase->Render(m_baseModel.get());
 
 	// クリスタルの描画処理
 	for (std::list<Crystal>::iterator it = m_crystals->begin(); it != m_crystals->end(); it++)

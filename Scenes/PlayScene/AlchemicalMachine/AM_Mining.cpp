@@ -83,10 +83,10 @@ void AM_Mining::AllFieldObject(FieldObjectManager* fieldManager)
 
 void AM_Mining::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
 {
-	SpriteLoder& pSL = SpriteLoder::GetInstance();
-	RECT rect_lv = SpriteCutter(64, 64, m_lv, 0);
-	m_selectLvUpBox->DrawUI(texture, pSL.GetNumberTexture(), rect_lv);
-	m_dismantlingBox->DrawUI(texture);
+	//SpriteLoder& pSL = SpriteLoder::GetInstance();
+	//RECT rect_lv = SpriteCutter(64, 64, m_lv, 0);
+	//m_selectLvUpBox->DrawUI(texture, pSL.GetNumberTexture(), rect_lv);
+	//m_dismantlingBox->DrawUI(texture);
 }
 
 void AM_Mining::LvUp()

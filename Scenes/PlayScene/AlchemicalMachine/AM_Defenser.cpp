@@ -20,7 +20,7 @@ void AM_Defenser::Initialize()
 	m_objectName = "Defenser";
 
 	// Jsonから読み取ったマシンのデータを適応する
-	float machineHP = ShareJsonData::GetInstance().GetMachineData(m_machineID).hp;
+	float machineHP = (float)ShareJsonData::GetInstance().GetMachineData(m_machineID).hp;
 
 	m_hp = (int)machineHP;
 	m_maxHp = (int)machineHP;
@@ -56,12 +56,12 @@ void AM_Defenser::Finalize()
 void AM_Defenser::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
 {
 
-	SpriteLoder& pSL = SpriteLoder::GetInstance();
-	RECT rect_lv = SpriteCutter(64, 64, m_lv, 0);
-	m_selectLvUpBox->DrawUI(texture, pSL.GetNumberTexture(), rect_lv);
+	//SpriteLoder& pSL = SpriteLoder::GetInstance();
+	//RECT rect_lv = SpriteCutter(64, 64, m_lv, 0);
+	//m_selectLvUpBox->DrawUI(texture, pSL.GetNumberTexture(), rect_lv);
 
-	m_repairBox->DrawUI(texture);
-	m_dismantlingBox->DrawUI(texture);
+	//m_repairBox->DrawUI(texture);
+	//m_dismantlingBox->DrawUI(texture);
 
 }
 
@@ -97,7 +97,9 @@ void AM_Defenser::EnemyHit(std::list<EnemyObject>* enemys)
 
 		bool hitMachine = false;
 
-		if (hitMachine = (CircleCollider(it->GetCircle(), m_magicCircle)))
+		hitMachine = (CircleCollider(it->GetCircle(), m_magicCircle));
+
+		if (hitMachine)
 		{
 			it->HitMachine(hitMachine);
 			it->Bouns();

@@ -66,6 +66,8 @@ void MachineSelect::Update()
 	DirectX::SimpleMath::Vector2 mousePos = pIS.GetMousePosScreen();
 	bool leftFlag = pIS.GetMouseState().leftButton == Mouse::ButtonStateTracker::PRESSED;
 	bool onMouseFlag = HitObject(mousePos);
+	leftFlag;
+	onMouseFlag;
 
 	m_onMouseFlag = m_machineBox->HitMouse();
 	m_hitMouseFlag = m_machineBox->SelectionMouse();
@@ -143,7 +145,7 @@ void MachineSelect::DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceVie
 	DirectX::SimpleMath::Matrix modelData = DirectX::SimpleMath::Matrix::Identity;
 	modelData = DirectX::SimpleMath::Matrix::CreateScale(0.35f, 0.35f, 0.35f);
 
-	//// 角度調整
+	// 角度調整
 	modelData *= SimpleMath::Matrix::CreateRotationX(-20);
 
 	// ワールド座標変換

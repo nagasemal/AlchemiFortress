@@ -42,8 +42,6 @@ private:
     // 共有する変数の管理
     DataManager* m_DataManager;
 
-    
-
     // スプライトバッチ
     std::unique_ptr<DirectX::SpriteBatch> m_SpriteBatch;
 

@@ -13,7 +13,7 @@ EnemyManager::EnemyManager() :
 	m_totalTimer(),
 	m_nextEnemyTime(),
 	m_knokDownEnemyType(ENEMY_TYPE::ENMEY_NONE),
-	m_knokDownFlag(false),
+	m_knokDownFlag(0),
 	m_enemyNums()
 {
 }
@@ -38,6 +38,11 @@ void EnemyManager::Initialize()
 
 	m_particle_delete = std::make_unique<Particle>(Particle::DELETE_ENEMY);
 	m_particle_delete->Initialize();
+
+	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
+	fx->SetDirectory(L"Resources/Models");
+
+	m_enemyModel = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Slime.cmo", *fx);
 }
 
 void EnemyManager::Update(DirectX::SimpleMath::Vector3 basePos)
@@ -48,7 +53,7 @@ void EnemyManager::Update(DirectX::SimpleMath::Vector3 basePos)
 	ShareJsonData& pSJD = ShareJsonData::GetInstance();
 
 	// 毎秒初期化
-	m_knokDownFlag = false;
+	m_knokDownFlag = 0;
 	m_knokDownEnemyType = ENEMY_TYPE::ENMEY_NONE;
 
 	m_timer += deltaTime;
@@ -79,7 +84,7 @@ void EnemyManager::Update(DirectX::SimpleMath::Vector3 basePos)
 		{
 			pDM.SetNowEnemyKill(pDM.GetNowEnemyKill() + 1);
 
-			m_knokDownFlag = true;
+			m_knokDownFlag++;
 			m_knokDownEnemyType = it->GetEnemyType();
 
 			m_particle_delete->OnShot(it->GetPos(), true);
@@ -97,21 +102,19 @@ void EnemyManager::Update(DirectX::SimpleMath::Vector3 basePos)
 void EnemyManager::Render()
 {
 
-	ShareData& pSD = ShareData::GetInstance();
-
 	///*===[ デバッグ文字描画 ]===*/
 	//std::wostringstream oss;
 	//oss << "EnemyNum - " << m_enemyObject->size();
 	//pSD.GetDebugFont()->AddString(oss.str().c_str(), DirectX::SimpleMath::Vector2(400.f, 20.f));
 
-	//m_particle_hit		->Render();
+	//m_particle_hit	->Render();
 	m_particle_delete	->Render();
 	m_particle_spawn	->Render();
 
 	for (std::list<EnemyObject>::iterator it = m_enemyObject->begin(); it != m_enemyObject->end(); it++)
 	{
 		it->Draw();
-		it->Render(m_testBox.get());
+		it->Render(m_enemyModel.get());
 	}
 
 }
@@ -131,6 +134,7 @@ void EnemyManager::Finalize()
 	m_testBox.reset();
 }
 
+//　Jsonファイルから読み取った情報を元にマシンを製造する
 EnemyObject EnemyManager::GetEnemyStatus(ENEMY_TYPE type,int spawnNumber)
 {
 	ShareJsonData& pSJD = ShareJsonData::GetInstance();
@@ -140,10 +144,10 @@ EnemyObject EnemyManager::GetEnemyStatus(ENEMY_TYPE type,int spawnNumber)
 	//std::uniform_real_distribution<> dist(0, XM_2PI);
 	//float rand = static_cast<float>(dist(engine));
 
-	int remoteness = pSJD.GetStageData().enemys_Spawn[spawnNumber].remoteness * 1.5f;
-	float direction = pSJD.GetStageData().enemys_Spawn[spawnNumber].direction;
+	int remoteness = (int)((float)pSJD.GetStageData().enemys_Spawn[spawnNumber].remoteness * 1.5f);
+	float direction = (float)pSJD.GetStageData().enemys_Spawn[spawnNumber].direction;
 
-	EnemyObject enemy(type,DirectX::SimpleMath::Vector3(remoteness * cosf(direction), 0, remoteness * sinf(direction)),1);
+	EnemyObject enemy(type,DirectX::SimpleMath::Vector3(remoteness * cosf(direction), 0.0f, remoteness * sinf(direction)),1);
 
 	return enemy;
 }

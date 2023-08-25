@@ -49,6 +49,9 @@ public:
 	// 共通してアップデートをかける処理
 	void SelectUpdate_Common();
 
+	// 共通して描画するUIの処理
+	void SelectRenderUI_Common();
+
 	// 他のオブジェクト同士の当たり判定
 	void HitToObject(MousePointer* pMP);
 
@@ -129,6 +132,8 @@ public:
 	void SetLine(int line)								{ m_line = line; }
 	void SetPowerUpFlag(bool flag)						{ m_powerUPFlag = flag; }
 	void SetSelectModeFlag(bool flag)					{ m_selectModeFlag = flag;}
+	void SetElement(MACHINE_ELEMENT element)			{ m_element = element; }
+	void SetColor(DirectX::SimpleMath::Color color)		{ m_color = color;}
 
 private:
 

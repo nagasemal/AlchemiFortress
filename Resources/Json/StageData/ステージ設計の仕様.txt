@@ -4,3 +4,9 @@ MACHINE_SPAWN ： 特定のマシンをVALUE分出してください
 
 ENEMY_NOCKDOWN : 特定のエネミーをVALUE分倒してください
 
+===マシンType===
+Attacker
+Upper
+Defenser
+Minig
+Recovery

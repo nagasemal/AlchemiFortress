@@ -31,7 +31,7 @@ public:
 public:
 
 
-	const bool GetKnokDownEnemyFlag() const { return m_knokDownFlag; }
+	const int GetKnokDownEnemyFlag() const { return m_knokDownFlag; }
 	const ENEMY_TYPE GetKnokDownEnemyType() const { return m_knokDownEnemyType; }
 
 	std::list<EnemyObject>* GetEnemyData() { return m_enemyObject.get(); }
@@ -43,6 +43,8 @@ private:
 	//===後で消すテスト用変数
 	std::unique_ptr<DirectX::GeometricPrimitive> m_testBox;	//  仮置き四角モデル
 
+	std::unique_ptr<DirectX::Model> m_enemyModel;
+
 	// パーティクルクラス
 	std::unique_ptr<Particle> m_particle_spawn;
 	std::unique_ptr<Particle> m_particle_delete;
@@ -53,8 +55,8 @@ private:
 	float m_timer;
 	float m_totalTimer;
 
-	// 倒された瞬間を取得するフラグ
-	bool m_knokDownFlag;
+	// 倒された瞬間を取得するフラグ(1F内に複数体倒すと正常な処理を行えない為、int型で管理)
+	int m_knokDownFlag;
 	ENEMY_TYPE m_knokDownEnemyType;
 
 	int m_enemyNums;

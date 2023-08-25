@@ -17,7 +17,7 @@ void AM_Upper::Initialize()
 	// Jsonから読み取ったマシンのデータを適応する
 	ShareJsonData& pSJD = ShareJsonData::GetInstance();
 
-	m_machineID = MACHINE_TYPE::UPEER;
+	m_machineID = MACHINE_TYPE::UPPER;
 	m_objectName = "Upper";
 
 	// Jsonから読み取ったマシンのデータを適応する
@@ -87,11 +87,6 @@ void AM_Upper::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture
 
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
 
-	RECT rect_lv = SpriteCutter(64, 64, m_lv, 0);
-	m_selectLvUpBox->DrawUI(texture, pSL.GetNumberTexture(), rect_lv);
-
-	m_repairBox->DrawUI(texture);
-
 	if (m_element != NOMAL) return;
 
 	for (int i = 0; i < 4; i++)
@@ -100,20 +95,6 @@ void AM_Upper::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture
 
 		m_selectBox[i]->DrawUI(texture, pSL.GetElementTexture(), rect_element);
 	}
-
-	m_dismantlingBox->DrawUI(texture);
-
-	//SpriteLoder& pSL = SpriteLoder::GetInstance();
-	//RECT rect_lv = SpriteCutter(64, 64, m_lv, 0);
-	//m_selectLvUpBox->DrawUI(texture, pSL.GetNumberTexture(), rect_lv);
-	//if (m_element != NOMAL) return;
-	//for (int i = 0; i < 4; i++)
-	//{
-	//	SpriteLoder& pSL = SpriteLoder::GetInstance();
-	//	RECT rect = SpriteCutter(64, 64, 2 + i, 0);
-	//	m_selectBox[i]->DrawUI(texture, pSL.GetElementTexture(), rect);
-	//}
-
 }
 
 void AM_Upper::LvUp()

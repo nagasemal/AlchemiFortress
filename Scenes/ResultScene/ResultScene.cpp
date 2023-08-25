@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "ResultScene.h"
 
+#include "NecromaLib/Singleton/InputSupport.h"
+
 ResultScene::ResultScene()
 {
 }
@@ -15,6 +17,11 @@ void ResultScene::Initialize()
 
 GAME_SCENE ResultScene::Update()
 {
+	InputSupport* pINP = &InputSupport::GetInstance();
+
+	//　ステージセレクトシーンに遷移
+	if (pINP->GetKeybordState().IsKeyReleased(DirectX::Keyboard::Space)) return GAME_SCENE::SELECT;
+
 	return GAME_SCENE();
 }
 

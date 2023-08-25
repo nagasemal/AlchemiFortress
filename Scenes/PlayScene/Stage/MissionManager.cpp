@@ -5,6 +5,8 @@
 #include "Scenes/PlayScene/Enemy/EnemyManager.h"
 #include "Scenes/PlayScene/UI/Number.h"
 
+#include "Scenes/SelectScene/MissionRender.h"
+
 #include "NecromaLib/Singleton/ShareJsonData.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
 
@@ -45,7 +47,9 @@ void MissionManager::Initialize()
 
 	m_allClearFlag = false;
 
-	m_timeRender = std::make_unique<Number>(DirectX::SimpleMath::Vector2{400.0f,100.0f}, DirectX::SimpleMath::Vector2{2.0f,2.0f});
+	m_timeRender = std::make_unique<Number>(DirectX::SimpleMath::Vector2{220.0f,220.0f}, DirectX::SimpleMath::Vector2{1.0f,1.0f});
+
+	m_missionRender = std::make_unique<MissionRender>(DirectX::SimpleMath::Vector2{ 100.0f,300.0f }, DirectX::SimpleMath::Vector2{ 1.0f,1.0f });
 
 }
 
@@ -76,8 +80,23 @@ void MissionManager::Update(AlchemicalMachineManager* alchemicalManager, EnemyMa
 
 void MissionManager::Render()
 {
+
+	ShareData& pSD = ShareData::GetInstance();
+
+	// 時間計測
 	m_timeRender->SetNumber((int)m_timer);
 	m_timeRender->Render();
+
+
+	// ミッション内容の描画
+	pSD.GetSpriteBatch()->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
+	m_missionRender->Render_MachineMission(m_machineCondition);
+	m_missionRender->Render_EnemyMission(m_enemyCondition);
+	m_missionRender->Render_TimerMission(m_timeCondition);
+	m_missionRender->LineReset();
+	pSD.GetSpriteBatch()->End();
+
+
 }
 
 bool MissionManager::MissionComplete()
@@ -88,6 +107,11 @@ bool MissionManager::MissionComplete()
 bool MissionManager::MissionmFailure()
 {
 	return m_failureFlag;
+}
+
+int MissionManager::GetStartTimer()
+{
+	return m_timeCondition[0].progress;
 }
 
 void MissionManager::MachineMission(AlchemicalMachineManager* alchemicalManager)
@@ -122,7 +146,8 @@ void MissionManager::EnemyMission(EnemyManager* enemyManager)
 			enemyManager->GetKnokDownEnemyType() &&
 			m_enemyCondition[i].progress < m_enemyCondition[i].value)
 		{
-			m_enemyCondition[i].progress++;
+			// 同一フレーム内に複数対敵がやられたとしても対応可能にする
+			m_enemyCondition[i].progress += enemyManager->GetKnokDownEnemyFlag();
 
 			// 攻略完了
 			if (m_enemyCondition[i].progress >= m_enemyCondition[i].value)
@@ -136,6 +161,7 @@ void MissionManager::EnemyMission(EnemyManager* enemyManager)
 
 void MissionManager::TimerMission()
 {
+
 	// 生き残れば勝利系タイマー
 	if (m_timeCondition[0].progress < m_timeCondition[0].value)
 	{
@@ -144,14 +170,10 @@ void MissionManager::TimerMission()
 
 		if (m_timeCondition[0].progress >= m_timeCondition[0].value)
 		{
-			m_missionSituation++;
+
+			if (m_timeCondition[0].condition == "Standerd") m_missionSituation++;
+			if (m_timeCondition[0].condition == "Limit") m_failureFlag = true;
+			
 		}
 	}
-
-	// 制限時間内にクリアできなかった
-	if (m_timeCondition[0].progress < m_timeCondition[0].value)
-	{
-
-	}
-
 }

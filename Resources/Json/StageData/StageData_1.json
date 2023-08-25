@@ -17,17 +17,10 @@
 		 {"TYPE":"Standerd",	"VALUE":20.0}
 		]
 	},
-
+	
 	"ENEMY_SPAWNTIME":{
 		"ENEMYS":[
-			{"TYPE":"Slime",		"AZIMUTH":4.5,	"REMOTENESS":5.0,		"SPAWNTIME":5.0,	"CONDITION":"Explanation"}
-		]
-	},
-
-	"ClearData":{
-		"TIME":0.0,
-		"MACHINES":[
-			{"NAME":"None","LV":1,"NUMBER":1,}
+			{"TYPE":"Slime",		"AZIMUTH":4.5,	"REMOTENESS":10.0,		"SPAWNTIME":5.0,	"CONDITION":"Explanation"}
 		]
 	}
 }

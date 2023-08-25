@@ -28,7 +28,7 @@ AlchemicalMachineFilter::AlchemicalMachineFilter():
 
 	m_model[MACHINE_TYPE::RECOVERY] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Attacker.cmo", *fx);
 
-	m_model[MACHINE_TYPE::UPEER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Upper.cmo", *fx);
+	m_model[MACHINE_TYPE::UPPER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Upper.cmo", *fx);
 
 
 	// ƒTƒuƒ‚ƒfƒ‹
@@ -71,7 +71,7 @@ std::unique_ptr<AlchemicalMachineObject> AlchemicalMachineFilter::HandOverAMClas
 		return std::make_unique<AM_Mining>();
 	case MACHINE_TYPE::RECOVERY:
 		return std::make_unique<AM_Recovery>();
-	case MACHINE_TYPE::UPEER:
+	case MACHINE_TYPE::UPPER:
 		return std::make_unique<AM_Upper>();
 	default:
 		return std::make_unique<AM_None>();
@@ -100,7 +100,7 @@ void AlchemicalMachineFilter::Finalize()
 
 	m_model[MACHINE_TYPE::RECOVERY].reset();
 
-	m_model[MACHINE_TYPE::UPEER].reset();
+	m_model[MACHINE_TYPE::UPPER].reset();
 	
 	m_model->reset();
 }

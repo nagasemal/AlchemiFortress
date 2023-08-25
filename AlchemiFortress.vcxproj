@@ -207,6 +207,8 @@
     <ClInclude Include="NecromaLib\Singleton\SpriteLoder.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resources\Icon\Icon.h" />
+    <ClInclude Include="Scenes\Commons\DrawArrow.h" />
+    <ClInclude Include="Scenes\Commons\DrawMachine.h" />
     <ClInclude Include="Scenes\DataManager.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineFilter.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineManager.h" />
@@ -243,8 +245,10 @@
     <ClInclude Include="Scenes\PlayScene\UI\SelectionBox.h" />
     <ClInclude Include="Scenes\PlayScene\UI\Number.h" />
     <ClInclude Include="Scenes\ResultScene\ResultScene.h" />
+    <ClInclude Include="Scenes\SelectScene\MissionRender.h" />
+    <ClInclude Include="Scenes\SelectScene\SelectCamera.h" />
+    <ClInclude Include="Scenes\SelectScene\SelectScene.h" />
     <ClInclude Include="Scenes\TitleScene\Camera\TitleCamera.h" />
-    <ClInclude Include="Scenes\TitleScene\TitleCall\TitileCall.h" />
     <ClInclude Include="Scenes\TitleScene\TitleScene.h" />
     <ClInclude Include="StepTimer.h" />
   </ItemGroup>
@@ -281,6 +285,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Scenes\Commons\DrawArrow.cpp" />
+    <ClCompile Include="Scenes\Commons\DrawMachine.cpp" />
     <ClCompile Include="Scenes\DataManager.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineFilter.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineManager.cpp" />
@@ -317,8 +323,10 @@
     <ClCompile Include="Scenes\PlayScene\UI\Number.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\SelectionBox.cpp" />
     <ClCompile Include="Scenes\ResultScene\ResultScene.cpp" />
+    <ClCompile Include="Scenes\SelectScene\MissionRender.cpp" />
+    <ClCompile Include="Scenes\SelectScene\SelectCamera.cpp" />
+    <ClCompile Include="Scenes\SelectScene\SelectScene.cpp" />
     <ClCompile Include="Scenes\TitleScene\Camera\TitleCamera.cpp" />
-    <ClCompile Include="Scenes\TitleScene\TitleCall\TitileCall.cpp" />
     <ClCompile Include="Scenes\TitleScene\TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>

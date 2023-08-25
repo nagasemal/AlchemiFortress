@@ -51,6 +51,7 @@ struct Stage_Condition
 struct Stage_ClearMachine
 {
 	MACHINE_TYPE type = MACHINE_TYPE::NONE;
+	MACHINE_ELEMENT element = MACHINE_ELEMENT::NOMAL;
 	int lv = 1;
 	int number = 0;
 };
@@ -73,10 +74,17 @@ struct Stage_Data
 
 	std::vector<Enemys_Spawn> enemys_Spawn;					// エネミーの出現情報
 
-	std::vector<Stage_ClearMachine> clearMachine;			// クリアした際のマシンの情報
-
 };
 
+struct Stage_ClearData
+{
+	std::vector<Stage_ClearMachine> machines;	// クリアしたマシン
+	int clearTime = 0;							// クリアまでにかかった時間
+	int num = 0;								// 挑戦回数
+};
+
+// 書き込み
+class AlchemicalMachineObject;
 
 namespace Json
 {
@@ -86,8 +94,11 @@ namespace Json
 
 	Stage_Data FileLoad_StageData(const std::string filePath);
 
+	Stage_ClearData FileLoad_StageClearData(const std::string filePath);
+
 	//  属性変換
 	MACHINE_ELEMENT ChangeElement(const std::string element);
+	std::string ChangeElementString(const MACHINE_ELEMENT element);
 
 	//　マシン変換
 	MACHINE_TYPE ChangeMachine(const std::string machine);
@@ -99,4 +110,5 @@ namespace Json
 	//  色変換
 	DirectX::SimpleMath::Color ChangeColor(MACHINE_ELEMENT element);
 
+	void WritingJsonFile_ClearData(int number,std::vector<std::shared_ptr<AlchemicalMachineObject>> alchemicalMachineList,int time);
 }

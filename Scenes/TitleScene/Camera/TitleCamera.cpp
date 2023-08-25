@@ -61,74 +61,8 @@ void TitleCamera::Update()
 
 	}
 
-	//m_move.x = Easing::EaseInOutBack(0.0f, 2.0f, m_testAnimation->Animatior());
-
-	//// カメラ移動をするか否か
-	//if (true)
-	//{
-	//	// マウスの右クリック＆ドラッグでカメラ座標を更新する
-	//	if (state.rightButton)
-	//	{
-	//		DraggedDistance(state.x, state.y);
-	//	}
-	//	// マウスの座標を前回の値として保存
-	//	m_prevX = state.x;
-	//	m_prevY = state.y;
-	//}
-	//// スクロールをするか否か
-	//if (true)
-	//{
-	//	int value = state.scrollWheelValue - m_prevWheelValue;
-	//	int newValue = m_scrollWheelValue + value;
-	//	// 上限下限設定(clamp)
-	//	if (newValue <= MAX_SAVEWHELL) newValue = MAX_SAVEWHELL;
-	//	if (newValue > 0) newValue = 0;
-	//	if (newValue != 0 && newValue != MAX_SAVEWHELL)
-	//	{
-	//		m_scrollWheelValue = newValue;
-	//	}
-	//	else
-	//	{
-	//		value = 0;
-	//	}
-	//	if (m_scrollWheelValue == MAX_SAVEWHELL && value > 0)
-	//	{
-	//		m_scrollWheelValue -= value;
-	//	}
-	//	else if (m_scrollWheelValue == 0 && value < 0)
-	//	{
-	//		m_scrollWheelValue -= value;
-	//	}
-	//	if (m_scrollWheelValue > 0)
-	//	{
-	//		m_scrollWheelValue = 0;
-	//		DirectX::Mouse::Get().ResetScrollWheelValue();
-	//	}
-	//}
-	//// 前回の値を保存
-	//m_prevWheelValue = state.scrollWheelValue;
-
 	// ビュー行列の算出
 	CalculateViewMatrix();
-}
-
-void TitleCamera::DraggedDistance(int x, int y)
-{
-	// マウスポインタの前回からの変位
-	float dx = static_cast<float>(x - m_prevX) * CORRECTION_VALUE;
-	float dy = static_cast<float>(y - m_prevY) * CORRECTION_VALUE;
-
-	if (dx != 0.0f || dy != 0.0f)
-	{
-		// マウスポインタの変位を元に、Ｘ軸Ｙ軸の回転角を求める
-		// XとYの関係に注意！！
-		float angleX = dy * DirectX::XM_PI / 180.0f;
-		float angleY = dx * DirectX::XM_PI / 180.0f;
-
-		// 角度の更新 Yには回転の制限をかける
-		m_angleX += (m_angleX + angleX) >= 0.8f ? 0 : (m_angleX + angleX) <= -0.7f ? 0 : angleX;
-		m_angleY += angleY;
-	}
 }
 
 void TitleCamera::CalculateViewMatrix()

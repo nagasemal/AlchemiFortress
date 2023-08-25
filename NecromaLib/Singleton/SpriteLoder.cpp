@@ -24,6 +24,22 @@ void SpriteLoder::Loading()
 		m_elementTextures.ReleaseAndGetAddressOf()
 	);
 
+	// テクスチャ
+	DirectX::CreateWICTextureFromFile(
+		ShareData::GetInstance().GetDevice(),
+		L"Resources/Textures/MachineNames.png",
+		nullptr,
+		m_machineNameTextures.ReleaseAndGetAddressOf()
+	);
+
+	// エネミーの名前のテクスチャ
+	DirectX::CreateWICTextureFromFile(
+		ShareData::GetInstance().GetDevice(),
+		L"Resources/Textures/EnemyNames.png",
+		nullptr,
+		m_enemyNameTextures.ReleaseAndGetAddressOf()
+	);
+
 	// 製造の文字テクスチャ
 	DirectX::CreateWICTextureFromFile(
 		ShareData::GetInstance().GetDevice(),
@@ -32,6 +48,30 @@ void SpriteLoder::Loading()
 		m_ManufacturingTexture.ReleaseAndGetAddressOf()
 	);
 
+	// 文字テクスチャ
+	DirectX::CreateWICTextureFromFile(
+		ShareData::GetInstance().GetDevice(),
+		L"Resources/Textures/wo.png",
+		nullptr,
+		m_letterTexture.ReleaseAndGetAddressOf()
+	);
+
+	// 文字テクスチャ
+	DirectX::CreateWICTextureFromFile(
+		ShareData::GetInstance().GetDevice(),
+		L"Resources/Textures/MissionText.png",
+		nullptr,
+		m_missionTexture.ReleaseAndGetAddressOf()
+	);
+
+	// ラベルテクスチャ
+	DirectX::CreateWICTextureFromFile(
+		ShareData::GetInstance().GetDevice(),
+		L"Resources/Textures/MissionLabel.png",
+		nullptr,
+		m_missionLabelTexture.ReleaseAndGetAddressOf()
+	);
+	
 	// 数字テクスチャ
 	DirectX::CreateWICTextureFromFile(
 		ShareData::GetInstance().GetDevice(),
@@ -55,13 +95,42 @@ void SpriteLoder::Loading()
 		nullptr,
 		m_MagicCircleTexture[1].ReleaseAndGetAddressOf()
 	);
+
+	// タイトルロゴテクスチャ
+	DirectX::CreateWICTextureFromFile(
+		ShareData::GetInstance().GetDevice(),
+		L"Resources/Textures/TitleLogo.png",
+		nullptr,
+		m_titleLogo.ReleaseAndGetAddressOf()
+	);
+
+	// UIアイコンテクスチャ
+	DirectX::CreateWICTextureFromFile(
+		ShareData::GetInstance().GetDevice(),
+		L"Resources/Textures/UIIcons.png",
+		nullptr,
+		m_uiIcons.ReleaseAndGetAddressOf()
+	);
+
+	// UIアイコンテクスチャ
+	DirectX::CreateWICTextureFromFile(
+		ShareData::GetInstance().GetDevice(),
+		L"Resources/Textures/Arrow.png",
+		nullptr,
+		m_uiArrow.ReleaseAndGetAddressOf()
+	);
 }
 
 void SpriteLoder::Finalize()
 {
 	// 解放
+	m_selectBoxTexture.Reset();
 	m_elementTextures.Reset();
+	m_machineNameTextures.Reset();
 	m_ManufacturingTexture.Reset();
+	m_NumberTexture.Reset();
+
+	m_MagicCircleTexture->Reset();
 
 }
 

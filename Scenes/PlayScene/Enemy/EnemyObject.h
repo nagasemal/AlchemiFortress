@@ -28,7 +28,7 @@ public:
 	// 描画　(UI関係)
 	void Draw()							override;
 
-	void Render(GeometricPrimitive* geo);
+	void Render(Model* model);
 
 	// 終了処理
 	void Finalize()						override;
@@ -78,6 +78,8 @@ private:
 	int m_lv;
 	// 経験値
 	int m_exp;
+	// 生存している時間
+	float m_aliveTimer;
 	// 速度
 	float m_speed;
 	// 移動を止める
@@ -87,6 +89,11 @@ private:
 
 	// 加速度
 	DirectX::SimpleMath::Vector3 m_accele;
+
+	DirectX::SimpleMath::Vector3 m_moveVec;
+
+	DirectX::SimpleMath::Quaternion m_rotation;
+
 	// 目的地までの距離
 	DirectX::SimpleMath::Vector3 m_lengthVec;
 

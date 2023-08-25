@@ -34,6 +34,7 @@ public:
 	void DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture,
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsTexture = nullptr,
 		RECT rect = { 0,0,64,64 },
+		DirectX::SimpleMath::Color pulsTextureCol = {1.0f,1.0f,1.0f,1.0f},
 		DirectX::SimpleMath::Color nomalColor	= {1.0f,1.0f,1.0f,1.0f},
 		DirectX::SimpleMath::Color onColor		= {0.9f,0.9f,0.9f,1.0f},
 		DirectX::SimpleMath::Color pressdColor	= {0.7f,0.7f,0.7f,1.0f});

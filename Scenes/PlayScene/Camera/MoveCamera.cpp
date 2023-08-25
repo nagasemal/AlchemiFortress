@@ -124,9 +124,11 @@ void MoveCamera::Update(bool scroll, bool move)
 
 void MoveCamera::TargetChange(DirectX::SimpleMath::Vector3 targetA, DirectX::SimpleMath::Vector3 targetB)
 {
-	m_target.x = Easing::EaseOutQuint(targetA.x, targetB.x, m_targetChangeTime);
-	m_target.y = Easing::EaseOutBounce(targetA.y, targetB.y, m_targetChangeTime);
-	m_target.z = Easing::EaseOutQuint(targetA.z, targetB.z, m_targetChangeTime);
+	DirectX::SimpleMath::Vector3 diffpos = targetA - targetB;
+
+	m_target.x = Easing::EaseOutQuint(m_saveTarget.x, m_saveTarget.x - diffpos.x, m_targetChangeTime);
+	m_target.y = Easing::EaseOutBounce(m_saveTarget.y, m_saveTarget.y - diffpos.y, m_targetChangeTime);
+	m_target.z = Easing::EaseOutQuint(m_saveTarget.z, m_saveTarget.z - diffpos.z, m_targetChangeTime);
 }
 
 void MoveCamera::DraggedDistance(int x, int y)

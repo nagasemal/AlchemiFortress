@@ -98,6 +98,8 @@ void AlchemicalMachineManager::Update(
 	bool leftRelease	= mouse.leftButton == mouse.RELEASED;
 	bool leftDrag		= mouse.leftButton == mouse.HELD;
 
+	leftDrag;
+
 	// 回転を止めるフラグ
 	m_rotationStop = mouse.rightButton == mouse.HELD && !keyboard.GetLastState().LeftShift;
 
@@ -138,10 +140,12 @@ void AlchemicalMachineManager::Update(
 		if (m_selectNumber != -1)
 		{
 			m_prevSelectMachinePos = m_AMObject[m_selectNumber]->GetPos();
+			moveCamera->SetSaveTargetProsition(m_AMObject[m_selectNumber]->GetPos());
 		}
 		else
 		{
 			m_prevSelectMachinePos = DirectX::SimpleMath::Vector3();
+			moveCamera->SetSaveTargetProsition(DirectX::SimpleMath::Vector3());
 		}
 
 		// 選択状態の解除
@@ -160,7 +164,7 @@ void AlchemicalMachineManager::Update(
 		m_machineExplanation->Update();
 		m_machineExplanation->Update_MachineData(m_AMObject[m_selectNumber].get());
 
-		// 選択済みのオブジェクトの特殊アップデートを回す
+		// 選択済みのオブジェクトの選択時アップデートを回す
 		m_AMObject[m_selectNumber]->SelectUpdate();
 		m_AMObject[m_selectNumber]->SelectUpdate_Common();
 
@@ -297,9 +301,6 @@ void AlchemicalMachineManager::Update(
 
 void AlchemicalMachineManager::Render()
 {
-	ShareData& pSD = ShareData::GetInstance();
-	DataManager& pDM = *DataManager::GetInstance();
-
 	for (int i = 0; i < m_AMObject.size(); i++)
 	{
 		// 存在しているかチェック
@@ -334,8 +335,6 @@ void AlchemicalMachineManager::Render()
 
 void AlchemicalMachineManager::DrawUI()
 {
-	ShareData& pSD = ShareData::GetInstance();
-
 	m_selectManager->MagicCircleRender();
 
 	// オブジェクトセレクトのrenderを呼び出す Noneを省くために1スタート
@@ -364,6 +363,7 @@ void AlchemicalMachineManager::DrawUI()
 			m_AMObject[m_selectNumber].get());
 
 		m_AMObject[m_selectNumber]->RenderUI(m_selectManager->GetTextuer());
+		m_AMObject[m_selectNumber]->SelectRenderUI_Common();
 
 	}
 }
@@ -433,7 +433,7 @@ void AlchemicalMachineManager::Update_Attacker(int index, EnemyManager* enemys)
 		// 判定を取る条件
 		bool flag = (upperMachineLine + 1 >= attackerMachineLine ||
 					 upperMachineLine - 1 >= attackerMachineLine) &&
-					 m_AMObject[j]->GetModelID() == MACHINE_TYPE::UPEER &&
+					 m_AMObject[j]->GetModelID() == MACHINE_TYPE::UPPER &&
 					 m_AMObject[j]->GetElement() == m_AMObject[index]->GetElement();
 
 		if(flag)	 attacker->AllAlchemicalMachine(m_AMObject[j].get());

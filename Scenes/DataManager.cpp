@@ -15,7 +15,8 @@ DataManager::DataManager() :
 	m_nowMP_MAX		(),
 	m_nowBaseHp_MAX	(),
 	m_round			(),
-	m_nowEnemyKill	()
+	m_nowEnemyKill	(),
+	m_stageNum		()
 {
 
 }
@@ -33,7 +34,6 @@ void DataManager::Initialize()
 
 	m_nowEnemyKill = 0;
 	m_round = 1;
-
 }
 
 void DataManager::Update()

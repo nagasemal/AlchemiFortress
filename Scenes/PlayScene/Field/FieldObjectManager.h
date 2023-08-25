@@ -45,6 +45,8 @@ private:
 	std::unique_ptr<DirectX::Model> m_floorModel;
 	// 結晶モデル
 	std::unique_ptr<DirectX::Model> m_crystalModel;
+	// 拠点モデル
+	std::unique_ptr<DirectX::Model> m_baseModel;
 
 	// フィールドオブジェクト
 	std::unique_ptr<Field> m_field;

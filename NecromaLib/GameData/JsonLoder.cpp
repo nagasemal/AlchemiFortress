@@ -5,6 +5,8 @@
 #include <cassert>
 #include "picojson.h"
 
+#include "Scenes/PlayScene/AlchemicalMachine/AlchemicalMachineObject.h"
+
 #define COLOR_WIGHT		{1.0f,1.0f,1.0f,1.0f}
 #define COLOR_RED		{1.0f,0.0f,0.0f,1.0f}
 #define COLOR_BLUE		{0.0f,0.0f,1.0f,1.0f}
@@ -179,7 +181,7 @@ Stage_Data Json::FileLoad_StageData(const std::string filePath)
 
 		Stage_Condition condition;
 		condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
-		condition.value = it->get<picojson::object>()["VALUE"].get<double>();
+		condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
 
 		if (condition.condition != "False")
 		{
@@ -230,6 +232,52 @@ Stage_Data Json::FileLoad_StageData(const std::string filePath)
 
 }
 
+Stage_ClearData Json::FileLoad_StageClearData(const std::string filePath)
+{
+	//	読み込み用変数
+	std::ifstream ifs;
+
+	//	ファイル読み込み
+	ifs.open(filePath, std::ios::binary);
+
+	//	読み込みチェック
+	//	ifs変数にデータがなければエラー
+	assert(ifs);
+
+	//	Picojsonへ読み込む
+	picojson::value val;
+	ifs >> val;
+
+	//	ifs変数はもう使わないので閉じる
+	ifs.close();
+	Stage_ClearData status;
+
+	//	読み込んだデータを構造体に代入
+	// クリア条件
+	// stageDataからMACHINE_SPAWNの配列の中身を得る
+	picojson::object& clearData = val.get<picojson::object>()["ClearData"].get<picojson::object>();
+	picojson::array& machines = clearData["MACHINES"].get<picojson::array>();
+
+	// 要素分回す
+	for (picojson::array::iterator it = machines.begin(); it != machines.end(); it++) {
+
+		Stage_ClearMachine condition;
+
+		condition.lv		= (int)it->get<picojson::object>()["LV"].get<double>();
+		condition.type		= ChangeMachine(it->get<picojson::object>()["NAME"].get<std::string>());
+		condition.element	= ChangeElement(it->get<picojson::object>()["ELEMENT"].get<std::string>());
+		condition.number	= (int)it->get<picojson::object>()["NUMBER"].get<double>();
+
+		status.machines.push_back(condition);
+
+	}
+
+	status.clearTime = (int)clearData["TIME"].get<double>();
+	status.num		 = (int)clearData["NUM"].get<double>();
+
+	return status;
+}
+
 // string形式をMACHINE_ELEMENTに変換
 MACHINE_ELEMENT Json::ChangeElement(std::string element)
 {
@@ -244,6 +292,26 @@ MACHINE_ELEMENT Json::ChangeElement(std::string element)
 	return elements;
 }
 
+std::string Json::ChangeElementString(const MACHINE_ELEMENT element)
+{
+	switch (element)
+	{
+	case NOMAL:
+		return "Nomal";
+	case FLAME:
+		return "Flame";
+	case AQUA:
+		return "Aqua";
+	case WIND:
+		return "Wind";
+	case EARTH:
+		return "Earth";
+	default:
+		return "Nomal";
+	}
+
+}
+
 // string形式をMACHINE_TYPEに変換
 MACHINE_TYPE Json::ChangeMachine(const std::string machine)
 {
@@ -251,9 +319,9 @@ MACHINE_TYPE Json::ChangeMachine(const std::string machine)
 
 	if		(machine == "None")		type = MACHINE_TYPE::NONE;
 	else if (machine == "Attacker")	type = MACHINE_TYPE::ATTACKER;
-	else if (machine == "Upeer")	type = MACHINE_TYPE::UPEER;
+	else if (machine == "Upper")	type = MACHINE_TYPE::UPPER;
 	else if (machine == "Defenser")	type = MACHINE_TYPE::DEFENSER;
-	else if (machine == "Minig")	type = MACHINE_TYPE::MINING;
+	else if (machine == "Mining")	type = MACHINE_TYPE::MINING;
 	else if (machine == "Recovery")	type = MACHINE_TYPE::RECOVERY;
 
 	return type;
@@ -261,22 +329,20 @@ MACHINE_TYPE Json::ChangeMachine(const std::string machine)
 
 std::string Json::ChangeMachineString(const MACHINE_TYPE type)
 {
-	std::string machineName = "None";
-
 	switch (type)
 	{
 	case NONE:
 		return "None";
 	case ATTACKER:
 		return "Attacker";
-	case UPEER:
-		return "Upeer";
+	case UPPER:
+		return "Upper";
 	case DEFENSER:
 		return "Defenser";
 	case MINING:
 		return "Mining";
 	case RECOVERY:
-		return "Recover";
+		return "Recovery";
 	default:
 		return "None";
 	}
@@ -289,6 +355,7 @@ ENEMY_TYPE Json::ChangeEnemy(const std::string machine)
 
 	if (machine == "None")			type = ENEMY_TYPE::ENMEY_NONE;
 	else if (machine == "Slime")	type = ENEMY_TYPE::SLIME;
+	else if (machine == "Worm")		type = ENEMY_TYPE::WORM;
 
 	return type;
 }
@@ -314,4 +381,57 @@ DirectX::SimpleMath::Color Json::ChangeColor(MACHINE_ELEMENT element)
 	}
 
 	return colors;
+}
+
+void Json::WritingJsonFile_ClearData(int number,std::vector<std::shared_ptr<AlchemicalMachineObject>> alchemicalMachineList,int time)
+{
+	time;
+
+	// numberに応じたファイルパスを読み込む
+	std::ostringstream oss;
+	oss << number;
+	std::string filePath = "Resources/Json/ClearData/ClearData_" + oss.str() + ".json";
+
+	//	読み込み用変数
+	std::ifstream ifs;
+
+	//	ファイル読み込み
+	ifs.open(filePath, std::ios::binary);
+
+	//	読み込みチェック
+	//	ifs変数にデータがなければエラー
+	assert(ifs);
+
+	//	Picojsonへ読み込む
+	picojson::value val;
+	ifs >> val;
+
+	//	ifs変数はもう使わないので閉じる
+	ifs.close();
+
+	// 書き換える情報をjsonから取得
+	picojson::object& clearMachineObj = val.get<picojson::object>()["ClearData"].get<picojson::object>();
+	picojson::array& clearMachineArr = clearMachineObj["MACHINES"].get<picojson::array>();
+
+	//picojson::object& timeObj = val.get<picojson::object>()["TIME"].get<picojson::object>();
+
+	// 初期化
+	clearMachineArr.clear();
+
+	for (int i = 0; i < alchemicalMachineList.size(); i++)
+	{
+		// 内容追加
+		picojson::object id;
+		id.insert(std::make_pair("LV", picojson::value((double)alchemicalMachineList[i]->GetLv())));
+		id.insert(std::make_pair("NAME", picojson::value(alchemicalMachineList[i]->GetObjectName())));
+		id.insert(std::make_pair("ELEMENT", picojson::value(ChangeElementString(alchemicalMachineList[i]->GetElement()))));
+		id.insert(std::make_pair("NUMBER", picojson::value((double)i)));
+		// 内容書き込み
+		clearMachineArr.emplace_back(picojson::value(id));
+
+	}
+
+	std::ofstream ofs(filePath);
+
+	ofs << picojson::value(val).serialize(true) << std::endl;
 }

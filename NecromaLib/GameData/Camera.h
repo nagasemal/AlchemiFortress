@@ -49,6 +49,8 @@ public:
 	// プロジェクション行列のアクセサ
 	void SetProjectionMatrix(DirectX::SimpleMath::Matrix projection) { mProjection = projection; }
 
+	void CameraReset();
+
 	DirectX::SimpleMath::Matrix GetProjectionMatrix()
 	{
 		CalculateProjectionMatrix();

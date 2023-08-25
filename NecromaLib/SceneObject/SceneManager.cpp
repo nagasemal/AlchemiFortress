@@ -7,6 +7,7 @@
 #include "Scenes/TitleScene/TitleScene.h"
 #include "Scenes/PlayScene/PlayScene.h"
 #include "Scenes/ResultScene/ResultScene.h"
+#include "Scenes/SelectScene/SelectScene.h"
 
 // 名前空間の利用
 using namespace DirectX;
@@ -54,13 +55,13 @@ void SceneManager::Initialize()
 //-------------------------------------------------------------------
 void SceneManager::Update(const DX::StepTimer& timer)
 {
-	InputSupport* pINP = &InputSupport::GetInstance();
+	InputSupport& pINP = InputSupport::GetInstance();
 
 	m_Fade->Update(timer);
 	m_DataManager->Update();
 
 	// ESCキーで終了
-	if (pINP->GetKeybordState().IsKeyPressed(Keyboard::Escape)) PostQuitMessage(0);
+	if (pINP.GetKeybordState().IsKeyPressed(Keyboard::Escape)) PostQuitMessage(0);
 
 	// 次のシーンが設定されていたらシーン切り替え
 	if (m_NextScene != GAME_SCENE::NONE)
@@ -72,6 +73,7 @@ void SceneManager::Update(const DX::StepTimer& timer)
 
 		// シーン削除
 		DeleteScene();
+		ShareData::GetInstance().GetCamera()->CameraReset();
 
 		// シーン作成
 		CreateScene();
@@ -89,13 +91,16 @@ void SceneManager::Update(const DX::StepTimer& timer)
 	//　デバッグ機能
 	{
 		// タイトルシーンへ
-		if (pINP->GetKeybordState().IsKeyReleased(Keyboard::T))		m_NextScene = GAME_SCENE::TITLE;
+		if (pINP.GetKeybordState().IsKeyReleased(Keyboard::T))		m_NextScene = GAME_SCENE::TITLE;
 
 		//　プレイシーンへ
-		if (pINP->GetKeybordState().IsKeyReleased(Keyboard::P))		m_NextScene = GAME_SCENE::PLAY;
+		if (pINP.GetKeybordState().IsKeyReleased(Keyboard::P))		m_NextScene = GAME_SCENE::PLAY;
 
 		//　リザルトシーン
-		if (pINP->GetKeybordState().IsKeyReleased(Keyboard::R))		m_NextScene = GAME_SCENE::RESULT;
+		if (pINP.GetKeybordState().IsKeyReleased(Keyboard::R))		m_NextScene = GAME_SCENE::RESULT;
+
+		//　ステージセレクトシーン
+		if (pINP.GetKeybordState().IsKeyReleased(Keyboard::S))		m_NextScene = GAME_SCENE::SELECT;
 	}
 
 }
@@ -156,6 +161,11 @@ void SceneManager::CreateScene()
 	case GAME_SCENE::RESULT:
 	{
 		m_Scene = new ResultScene();
+		break;
+	}
+	case GAME_SCENE::SELECT:
+	{
+		m_Scene = new SelectScene();
 		break;
 	}
 	default:

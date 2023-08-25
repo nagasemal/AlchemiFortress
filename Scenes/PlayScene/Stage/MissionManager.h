@@ -6,6 +6,7 @@ class AlchemicalMachineManager;
 class EnemyManager;
 class Stage_Condition;
 class Number;
+class MissionRender;
 
 class MissionManager
 {
@@ -20,6 +21,8 @@ public:
 
 	bool MissionComplete();
 	bool MissionmFailure();
+
+	int GetStartTimer();
 
 private:
 
@@ -40,6 +43,9 @@ private:
 
 	// タイマー計測
 	std::unique_ptr<Number> m_timeRender;
+
+	// ミッション描画
+	std::unique_ptr<MissionRender> m_missionRender;
 
 	float m_timer;
 

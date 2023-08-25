@@ -36,9 +36,6 @@ private:
 
 	float m_animationTimer;								// 引きで使うタイマー
 
-	// マウスポインタのドラッグ開始位置からの変位(相対値)
-	void DraggedDistance(int x, int y);
-
 	// ビュー行列の算出
 	void CalculateViewMatrix();
 

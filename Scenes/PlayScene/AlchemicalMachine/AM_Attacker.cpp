@@ -107,7 +107,7 @@ void AM_Attacker::AllAlchemicalMachine(AlchemicalMachineObject* object)
 			m_bulletStatus.life		 = m_saveBulletStatus.life	  * 1.5f;
 			m_bulletStatus.speed	 = m_saveBulletStatus.speed	  * 1.5f;
 			m_bulletStatus.span		 = m_saveBulletStatus.span	  * 0.8f;
-			m_bulletStatus.lossMp	 = m_saveBulletStatus.lossMp  * 0.35f;
+			m_bulletStatus.lossMp	 = (int)((float)m_saveBulletStatus.lossMp  * 0.35f);
 		}
 }
 
@@ -163,10 +163,11 @@ void AM_Attacker::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> text
 
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
 
-	RECT rect_lv = SpriteCutter(64, 64, m_lv,0);
-	m_selectLvUpBox->DrawUI(texture,pSL.GetNumberTexture(),rect_lv);
+	//RECT rect_UI = SpriteCutter(64, 64, m_lv,0);
+	//m_selectLvUpBox->DrawUI(texture,pSL.GetNumberTexture(), rect_UI);
 
-	m_repairBox->DrawUI(texture);
+	//rect_UI = SpriteCutter(64, 64, SpriteLoder::REPAIR, 0);
+	//m_repairBox->DrawUI(texture, pSL.GetUIIcons(), rect_UI);
 
 	if (m_element != NOMAL) return;
 
@@ -177,7 +178,8 @@ void AM_Attacker::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> text
 		m_selectBox[i]->DrawUI(texture, pSL.GetElementTexture(), rect_element);
 	}
 
-	m_dismantlingBox->DrawUI(texture);
+	//rect_UI = SpriteCutter(64, 64, SpriteLoder::DISMATIONG, 0);
+	//m_dismantlingBox->DrawUI(texture, pSL.GetUIIcons(),rect_UI);
 }
 
 void AM_Attacker::LvUp()
