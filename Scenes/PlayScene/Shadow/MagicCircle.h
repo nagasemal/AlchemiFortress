@@ -29,7 +29,7 @@ public:
 
 	void Initialize();
 	void Update();
-	void Render();
+	void Render(int magicCircleNumber);
 	void Finalize();
 
 	void CreateShader();

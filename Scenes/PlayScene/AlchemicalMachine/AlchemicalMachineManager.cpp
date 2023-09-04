@@ -310,7 +310,7 @@ void AlchemicalMachineManager::Render()
 		{
 			// モデルの描画			オブジェクトに割り当てられたIDをもとにモデル配列からデータを取り出す
 			m_AMObject[i]->ModelRender(m_AMFilter->HandOverAMModel(m_AMObject[i]->GetModelID()),
-									   m_AMFilter->GetRingModel(m_AMObject[i]->GetModelID()));
+				m_AMFilter->GetRingModel(m_AMObject[i]->GetModelID()));
 			m_AMObject[i]->Draw();
 		}
 	}
@@ -319,8 +319,11 @@ void AlchemicalMachineManager::Render()
 	m_dorpShadow->CreateWorld();
 	m_dorpShadow->Render();
 
-	m_magicCircle->CreateWorld();
-	m_magicCircle->Render();
+	if (m_selectNumber != -1)
+	{
+		m_magicCircle->CreateWorld();
+		m_magicCircle->Render(m_AMObject[m_selectNumber]->GetModelID());
+	}
 
 	// 球が当たった際のエフェクト処理
 	m_particle_hit->Render();
@@ -332,7 +335,7 @@ void AlchemicalMachineManager::Render()
 	}
 
 	m_magicCircle_Field->CreateWorld();
-	m_magicCircle_Field->Render();
+	m_magicCircle_Field->Render(0);
 }
 
 void AlchemicalMachineManager::DrawUI()

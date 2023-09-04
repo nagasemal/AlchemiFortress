@@ -58,6 +58,7 @@ void MagicCircle::CreateMagicCircle(DirectX::SimpleMath::Vector3 pos,float r, Di
 
 void MagicCircle::DeleteMagicCircle()
 {
+	m_animationTime = 0.0f;
 	// 全て消去
 	m_vertices.clear();
 }
@@ -76,10 +77,12 @@ void MagicCircle::CreateWorld()
 
 	m_world *= rot * m_world;
 
+	//if (m_animationTime >= 1.0f) m_animationTime = 0.0f;
+
 }
 
 
-void MagicCircle::Render()
+void MagicCircle::Render(int magicCircleNumber)
 {
 	auto context = ShareData::GetInstance().GetContext();
 	auto view = ShareData::GetInstance().GetView();
@@ -90,7 +93,7 @@ void MagicCircle::Render()
 	cbuff.m_matView = view.Transpose();
 	cbuff.m_matProj = proj.Transpose();
 	cbuff.m_matWorld = m_world.Transpose();
-	cbuff.m_diffuse = DirectX::SimpleMath::Vector4(1, 1, 1, 1);
+	cbuff.m_diffuse = DirectX::SimpleMath::Vector4(1, 1, 1, m_animationTime);
 
 	//受け渡し用バッファの内容更新(ConstBufferからID3D11Bufferへの変換）
 	context->UpdateSubresource(m_cBuffer.Get(), 0, NULL, &cbuff, 0, 0);
@@ -102,7 +105,7 @@ void MagicCircle::Render()
 	context->PSSetConstantBuffers(0, 1, cb);
 
 	//画像用サンプラーの登録
-	ID3D11SamplerState* sampler[1] = { m_states->LinearWrap() };
+	ID3D11SamplerState* sampler[1] = { m_states->LinearWrap()};
 	context->PSSetSamplers(0, 1, sampler);
 
 	//半透明描画指定
@@ -123,8 +126,9 @@ void MagicCircle::Render()
 	context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
 
 	//ピクセルシェーダにテクスチャを登録する。
-	context->PSSetShaderResources(0, 1, SpriteLoder::GetInstance().GetMagicCircleTexture(0).GetAddressOf());
-	
+	context->PSSetShaderResources(0, 1, SpriteLoder::GetInstance().GetMagicCircleTexture(magicCircleNumber).GetAddressOf());
+	context->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetRule().GetAddressOf());
+
 	//インプットレイアウトの登録
 	context->IASetInputLayout(m_inputLayout.Get());
 

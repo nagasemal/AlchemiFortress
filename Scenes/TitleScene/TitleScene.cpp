@@ -90,7 +90,7 @@ void TitleScene::Draw()
 	ShareData::GetInstance().GetDebugFont()->AddString(oss.str().c_str(), DirectX::SimpleMath::Vector2(0.f, 60.f));
 
 	m_magicCircle->CreateWorld();
-	m_magicCircle->Render();
+	m_magicCircle->Render(0);
 }
 
 void TitleScene::DrawUI()

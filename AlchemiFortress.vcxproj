@@ -335,6 +335,7 @@
     <ClCompile Include="Scenes\PlayScene\Shadow\Particle.cpp" />
     <ClCompile Include="Scenes\PlayScene\Shadow\ParticleUtility.cpp" />
     <ClCompile Include="Scenes\PlayScene\Stage\MissionManager.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Tutorial\Tutorial.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\DisplayMagicCircle.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\Gauge.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\MachineExplanation.cpp" />

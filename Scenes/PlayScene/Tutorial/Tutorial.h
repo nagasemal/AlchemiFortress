@@ -10,12 +10,21 @@
 
 #pragma once
 
+class SelectionBox;
+class DrawArrow;
+
 class Tutorial
 {
 public:
 	Tutorial();
 	~Tutorial();
 
+	void Initialize();
+	void Update();
+	void Render();
+	void Finalize();
+
 private:
+
 
 };

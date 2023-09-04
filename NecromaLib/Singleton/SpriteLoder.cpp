@@ -106,6 +106,14 @@ void SpriteLoder::Loading()
 		m_uiArrow.ReleaseAndGetAddressOf()
 	);
 
+	// ルール画像テクスチャ
+	DirectX::CreateWICTextureFromFile(
+		ShareData::GetInstance().GetDevice(),
+		L"Resources/Textures/Rule.png",
+		nullptr,
+		m_rule.ReleaseAndGetAddressOf()
+	);
+
 	{
 		// 魔法陣テクスチャ_None
 		DirectX::CreateWICTextureFromFile(

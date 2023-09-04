@@ -636,6 +636,9 @@
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyCommand_Identifier.cpp">
       <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand</Filter>
     </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Tutorial\Tutorial.cpp">
+      <Filter>Scene\PlayScene\Tutorial</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

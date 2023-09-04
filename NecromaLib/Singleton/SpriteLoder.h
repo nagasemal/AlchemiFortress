@@ -89,7 +89,7 @@ public:
 
 	// 魔法陣テクスチャを渡す
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetMagicCircleTexture(int number) { return m_MagicCircleTexture[number]; }
-	const wchar_t* GetMagicCircleTexturePath() { return L"Resources/Textures/MajicCircle.png"; }
+	const wchar_t* GetMagicCircleTexturePath() { return L"Resources/Textures/MagicCircle/MajicCircle.png"; }
 
 	// タイトルロゴテクスチャを渡す
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetTitleLogo() { return m_titleLogo; }
@@ -102,6 +102,10 @@ public:
 	// 矢印アイコンテクスチャを渡す
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetUIArrow() { return m_uiArrow; }
 	const wchar_t* GetUIArrowPath() { return L"Resources/Textures/Arrow.png"; }
+
+	// ルール画像を渡す
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetRule() { return m_rule; }
+	const wchar_t* GetRulePath() { return L"Resources/Textures/MagicRule.png"; }
 
 private:
 	SpriteLoder();
@@ -142,5 +146,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_uiIcons;
 
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_uiArrow;
+
+	// ルール画像
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_rule;
 
 };
