@@ -50,7 +50,8 @@ public:
 	void SetMachineType(MACHINE_TYPE type) { m_selectMachineType = type;}
 	MACHINE_TYPE GetMachineType()			{ return m_selectMachineType;}
 
-	SelectionBox* GetMachineBox()									{return m_machineBox.get();}
+	SelectionBox* GetMachineBox()									{ return m_machineBox.get();}
+	SelectionBox* GetManufacturingBox()								{ return m_selectionManufacturing.get(); }
 
 	void SetChangeColorFlag(bool flag)								{ m_changeColorFlag = flag;}
 

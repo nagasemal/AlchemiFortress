@@ -44,6 +44,9 @@ public:
 	SimpleMath::Vector2 GetRage() { return m_data.rage; }
 	SimpleMath::Vector2 GetPos() { return m_data.pos; }
 
+	void SetPos(DirectX::SimpleMath::Vector2 pos) { m_data.pos = pos;}
+	void SetRage(DirectX::SimpleMath::Vector2 rage) { m_data.rage = rage; }
+
 	// 当たる対象のオブジェクト
 	bool  HitObject(SimpleMath::Vector2 pos);
 

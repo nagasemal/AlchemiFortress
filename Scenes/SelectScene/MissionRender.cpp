@@ -39,6 +39,17 @@ void MissionRender::Render()
 	Render_TimerMission(missionData.condition_Time);
 }
 
+
+void MissionRender::Render(Stage_Data data)
+{
+	m_lineCount = 0;
+
+	Render_MachineMission(data.condition_Machine);
+	Render_EnemyMission(data.condition_Enemy);
+	Render_TimerMission(data.condition_Time);
+
+}
+
 void MissionRender::Render_MachineMission(std::vector<Stage_Condition> stageData)
 {
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
@@ -51,6 +62,10 @@ void MissionRender::Render_MachineMission(std::vector<Stage_Condition> stageData
 		DirectX::SimpleMath::Vector2 pos = m_position;
 		pos.y += m_lineCount * KERNING_Y;
 
+		DirectX::SimpleMath::Color color = DirectX::SimpleMath::Color(0.0f, 0.0f, 0.0f, 1.0f);
+
+		if (stageData[i].progress >= stageData[i].value) color = DirectX::SimpleMath::Color(1.0f, 0.0f, 0.0f, 1.0f);
+
 		LabelDraw(pos);
 
 		// •¶Žš‚Ì–¼‘O•`‰æ
@@ -60,7 +75,7 @@ void MissionRender::Render_MachineMission(std::vector<Stage_Condition> stageData
 			pSB->Draw(pSL.GetMachineNameTexture().Get(),
 				pos,
 				&machineNameRect,
-				DirectX::SimpleMath::Color(0.0f, 0.0f, 0.0f),
+				color,
 				0.0f,
 				DirectX::XMFLOAT2(128 / 2, 28 / 2),
 				m_rage);
@@ -75,7 +90,7 @@ void MissionRender::Render_MachineMission(std::vector<Stage_Condition> stageData
 			pSB->Draw(pSL.GetLetterTexture().Get(),
 				pos,
 				&letterRect,
-				DirectX::SimpleMath::Color(0.0f, 0.0f, 0.0f),
+				color,
 				0.0f,
 				DirectX::XMFLOAT2(28 / 2, 28 / 2),
 				m_rage);
@@ -89,7 +104,7 @@ void MissionRender::Render_MachineMission(std::vector<Stage_Condition> stageData
 			pSB->Draw(pSL.GetMissionTexture().Get(),
 				pos,
 				&missionRect,
-				DirectX::SimpleMath::Color(0.0f, 0.0f, 0.0f),
+				color,
 				0.0f,
 				DirectX::XMFLOAT2(112 / 2, 28 / 2),
 				m_rage);
@@ -120,6 +135,10 @@ void MissionRender::Render_EnemyMission(std::vector<Stage_Condition> stageData)
 
 		pos.y += m_lineCount * KERNING_Y;
 
+		DirectX::SimpleMath::Color color = DirectX::SimpleMath::Color(0.0f, 0.0f, 0.0f, 1.0f);
+
+		if(stageData[i].progress >= stageData[i].value) color = DirectX::SimpleMath::Color(1.0f, 0.0f, 0.0f, 1.0f);
+
 		LabelDraw(pos);
 
 		// •¶Žš‚Ì–¼‘O•`‰æ
@@ -129,7 +148,7 @@ void MissionRender::Render_EnemyMission(std::vector<Stage_Condition> stageData)
 			pSB->Draw(pSL.GetEnemyNameTexture().Get(),
 				pos,
 				&machineNameRect,
-				DirectX::SimpleMath::Color(0.0f, 0.0f, 0.0f),
+				color,
 				0.0f,
 				DirectX::XMFLOAT2(128 / 2, 28 / 2),
 				m_rage);
@@ -144,7 +163,7 @@ void MissionRender::Render_EnemyMission(std::vector<Stage_Condition> stageData)
 			pSB->Draw(pSL.GetLetterTexture().Get(),
 				pos,
 				&letterRect,
-				DirectX::SimpleMath::Color(0.0f, 0.0f, 0.0f),
+				color,
 				0.0f,
 				DirectX::XMFLOAT2(28 / 2, 28 / 2),
 				m_rage);
@@ -158,7 +177,7 @@ void MissionRender::Render_EnemyMission(std::vector<Stage_Condition> stageData)
 			pSB->Draw(pSL.GetMissionTexture().Get(),
 				pos,
 				&missionRect,
-				DirectX::SimpleMath::Color(0.0f, 0.0f, 0.0f),
+				color,
 				0.0f,
 				DirectX::XMFLOAT2(112 / 2, 28 / 2),
 				m_rage);

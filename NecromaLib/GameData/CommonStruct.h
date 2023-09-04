@@ -11,7 +11,7 @@ struct EnemyParam
 
 };
 
-enum MACHINE_ELEMENT : int
+enum ELEMENT : int
 {
 	NOMAL = 0,
 	FLAME = 1,

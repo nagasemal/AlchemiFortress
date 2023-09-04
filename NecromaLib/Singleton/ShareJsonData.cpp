@@ -3,6 +3,9 @@
 
 ShareJsonData* ShareJsonData::instance = nullptr;
 
+#define MAX_STAGE 4
+#define MIN_STAGE 1
+
 ShareJsonData::ShareJsonData():
 	m_bulletData{}
 {
@@ -29,11 +32,11 @@ void ShareJsonData::Destroy()
 void ShareJsonData::LoadingJsonFile_Bullet()
 {
 
-	m_bulletData[MACHINE_ELEMENT::NOMAL]	= Json::FileLoad_BulletData("Resources/Json/BulletData/BulletData_Nomal.json");
-	m_bulletData[MACHINE_ELEMENT::FLAME]	= Json::FileLoad_BulletData("Resources/Json/BulletData/BulletData_Flame.json");
-	m_bulletData[MACHINE_ELEMENT::AQUA]		= Json::FileLoad_BulletData("Resources/Json/BulletData/BulletData_Aqua.json");
-	m_bulletData[MACHINE_ELEMENT::WIND]		= Json::FileLoad_BulletData("Resources/Json/BulletData/BulletData_Wind.json");
-	m_bulletData[MACHINE_ELEMENT::EARTH]	= Json::FileLoad_BulletData("Resources/Json/BulletData/BulletData_Earth.json");
+	m_bulletData[ELEMENT::NOMAL]	= Json::FileLoad_BulletData("Resources/Json/BulletData/BulletData_Nomal.json");
+	m_bulletData[ELEMENT::FLAME]	= Json::FileLoad_BulletData("Resources/Json/BulletData/BulletData_Flame.json");
+	m_bulletData[ELEMENT::AQUA]		= Json::FileLoad_BulletData("Resources/Json/BulletData/BulletData_Aqua.json");
+	m_bulletData[ELEMENT::WIND]		= Json::FileLoad_BulletData("Resources/Json/BulletData/BulletData_Wind.json");
+	m_bulletData[ELEMENT::EARTH]	= Json::FileLoad_BulletData("Resources/Json/BulletData/BulletData_Earth.json");
 
 }
 
@@ -45,6 +48,13 @@ void ShareJsonData::LoadingJsonFile_Machine()
 	m_machineData[MACHINE_TYPE::MINING]		= Json::FileLoad_MachineData("Resources/Json/MachineData/MachineData_Mining.json");
 	m_machineData[MACHINE_TYPE::RECOVERY]	= Json::FileLoad_MachineData("Resources/Json/MachineData/MachineData_Recovery.json");
 	m_machineData[MACHINE_TYPE::UPPER]		= Json::FileLoad_MachineData("Resources/Json/MachineData/MachineData_Upper.json");
+}
+
+void ShareJsonData::LoadingJsonFile_Enemy()
+{
+	m_enemyData[ENEMY_TYPE::ENMEY_NONE] = Json::FileLoad_EnemyData("Resources/Json/EnemyData/EnemyData_None.json");
+	m_enemyData[ENEMY_TYPE::SLIME] = Json::FileLoad_EnemyData("Resources/Json/EnemyData/EnemyData_Slime.json");
+	m_enemyData[ENEMY_TYPE::WORM] = Json::FileLoad_EnemyData("Resources/Json/EnemyData/EnemyData_Worm.json");
 }
 
 void ShareJsonData::LoadingJsonFile_Stage(int number)
@@ -71,7 +81,7 @@ void ShareJsonData::LoadingJsonFile_ClearData(int number)
 	m_clearData = Json::FileLoad_StageClearData(filePath);
 }
 
-const Bullet_Data ShareJsonData::GetBulletData(MACHINE_ELEMENT element)
+const Bullet_Data ShareJsonData::GetBulletData(ELEMENT element)
 {
 	return m_bulletData[element];
 }
@@ -79,6 +89,11 @@ const Bullet_Data ShareJsonData::GetBulletData(MACHINE_ELEMENT element)
 const Machine_Data ShareJsonData::GetMachineData(MACHINE_TYPE type)
 {
 	return m_machineData[type];
+}
+
+const Enemy_Data ShareJsonData::GetEnemyData(ENEMY_TYPE type)
+{
+	return m_enemyData[type];
 }
 
 const Stage_Data ShareJsonData::GetStageData()
@@ -98,7 +113,7 @@ void ShareJsonData::StageDataCleanUP()
 
 }
 
-DirectX::SimpleMath::Color ShareJsonData::GetElementColor(MACHINE_ELEMENT element)
+DirectX::SimpleMath::Color ShareJsonData::GetElementColor(ELEMENT element)
 {
 	return Json::ChangeColor(element);
 }

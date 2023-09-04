@@ -182,6 +182,8 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="imaseLib\DebugCamera.h" />
     <ClInclude Include="imaseLib\DebugFont.h" />
+    <ClInclude Include="NecromaLib\Command\Commander_UI.h" />
+    <ClInclude Include="NecromaLib\Command\ICommand_UI.h" />
     <ClInclude Include="NecromaLib\GameData\Animation.h" />
     <ClInclude Include="NecromaLib\GameData\BinaryFile.h" />
     <ClInclude Include="NecromaLib\GameData\Camera.h" />
@@ -209,7 +211,11 @@
     <ClInclude Include="Resources\Icon\Icon.h" />
     <ClInclude Include="Scenes\Commons\DrawArrow.h" />
     <ClInclude Include="Scenes\Commons\DrawMachine.h" />
+    <ClInclude Include="Scenes\Commons\SelectionUI.h" />
+    <ClInclude Include="Scenes\Commons\UIKeyControl.h" />
     <ClInclude Include="Scenes\DataManager.h" />
+    <ClInclude Include="Scenes\EditScene\EditScene.h" />
+    <ClInclude Include="Scenes\EditScene\MIssionUIEdit.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineFilter.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineManager.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineObject.h" />
@@ -223,6 +229,11 @@
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Recovery.h" />
     <ClInclude Include="Scenes\PlayScene\Camera\MoveCamera.h" />
+    <ClInclude Include="Scenes\PlayScene\Enemy\EnemyCommand_Identifier.h" />
+    <ClInclude Include="Scenes\PlayScene\Enemy\EnemyList\EnemyCommander.h" />
+    <ClInclude Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_MeanderingMove.h" />
+    <ClInclude Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_StandardMove.h" />
+    <ClInclude Include="Scenes\PlayScene\Enemy\EnemyList\ICommand_Enemy.h" />
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyManager.h" />
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyObject.h" />
     <ClInclude Include="Scenes\PlayScene\Field\Crystal\Crystal.h" />
@@ -236,6 +247,7 @@
     <ClInclude Include="Scenes\PlayScene\Shadow\Particle.h" />
     <ClInclude Include="Scenes\PlayScene\Shadow\ParticleUtility.h" />
     <ClInclude Include="Scenes\PlayScene\Stage\MissionManager.h" />
+    <ClInclude Include="Scenes\PlayScene\Tutorial\Tutorial.h" />
     <ClInclude Include="Scenes\PlayScene\UI\DisplayMagicCircle.h" />
     <ClInclude Include="Scenes\PlayScene\UI\Gauge.h" />
     <ClInclude Include="Scenes\PlayScene\UI\MachineExplanation.h" />
@@ -245,6 +257,7 @@
     <ClInclude Include="Scenes\PlayScene\UI\SelectionBox.h" />
     <ClInclude Include="Scenes\PlayScene\UI\Number.h" />
     <ClInclude Include="Scenes\ResultScene\ResultScene.h" />
+    <ClInclude Include="Scenes\ResultScene\ResultUIManager.h" />
     <ClInclude Include="Scenes\SelectScene\MissionRender.h" />
     <ClInclude Include="Scenes\SelectScene\SelectCamera.h" />
     <ClInclude Include="Scenes\SelectScene\SelectScene.h" />
@@ -258,6 +271,7 @@
     <ClCompile Include="imaseLib\DebugCamera.cpp" />
     <ClCompile Include="imaseLib\DebugFont.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="NecromaLib\Command\Commander_UI.cpp" />
     <ClCompile Include="NecromaLib\GameData\Animation.cpp" />
     <ClCompile Include="NecromaLib\GameData\BinaryFile.cpp" />
     <ClCompile Include="NecromaLib\GameData\Camera.cpp" />
@@ -287,7 +301,10 @@
     </ClCompile>
     <ClCompile Include="Scenes\Commons\DrawArrow.cpp" />
     <ClCompile Include="Scenes\Commons\DrawMachine.cpp" />
+    <ClCompile Include="Scenes\Commons\SelectionUI.cpp" />
+    <ClCompile Include="Scenes\Commons\UIKeyControl.cpp" />
     <ClCompile Include="Scenes\DataManager.cpp" />
+    <ClCompile Include="Scenes\EditScene\EditScene.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineFilter.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineManager.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineObject.cpp" />
@@ -301,6 +318,10 @@
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\Bullet\BulletDataBase.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.cpp" />
     <ClCompile Include="Scenes\PlayScene\Camera\MoveCamera.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Enemy\EnemyCommand_Identifier.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Enemy\EnemyList\EnemyCommander.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_MeanderingMove.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_StandardMove.cpp" />
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyManager.cpp" />
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyObject.cpp" />
     <ClCompile Include="Scenes\PlayScene\Field\Crystal\Crystal.cpp" />
@@ -323,6 +344,7 @@
     <ClCompile Include="Scenes\PlayScene\UI\Number.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\SelectionBox.cpp" />
     <ClCompile Include="Scenes\ResultScene\ResultScene.cpp" />
+    <ClCompile Include="Scenes\ResultScene\ResultUIManager.cpp" />
     <ClCompile Include="Scenes\SelectScene\MissionRender.cpp" />
     <ClCompile Include="Scenes\SelectScene\SelectCamera.cpp" />
     <ClCompile Include="Scenes\SelectScene\SelectScene.cpp" />
@@ -346,7 +368,9 @@
     <None Include="Resources\Json\BulletData\BulletData_Flame.json" />
     <None Include="Resources\Json\BulletData\BulletData_Nomal.json" />
     <None Include="Resources\Json\BulletData\BulletData_Wind.json" />
+    <None Include="Resources\Json\EnemyData\EnemyData_None.json" />
     <None Include="Resources\Json\EnemyData\EnemyData_Slime.json" />
+    <None Include="Resources\Json\EnemyData\EnemyData_Worm.json" />
     <None Include="Resources\Json\MachineData\MachineData_Attacker.json" />
     <None Include="Resources\Json\MachineData\MachineData_Defenser.json" />
     <None Include="Resources\Json\MachineData\MachineData_Mining.json" />

@@ -3,6 +3,9 @@
 #include "NecromaLib/SceneObject/SceneObj.h"
 //#include "NecromaLib/SceneObject/SceneManager.h"
 
+class SelectionBox;
+class UIKeyControl;
+
 class ResultScene : public SceneObj
 {
 public:
@@ -27,5 +30,12 @@ public:
 	// èIóπèàóù
 	void Finalize() override;
 
+private:
+
+	std::unique_ptr<SelectionBox> m_selectionBox_Next;
+	std::unique_ptr<SelectionBox> m_selectionBox_Retry;
+	std::unique_ptr<SelectionBox> m_selectionBox_Back;
+
+	std::unique_ptr<UIKeyControl> m_uiKeyControl;
 
 };

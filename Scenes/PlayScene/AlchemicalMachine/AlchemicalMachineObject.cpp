@@ -27,7 +27,7 @@ AlchemicalMachineObject::AlchemicalMachineObject():
 	m_span(),
 	m_color(1,1,1,1),
 	m_rotateAnimation(),
-	m_element(MACHINE_ELEMENT::NOMAL),
+	m_element(ELEMENT::NOMAL),
 	m_powerUPFlag(),
 	m_line(),
 	m_dismantlingFlag()

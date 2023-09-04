@@ -2,7 +2,13 @@
 #include "EnemyObject.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
 #include "NecromaLib/Singleton/ShareData.h"
+#include "NecromaLib/Singleton/ShareJsonData.h"
 #include "NecromaLib/GameData/Easing.h"
+
+// コマンド
+#include "Scenes/PlayScene/Enemy/EnemyList/EnemyCommander.h"
+
+#include "Scenes/PlayScene/Enemy/EnemyCommand_Identifier.h"
 
 #define GRAVITY 0.2f
 
@@ -10,7 +16,6 @@ EnemyObject::EnemyObject(ENEMY_TYPE type, DirectX::SimpleMath::Vector3 startPos,
 	m_power(1),
 	m_hp(10),
 	m_lv(lv),
-	m_speed(1),
 	m_accele(),
 	m_lengthVec(),
 	m_exp(),
@@ -18,7 +23,8 @@ EnemyObject::EnemyObject(ENEMY_TYPE type, DirectX::SimpleMath::Vector3 startPos,
 	m_enemyType(type),
 	m_rotation(),
 	m_moveVec(),
-	m_aliveTimer()
+	m_aliveTimer(),
+	m_targetPos()
 {
 
 	m_data.pos = startPos;
@@ -32,18 +38,49 @@ EnemyObject::~EnemyObject()
 
 void EnemyObject::Initialize()
 {
-
 }
 
 void EnemyObject::Update()
 {
-	m_stopFlag = false;
+	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
+	m_aliveTimer += deltaTime;
 
-	m_aliveTimer += DeltaTime::GetInstance().GetDeltaTime();
-
+	// 拡縮アニメーション
 	m_data.rage.y = Easing::EaseInCirc(0.25f, 0.35f, sinf(m_aliveTimer));
+	m_data.rage.x = Easing::EaseInCirc(0.25f, 0.35f, cosf(m_aliveTimer));
 	m_data.rage.z = Easing::EaseInCirc(0.25f, 0.35f, cosf(m_aliveTimer));
 
+	// 重力計算
+	m_data.pos.y -= GRAVITY;
+	if (m_data.pos.y <= 0.0f)	m_data.pos.y = 0.0f;
+
+	// ターゲットに視線を向ける処理
+	DirectX::SimpleMath::Vector3 targetDiff = m_targetPos - m_data.pos;
+	targetDiff.y = 0;
+	targetDiff.Normalize();
+	m_rotation = DirectX::SimpleMath::Quaternion::FromToRotation(DirectX::SimpleMath::Vector3::UnitX, targetDiff);
+
+	// 移動を止める処理
+	if (!m_stopFlag)
+	{
+		// ポインターをコマンドに渡す
+		for (auto& command : m_moveCommands)
+		{
+			command->SetEnemyPtr(*this);
+		}
+
+		// コマンド再生種類の切り替え
+		if (m_moveType == "ALL")m_commander->Execute_ALL();
+		if (m_moveType == "ONE")m_commander->Execute_One();
+
+		// 座標の計算
+		m_data.pos += m_lengthVec * deltaTime;
+	}
+
+	m_stopFlag = false;
+
+	// 初期化
+	m_lengthVec = DirectX::SimpleMath::Vector3();
 }
 
 void EnemyObject::Draw()
@@ -67,36 +104,19 @@ void EnemyObject::Render(Model* model)
 
 void EnemyObject::Finalize()
 {
+	for (auto& command : m_moveCommands)
+	{
+		delete command;
+	}
 
+	m_moveCommands.clear();
 }
 
 bool EnemyObject::GotoTarget(DirectX::SimpleMath::Vector3 target)
 {
-	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
+	target;
 
-	if (m_stopFlag) return m_hp <= 0;
-
-	DirectX::SimpleMath::Vector3 targetDiff = target - m_data.pos;
-	targetDiff.y = 0;
-	targetDiff.Normalize();
-
-	// 速度の計算
-	m_lengthVec = Easing::Moveing(target, m_data.pos);
-	m_lengthVec.Normalize();
-
-	// 対象に向ける処理
-	m_rotation = DirectX::SimpleMath::Quaternion::FromToRotation(DirectX::SimpleMath::Vector3::UnitX, targetDiff);
-
-	// 座標の計算
-	m_data.pos	+= m_lengthVec * m_speed * deltaTime;
-
-	// 重力計算
-	m_data.pos.y -= GRAVITY;
-
-	if (m_data.pos.y <= 0.0f)	m_data.pos.y = 0.0f;
-
-	// マネージャー側で消してもらう
-	return m_hp <= 0;
+	return 0;
 }
 
 void EnemyObject::HitMachine(bool flag)
@@ -112,8 +132,39 @@ void EnemyObject::Bouns()
 {
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
 
-	m_lengthVec.Normalize();
+	m_data.pos -= m_lengthVec * deltaTime;
 
-	m_data.pos -= m_lengthVec * m_speed * deltaTime;
+}
+
+void EnemyObject::SetEnemyData(Enemy_Data data)
+{
+	m_hp		= data.hp;
+	m_exp		= data.exp;
+	m_power		= data.power;
+	m_enemyType = data.type;
+	m_moveType  = data.moveType;
+
+	m_commander = std::make_unique<EnemyCommander>();
+
+	for (auto& moveData : data.moveData)
+	{
+		// コマンドクラス取得
+		ICommand_Enemy* command = ChangeEnemyMoveCommand(moveData.moveName);
+		// 値取得
+		MoveParameter moveParam = MoveParameter();
+
+		moveParam.delay = moveData.delay;
+		moveParam.time = moveData.time;
+		moveParam.value = moveData.value;
+
+		command->SetParam(moveParam);
+
+		m_moveCommands.push_back(command);
+	}
+
+	for (auto& command : m_moveCommands)
+	{
+		m_commander->AddCommand(command);
+	}
 
 }

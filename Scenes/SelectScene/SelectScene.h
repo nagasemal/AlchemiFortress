@@ -8,6 +8,10 @@
 #include "Scenes/SelectScene/SelectCamera.h"
 #include "Scenes/SelectScene/MissionRender.h"
 
+class DrawArrow;
+class SelectionBox;
+class UIKeyControl;
+
 class SelectScene : public SceneObj
 {
 public:
@@ -49,6 +53,14 @@ private:
 	// ミッションの描画
 	std::unique_ptr<MissionRender> m_missionDraw;
 
+	// 矢印オブジェクトの描画
+	std::unique_ptr<DrawArrow> m_arrowDraw[2];
+
+	// 選択ボックスの描画(次のシーンへ遷移)
+	std::unique_ptr<SelectionBox> m_nextSceneBox;
+
 	bool m_changeMachine;							// マシンが変更されたことを知らせるフラグ
+
+	std::unique_ptr<UIKeyControl> m_uiKeyControl;
 
 };

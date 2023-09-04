@@ -58,12 +58,12 @@ void AM_Upper::SelectUpdate()
 
 		//　外部ファイルから読み込めるようにしたい
 		//　Nomalを省くために1からスタート
-		for (int i = 1; i < MACHINE_ELEMENT::Num; i++)
+		for (int i = 1; i < ELEMENT::Num; i++)
 		{
 			if (m_selectBox[i - 1]->ClickMouse())
 			{
 				// 情報更新
-				m_element = (MACHINE_ELEMENT)i;
+				m_element = (ELEMENT)i;
 				m_color = ShareJsonData::GetInstance().GetElementColor(m_element);
 			}
 		}

@@ -23,4 +23,20 @@
 			{"TYPE":"Slime",		"AZIMUTH":4.5,	"REMOTENESS":10.0,		"SPAWNTIME":5.0,	"CONDITION":"Explanation"}
 		]
 	}
+	,
+	"MACHINE_DEFAULET":{
+		"MACHINES":[
+			{"TYPE":"Attacker","ELEMENT":"NOMAL","NUMBER":0,"LV":1}
+		]
+	},
+	"RESOURCE_DEFAULET":{
+		"CRYSTAL":215.0,
+		"MP":400.0,
+		"LV":1.0,
+		"ATTACKER":1.0,
+		"UPPER":1.0,
+		"DEFFENCER":1.0,
+		"MINING":1.0,
+		"RECOVERY":1.0
+	}
 }

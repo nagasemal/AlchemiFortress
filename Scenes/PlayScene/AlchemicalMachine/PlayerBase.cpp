@@ -4,6 +4,8 @@
 #include "NecromaLib/Singleton/DeltaTime.h"
 #include "Scenes/DataManager.h"
 
+#include "NecromaLib/Singleton/ShareJsonData.h"
+
 #define RAGE DirectX::SimpleMath::Vector3(3, 3, 3)
 
 PlayerBase::PlayerBase() :
@@ -25,7 +27,7 @@ void PlayerBase::Initialize()
 {
 
 	ShareData& pSD = ShareData::GetInstance();
-	m_baseLv = 1;
+	m_baseLv = ShareJsonData::GetInstance().GetStageData().resource.lv;
 	m_exp = 0;
 	m_hp = 50;
 
@@ -38,9 +40,7 @@ void PlayerBase::Initialize()
 	pDataM->CrystalMAXRecalculation	(m_baseLv);
 	pDataM->BaseHPMAXRecalculation	(m_baseLv);
 
-	pDataM->SetNowMP		(pDataM->GetNowMP_MAX() / 2);
-	pDataM->SetNowCrystal	(pDataM->GetNowCrystal_MAX() / 2);
-	pDataM->SetNowBaseHP	(pDataM->GetNowBaseHP_MAX() / 2);
+	pDataM->Initialize();
 }
 
 void PlayerBase::Update()
@@ -65,7 +65,7 @@ void PlayerBase::Update()
 	if (PointerToCircle(GetCircle(), mouseWolrdPos)) m_hitMouseFlag = true;
 
 	// ŒÜ‚Ì”{”–ˆ‚ÉLvUP
-	if (enemyKillNum >= (2 * m_baseLv) + (4 * m_baseLv))
+	if (enemyKillNum >= 5 * (m_baseLv * 2))
 	{
 		m_baseLv++;
 		m_lvUpTiming = true;

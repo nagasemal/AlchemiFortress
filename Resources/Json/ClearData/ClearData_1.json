@@ -10,19 +10,19 @@
       {
         "ELEMENT": "Nomal",
         "LV": 1,
-        "NAME": "Upper",
+        "NAME": "None",
         "NUMBER": 1
       },
       {
         "ELEMENT": "Nomal",
         "LV": 1,
-        "NAME": "Defenser",
+        "NAME": "Attacker",
         "NUMBER": 2
       },
       {
         "ELEMENT": "Nomal",
         "LV": 1,
-        "NAME": "Defenser",
+        "NAME": "None",
         "NUMBER": 3
       },
       {

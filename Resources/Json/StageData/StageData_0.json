@@ -23,7 +23,22 @@
 
 	"ENEMY_SPAWNTIME":{
 		"ENEMYS":[
-			{"TYPE":"Slime",		"AZIMUTH":4.5,	"REMOTENESS":5.0,		"SPAWNTIME":5.0,	"CONDITION":"Explanation"}
+			{"TYPE":"Slime",		"AZIMUTH":4.5,	"REMOTENESS":20.0,		"SPAWNTIME":5.0,	"CONDITION":"Explanation"}
 		]
+	},
+	"MACHINE_DEFAULET":{
+		"MACHINES":[
+			{"TYPE":"Attacker","ELEMENT":"NOMAL","NUMBER":0,"LV":1}
+		]
+	},
+	"RESOURCE_DEFAULET":{
+		"CRYSTAL":200.0,
+		"MP":200.0,
+		"LV":1.0,
+		"ATTACKER":1.0,
+		"UPPER":1.0,
+		"DEFFENCER":1.0,
+		"MINING":1.0,
+		"RECOVERY":1.0
 	}
 }

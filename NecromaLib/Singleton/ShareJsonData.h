@@ -32,6 +32,9 @@ public:
 	// マシンのjsonファイルを読み込む
 	void LoadingJsonFile_Machine();
 
+	// エネミーのjsonファイルを読み込む
+	void LoadingJsonFile_Enemy();
+
 	// ステージのjsonファイルを読み込む
 	void LoadingJsonFile_Stage(int number);
 
@@ -41,10 +44,13 @@ public:
 public:
 
 	// 属性に対応したバレットのパラメータを渡す
-	const Bullet_Data GetBulletData(MACHINE_ELEMENT element);
+	const Bullet_Data GetBulletData(ELEMENT element);
 
 	// マシンタイプに対応したマシンのパラメータを渡す
 	const Machine_Data GetMachineData(MACHINE_TYPE type);
+
+	// エネミータイプに対応したエネミーのパラメータを渡す
+	const Enemy_Data GetEnemyData(ENEMY_TYPE type);
 
 	// ステージのデータを渡す
 	const Stage_Data GetStageData();
@@ -55,19 +61,27 @@ public:
 	// ステージデータの中身を全て消す(メモリ領域の圧迫を防ぐため)
 	void StageDataCleanUP();
 
-	DirectX::SimpleMath::Color GetElementColor(MACHINE_ELEMENT element);
+	// エレメントに紐づく色情報を取得
+	DirectX::SimpleMath::Color GetElementColor(ELEMENT element);
 
 
 private:
 	ShareJsonData();
 	static ShareJsonData* instance;
 
-	Bullet_Data m_bulletData[MACHINE_ELEMENT::Num];
+	// Attackerが繰り出す弾のパラメータ
+	Bullet_Data m_bulletData[ELEMENT::Num];
 
+	// 各マシンのデータ
 	Machine_Data m_machineData[MACHINE_TYPE::NUM];
 
+	// 各エネミーのデータ
+	Enemy_Data m_enemyData[ENEMY_TYPE::ENEMY_NUM];
+
+	// 読み込んだステージのデータ(全てを読み込むとメモリ効率が悪い為、随時読み込む方式を採用)
 	Stage_Data m_stageData;
 
+	// 読み込んだステージのクリア時データ
 	Stage_ClearData m_clearData;
 
 };

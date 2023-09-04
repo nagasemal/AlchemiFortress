@@ -7,7 +7,6 @@
 #include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
 
-
 #define IMAGE_WIGHT			64
 #define IMAGE_HEIGHT		64
 
@@ -56,18 +55,17 @@ void MachineSelect::Initialize()
 
 void MachineSelect::Update()
 {
-	InputSupport&	pIS = InputSupport::GetInstance();
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
 
 	// F‚ð•Ï‚¦‚é
 	m_colorChangeTime += deltaTime * 5.0f;
 	m_boxColor.G(0.5f + cosf(m_colorChangeTime) / 2);
 
-	DirectX::SimpleMath::Vector2 mousePos = pIS.GetMousePosScreen();
-	bool leftFlag = pIS.GetMouseState().leftButton == Mouse::ButtonStateTracker::PRESSED;
-	bool onMouseFlag = HitObject(mousePos);
-	leftFlag;
-	onMouseFlag;
+	//DirectX::SimpleMath::Vector2 mousePos = pIS.GetMousePosScreen();
+	//bool leftFlag = pIS.GetMouseState().leftButton == Mouse::ButtonStateTracker::PRESSED;
+	//bool onMouseFlag = HitObject(mousePos);
+	//leftFlag;
+	//onMouseFlag;
 
 	m_onMouseFlag = m_machineBox->HitMouse();
 	m_hitMouseFlag = m_machineBox->SelectionMouse();

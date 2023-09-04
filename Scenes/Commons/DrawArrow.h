@@ -9,26 +9,20 @@
 //--------------------------------------------------------------------------------------
 
 #pragma once
-#include "NecromaLib/GameData/GameObject2D.h"
+#include "Scenes/Commons/SelectionUI.h"
 
-class DrawArrow : public GameObjct2D
+class DrawArrow : public SelectionUI
 {
 public:
-	DrawArrow();
+
+	DrawArrow(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage,int direciton);
 	~DrawArrow();
-
-	// ‰Šú‰»
-	void Initialize()			override;
-
-	// XV
-	void Update()				override;
 
 	// •`‰æ
 	void Draw()					override;
 
-	// I—¹ˆ—
-	void Finalize()				override;
-
 private:
+
+	int m_direction;
 
 };

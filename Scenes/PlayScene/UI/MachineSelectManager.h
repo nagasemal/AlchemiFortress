@@ -17,6 +17,7 @@
 
 class FieldObjectManager;
 class DisplayMagicCircle;
+class UIKeyControl;
 
 class MachineSelectManager
 {
@@ -76,6 +77,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_boxTextuer;
 
 	std::unique_ptr<MachineSelect> m_machineSelect[MACHINE_TYPE::NUM];
+
+	std::unique_ptr<UIKeyControl> m_uiKeyControl;
 
 	MACHINE_TYPE m_selectMachineType;
 

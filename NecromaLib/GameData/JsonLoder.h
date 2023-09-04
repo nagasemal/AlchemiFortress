@@ -1,4 +1,5 @@
-//--------------------------------------------------------------------------------------
+//---------
+// -----------------------------------------------------------------------------
 // File: JsonLoder.h
 //
 // ジェイソンを読み書きするクラス
@@ -39,6 +40,26 @@ struct Machine_Data
 	float effect_value		= 0.0f;		// 効果値
 };
 
+struct Enemy_MoveData
+{
+	std::string moveName;
+	float delay;
+	float time;
+	float value;
+};
+
+struct Enemy_Data
+{
+	ELEMENT element = ELEMENT::NOMAL;
+	ENEMY_TYPE type = ENEMY_TYPE::ENMEY_NONE;
+	std::string moveType = "ALL";
+	int hp = 1;
+	float power = 1.0f;
+	int exp = 1;
+
+	std::vector<Enemy_MoveData> moveData;
+};
+
 // ステージのクリア条件を格納
 struct Stage_Condition
 {
@@ -47,11 +68,23 @@ struct Stage_Condition
 	int progress = 0;	//進行度
 };
 
+struct Stage_Resource
+{
+	int mp;
+	int crystal;
+	int lv;
+	int attacker;
+	int upper;
+	int deffencer;
+	int mining;
+	int recovery;
+};
+
 // ステージをクリアしたマシンの情報を格納
-struct Stage_ClearMachine
+struct Stage_Machine
 {
 	MACHINE_TYPE type = MACHINE_TYPE::NONE;
-	MACHINE_ELEMENT element = MACHINE_ELEMENT::NOMAL;
+	ELEMENT element = ELEMENT::NOMAL;
 	int lv = 1;
 	int number = 0;
 };
@@ -74,41 +107,50 @@ struct Stage_Data
 
 	std::vector<Enemys_Spawn> enemys_Spawn;					// エネミーの出現情報
 
+	Stage_Resource resource;								// 初めから所持しているリソース群
+	std::vector<Stage_Machine> machine;						// 初めから設置されているマシン群
 };
 
 struct Stage_ClearData
 {
-	std::vector<Stage_ClearMachine> machines;	// クリアしたマシン
+	std::vector<Stage_Machine> machines;	// クリアしたマシン
 	int clearTime = 0;							// クリアまでにかかった時間
 	int num = 0;								// 挑戦回数
 };
 
 // 書き込み
 class AlchemicalMachineObject;
+class ICommand_Enemy;
 
 namespace Json
 {
+	// 読み込み：Attackerが射出する弾の情報
 	Bullet_Data FileLoad_BulletData(const std::string filePath);
-
+	// 読み込み：マシンの基本データ
 	Machine_Data FileLoad_MachineData(const std::string filePath);
-
+	// 読み込み：エネミーの基本データ
+	Enemy_Data FileLoad_EnemyData(const std::string filePath);
+	// 読み込み：ステージの基本データ
 	Stage_Data FileLoad_StageData(const std::string filePath);
-
+	// 読み込み：ステージクリア情報
 	Stage_ClearData FileLoad_StageClearData(const std::string filePath);
 
 	//  属性変換
-	MACHINE_ELEMENT ChangeElement(const std::string element);
-	std::string ChangeElementString(const MACHINE_ELEMENT element);
+	ELEMENT ChangeElement(const std::string element);
+	std::string ChangeElementString(const ELEMENT element);
 
 	//　マシン変換
 	MACHINE_TYPE ChangeMachine(const std::string machine);
 	std::string ChangeMachineString(const MACHINE_TYPE type);
 
 	//　エネミー変換
-	ENEMY_TYPE ChangeEnemy(const std::string machine);
+	ENEMY_TYPE ChangeEnemy(const std::string enemyName);
 
 	//  色変換
-	DirectX::SimpleMath::Color ChangeColor(MACHINE_ELEMENT element);
+	DirectX::SimpleMath::Color ChangeColor(ELEMENT element);
 
 	void WritingJsonFile_ClearData(int number,std::vector<std::shared_ptr<AlchemicalMachineObject>> alchemicalMachineList,int time);
+
+	// エディターに使用　ステージのデータを書き込む
+	void WritingJsonFile_StageData(int number,Stage_Data stageData);
 }

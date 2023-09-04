@@ -1,5 +1,6 @@
 #include <pch.h>
 #include "DataManager.h"
+#include "NecromaLib/Singleton/ShareJsonData.h"
 
 #define STANDARD_MP			400
 #define STANDARD_CRYSTAL	215
@@ -16,21 +17,24 @@ DataManager::DataManager() :
 	m_nowBaseHp_MAX	(),
 	m_round			(),
 	m_nowEnemyKill	(),
-	m_stageNum		()
+	m_stageNum		(),
+	m_stageClearFlag()
 {
 
 }
 
 void DataManager::Initialize()
 {
+	auto resource = ShareJsonData::GetInstance().GetStageData().resource;
+
 	m_nowMP_MAX			= STANDARD_MP;
-	m_nowMP				= STANDARD_MP / 2;
+	m_nowMP				= resource.mp;
 
 	m_nowCrystal_MAX	= STANDARD_CRYSTAL;
-	m_nowCrystal		= STANDARD_CRYSTAL / 2;
+	m_nowCrystal		= resource.crystal;
 
 	m_nowBaseHp_MAX		= STANDARD_BASEHP;
-	m_nowBaseHp			= STANDARD_BASEHP / 2;
+	m_nowBaseHp			= STANDARD_BASEHP;
 
 	m_nowEnemyKill = 0;
 	m_round = 1;

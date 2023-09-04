@@ -87,6 +87,9 @@ private:
 	// 解体時処理(Noneにもどす)
 	void Dismantling(int index);
 
+	// Jsonデータから読み取ったリソースを反映させる
+	void JsonLoadResources();
+
 private:
 
 	// 円周上に並べる処理

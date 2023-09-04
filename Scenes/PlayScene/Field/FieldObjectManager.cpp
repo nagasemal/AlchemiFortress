@@ -122,22 +122,22 @@ void FieldObjectManager::Finalize()
 
 void FieldObjectManager::CrystalSpawn(int num)
 {
-	int minRage = 2;
+	//int minRage = 2;
 
-	for (int i = 0; i < num; i++)
-	{
-		std::random_device seed;
-		std::default_random_engine engine(seed());
-		std::uniform_real_distribution<> dist(0, XM_2PI);
+	//for (int i = 0; i < num; i++)
+	//{
+	//	std::random_device seed;
+	//	std::default_random_engine engine(seed());
+	//	std::uniform_real_distribution<> dist(0, XM_2PI);
 
-		std::uniform_int_distribution<> dist2(minRage,m_field->GetCircle().r);
-		std::random_device rd;
-		std::mt19937 gen(rd());
+	//	std::uniform_int_distribution<> dist2(minRage,m_field->GetCircle().r);
+	//	std::random_device rd;
+	//	std::mt19937 gen(rd());
 
-		float rand = static_cast<float>(dist(engine));
+	//	float rand = static_cast<float>(dist(engine));
 
-		float rand2 = static_cast<float>(dist2(gen));
+	//	float rand2 = static_cast<float>(dist2(gen));
 
-		m_crystals->push_back(*std::make_unique<Crystal>(DirectX::SimpleMath::Vector3(rand2 * cosf(rand), -1.0f, rand2 * sinf(rand)),cos(rand2)));
-	}
+	//	m_crystals->push_back(*std::make_unique<Crystal>(DirectX::SimpleMath::Vector3(rand2 * cosf(rand), -1.0f, rand2 * sinf(rand)),cos(rand2)));
+	//}
 }

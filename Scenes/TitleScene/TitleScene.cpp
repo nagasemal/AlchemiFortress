@@ -50,11 +50,11 @@ void TitleScene::Initialize()
 
 		});
 
-	SpriteLoder& pSL = SpriteLoder::GetInstance();
-
 	auto device = ShareData::GetInstance().GetDeviceResources();
 	int width = device->GetOutputSize().right;
 	int height = device->GetOutputSize().bottom;
+
+	width; height;
 
 }
 
@@ -107,7 +107,7 @@ void TitleScene::DrawUI()
 
 	// 画像のサイズ
 	RECT rect_title = { 0, 0, 676, 52 };
-	RECT rect_circle = { 0, 0, 290, 290 };
+	RECT rect_circle = { 0, 0, 1280, 1280 };
 
 	DirectX::SimpleMath::Vector2 box_Pos = {(float) width / 2.0f,(float)height / 2.0f};
 
@@ -117,7 +117,7 @@ void TitleScene::DrawUI()
 			  &rect_circle,
 			  COLOR,
 			  m_magicCircle->GetAnimationTime(),
-			  DirectX::XMFLOAT2(290 / 2, 290 / 2),
+			  DirectX::XMFLOAT2(1280 / 2, 1280 / 2),
 			  1.0f);
 
 	// タイトル描画

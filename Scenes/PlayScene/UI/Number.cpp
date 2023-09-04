@@ -93,7 +93,7 @@ void Number::Number_Render(int num, DirectX::SimpleMath::Vector2 pos)
 
 	DirectX::SimpleMath::Color color(1, 1, 1, 1);
 
-	for (int i = 1; i >= 0; i--)
+	for (int i = MAX_NUM; i >= 0; i--)
 	{
 		// 基数　桁数取得
 		int base = 1;
@@ -104,7 +104,8 @@ void Number::Number_Render(int num, DirectX::SimpleMath::Vector2 pos)
 			int digit = (num / base) % 10;
 			RECT numRect = SpriteCutter(64, 64, digit, 0);
 
-			pos.x -= ((64 * m_rage.x) * j);
+			DirectX::SimpleMath::Vector2 pos = m_position;
+			pos.x -= ((64 * (m_rage.x / 2)) * j);
 
 			// 数字描画
 			pSB->Draw(SpriteLoder::GetInstance().GetNumberTexture().Get(),
@@ -120,5 +121,4 @@ void Number::Number_Render(int num, DirectX::SimpleMath::Vector2 pos)
 
 		}
 	}
-
 }

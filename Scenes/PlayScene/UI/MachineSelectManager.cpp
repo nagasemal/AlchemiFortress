@@ -3,9 +3,10 @@
 #include "Scenes/DataManager.h"
 #include <WICTextureLoader.h>
 
+#include "Scenes/Commons/UIKeyControl.h"
+
 #include "Scenes/PlayScene/UI/DisplayMagicCircle.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
-
 #include "NecromaLib/Singleton/ShareJsonData.h"
 
 #define POS 		DirectX::SimpleMath::Vector2(532, 64)
@@ -39,6 +40,8 @@ void MachineSelectManager::Initialize()
 
 	m_camera = std::make_unique<Camera>();
 
+	//m_uiKeyControl = std::make_unique<UIKeyControl>();
+
 	// Noneを省くために1スタート
 	for (int i = 1; i < MACHINE_TYPE::NUM; i++)
 	{
@@ -49,6 +52,10 @@ void MachineSelectManager::Initialize()
 
 		m_machineSelect[i]->Initialize();
 
+		//// UIを登録　
+		//m_uiKeyControl->AddUI(m_machineSelect[i]->GetMachineBox(), i - 1,0);
+		//m_uiKeyControl->AddUI(m_machineSelect[i]->GetManufacturingBox(), 0,1);
+
 	}
 
 	m_selectBoxAll		= false;
@@ -56,6 +63,7 @@ void MachineSelectManager::Initialize()
 
 	m_displayMagicCircle = std::make_unique<DisplayMagicCircle>();
 	m_displayMagicCircle->Create(SpriteLoder::GetInstance().GetMagicCircleTexturePath());
+
 }
 
 void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
@@ -102,6 +110,8 @@ void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
 			}
 		}
 	}
+
+	//m_uiKeyControl->Update();
 
 	// 何処かのクリスタルが選択されているならば、type：マイニングの選択ボックスの色を変える
 	m_machineSelect[MACHINE_TYPE::MINING]->

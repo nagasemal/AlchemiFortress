@@ -10,6 +10,7 @@
 #include "Scenes/PlayScene/UI/Number.h"
 class Stage_Condition;
 class SpriteLoder;
+class Stage_Data;
 
 class MissionRender
 {
@@ -19,6 +20,7 @@ public:
 	~MissionRender();
 
 	void Render();
+	void Render(Stage_Data data);
 
 	// マシン系のミッション内容を描画
 	void Render_MachineMission(std::vector<Stage_Condition> stageData);
@@ -31,6 +33,9 @@ public:
 
 	// 行の変数を0にする
 	void LineReset();
+
+	// ラインのカウンターを返す
+	int GetLineCount() { return m_lineCount; }
 
 private:
 

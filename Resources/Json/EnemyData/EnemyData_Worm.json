@@ -1,0 +1,15 @@
+{
+  "Status": {
+    "ELEMENT":"Normal",
+    "TYPE":"Worm",
+    "MOVETYPE":"ALL",
+    "HP": 4.0,
+    "STR": 2.5,
+    "EXP": 15.0,
+
+    "MOVEING":[
+        {"TYPE":"Standard","TIME":0.0,"DELAY":0.0,"VALUE":1.0},
+        {"TYPE":"Meandering","TIME":0.0,"DELAY":0.0,"VALUE":1.0}
+    ]
+  }
+}

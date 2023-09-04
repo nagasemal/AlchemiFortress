@@ -13,6 +13,12 @@
 #include "Scenes/PlayScene/AlchemicalMachine/AlchemicalMachineObject.h"
 #include "NecromaLib/GameData/CommonStruct.h"
 
+class EnemyCommander;
+class Enemy_StanderMove;
+class Enemy_MeanderingMove;
+class ICommand_Enemy;
+class Enemy_Data;
+
 class EnemyObject : public GameObjct3D
 {
 public:
@@ -48,8 +54,17 @@ public:
 	// 体力
 	void SetHp(int hp)									{ m_hp = hp; }
 
-	// スピード
-	void SetSpeed(float speed)							{ m_speed = speed; }
+	// ターゲット
+	void SetTargetPos(DirectX::SimpleMath::Vector3 targetPos) { m_targetPos = targetPos; }
+
+	// 目的地までの距離
+	void SetLengthVec(DirectX::SimpleMath::Vector3 lengthVec) { m_lengthVec = lengthVec; }
+
+	// 止まる処理
+	void SetStopFlag(bool flag)							{ m_stopFlag = flag;}
+
+	// ステータスを設定する
+	void SetEnemyData(Enemy_Data data);
 
 	// レベル
 	const int GetLv()									{ return m_lv; }
@@ -59,6 +74,11 @@ public:
 	const int GetEXP()									{ return m_exp; }
 	// パワー	
 	const float GetPower()								{ return m_power;}
+
+	// とまっているフラグ
+	const bool GetStopFlag()							{ return m_stopFlag; }
+
+	const DirectX::SimpleMath::Vector3 GetTargetPos()	{ return m_targetPos;}
 	// 目的地までの距離
 	const DirectX::SimpleMath::Vector3 GetLengthVec()	{ return m_lengthVec;}
 	// 加速度
@@ -80,10 +100,10 @@ private:
 	int m_exp;
 	// 生存している時間
 	float m_aliveTimer;
-	// 速度
-	float m_speed;
 	// 移動を止める
 	bool m_stopFlag;
+	// 動きの種類　ALL 記述されている動きを全て同時に動かす　ONE 一つずつ動きを動かす
+	std::string m_moveType;
 	// 自身のタイプ
 	ENEMY_TYPE m_enemyType;
 
@@ -96,5 +116,14 @@ private:
 
 	// 目的地までの距離
 	DirectX::SimpleMath::Vector3 m_lengthVec;
+
+	// 目標の位置
+	DirectX::SimpleMath::Vector3 m_targetPos;
+
+	std::vector<ICommand_Enemy*> m_moveCommands;
+	// 動きのデータが入るコマンド
+	std::shared_ptr<EnemyCommander> m_commander;
+
+
 
 };

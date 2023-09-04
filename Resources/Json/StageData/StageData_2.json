@@ -1,14 +1,14 @@
 {
 	"Conditions_Machine":{
 	  "MACHINE_SPAWN":[
-		  {"TYPE":"Attacker",	"VALUE":1.0},
-		  {"TYPE":"Upper",	"VALUE":1.0}
+		  {"TYPE":"Attacker",	"VALUE":1.0}
+
 		]
 	},
 	
 	"Conditions_Enemy":{
 		  "ENEMY_KNOCKDOWN":[
-		  {"TYPE":"Slime",		"VALUE":3.0}
+		  {"TYPE":"Slime",		"VALUE":1.0}
 		]
 	},
 
@@ -17,12 +17,26 @@
 		 {"TYPE":"Standerd",	"VALUE":20.0}
 		]
 	},
-
+	
 	"ENEMY_SPAWNTIME":{
 		"ENEMYS":[
-			{"TYPE":"Slime",		"AZIMUTH":4.5,	"REMOTENESS":8.0,		"SPAWNTIME":5.0,	"CONDITION":"Explanation"},
-			{"TYPE":"Slime",		"AZIMUTH":5.0,	"REMOTENESS":8.0,		"SPAWNTIME":6.2,	"CONDITION":"Explanation"},
-			{"TYPE":"Slime",		"AZIMUTH":6.0,	"REMOTENESS":8.0,		"SPAWNTIME":7.4,	"CONDITION":"Explanation"}
+			{"TYPE":"Worm",		"AZIMUTH":4.5,	"REMOTENESS":10.0,		"SPAWNTIME":5.0,	"CONDITION":"Explanation"}
 		]
+	}
+	,
+	"MACHINE_DEFAULET":{
+		"MACHINES":[
+			{"TYPE":"Attacker","ELEMENT":"NOMAL","NUMBER":0,"LV":1}
+		]
+	},
+	"RESOURCE_DEFAULET":{
+		"CRYSTAL":500.0,
+		"MP":400.0,
+		"LV":1.0,
+		"ATTACKER":1.0,
+		"UPPER":1.0,
+		"DEFFENCER":1.0,
+		"MINING":1.0,
+		"RECOVERY":1.0
 	}
 }

@@ -3,6 +3,8 @@
 #include "ShareData.h"
 #include <WICTextureLoader.h>
 
+#include "NecromaLib/GameData/CommonStruct.h"
+
 SpriteLoder* SpriteLoder::instance = nullptr;
 
 void SpriteLoder::Loading()
@@ -80,22 +82,6 @@ void SpriteLoder::Loading()
 		m_NumberTexture.ReleaseAndGetAddressOf()
 	);
 
-	// 魔法陣テクスチャ
-	DirectX::CreateWICTextureFromFile(
-		ShareData::GetInstance().GetDevice(),
-		L"Resources/Textures/MajicCircle.png",
-		nullptr,
-		m_MagicCircleTexture[0].ReleaseAndGetAddressOf()
-	);
-
-	// 魔法陣テクスチャ2
-	DirectX::CreateWICTextureFromFile(
-		ShareData::GetInstance().GetDevice(),
-		L"Resources/Textures/MagicCircle_2.png",
-		nullptr,
-		m_MagicCircleTexture[1].ReleaseAndGetAddressOf()
-	);
-
 	// タイトルロゴテクスチャ
 	DirectX::CreateWICTextureFromFile(
 		ShareData::GetInstance().GetDevice(),
@@ -119,6 +105,64 @@ void SpriteLoder::Loading()
 		nullptr,
 		m_uiArrow.ReleaseAndGetAddressOf()
 	);
+
+	{
+		// 魔法陣テクスチャ_None
+		DirectX::CreateWICTextureFromFile(
+			ShareData::GetInstance().GetDevice(),
+			L"Resources/Textures/MagicCircle/MajicCircle.png",
+			nullptr,
+			m_MagicCircleTexture[MACHINE_TYPE::NONE].ReleaseAndGetAddressOf()
+		);
+
+		// 魔法陣テクスチャ_Attacker
+		DirectX::CreateWICTextureFromFile(
+			ShareData::GetInstance().GetDevice(),
+			L"Resources/Textures/MagicCircle/Attacker.png",
+			nullptr,
+			m_MagicCircleTexture[MACHINE_TYPE::ATTACKER].ReleaseAndGetAddressOf()
+		);
+
+		// 魔法陣テクスチャ_Defenser
+		DirectX::CreateWICTextureFromFile(
+			ShareData::GetInstance().GetDevice(),
+			L"Resources/Textures/MagicCircle/Attacker.png",
+			nullptr,
+			m_MagicCircleTexture[MACHINE_TYPE::DEFENSER].ReleaseAndGetAddressOf()
+		);
+
+		// 魔法陣テクスチャ_Upper
+		DirectX::CreateWICTextureFromFile(
+			ShareData::GetInstance().GetDevice(),
+			L"Resources/Textures/MagicCircle/Attacker.png",
+			nullptr,
+			m_MagicCircleTexture[MACHINE_TYPE::UPPER].ReleaseAndGetAddressOf()
+		);
+
+		// 魔法陣テクスチャ_Recovery
+		DirectX::CreateWICTextureFromFile(
+			ShareData::GetInstance().GetDevice(),
+			L"Resources/Textures/MagicCircle/Attacker.png",
+			nullptr,
+			m_MagicCircleTexture[MACHINE_TYPE::RECOVERY].ReleaseAndGetAddressOf()
+		);
+
+		// 魔法陣テクスチャ_Recovery
+		DirectX::CreateWICTextureFromFile(
+			ShareData::GetInstance().GetDevice(),
+			L"Resources/Textures/MagicCircle/Attacker.png",
+			nullptr,
+			m_MagicCircleTexture[MACHINE_TYPE::RECOVERY].ReleaseAndGetAddressOf()
+		);
+
+		// 魔法陣テクスチャ_Mining
+		DirectX::CreateWICTextureFromFile(
+			ShareData::GetInstance().GetDevice(),
+			L"Resources/Textures/MagicCircle/Attacker.png",
+			nullptr,
+			m_MagicCircleTexture[MACHINE_TYPE::MINING].ReleaseAndGetAddressOf()
+		);
+	}
 }
 
 void SpriteLoder::Finalize()
@@ -130,8 +174,10 @@ void SpriteLoder::Finalize()
 	m_ManufacturingTexture.Reset();
 	m_NumberTexture.Reset();
 
-	m_MagicCircleTexture->Reset();
-
+	for (int i = 0; i < MACHINE_TYPE::NUM;i++)
+	{
+		m_MagicCircleTexture[i].Reset();
+	}
 }
 
 SpriteLoder::SpriteLoder()

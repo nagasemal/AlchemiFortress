@@ -19,7 +19,8 @@ enum class GAME_SCENE : int
 	TITLE,
 	PLAY,
 	RESULT,
-	SELECT
+	SELECT,
+	EDIT,
 };
 
 class SceneObj

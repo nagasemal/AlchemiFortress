@@ -43,10 +43,16 @@ void EnemyManager::Initialize()
 	fx->SetDirectory(L"Resources/Models");
 
 	m_enemyModel = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Slime.cmo", *fx);
+
+	// エネミーの数値取得
+	ShareJsonData::GetInstance().LoadingJsonFile_Enemy();
 }
 
 void EnemyManager::Update(DirectX::SimpleMath::Vector3 basePos)
 {
+
+	basePos;
+
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
 
 	DataManager& pDM = *DataManager::GetInstance();
@@ -80,7 +86,7 @@ void EnemyManager::Update(DirectX::SimpleMath::Vector3 basePos)
 	for (std::list<EnemyObject>::iterator it = m_enemyObject->begin(); it != m_enemyObject->end(); it++)
 	{
 		// 子クラスからfalseで消す
-		if ((it)->GotoTarget(basePos))
+		if (it->GetHp() <= 0)
 		{
 			pDM.SetNowEnemyKill(pDM.GetNowEnemyKill() + 1);
 
@@ -88,6 +94,7 @@ void EnemyManager::Update(DirectX::SimpleMath::Vector3 basePos)
 			m_knokDownEnemyType = it->GetEnemyType();
 
 			m_particle_delete->OnShot(it->GetPos(), true);
+			it->Finalize();
 			it = m_enemyObject->erase(it);
 			if (it == m_enemyObject->end()) break;
 		}
@@ -149,6 +156,11 @@ EnemyObject EnemyManager::GetEnemyStatus(ENEMY_TYPE type,int spawnNumber)
 
 	EnemyObject enemy(type,DirectX::SimpleMath::Vector3(remoteness * cosf(direction), 0.0f, remoteness * sinf(direction)),1);
 
+	Enemy_Data enemyData = pSJD.GetEnemyData(pSJD.GetStageData().enemys_Spawn[spawnNumber].type);
+
+	enemy.Initialize();
+	enemy.SetEnemyData(enemyData);
+
 	return enemy;
 }
 
@@ -158,12 +170,8 @@ void EnemyManager::HitAMObejct(AlchemicalMachineObject* alchemicalMachines)
 	//　現存存在するエネミー分回す
 	for (std::list<EnemyObject>::iterator it = m_enemyObject->begin(); it != m_enemyObject->end(); it++)
 	{
-		if (CircleCollider(it->GetCircle(), alchemicalMachines->GetCircle()))
-		{
-			// 反発
-			it->GotoTarget(-alchemicalMachines->GetPos());
-
-		}
+		// 反発
+		it->SetStopFlag(CircleCollider(it->GetCircle(), alchemicalMachines->GetCircle()));
 	}
 
 }

@@ -8,6 +8,7 @@
 #include "Scenes/PlayScene/PlayScene.h"
 #include "Scenes/ResultScene/ResultScene.h"
 #include "Scenes/SelectScene/SelectScene.h"
+#include "Scenes/EditScene/EditScene.h"
 
 // 名前空間の利用
 using namespace DirectX;
@@ -96,6 +97,9 @@ void SceneManager::Update(const DX::StepTimer& timer)
 		//　プレイシーンへ
 		if (pINP.GetKeybordState().IsKeyReleased(Keyboard::P))		m_NextScene = GAME_SCENE::PLAY;
 
+		//　エディットシーンへ
+		if (pINP.GetKeybordState().IsKeyReleased(Keyboard::E))		m_NextScene = GAME_SCENE::EDIT;
+
 		//　リザルトシーン
 		if (pINP.GetKeybordState().IsKeyReleased(Keyboard::R))		m_NextScene = GAME_SCENE::RESULT;
 
@@ -156,6 +160,11 @@ void SceneManager::CreateScene()
 	case GAME_SCENE::PLAY:
 	{
 		m_Scene = new PlayScene();
+		break;
+	}
+	case GAME_SCENE::EDIT:
+	{
+		m_Scene = new EditScene();
 		break;
 	}
 	case GAME_SCENE::RESULT:

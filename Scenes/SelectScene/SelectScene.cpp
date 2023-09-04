@@ -4,10 +4,19 @@
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/ShareJsonData.h"
 
+#include "Scenes/Commons/DrawArrow.h"
+#include "Scenes/Commons/UIKeyControl.h"
+
 #include "Scenes/DataManager.h"
+#include "Scenes/PlayScene/UI/SelectionBox.h"
 
 #define MAX_STAGE 4
 #define MIN_STAGE 1
+
+#define MISSION_POS DirectX::SimpleMath::Vector2{545,720 / 2}
+#define NEXTBOTTOM_POS DirectX::SimpleMath::Vector2{1280.0f / 2.0f,720.0f / 1.15f}
+#define ARROW_POS_L DirectX::SimpleMath::Vector2{200,500}
+#define ARROW_POS_R DirectX::SimpleMath::Vector2{1080,500}
 
 SelectScene::SelectScene():
 	m_selectStageNumber(1),
@@ -32,14 +41,23 @@ void SelectScene::Initialize()
 	m_machineDraw = std::make_unique<DrawMachine>();
 	m_machineDraw->Initialize(m_selectStageNumber);
 
-	m_missionDraw = std::make_unique<MissionRender>(DirectX::SimpleMath::Vector2{200,300 }, DirectX::SimpleMath::Vector2{1,1});
+	m_missionDraw = std::make_unique<MissionRender>(MISSION_POS, DirectX::SimpleMath::Vector2{1,1});
+
+	m_arrowDraw[0] = std::make_unique<DrawArrow>(ARROW_POS_L, DirectX::SimpleMath::Vector2{1,1},0);
+	m_arrowDraw[1] = std::make_unique<DrawArrow>(ARROW_POS_R, DirectX::SimpleMath::Vector2{1,1},2);
+
+	m_nextSceneBox = std::make_unique<SelectionBox>(NEXTBOTTOM_POS, DirectX::SimpleMath::Vector2{5,1});
+
+	m_uiKeyControl = std::make_unique<UIKeyControl>();
+	m_uiKeyControl->AddUI(m_arrowDraw[0].get(), 0, 0);
+	m_uiKeyControl->AddUI(m_arrowDraw[1].get(), 1, 0);
+	m_uiKeyControl->AddUI(m_nextSceneBox.get(), 0, 1);
 
 }
 
 GAME_SCENE SelectScene::Update()
 {
 	ShareData& pSD = ShareData::GetInstance();
-	InputSupport* pINP = &InputSupport::GetInstance();
 
 	m_selectCamera->Update();
 	m_machineDraw->Update();
@@ -49,7 +67,17 @@ GAME_SCENE SelectScene::Update()
 	pSD.GetCamera()->SetTargetPosition(m_selectCamera->GetTargetPosition());
 	pSD.GetCamera()->SetEyePosition(m_selectCamera->GetEyePosition());
  
-	if (pINP->GetKeybordState().IsKeyReleased(DirectX::Keyboard::Q) && m_selectStageNumber < MAX_STAGE)
+	m_arrowDraw[0]->HitMouse();
+	if (m_arrowDraw[0]->ClickMouse() && m_selectStageNumber > 1)
+	{
+		m_selectStageNumber--;
+		m_changeMachine = false;
+		m_selectCamera->AnimationReset();
+	}
+
+
+	m_arrowDraw[1]->HitMouse();
+	if (m_arrowDraw[1]->ClickMouse() && m_selectStageNumber < MAX_STAGE)
 	{
 		m_selectStageNumber++;
 		m_changeMachine = false;
@@ -66,8 +94,13 @@ GAME_SCENE SelectScene::Update()
 		m_changeMachine = true;
 	}
 
-	//　プレイシーンに遷移
-	if (pINP->GetMouseState().leftButton == Mouse::ButtonStateTracker::PRESSED)
+	// Update処理;
+	m_nextSceneBox->HitMouse();
+
+	m_uiKeyControl->Update();
+
+	//　プレイシーンに遷移 (ボタンを押した時)
+	if (m_nextSceneBox->ClickMouse())
 	{
 		DataManager::GetInstance()->SetStageNum(m_selectStageNumber);
 
@@ -98,6 +131,16 @@ void SelectScene::Draw()
 
 void SelectScene::DrawUI()
 {
+	ShareData& pSD = ShareData::GetInstance();
+	auto pSB = pSD.GetSpriteBatch();
+
+	pSB->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
+	m_arrowDraw[0]->Draw();
+	m_arrowDraw[1]->Draw();
+	pSB->End();
+
+	m_nextSceneBox->Draw();
+
 }
 
 void SelectScene::Finalize()

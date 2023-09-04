@@ -21,10 +21,6 @@ class AlchemicalMachineObject : public GameObjct3D
 {
 public:
 
-
-
-public:
-
 	// オブジェクトの現在状況の取得
 	enum STATE_NAME : int
 	{
@@ -112,7 +108,7 @@ public:
 	const bool GetPowerUpFlag()								const { return m_powerUPFlag; }
 
 	// 現在の属性
-	const MACHINE_ELEMENT GetElement()						const { return m_element; }
+	const ELEMENT GetElement()						const { return m_element; }
 
 	// 現在どのライン上に存在しているか
 	const int GetLine()										const { return m_line; }
@@ -126,13 +122,14 @@ public:
 	// 解体で得られるクリスタルの量
 	const int GetDismantlingCrystal();
 
+	void SetLv(int lv)									{ m_lv = lv; }
 	void SetPos(DirectX::SimpleMath::Vector3 pos)		{ m_data.pos = pos; }
 	void SetMagicCircle(Circle circle)					{ m_magicCircle = circle;}
 	void SetActive(bool flag)							{ m_active = flag; }
 	void SetLine(int line)								{ m_line = line; }
 	void SetPowerUpFlag(bool flag)						{ m_powerUPFlag = flag; }
 	void SetSelectModeFlag(bool flag)					{ m_selectModeFlag = flag;}
-	void SetElement(MACHINE_ELEMENT element)			{ m_element = element; }
+	void SetElement(ELEMENT element)			{ m_element = element; }
 	void SetColor(DirectX::SimpleMath::Color color)		{ m_color = color;}
 
 private:
@@ -190,7 +187,7 @@ protected:
 	DirectX::SimpleMath::Color m_color;
 
 	// オブジェクトの属性
-	MACHINE_ELEMENT m_element;
+	ELEMENT m_element;
 
 	// LvUp用の選択ボックス
 	std::unique_ptr<SelectionBox> m_selectLvUpBox;

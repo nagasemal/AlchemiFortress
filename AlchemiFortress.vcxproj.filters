@@ -17,9 +17,6 @@
     <Filter Include="NecromaLib\GameData">
       <UniqueIdentifier>{d450f301-c053-4dae-b800-9e1a0ddae9a4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NecromaLib\Singleton">
-      <UniqueIdentifier>{d4a4b601-55c3-41ba-8510-1d18ef9346a7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="NecromaLib\SceneObjct">
       <UniqueIdentifier>{76d764f7-0348-4f1b-aac2-b537ce6909e3}</UniqueIdentifier>
     </Filter>
@@ -128,6 +125,30 @@
     <Filter Include="Scene\Commons\Mission">
       <UniqueIdentifier>{0beb3f99-df5b-4de0-a0e9-a5dc2661c683}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NecromaLib\DesinPattern">
+      <UniqueIdentifier>{9675ef88-d87a-4ee1-9c7c-3d86e1b6f751}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NecromaLib\DesinPattern\Singleton">
+      <UniqueIdentifier>{d4a4b601-55c3-41ba-8510-1d18ef9346a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NecromaLib\DesinPattern\Command">
+      <UniqueIdentifier>{f5be055f-84e1-4947-8893-fe79099656c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\ResultScene\UI">
+      <UniqueIdentifier>{fba29758-b9ca-4792-8ef4-63d5e4002bda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\EditScene">
+      <UniqueIdentifier>{341033be-c045-4670-8a84-aeb161ffc7fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene\Enemy\EnemyMoveCommand">
+      <UniqueIdentifier>{3e238bef-c636-455c-a750-796f24c29800}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene\Enemy\EnemyMoveCommand\MoveList">
+      <UniqueIdentifier>{ad9e42a3-9e02-4469-b704-c64cb4889a92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene\Tutorial">
+      <UniqueIdentifier>{0abce972-2c45-4b08-b348-56a6a8ab00a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -164,10 +185,10 @@
       <Filter>NecromaLib\SceneObjct</Filter>
     </ClInclude>
     <ClInclude Include="NecromaLib\Singleton\DeltaTime.h">
-      <Filter>NecromaLib\Singleton</Filter>
+      <Filter>NecromaLib\DesinPattern\Singleton</Filter>
     </ClInclude>
     <ClInclude Include="NecromaLib\Singleton\ShareData.h">
-      <Filter>NecromaLib\Singleton</Filter>
+      <Filter>NecromaLib\DesinPattern\Singleton</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\PlayScene\PlayScene.h">
       <Filter>Scene\PlayScene</Filter>
@@ -197,7 +218,7 @@
       <Filter>Scene\PlayScene\Camera</Filter>
     </ClInclude>
     <ClInclude Include="NecromaLib\Singleton\InputSupport.h">
-      <Filter>NecromaLib\Singleton</Filter>
+      <Filter>NecromaLib\DesinPattern\Singleton</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\PlayScene\Mouse\MousePointer.h">
       <Filter>Scene\PlayScene\Mouse</Filter>
@@ -254,7 +275,7 @@
       <Filter>Scene\PlayScene\AlchemicalMachine\Bullet</Filter>
     </ClInclude>
     <ClInclude Include="NecromaLib\Singleton\SpriteLoder.h">
-      <Filter>NecromaLib\Singleton</Filter>
+      <Filter>NecromaLib\DesinPattern\Singleton</Filter>
     </ClInclude>
     <ClInclude Include="NecromaLib\GameData\UserInterfase.h">
       <Filter>NecromaLib\GameData</Filter>
@@ -320,7 +341,7 @@
       <Filter>NecromaLib\GameData</Filter>
     </ClInclude>
     <ClInclude Include="NecromaLib\Singleton\ShareJsonData.h">
-      <Filter>NecromaLib\Singleton</Filter>
+      <Filter>NecromaLib\DesinPattern\Singleton</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\PlayScene\Stage\MissionManager.h">
       <Filter>Scene\PlayScene\Stage</Filter>
@@ -342,6 +363,45 @@
     </ClInclude>
     <ClInclude Include="Scenes\Commons\DrawMachine.h">
       <Filter>Scene\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Commons\SelectionUI.h">
+      <Filter>Scene\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\ResultScene\ResultUIManager.h">
+      <Filter>Scene\ResultScene\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\Command\ICommand_UI.h">
+      <Filter>NecromaLib\DesinPattern\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\Command\Commander_UI.h">
+      <Filter>NecromaLib\DesinPattern\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Commons\UIKeyControl.h">
+      <Filter>Scene\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\EditScene\EditScene.h">
+      <Filter>Scene\EditScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\EditScene\MIssionUIEdit.h">
+      <Filter>Scene\EditScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Enemy\EnemyList\ICommand_Enemy.h">
+      <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Enemy\EnemyList\EnemyCommander.h">
+      <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_StandardMove.h">
+      <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand\MoveList</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_MeanderingMove.h">
+      <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand\MoveList</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Enemy\EnemyCommand_Identifier.h">
+      <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Tutorial\Tutorial.h">
+      <Filter>Scene\PlayScene\Tutorial</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -376,10 +436,10 @@
       <Filter>NecromaLib\SceneObjct</Filter>
     </ClCompile>
     <ClCompile Include="NecromaLib\Singleton\DeltaTime.cpp">
-      <Filter>NecromaLib\Singleton</Filter>
+      <Filter>NecromaLib\DesinPattern\Singleton</Filter>
     </ClCompile>
     <ClCompile Include="NecromaLib\Singleton\ShareData.cpp">
-      <Filter>NecromaLib\Singleton</Filter>
+      <Filter>NecromaLib\DesinPattern\Singleton</Filter>
     </ClCompile>
     <ClCompile Include="Scenes\PlayScene\PlayScene.cpp">
       <Filter>Scene\PlayScene</Filter>
@@ -409,7 +469,7 @@
       <Filter>Scene\PlayScene\Camera</Filter>
     </ClCompile>
     <ClCompile Include="NecromaLib\Singleton\InputSupport.cpp">
-      <Filter>NecromaLib\Singleton</Filter>
+      <Filter>NecromaLib\DesinPattern\Singleton</Filter>
     </ClCompile>
     <ClCompile Include="Scenes\PlayScene\Mouse\MousePointer.cpp">
       <Filter>Scene\PlayScene\Mouse</Filter>
@@ -466,7 +526,7 @@
       <Filter>Scene\PlayScene\AlchemicalMachine\Bullet</Filter>
     </ClCompile>
     <ClCompile Include="NecromaLib\Singleton\SpriteLoder.cpp">
-      <Filter>NecromaLib\Singleton</Filter>
+      <Filter>NecromaLib\DesinPattern\Singleton</Filter>
     </ClCompile>
     <ClCompile Include="NecromaLib\GameData\UserInterfase.cpp">
       <Filter>NecromaLib\GameData</Filter>
@@ -526,7 +586,7 @@
       <Filter>NecromaLib\GameData</Filter>
     </ClCompile>
     <ClCompile Include="NecromaLib\Singleton\ShareJsonData.cpp">
-      <Filter>NecromaLib\Singleton</Filter>
+      <Filter>NecromaLib\DesinPattern\Singleton</Filter>
     </ClCompile>
     <ClCompile Include="Scenes\PlayScene\Stage\MissionManager.cpp">
       <Filter>Scene\PlayScene\Stage</Filter>
@@ -548,6 +608,33 @@
     </ClCompile>
     <ClCompile Include="Scenes\Commons\DrawArrow.cpp">
       <Filter>Scene\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\Commons\SelectionUI.cpp">
+      <Filter>Scene\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\Command\Commander_UI.cpp">
+      <Filter>NecromaLib\DesinPattern\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\ResultScene\ResultUIManager.cpp">
+      <Filter>Scene\ResultScene\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\Commons\UIKeyControl.cpp">
+      <Filter>Scene\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\EditScene\EditScene.cpp">
+      <Filter>Scene\EditScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Enemy\EnemyList\EnemyCommander.cpp">
+      <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_StandardMove.cpp">
+      <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand\MoveList</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_MeanderingMove.cpp">
+      <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand\MoveList</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Enemy\EnemyCommand_Identifier.cpp">
+      <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -619,6 +706,12 @@
     </None>
     <None Include="Resources\Json\StageData\StageData_1.json">
       <Filter>Json\StageData</Filter>
+    </None>
+    <None Include="Resources\Json\EnemyData\EnemyData_None.json">
+      <Filter>Json\EnemyData</Filter>
+    </None>
+    <None Include="Resources\Json\EnemyData\EnemyData_Worm.json">
+      <Filter>Json\EnemyData</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

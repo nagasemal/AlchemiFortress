@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "AlchemicalMachineManager.h"
 #include "NecromaLib/Singleton/ShareData.h"
+#include "NecromaLib/Singleton/ShareJsonData.h"
 #include "NecromaLib/Singleton/InputSupport.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
 
@@ -34,7 +35,7 @@ AlchemicalMachineManager::AlchemicalMachineManager():
 	m_selectNumber(-1),
 	m_prevSelectMachinePos(0,0,0),
 	m_mpPulsTimer(),
-	m_AMnums{0,1,1,1,1,4},
+	m_AMnums{0,0,0,0,0,0},
 	m_saveWheelValue(0),
 	m_scrollValue(),
 	m_rotationStop(),
@@ -78,6 +79,7 @@ void AlchemicalMachineManager::Initialize()
 
 	CreateAMMachine();
 	LvToObjectActives(1);
+	JsonLoadResources();
 
 }
 
@@ -610,4 +612,46 @@ void AlchemicalMachineManager::Dismantling(int index)
 	// ライン情報を引き継ぐ
 	m_AMObject[index]->SetLine(saveLine);
 
+}
+
+void AlchemicalMachineManager::JsonLoadResources()
+{
+	auto pSJD = &ShareJsonData::GetInstance();
+
+	Stage_Resource resource = pSJD->GetStageData().resource;
+
+	m_AMnums[MACHINE_TYPE::ATTACKER]	= resource.attacker;
+	m_AMnums[MACHINE_TYPE::DEFENSER]	= resource.deffencer;
+	m_AMnums[MACHINE_TYPE::UPPER]		= resource.upper;
+	m_AMnums[MACHINE_TYPE::RECOVERY]	= resource.recovery;
+	m_AMnums[MACHINE_TYPE::MINING]		= resource.mining;
+
+	for (int i = 0; i < pSJD->GetStageData().machine.size(); i++)
+	{
+		// 位置情報を取得
+		DirectX::SimpleMath::Vector3 savePos = m_AMObject[i]->GetData().pos;
+
+		// ライン情報を取得
+		int saveLine = m_AMObject[i]->GetLine();
+
+		// 本取得
+		m_AMObject[i] = m_AMFilter->HandOverAMClass(pSJD->GetStageData().machine[i].type);
+
+		// 初期化
+		m_AMObject[i]->Initialize();
+
+		// 属性設定
+		m_AMObject[i]->SetElement(pSJD->GetStageData().machine[i].element);
+		m_AMObject[i]->SetColor(Json::ChangeColor(pSJD->GetStageData().machine[i].element));
+
+		// 属性設定
+		m_AMObject[i]->SetLv(pSJD->GetStageData().machine[i].lv);
+
+		// Noneと対象のオブジェクトを入れ替える
+		m_AMObject[i]->SummonAM(savePos);
+
+		// ライン情報を引き継ぐ
+		m_AMObject[i]->SetLine(saveLine);
+
+	}
 }

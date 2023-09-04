@@ -114,4 +114,7 @@ private:
 	// 現在のステージ数
 	int m_stageNum;
 
+	// ステージをクリアしたフラグ
+	bool m_stageClearFlag;
+
 };

@@ -3,7 +3,7 @@
 #include "NecromaLib/GameData/CommonStruct.h"
 #define MaxLv	5
 
-Bullet_Data RecalculationStatus(MACHINE_ELEMENT element, int lv)
+Bullet_Data RecalculationStatus(ELEMENT element, int lv)
 {
 	//発射間隔以外　元ステータス * lv / MaxLv + 2
 	//発射間隔		(1 + 元ステータス) * MaxLv / lv - 1

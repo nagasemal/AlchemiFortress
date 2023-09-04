@@ -16,6 +16,10 @@ PlayScene::PlayScene()
 	ShareJsonData::GetInstance().LoadingJsonFile_Bullet();
 	ShareJsonData::GetInstance().LoadingJsonFile_Machine();
 	ShareJsonData::GetInstance().LoadingJsonFile_Stage(m_stageNumber);
+
+	//Json::FileLoad_EnemyData("Resources/Json/EnemyData/EnemyData_Slime.json");
+
+	//DataManager::GetInstance()->Initialize();
 }
 
 PlayScene::~PlayScene()
@@ -208,6 +212,7 @@ void PlayScene::EnemyToPlayerBase()
 		{
 			playerBase->Damage(enemyIt->GetPower());
 			enemyIt->HitMachine(hitEnemy);
+			enemyIt->SetStopFlag(hitEnemy);
 		}
 	}
 }

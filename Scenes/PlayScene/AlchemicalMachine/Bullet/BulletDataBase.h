@@ -12,4 +12,4 @@
 #include "NecromaLib/Singleton/ShareJsonData.h"
 
 	// ステータスの再計算
-	Bullet_Data RecalculationStatus(MACHINE_ELEMENT element,int lv);
+	Bullet_Data RecalculationStatus(ELEMENT element,int lv);
