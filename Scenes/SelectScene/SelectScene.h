@@ -11,6 +11,7 @@
 class DrawArrow;
 class SelectionBox;
 class UIKeyControl;
+class Number;
 
 class SelectScene : public SceneObj
 {
@@ -58,6 +59,9 @@ private:
 
 	// 選択ボックスの描画(次のシーンへ遷移)
 	std::unique_ptr<SelectionBox> m_nextSceneBox;
+
+	// ステージ番号描画
+	std::unique_ptr<Number> m_stageNumber;
 
 	bool m_changeMachine;							// マシンが変更されたことを知らせるフラグ
 

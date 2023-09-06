@@ -262,6 +262,7 @@
     <ClInclude Include="Scenes\SelectScene\SelectCamera.h" />
     <ClInclude Include="Scenes\SelectScene\SelectScene.h" />
     <ClInclude Include="Scenes\TitleScene\Camera\TitleCamera.h" />
+    <ClInclude Include="Scenes\TitleScene\TitleLogo\TitleLogo.h" />
     <ClInclude Include="Scenes\TitleScene\TitleScene.h" />
     <ClInclude Include="StepTimer.h" />
   </ItemGroup>
@@ -350,6 +351,7 @@
     <ClCompile Include="Scenes\SelectScene\SelectCamera.cpp" />
     <ClCompile Include="Scenes\SelectScene\SelectScene.cpp" />
     <ClCompile Include="Scenes\TitleScene\Camera\TitleCamera.cpp" />
+    <ClCompile Include="Scenes\TitleScene\TitleLogo\TitleLogo.cpp" />
     <ClCompile Include="Scenes\TitleScene\TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -379,6 +381,7 @@
     <None Include="Resources\Json\MachineData\MachineData_Recovery.json" />
     <None Include="Resources\Json\MachineData\MachineData_Upper.json" />
     <None Include="Resources\Json\StageData\StageData_1.json" />
+    <None Include="Resources\Shader\CutTexture.hlsli" />
     <None Include="Resources\Shader\DisplayMagicCircle.hlsli" />
     <None Include="Resources\Shader\MagicCircle.hlsli" />
     <None Include="Resources\Shader\Shadow.hlsli" />
@@ -386,6 +389,31 @@
     <None Include="Resources\Shader\UI.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Resources\Shader\CutTexture_GS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\CutTexture_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\CutTexture_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
     <FxCompile Include="Resources\Shader\DisplayMagicCircle_GS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>

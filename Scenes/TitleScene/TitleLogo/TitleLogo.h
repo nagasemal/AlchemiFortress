@@ -1,7 +1,7 @@
 #pragma once
 #include "PrimitiveBatch.h"
 
-class DisplayMagicCircle
+class TitleLogo
 {
 public:
 
@@ -28,12 +28,12 @@ public:
 	{
 		DirectX::SimpleMath::Vector4	windowSize;
 		DirectX::SimpleMath::Vector4	color;
-		DirectX::SimpleMath::Matrix		rotationMatrix;
+		DirectX::SimpleMath::Vector4	diffuse;
 	};
 
 public:
-	DisplayMagicCircle();
-	~DisplayMagicCircle();
+	TitleLogo();
+	~TitleLogo();
 
 	void LoadTexture(const wchar_t* path);
 
@@ -42,9 +42,6 @@ public:
 	void Update();
 	void Render();
 
-	// 苦肉の策
-	void SpritebatchRender();
-
 	void SetWindowSize(const int& width, const int& height);
 
 	void SetScale(DirectX::SimpleMath::Vector2 scale);
@@ -52,11 +49,6 @@ public:
 
 	void SetColor(DirectX::SimpleMath::Color color) { m_color = color; }
 	DirectX::SimpleMath::Color GetColor() { return m_color; }
-
-	void SetRotationMatrix(DirectX::SimpleMath::Matrix matrix) { m_rotationMatrix = matrix;}
-
-	// 魔法陣を出現させる
-	void TransparentUpdate(bool spawnFlag);
 
 	static const std::vector<D3D11_INPUT_ELEMENT_DESC> INPUT_LAYOUT;
 
@@ -92,15 +84,9 @@ private:
 	DirectX::SimpleMath::Color m_color;
 	DirectX::SimpleMath::Matrix	m_rotationMatrix;
 
-	// 魔法陣を回す時間計測変数
-	float m_rotateTime;
-
 	// 魔法陣を透明→半透明に出現させる時間計測変数
 	float m_transparentTime;
 	float m_transparentDeltaTime;
-
-	// テスト用
-	std::unique_ptr<DirectX::Model>				m_Sphere;
 
 private:
 

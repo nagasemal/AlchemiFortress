@@ -16,13 +16,13 @@
       {
         "ELEMENT": "Nomal",
         "LV": 1,
-        "NAME": "Attacker",
+        "NAME": "None",
         "NUMBER": 2
       },
       {
         "ELEMENT": "Nomal",
         "LV": 1,
-        "NAME": "None",
+        "NAME": "Attacker",
         "NUMBER": 3
       },
       {

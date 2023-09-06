@@ -4,6 +4,7 @@
 
 #include "Scenes/Commons/DrawMachine.h"
 #include "Scenes/TitleScene/Camera/TitleCamera.h"
+#include "Scenes/TitleScene/TitleLogo/TitleLogo.h"
 
 class MagicCircle;
 
@@ -35,6 +36,7 @@ private:
 
 	std::unique_ptr<DrawMachine>		m_titleCall;
 	std::unique_ptr<TitleCamera>		m_titleCamera;
+	std::unique_ptr<TitleLogo>			m_titleLogo;
 
 	std::unique_ptr<MagicCircle>		m_magicCircle;
 

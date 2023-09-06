@@ -242,7 +242,7 @@ void DisplayMagicCircle::Render()
 
 void DisplayMagicCircle::SpritebatchRender()
 {
-	ShareData& pSD = ShareData::GetInstance();
+	auto& pSD = ShareData::GetInstance();
 	auto pSB = pSD.GetSpriteBatch();
 	auto pDR = pSD.GetDeviceResources();
 

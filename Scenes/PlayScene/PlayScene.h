@@ -14,7 +14,9 @@
 // ミッション
 #include "Scenes/PlayScene/Stage/MissionManager.h"
 
+// UI関連
 #include "Scenes/PlayScene/UI/Gauge.h"
+#include "Scenes/PlayScene/Tutorial/Tutorial.h"
 
 class PlayScene : public SceneObj
 {
@@ -58,10 +60,12 @@ private:
 
 	std::unique_ptr<MissionManager>				m_missionManager;
 
-	//// テスト用
+	// テスト用
 	std::unique_ptr<Gauge>						m_gauge;
 
 	std::unique_ptr<DirectX::Model>				m_skySphere;
+
+	std::unique_ptr<Tutorial>					m_tutorial;
 
 	// ステージ番号
 	int m_stageNumber;

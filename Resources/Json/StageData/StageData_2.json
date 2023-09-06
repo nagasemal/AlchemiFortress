@@ -1,14 +1,15 @@
 {
 	"Conditions_Machine":{
 	  "MACHINE_SPAWN":[
-		  {"TYPE":"Attacker",	"VALUE":1.0}
+		  {"TYPE":"Attacker",	"VALUE":2.0},
+		  {"TYPE":"Defenser",	"VALUE":1.0}
 
 		]
 	},
 	
 	"Conditions_Enemy":{
 		  "ENEMY_KNOCKDOWN":[
-		  {"TYPE":"Slime",		"VALUE":1.0}
+		  {"TYPE":"Worm",		"VALUE":3.0}
 		]
 	},
 
@@ -20,7 +21,9 @@
 	
 	"ENEMY_SPAWNTIME":{
 		"ENEMYS":[
-			{"TYPE":"Worm",		"AZIMUTH":4.5,	"REMOTENESS":10.0,		"SPAWNTIME":5.0,	"CONDITION":"Explanation"}
+			{"TYPE":"Worm",		"AZIMUTH":4.5,	"REMOTENESS":10.0,		"SPAWNTIME":5.0,	"CONDITION":"Explanation"},
+			{"TYPE":"Worm",		"AZIMUTH":4.6,	"REMOTENESS":10.0,		"SPAWNTIME":5.2,	"CONDITION":"Explanation"},
+			{"TYPE":"Worm",		"AZIMUTH":4.7,	"REMOTENESS":10.0,		"SPAWNTIME":5.4,	"CONDITION":"Explanation"}
 		]
 	}
 	,

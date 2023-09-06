@@ -74,7 +74,6 @@ private:
 	DirectX::SimpleMath::Color m_color;
 	float m_value;	// –¾ˆÃ
 
-
 	// •\Ž¦ˆÊ’u
 	ANCHOR m_anchor;
 
@@ -89,9 +88,16 @@ public:
 	~UserInterface();
 
 	void LoadTexture(const wchar_t* path);
+	void LoadTexture(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture);
 
 	void Create(DX::DeviceResources* pDR
 		, const wchar_t* path
+		, DirectX::SimpleMath::Vector2 position
+		, DirectX::SimpleMath::Vector2 scale
+		, ANCHOR anchor);
+
+	void Create(DX::DeviceResources* pDR
+		, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture
 		, DirectX::SimpleMath::Vector2 position
 		, DirectX::SimpleMath::Vector2 scale
 		, ANCHOR anchor);

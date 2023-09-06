@@ -149,6 +149,12 @@
     <Filter Include="Scene\PlayScene\Tutorial">
       <UniqueIdentifier>{0abce972-2c45-4b08-b348-56a6a8ab00a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\CutTexture">
+      <UniqueIdentifier>{043de53b-a1ba-4802-9440-3bd09e9201d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\TitleScene\TitleLogo">
+      <UniqueIdentifier>{84dd3a9a-7bbf-4b8e-964c-13e3a0605ae0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -403,6 +409,9 @@
     <ClInclude Include="Scenes\PlayScene\Tutorial\Tutorial.h">
       <Filter>Scene\PlayScene\Tutorial</Filter>
     </ClInclude>
+    <ClInclude Include="Scenes\TitleScene\TitleLogo\TitleLogo.h">
+      <Filter>Scene\TitleScene\TitleLogo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -639,6 +648,9 @@
     <ClCompile Include="Scenes\PlayScene\Tutorial\Tutorial.cpp">
       <Filter>Scene\PlayScene\Tutorial</Filter>
     </ClCompile>
+    <ClCompile Include="Scenes\TitleScene\TitleLogo\TitleLogo.cpp">
+      <Filter>Scene\TitleScene\TitleLogo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -716,6 +728,9 @@
     <None Include="Resources\Json\EnemyData\EnemyData_Worm.json">
       <Filter>Json\EnemyData</Filter>
     </None>
+    <None Include="Resources\Shader\CutTexture.hlsli">
+      <Filter>Shader\CutTexture</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Transition_GS.hlsl">
@@ -762,6 +777,15 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\DisplayMagicCircle_VS.hlsl">
       <Filter>Shader\DisplayMagicCircle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\CutTexture_GS.hlsl">
+      <Filter>Shader\CutTexture</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\CutTexture_PS.hlsl">
+      <Filter>Shader\CutTexture</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\CutTexture_VS.hlsl">
+      <Filter>Shader\CutTexture</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

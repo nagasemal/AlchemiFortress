@@ -31,6 +31,21 @@ public:
 
 	};
 
+	enum INSTRUCTION_TYPE : int
+	{
+		NONE = 0,		// 指定なし
+		ATTACKER = 1,	// 攻撃型
+		DEFENSER = 2,	// 防御型
+		UPPER = 3,		// 範囲内強化型
+		RECOVERY = 4,	// 魔力回収型
+		MINING = 5,		// 採掘型
+
+		OPERATION = 6,	// 操作方法
+
+
+		NUM
+	};
+
 public:
 	~SpriteLoder() = default;
 
@@ -107,6 +122,14 @@ public:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetRule() { return m_rule; }
 	const wchar_t* GetRulePath() { return L"Resources/Textures/MagicRule.png"; }
 
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetMagicRule() { return m_magicrule; }
+
+	//// 説明用画像を渡す
+	//Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetExplanationTexture(int type) { return m_explanationTexture[type]; }
+
+	// 画像を読み込む
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> LoadingPngFile(const wchar_t* filename, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>& spriteResource);
+
 private:
 	SpriteLoder();
 	static SpriteLoder* instance;
@@ -141,6 +164,9 @@ private:
 	// 魔法陣のテクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_MagicCircleTexture[6];
 
+	//// 説明用テクスチャ
+	//Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_explanationTexture[INSTRUCTION_TYPE::NUM];
+
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_titleLogo;
 
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_uiIcons;
@@ -149,5 +175,7 @@ private:
 
 	// ルール画像
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_rule;
+
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_magicrule;
 
 };

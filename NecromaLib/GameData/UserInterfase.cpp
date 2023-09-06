@@ -59,6 +59,20 @@ void UserInterface::LoadTexture(const wchar_t* path)
 
 }
 
+void UserInterface::LoadTexture(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
+{
+
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> tex;
+	DX::ThrowIfFailed(m_res.As(&tex));
+
+	D3D11_TEXTURE2D_DESC desc;
+	tex->GetDesc(&desc);
+
+	m_textureWidth = desc.Width;
+	m_textureHeight = desc.Height;
+
+}
+
 // 生成関数
 void UserInterface::Create(DX::DeviceResources* pDR
 	, const wchar_t* path
@@ -83,6 +97,26 @@ void UserInterface::Create(DX::DeviceResources* pDR
 
 	m_states = std::make_unique<CommonStates>(device);
 
+}
+
+void UserInterface::Create(DX::DeviceResources* pDR, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture, DirectX::SimpleMath::Vector2 position, DirectX::SimpleMath::Vector2 scale, ANCHOR anchor)
+{
+	m_pDR = pDR;
+	auto device = pDR->GetD3DDevice();
+	m_position = position;
+	m_baseScale = m_scale = scale;
+	m_anchor = anchor;
+
+	//シェーダーの作成
+	CreateShader();
+
+	//画像の読み込み
+	LoadTexture(texture);
+
+	// プリミティブバッチの作成
+	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColorTexture>>(pDR->GetD3DDeviceContext());
+
+	m_states = std::make_unique<CommonStates>(device);
 }
 
 void UserInterface::SetScale(DirectX::SimpleMath::Vector2 scale)

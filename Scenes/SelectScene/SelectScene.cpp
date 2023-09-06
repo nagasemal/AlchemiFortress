@@ -9,12 +9,14 @@
 
 #include "Scenes/DataManager.h"
 #include "Scenes/PlayScene/UI/SelectionBox.h"
+#include "Scenes/PlayScene/UI/Number.h"
 
-#define MAX_STAGE 4
+#define MAX_STAGE 10
 #define MIN_STAGE 1
 
 #define MISSION_POS DirectX::SimpleMath::Vector2{545,720 / 2}
 #define NEXTBOTTOM_POS DirectX::SimpleMath::Vector2{1280.0f / 2.0f,720.0f / 1.15f}
+#define NUMBER_POS DirectX::SimpleMath::Vector2{1280.0f / 2.0f,100}
 #define ARROW_POS_L DirectX::SimpleMath::Vector2{200,500}
 #define ARROW_POS_R DirectX::SimpleMath::Vector2{1080,500}
 
@@ -52,6 +54,8 @@ void SelectScene::Initialize()
 	m_uiKeyControl->AddUI(m_arrowDraw[0].get(), 0, 0);
 	m_uiKeyControl->AddUI(m_arrowDraw[1].get(), 1, 0);
 	m_uiKeyControl->AddUI(m_nextSceneBox.get(), 0, 1);
+
+	m_stageNumber = std::make_unique<Number>(NUMBER_POS, DirectX::SimpleMath::Vector2{ 2.0f,2.0f});
 
 }
 
@@ -91,6 +95,7 @@ GAME_SCENE SelectScene::Update()
 		ShareJsonData::GetInstance().LoadingJsonFile_Stage(m_selectStageNumber);
 
 		m_machineDraw->Initialize(m_selectStageNumber);
+		m_stageNumber->SetNumber(m_selectStageNumber);
 		m_changeMachine = true;
 	}
 
@@ -124,7 +129,6 @@ void SelectScene::Draw()
 
 	m_machineDraw->Render();
 	m_missionDraw->Render();
-
 	pSB->End();
 
 }
@@ -135,11 +139,12 @@ void SelectScene::DrawUI()
 	auto pSB = pSD.GetSpriteBatch();
 
 	pSB->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
-	m_arrowDraw[0]->Draw();
-	m_arrowDraw[1]->Draw();
+	/*if (m_selectStageNumber > MIN_STAGE)*/ m_arrowDraw[0]->Draw();
+	/*if (m_selectStageNumber < MAX_STAGE)*/ m_arrowDraw[1]->Draw();
 	pSB->End();
 
 	m_nextSceneBox->Draw();
+	m_stageNumber->Render();
 
 }
 

@@ -499,7 +499,7 @@ void AlchemicalMachineManager::MovingMachine(int number)
 	// 0,0,0‚ð’†S‚É‰ñ“]ˆÚ“®
 	DirectX::SimpleMath::Matrix matrix = DirectX::SimpleMath::Matrix::Identity;
 
-	matrix *= DirectX::SimpleMath::Matrix::CreateRotationY(XMConvertToRadians(0.1f)) * deltaTime;
+	matrix *= DirectX::SimpleMath::Matrix::CreateRotationY(XMConvertToRadians(10.0f * deltaTime));
 
 	// ‰ñ“]Œã‚ÌÀ•W‚ð‘ã“ü
 	m_AMObject[number]->SetPos(DirectX::SimpleMath::Vector3::Transform(m_AMObject[number]->GetPos(), matrix));

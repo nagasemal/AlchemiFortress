@@ -4,7 +4,8 @@
 DeltaTime* DeltaTime::instance = nullptr;
 
 DeltaTime::DeltaTime():
-	m_deltaTime(0)
+	m_deltaTime(0),
+	m_stopTimeFlag(false)
 {
 
 }

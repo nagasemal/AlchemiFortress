@@ -9,7 +9,7 @@
 
 #include "NecromaLib/Singleton/ShareJsonData.h"
 
-#define COLOR DirectX::SimpleMath::Color(0.2f, 0.2f, 1.0f, 0.95f)
+#define COLOR DirectX::SimpleMath::Color(1.0f, 1.0f, 1.0f, 0.55f)
 
 TitleScene::TitleScene()
 {
@@ -33,7 +33,6 @@ void TitleScene::Initialize()
 	m_magicCircle = std::make_unique<MagicCircle>();
 	m_magicCircle->Initialize();
 
-
 	ShareData& pSD = ShareData::GetInstance();
 	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
 	fx->SetDirectory(L"Resources/Models");
@@ -54,7 +53,13 @@ void TitleScene::Initialize()
 	int width = device->GetOutputSize().right;
 	int height = device->GetOutputSize().bottom;
 
-	width; height;
+	SpriteLoder& pSL = SpriteLoder::GetInstance();
+
+	m_titleLogo = std::make_unique<TitleLogo>();
+	m_titleLogo->Create(pSL.GetTitleLogoPath());
+	m_titleLogo->SetWindowSize(width, height);
+	m_titleLogo->SetColor(DirectX::SimpleMath::Color(0.2f, 0.2f, 0.65f, 1.0f));
+	m_titleLogo->SetPosition(DirectX::SimpleMath::Vector2(width / 2, height / 2.6f));
 
 }
 
@@ -106,7 +111,7 @@ void TitleScene::DrawUI()
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
 	// 画像のサイズ
-	RECT rect_title = { 0, 0, 676, 52 };
+	RECT rect_title = { 0, 0, 1000, 580 };
 	RECT rect_circle = { 0, 0, 1280, 1280 };
 
 	DirectX::SimpleMath::Vector2 box_Pos = {(float) width / 2.0f,(float)height / 2.0f};
@@ -118,19 +123,21 @@ void TitleScene::DrawUI()
 			  COLOR,
 			  m_magicCircle->GetAnimationTime(),
 			  DirectX::XMFLOAT2(1280 / 2, 1280 / 2),
-			  1.0f);
+			  0.5f);
 
-	// タイトル描画
-	pSB->Draw(pSL.GetTitleLogo().Get(),
-			  box_Pos,
-			  &rect_title,
-			  COLOR,
-			  0.0f,
-			  DirectX::XMFLOAT2(676 / 2, 52 / 2),
-			  1.0f);
+	//// タイトル描画
+	//pSB->Draw(pSL.GetTitleLogo().Get(),
+	//		  box_Pos,
+	//		  &rect_title,
+	//		  DirectX::SimpleMath::Color(1.0f,1.0f,1.0f,1.0f),
+	//		  0.0f,
+	//		  DirectX::XMFLOAT2(1000 / 2, 580 / 2),
+	//		  1.0f);
 
 
 	pSB->End();
+
+	m_titleLogo->Render();
 
 }
 

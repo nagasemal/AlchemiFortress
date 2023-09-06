@@ -50,6 +50,9 @@ void PlayScene::Initialize()
 	m_missionManager = std::make_unique<MissionManager>();
 	m_missionManager->Initialize();
 
+	m_tutorial = std::make_unique<Tutorial>();
+	m_tutorial->Initialize();
+
 	ShareData& pSD = ShareData::GetInstance();
 	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
 	fx->SetDirectory(L"Resources/Models");
@@ -70,6 +73,11 @@ void PlayScene::Initialize()
 GAME_SCENE PlayScene::Update()
 {
 	ShareData& pSD = ShareData::GetInstance();
+
+	m_tutorial->Update();
+
+	// チュートリアル中ならば以下の処理を通さない
+	if (m_tutorial->GetTutorialFlag()) return GAME_SCENE();
 
 	m_moveCamera->Update(!m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven(), true);
 
@@ -155,10 +163,11 @@ void PlayScene::Draw()
 
 void PlayScene::DrawUI()
 {
+	m_tutorial->Render();
+
 	m_AM_Manager		->DrawUI();
 	m_gauge				->Render();
 	m_missionManager	->Render();
-
 }
 
 void PlayScene::Finalize()

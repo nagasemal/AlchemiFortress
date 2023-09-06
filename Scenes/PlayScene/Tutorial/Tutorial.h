@@ -12,6 +12,7 @@
 
 class SelectionBox;
 class DrawArrow;
+class UserInterface;
 
 class Tutorial
 {
@@ -24,7 +25,24 @@ public:
 	void Render();
 	void Finalize();
 
+	void CreateInterfase();
+	
+	bool GetTutorialFlag() { return m_tutorialFlag; }
+
 private:
 
+	static const std::vector<const wchar_t*> FILENAME;
+
+	std::unique_ptr<DrawArrow> m_arrowR,m_arrowL;
+	std::unique_ptr<SelectionBox> m_cancelButton;
+	std::unique_ptr<SelectionBox> m_doubleSpeedButton; // ”{‘¬ƒ{ƒ^ƒ“
+
+	std::unique_ptr<UserInterface> m_blackFilm;
+	std::unique_ptr<UserInterface> m_backFlame;
+	std::unique_ptr<UserInterface> m_textTexture;
+
+	bool m_tutorialFlag;
+	int m_selectNumber;
+	int m_doubleSpeedNum; // ”{‘¬”{—¦
 
 };

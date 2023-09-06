@@ -21,13 +21,17 @@ public:
 
 	static DeltaTime& GetInstance() { return *instance; }
 
-	float GetDeltaTime() { return m_deltaTime; }
+	float GetDeltaTime() { return m_deltaTime * !m_stopTimeFlag; }
 	void SetDeltaTime(float time) { m_deltaTime = time; }
+
+	void SetStopFlag(bool flag) { m_stopTimeFlag = flag; }
 
 private:
 	DeltaTime();
 	static DeltaTime* instance;
 
 	float m_deltaTime;
+
+	bool m_stopTimeFlag;
 
 };
