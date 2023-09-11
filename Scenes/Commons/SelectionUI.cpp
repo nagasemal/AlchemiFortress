@@ -11,7 +11,8 @@ SelectionUI::SelectionUI() :
 	m_hitMouseFlag(),
 	m_luminousFlag(),
 	m_keySelectFlag(),
-	m_activeFlag(true)
+	m_activeFlag(true),
+	m_rect{0,0,64,64}
 {
 }
 
@@ -23,10 +24,10 @@ void SelectionUI::Initialize()
 {
 }
 
-void SelectionUI::Update()
-{
-	m_keySelectFlag = false;
-}
+//void SelectionUI::Update()
+//{
+//
+//}
 
 void SelectionUI::Finalize()
 {
@@ -38,7 +39,7 @@ bool SelectionUI::HitMouse()
 	if (!m_activeFlag)return false;
 
 	InputSupport& pIS = InputSupport::GetInstance();
-	return m_hitMouseFlag = HitObject_RageSet(pIS.GetMousePosScreen(), 64, 64, m_data.rage);
+	return m_hitMouseFlag = HitObject_RageSet(pIS.GetMousePosScreen(), static_cast<float>(m_rect.right), static_cast<float>(m_rect.bottom), m_data.rage);
 }
 
 bool SelectionUI::ClickMouse()

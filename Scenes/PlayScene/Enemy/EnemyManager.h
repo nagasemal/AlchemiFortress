@@ -20,7 +20,7 @@ public:
 	~EnemyManager();
 
 	void Initialize();
-	void Update(DirectX::SimpleMath::Vector3 basePos);
+	void Update(SimpleMath::Vector3 basePos);
 	void Render();
 	void Finalize();
 

@@ -3,28 +3,28 @@
 
 
 //AABB当たり判定集
-int AABB_XZ(DirectX::SimpleMath::Vector3 box1APos, DirectX::SimpleMath::Vector3 box1BPos, DirectX::SimpleMath::Vector3 box2APos, DirectX::SimpleMath::Vector3 box2BPos)
+int AABB_XZ(SimpleMath::Vector3 box1APos, SimpleMath::Vector3 box1BPos, SimpleMath::Vector3 box2APos, SimpleMath::Vector3 box2BPos)
 {
 	int ret = 0;
 	//当たっているか
 	if (box1APos.x <= box2BPos.x && box1BPos.x >= box2APos.x && box1APos.z <= box2BPos.z && box1BPos.z >= box2APos.z)
 	{
 		//幅と高さの和
-		DirectX::SimpleMath::Vector3 maxLength;
+		SimpleMath::Vector3 maxLength;
 		//(box1の幅) + (box2の幅)
 		maxLength.x = (box1BPos.x - box1APos.x) + (box2BPos.x - box2APos.x);
 		maxLength.z = (box1BPos.z - box1APos.z) + (box2BPos.z - box2APos.z);
 
 		//box1とbox2の中心
-		DirectX::SimpleMath::Vector3 box1Center;	//box1の中心
-		DirectX::SimpleMath::Vector3 box2Center;	//box2の中心
+		SimpleMath::Vector3 box1Center;	//box1の中心
+		SimpleMath::Vector3 box2Center;	//box2の中心
 		box1Center.x = (box1APos.x + box1BPos.x) / 2.0f;
 		box1Center.z = (box1APos.z + box1BPos.z) / 2.0f;
 		box2Center.x = (box2APos.x + box2BPos.x) / 2.0f;
 		box2Center.z = (box2APos.z + box2BPos.z) / 2.0f;
 
 		//中心の差　box2 - box1
-		DirectX::SimpleMath::Vector3 length;
+		SimpleMath::Vector3 length;
 		length.x = (box2Center.x - box1Center.x) / maxLength.x;
 		length.z = (box2Center.z - box1Center.z) / maxLength.z;
 
@@ -55,28 +55,28 @@ int AABB_XZ(DirectX::SimpleMath::Vector3 box1APos, DirectX::SimpleMath::Vector3 
 	return ret;
 }
 
-int AABB_XY(DirectX::SimpleMath::Vector3 box1APos, DirectX::SimpleMath::Vector3 box1BPos, DirectX::SimpleMath::Vector3 box2APos, DirectX::SimpleMath::Vector3 box2BPos)
+int AABB_XY(SimpleMath::Vector3 box1APos, SimpleMath::Vector3 box1BPos, SimpleMath::Vector3 box2APos, SimpleMath::Vector3 box2BPos)
 {
 	int ret = 0;
 	//当たっているか
 	if (box1APos.x <= box2BPos.x && box1BPos.x >= box2APos.x && box1APos.y <= box2BPos.y && box1BPos.y >= box2APos.y)
 	{
 		//幅と高さの和
-		DirectX::SimpleMath::Vector3 maxLength;
+		SimpleMath::Vector3 maxLength;
 		//(box1の幅) + (box2の幅)
 		maxLength.x = (box1BPos.x - box1APos.x) + (box2BPos.x - box2APos.x);
 		maxLength.z = (box1BPos.y - box1APos.y) + (box2BPos.z - box2APos.y);
 
 		//box1とbox2の中心
-		DirectX::SimpleMath::Vector3 box1Center;	//box1の中心
-		DirectX::SimpleMath::Vector3 box2Center;	//box2の中心
+		SimpleMath::Vector3 box1Center;	//box1の中心
+		SimpleMath::Vector3 box2Center;	//box2の中心
 		box1Center.x = (box1APos.x + box1BPos.x) / 2.0f;
 		box1Center.z = (box1APos.y + box1BPos.y) / 2.0f;
 		box2Center.x = (box2APos.x + box2BPos.x) / 2.0f;
 		box2Center.z = (box2APos.y + box2BPos.z) / 2.0f;
 
 		//中心の差　box2 - box1
-		DirectX::SimpleMath::Vector3 length;
+		SimpleMath::Vector3 length;
 		length.x = (box2Center.x - box1Center.x) / maxLength.x;
 		length.z = (box2Center.z - box1Center.z) / maxLength.z;
 
@@ -107,7 +107,7 @@ int AABB_XY(DirectX::SimpleMath::Vector3 box1APos, DirectX::SimpleMath::Vector3 
 	return ret;
 }
 
-int AABB_3D(DirectX::SimpleMath::Vector3 box1APos, DirectX::SimpleMath::Vector3 box1BPos, DirectX::SimpleMath::Vector3 box2APos, DirectX::SimpleMath::Vector3 box2BPos)
+int AABB_3D(SimpleMath::Vector3 box1APos, SimpleMath::Vector3 box1BPos, SimpleMath::Vector3 box2APos, SimpleMath::Vector3 box2BPos)
 {
 	int ret = 0;
 	//当たっているか
@@ -116,15 +116,15 @@ int AABB_3D(DirectX::SimpleMath::Vector3 box1APos, DirectX::SimpleMath::Vector3 
 		&& box1APos.y <= box2BPos.y && box1BPos.y >= box2APos.y)
 	{
 		//幅と高さの和
-		DirectX::SimpleMath::Vector3 maxLength;
+		SimpleMath::Vector3 maxLength;
 		//(box1の幅) + (box2の幅)
 		maxLength.x = (box1BPos.x - box1APos.x) + (box2BPos.x - box2APos.x);
 		maxLength.y = (box1BPos.y - box1APos.y) + (box2BPos.y - box2APos.y);
 		maxLength.z = (box1BPos.z - box1APos.z) + (box2BPos.z - box2APos.z);
 
 		//box1とbox2の中心
-		DirectX::SimpleMath::Vector3 box1Center;	//box1の中心
-		DirectX::SimpleMath::Vector3 box2Center;	//box2の中心
+		SimpleMath::Vector3 box1Center;	//box1の中心
+		SimpleMath::Vector3 box2Center;	//box2の中心
 		box1Center.x = (box1APos.x + box1BPos.x) / 2.0f;
 		box1Center.y = (box1APos.y + box1BPos.y) / 2.0f;
 		box1Center.z = (box1APos.z + box1BPos.z) / 2.0f;
@@ -134,7 +134,7 @@ int AABB_3D(DirectX::SimpleMath::Vector3 box1APos, DirectX::SimpleMath::Vector3 
 		box2Center.z = (box2APos.z + box2BPos.z) / 2.0f;
 
 		//中心の差　box2 - box1
-		DirectX::SimpleMath::Vector3 length;
+		SimpleMath::Vector3 length;
 		length.x = (box2Center.x - box1Center.x) / maxLength.x;
 		length.y = (box2Center.y - box1Center.y) / maxLength.y;
 		length.z = (box2Center.z - box1Center.z) / maxLength.z;
@@ -166,7 +166,7 @@ int AABB_3D(DirectX::SimpleMath::Vector3 box1APos, DirectX::SimpleMath::Vector3 
 	return ret;
 }
 
-bool PointerToBox(DirectX::SimpleMath::Vector2 screenPos, DirectX::SimpleMath::Vector2 box1, DirectX::SimpleMath::Vector2 box2)
+bool PointerToBox(SimpleMath::Vector2 screenPos, SimpleMath::Vector2 box1, SimpleMath::Vector2 box2)
 {
 
 	if (box1.x < screenPos.x && box1.y < screenPos.y && box2.x > screenPos.x && box2.y > screenPos.y) return true;
@@ -178,7 +178,7 @@ bool PointerToBox(DirectX::SimpleMath::Vector2 screenPos, DirectX::SimpleMath::V
 bool CircleCollider(Circle circle1, Circle circle2)
 {
 	//中心点の差
-	DirectX::SimpleMath::Vector3 lengthVec = circle1.p - circle2.p;
+	SimpleMath::Vector3 lengthVec = circle1.p - circle2.p;
 	float centerDifference = sqrtf(lengthVec.x * lengthVec.x + lengthVec.y * lengthVec.y + lengthVec.z * lengthVec.z);
 
 	//半径の和
@@ -190,7 +190,7 @@ bool CircleCollider(Circle circle1, Circle circle2)
 	return false;
 }
 
-bool PointerToCircle(Circle circle, DirectX::SimpleMath::Vector3 point)
+bool PointerToCircle(Circle circle, SimpleMath::Vector3 point)
 {
 	Circle pointCircle(point, 0.0f);
 
@@ -201,14 +201,14 @@ bool PointerToCircle(Circle circle, DirectX::SimpleMath::Vector3 point)
 bool OBBToOBB(OBB obb1, OBB obb2)
 {
 
-	DirectX::SimpleMath::Vector3 NAe1 = obb1.inc[0], Ae1 = NAe1 * obb1.length[0];
-	DirectX::SimpleMath::Vector3 NAe2 = obb1.inc[1], Ae2 = NAe2 * obb1.length[1];
-	DirectX::SimpleMath::Vector3 NAe3 = obb1.inc[2], Ae3 = NAe3 * obb1.length[2];
-	DirectX::SimpleMath::Vector3 NBe1 = obb2.inc[0], Be1 = NBe1 * obb2.length[0];
-	DirectX::SimpleMath::Vector3 NBe2 = obb2.inc[1], Be2 = NBe2 * obb2.length[1];
-	DirectX::SimpleMath::Vector3 NBe3 = obb2.inc[2], Be3 = NBe3 * obb2.length[2];
+	SimpleMath::Vector3 NAe1 = obb1.inc[0], Ae1 = NAe1 * obb1.length[0];
+	SimpleMath::Vector3 NAe2 = obb1.inc[1], Ae2 = NAe2 * obb1.length[1];
+	SimpleMath::Vector3 NAe3 = obb1.inc[2], Ae3 = NAe3 * obb1.length[2];
+	SimpleMath::Vector3 NBe1 = obb2.inc[0], Be1 = NBe1 * obb2.length[0];
+	SimpleMath::Vector3 NBe2 = obb2.inc[1], Be2 = NBe2 * obb2.length[1];
+	SimpleMath::Vector3 NBe3 = obb2.inc[2], Be3 = NBe3 * obb2.length[2];
 
-	DirectX::SimpleMath::Vector3 Interval = obb1.pos - obb2.pos;
+	SimpleMath::Vector3 Interval = obb1.pos - obb2.pos;
 
 
 	//=[分離軸]=/
@@ -255,7 +255,7 @@ bool OBBToOBB(OBB obb1, OBB obb2)
 		return false;
 
 	// 分離軸 : C11
-	DirectX::SimpleMath::Vector3 Cross;
+	SimpleMath::Vector3 Cross;
 	Cross = Cross3D(NAe1, NBe1);
 	rA = LenSegOnSeparateAxis(Cross, Ae2, Ae3);
 	rB = LenSegOnSeparateAxis(Cross, Be2, Be3);
@@ -338,7 +338,7 @@ bool OBBToPlane(OBB obb, Plane plane,float* len)
 
 	for (int i = 0; i < 3; i++)
 	{
-		DirectX::SimpleMath::Vector3 direct		= obb.inc[i];
+		SimpleMath::Vector3 direct		= obb.inc[i];
 		r += fabs(Dot3D((direct * obb.length[i]), plane.m_local));
 	}
 
@@ -358,14 +358,14 @@ bool OBBToPlane(OBB obb, Plane plane,float* len)
 }
 
 // OBB系で用いた処理達
-float Dot3D(DirectX::SimpleMath::Vector3 a, DirectX::SimpleMath::Vector3 b)
+float Dot3D(SimpleMath::Vector3 a, SimpleMath::Vector3 b)
 {
 		return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-DirectX::SimpleMath::Vector3 Cross3D(DirectX::SimpleMath::Vector3 a, DirectX::SimpleMath::Vector3 b)
+SimpleMath::Vector3 Cross3D(SimpleMath::Vector3 a, SimpleMath::Vector3 b)
 {
-		DirectX::SimpleMath::Vector3 closs = DirectX::SimpleMath::Vector3::Zero;
+		SimpleMath::Vector3 closs = SimpleMath::Vector3::Zero;
 
 		closs.x = (a.y * b.z - a.z * b.y);
 		closs.y = (a.z * b.x - a.x * b.z);
@@ -374,7 +374,7 @@ DirectX::SimpleMath::Vector3 Cross3D(DirectX::SimpleMath::Vector3 a, DirectX::Si
 		return closs;
 }
 
-float LenSegOnSeparateAxis(DirectX::SimpleMath::Vector3 Sep, DirectX::SimpleMath::Vector3 e1, DirectX::SimpleMath::Vector3 e2, DirectX::SimpleMath::Vector3* e3)
+float LenSegOnSeparateAxis(SimpleMath::Vector3 Sep, SimpleMath::Vector3 e1, SimpleMath::Vector3 e2, SimpleMath::Vector3* e3)
 {
 		// 3つの内積の絶対値の和で投影線分長を計算
 		// 分離軸Sepは標準化されていること

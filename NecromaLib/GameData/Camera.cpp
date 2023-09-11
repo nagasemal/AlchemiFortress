@@ -14,7 +14,7 @@ using namespace DirectX;
 const float Camera::DEFAULT_CAMERA_DISTANCE = 5.0f;
 
 Camera::Camera()
-	: mView(DirectX::SimpleMath::Matrix::Identity)
+	: mView(SimpleMath::Matrix::Identity)
 	, mEye(0.0f, 15.0f, 1.0f)
 	, mTarget(0.0f, 0.0f, 0.0f)
 	, mUp(0.0f, 1.0f, 0.0f)
@@ -31,15 +31,15 @@ Camera::~Camera()
 void Camera::CameraReset()
 {
 
-	mEye = DirectX::SimpleMath::Vector3(0.0f, 15.0f, 1.0f);
-	mTarget = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
-	mUp = DirectX::SimpleMath::Vector3(0.0f, 1.0f, 0.0f);
+	mEye = SimpleMath::Vector3(0.0f, 15.0f, 1.0f);
+	mTarget = SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
+	mUp = SimpleMath::Vector3(0.0f, 1.0f, 0.0f);
 
 }
 
 void Camera::CalculateViewMatrix()
 {
-	mView = DirectX::SimpleMath::Matrix::CreateLookAt(mEye, mTarget, mUp);
+	mView = SimpleMath::Matrix::CreateLookAt(mEye, mTarget, mUp);
 }
 
 

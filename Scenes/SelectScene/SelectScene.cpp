@@ -14,11 +14,11 @@
 #define MAX_STAGE 10
 #define MIN_STAGE 1
 
-#define MISSION_POS DirectX::SimpleMath::Vector2{545,720 / 2}
-#define NEXTBOTTOM_POS DirectX::SimpleMath::Vector2{1280.0f / 2.0f,720.0f / 1.15f}
-#define NUMBER_POS DirectX::SimpleMath::Vector2{1280.0f / 2.0f,100}
-#define ARROW_POS_L DirectX::SimpleMath::Vector2{200,500}
-#define ARROW_POS_R DirectX::SimpleMath::Vector2{1080,500}
+#define MISSION_POS SimpleMath::Vector2{545,720 / 2}
+#define NEXTBOTTOM_POS SimpleMath::Vector2{1280.0f / 2.0f,720.0f / 1.15f}
+#define NUMBER_POS SimpleMath::Vector2{1280.0f / 2.0f,100}
+#define ARROW_POS_L SimpleMath::Vector2{200,500}
+#define ARROW_POS_R SimpleMath::Vector2{1080,500}
 
 SelectScene::SelectScene():
 	m_selectStageNumber(1),
@@ -43,19 +43,19 @@ void SelectScene::Initialize()
 	m_machineDraw = std::make_unique<DrawMachine>();
 	m_machineDraw->Initialize(m_selectStageNumber);
 
-	m_missionDraw = std::make_unique<MissionRender>(MISSION_POS, DirectX::SimpleMath::Vector2{1,1});
+	m_missionDraw = std::make_unique<MissionRender>(MISSION_POS, SimpleMath::Vector2{1,1});
 
-	m_arrowDraw[0] = std::make_unique<DrawArrow>(ARROW_POS_L, DirectX::SimpleMath::Vector2{1,1},0);
-	m_arrowDraw[1] = std::make_unique<DrawArrow>(ARROW_POS_R, DirectX::SimpleMath::Vector2{1,1},2);
+	m_arrowDraw[0] = std::make_unique<DrawArrow>(ARROW_POS_L, SimpleMath::Vector2{1,1},0);
+	m_arrowDraw[1] = std::make_unique<DrawArrow>(ARROW_POS_R, SimpleMath::Vector2{1,1},2);
 
-	m_nextSceneBox = std::make_unique<SelectionBox>(NEXTBOTTOM_POS, DirectX::SimpleMath::Vector2{5,1});
+	m_nextSceneBox = std::make_unique<SelectionBox>(NEXTBOTTOM_POS, SimpleMath::Vector2{5,1});
 
 	m_uiKeyControl = std::make_unique<UIKeyControl>();
 	m_uiKeyControl->AddUI(m_arrowDraw[0].get(), 0, 0);
 	m_uiKeyControl->AddUI(m_arrowDraw[1].get(), 1, 0);
 	m_uiKeyControl->AddUI(m_nextSceneBox.get(), 0, 1);
 
-	m_stageNumber = std::make_unique<Number>(NUMBER_POS, DirectX::SimpleMath::Vector2{ 2.0f,2.0f});
+	m_stageNumber = std::make_unique<Number>(NUMBER_POS, SimpleMath::Vector2{ 2.0f,2.0f});
 
 }
 
@@ -123,7 +123,7 @@ void SelectScene::Draw()
 	/*===[ デバッグ文字描画 ]===*/
 	std::wostringstream oss;
 	oss << "SelectScene";
-	ShareData::GetInstance().GetDebugFont()->AddString(oss.str().c_str(), DirectX::SimpleMath::Vector2(0.f, 60.f));
+	ShareData::GetInstance().GetDebugFont()->AddString(oss.str().c_str(), SimpleMath::Vector2(0.f, 60.f));
 
 	pSB->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 

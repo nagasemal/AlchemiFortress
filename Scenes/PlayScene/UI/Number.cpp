@@ -15,7 +15,7 @@ Number::Number():
 {
 }
 
-Number::Number(DirectX::SimpleMath::Vector2 position, DirectX::SimpleMath::Vector2 rage)
+Number::Number(SimpleMath::Vector2 position, SimpleMath::Vector2 rage)
 {
 	m_num = 0;
 	m_position = position;
@@ -39,7 +39,7 @@ void Number::Render()
 	auto pDR = pSD.GetDeviceResources();
 	SpriteLoder::GetInstance().GetNumberTexture();
 
-	DirectX::SimpleMath::Color color(1, 1, 1, 1);
+	SimpleMath::Color color(1, 1, 1, 1);
 
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
@@ -54,7 +54,7 @@ void Number::Render()
 			int digit = (m_num / base) % 10;
 			RECT numRect = SpriteCutter(64, 64,digit, 0);
 
-			DirectX::SimpleMath::Vector2 pos = m_position;
+			SimpleMath::Vector2 pos = m_position;
 			pos.x -= ((64 * m_rage.x) * j);
 
 			// 数字描画
@@ -85,13 +85,13 @@ void Number::Render_SelectScene(int first, int next)
 
 }
 
-void Number::Number_Render(int num, DirectX::SimpleMath::Vector2 pos)
+void Number::Number_Render(int num, SimpleMath::Vector2 pos)
 {
 
 	ShareData& pSD = ShareData::GetInstance();
 	auto pSB = pSD.GetSpriteBatch();
 
-	DirectX::SimpleMath::Color color(1, 1, 1, 1);
+	SimpleMath::Color color(1, 1, 1, 1);
 
 	for (int i = MAX_NUM; i >= 0; i--)
 	{
@@ -104,7 +104,7 @@ void Number::Number_Render(int num, DirectX::SimpleMath::Vector2 pos)
 			int digit = (num / base) % 10;
 			RECT numRect = SpriteCutter(64, 64, digit, 0);
 
-			DirectX::SimpleMath::Vector2 pos = m_position;
+			SimpleMath::Vector2 pos = m_position;
 			pos.x -= ((64 * (m_rage.x / 2)) * j);
 
 			// 数字描画

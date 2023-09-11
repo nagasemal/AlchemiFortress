@@ -13,8 +13,8 @@
 const std::vector<D3D11_INPUT_ELEMENT_DESC> DisplayMagicCircle::INPUT_LAYOUT =
 {
 	{ "POSITION",	0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	{ "COLOR",	0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, sizeof(DirectX::SimpleMath::Vector3), D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	{ "TEXCOORD",	0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(DirectX::SimpleMath::Vector3) + sizeof(DirectX::SimpleMath::Vector4), D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "COLOR",	0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, sizeof(SimpleMath::Vector3), D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "TEXCOORD",	0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(SimpleMath::Vector3) + sizeof(SimpleMath::Vector4), D3D11_INPUT_PER_VERTEX_DATA, 0 },
 };
 
 DisplayMagicCircle::DisplayMagicCircle()
@@ -24,8 +24,8 @@ DisplayMagicCircle::DisplayMagicCircle()
 	, m_textureWidth(0)
 	, m_texture(nullptr)
 	, m_res(nullptr)
-	, m_scale(DirectX::SimpleMath::Vector2::One)
-	, m_position(DirectX::SimpleMath::Vector2::Zero)
+	, m_scale(SimpleMath::Vector2::One)
+	, m_position(SimpleMath::Vector2::Zero)
 	, m_color(1.0f, 1.0f, 1.0f, 1.0f)
 	, m_rotationMatrix()
 	, m_rotateTime()
@@ -85,11 +85,11 @@ void DisplayMagicCircle::Create(const wchar_t* path)
 }
 
 
-void DisplayMagicCircle::SetScale(DirectX::SimpleMath::Vector2 scale)
+void DisplayMagicCircle::SetScale(SimpleMath::Vector2 scale)
 {
 	m_scale = scale;
 }
-void DisplayMagicCircle::SetPosition(DirectX::SimpleMath::Vector2 position)
+void DisplayMagicCircle::SetPosition(SimpleMath::Vector2 position)
 {
 	m_position = position;
 }
@@ -163,7 +163,7 @@ void DisplayMagicCircle::Update()
 
 	m_rotateTime += deltaTime * ROTATION_SPEED;
 
-	m_rotationMatrix = DirectX::SimpleMath::Matrix::CreateRotationZ(m_rotateTime);
+	m_rotationMatrix = SimpleMath::Matrix::CreateRotationZ(m_rotateTime);
 
 	m_color.A(m_transparentTime);
 }
@@ -180,14 +180,14 @@ void DisplayMagicCircle::Render()
 	// Color.zw		:画像サイズ
 	// Tex.xy		:x 未使用　y 半透明化処理
 	DirectX::VertexPositionColorTexture vertex[1] = {
-		DirectX::VertexPositionColorTexture(DirectX::SimpleMath::Vector3(m_scale.x, m_scale.y, static_cast<float>(ANCHOR::MIDDLE_CENTER))
-		, DirectX::SimpleMath::Vector4(m_position.x, m_position.y, static_cast<float>(m_textureWidth), static_cast<float>(m_textureHeight))
-		, DirectX::SimpleMath::Vector2(1,m_transparentTime))
+		DirectX::VertexPositionColorTexture(SimpleMath::Vector3(m_scale.x, m_scale.y, static_cast<float>(ANCHOR::MIDDLE_CENTER))
+		, SimpleMath::Vector4(m_position.x, m_position.y, static_cast<float>(m_textureWidth), static_cast<float>(m_textureHeight))
+		, SimpleMath::Vector2(1,m_transparentTime))
 	};
 
 	//シェーダーに渡す追加のバッファを作成する。(ConstBuffer）
 	ConstBuffer cbuff;
-	cbuff.windowSize = DirectX::SimpleMath::Vector4(static_cast<float>(m_windowWidth), static_cast<float>(m_windowHeight), 1, 1);
+	cbuff.windowSize = SimpleMath::Vector4(static_cast<float>(m_windowWidth), static_cast<float>(m_windowHeight), 1, 1);
 	cbuff.color = m_color;
 	cbuff.rotationMatrix = m_rotationMatrix.Transpose();
 
@@ -195,7 +195,7 @@ void DisplayMagicCircle::Render()
 	context->UpdateSubresource(m_cBuffer.Get(), 0, NULL, &cbuff, 0, 0);
 
 	//シェーダーにバッファを渡す
-	ID3D11Buffer* cb[1] = { m_cBuffer.Get() };
+	ID3D11Buffer* cb[1] = {m_cBuffer.Get()};
 	context->VSSetConstantBuffers(0, 1, cb);
 	context->GSSetConstantBuffers(0, 1, cb);
 	context->PSSetConstantBuffers(0, 1, cb);
@@ -251,7 +251,7 @@ void DisplayMagicCircle::SpritebatchRender()
 	// 画像のサイズ
 	RECT srcRect = { 0, 0, m_textureWidth, m_textureHeight };
 
-	DirectX::SimpleMath::Vector2 box_Pos = { static_cast<float>(m_windowWidth) / 2,static_cast<float>(m_windowHeight) / 2 };
+	SimpleMath::Vector2 box_Pos = { static_cast<float>(m_windowWidth) / 2,static_cast<float>(m_windowHeight) / 2 };
 
 	// 選択BOX
 	pSB->Draw(SpriteLoder::GetInstance().GetMagicCircleTexture(0).Get(), box_Pos, &srcRect, m_color,m_rotateTime, DirectX::XMFLOAT2((float)m_textureWidth / 2, (float)m_textureHeight / 2), 1.5f);

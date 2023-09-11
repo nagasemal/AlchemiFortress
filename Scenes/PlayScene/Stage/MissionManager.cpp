@@ -47,9 +47,9 @@ void MissionManager::Initialize()
 
 	m_allClearFlag = false;
 
-	m_timeRender = std::make_unique<Number>(DirectX::SimpleMath::Vector2{220.0f,220.0f}, DirectX::SimpleMath::Vector2{1.0f,1.0f});
+	m_timeRender = std::make_unique<Number>(SimpleMath::Vector2{220.0f,220.0f}, SimpleMath::Vector2{1.0f,1.0f});
 
-	m_missionRender = std::make_unique<MissionRender>(DirectX::SimpleMath::Vector2{ 100.0f,300.0f }, DirectX::SimpleMath::Vector2{ 1.0f,1.0f });
+	m_missionRender = std::make_unique<MissionRender>(SimpleMath::Vector2{ 100.0f,300.0f }, SimpleMath::Vector2{ 1.0f,1.0f });
 
 }
 

@@ -70,7 +70,7 @@ private:
 	Bullet_Data m_bulletStatus;		// バレットデータ
 	Bullet_Data m_saveBulletStatus;	// 加工元のバレットデータ
 
-	DirectX::SimpleMath::Vector3 m_targetPos;
+	SimpleMath::Vector3 m_targetPos;
 
 	// 選択可能オブジェクト
 	std::unique_ptr<SelectionBox> m_selectBox[4];

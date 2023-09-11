@@ -16,13 +16,13 @@ class Number
 {
 public:
 	Number();
-	Number(DirectX::SimpleMath::Vector2 position,DirectX::SimpleMath::Vector2 rage);
+	Number(SimpleMath::Vector2 position,SimpleMath::Vector2 rage);
 	~Number();
 
 	// •\¦‚·‚é”š‚Ìİ’è
 	void SetNumber(int num);
-	void SetPosition(DirectX::SimpleMath::Vector2 position) { m_position = position; }
-	void SetRage(DirectX::SimpleMath::Vector2 rage) { m_rage = rage; }
+	void SetPosition(SimpleMath::Vector2 position) { m_position = position; }
+	void SetRage(SimpleMath::Vector2 rage) { m_rage = rage; }
 
 
 	// ”š‰æ‘œ•`‰æ
@@ -33,10 +33,10 @@ public:
 
 private:
 
-	void Number_Render(int num,DirectX::SimpleMath::Vector2 pos);
+	void Number_Render(int num,SimpleMath::Vector2 pos);
 
-	DirectX::SimpleMath::Vector2 m_position;
-	DirectX::SimpleMath::Vector2 m_rage;
+	SimpleMath::Vector2 m_position;
+	SimpleMath::Vector2 m_rage;
 
 	int m_num;
 

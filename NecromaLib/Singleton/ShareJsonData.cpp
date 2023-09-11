@@ -113,7 +113,7 @@ void ShareJsonData::StageDataCleanUP()
 
 }
 
-DirectX::SimpleMath::Color ShareJsonData::GetElementColor(ELEMENT element)
+SimpleMath::Color ShareJsonData::GetElementColor(ELEMENT element)
 {
 	return Json::ChangeColor(element);
 }

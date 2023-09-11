@@ -15,7 +15,7 @@
 class Crystal : public FieldObject
 {
 public:
-	Crystal(DirectX::SimpleMath::Vector3 pos,float rotateY);
+	Crystal(SimpleMath::Vector3 pos,float rotateY);
 	~Crystal();
 
 	// ‰Šú‰»

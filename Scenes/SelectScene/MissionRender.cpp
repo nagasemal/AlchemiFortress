@@ -9,7 +9,7 @@
 #define KERNING_X 64
 #define KERNING_Y 48
 
-MissionRender::MissionRender(DirectX::SimpleMath::Vector2 pos, DirectX::SimpleMath::Vector2 rage)
+MissionRender::MissionRender(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage)
 {
 
 	m_position = pos;
@@ -17,7 +17,7 @@ MissionRender::MissionRender(DirectX::SimpleMath::Vector2 pos, DirectX::SimpleMa
 	m_lineCount = 0;
 
 
-	m_number = std::make_unique<Number>(pos,DirectX::SimpleMath::Vector2(0.35f,0.25f));
+	m_number = std::make_unique<Number>(pos,SimpleMath::Vector2(0.35f,0.25f));
 
 }
 
@@ -59,12 +59,12 @@ void MissionRender::Render_MachineMission(std::vector<Stage_Condition> stageData
 	for (int i = 0; i < stageData.size(); i++)
 	{
 
-		DirectX::SimpleMath::Vector2 pos = m_position;
+		SimpleMath::Vector2 pos = m_position;
 		pos.y += m_lineCount * KERNING_Y;
 
-		DirectX::SimpleMath::Color color = DirectX::SimpleMath::Color(0.0f, 0.0f, 0.0f, 1.0f);
+		SimpleMath::Color color = SimpleMath::Color(0.0f, 0.0f, 0.0f, 1.0f);
 
-		if (stageData[i].progress >= stageData[i].value) color = DirectX::SimpleMath::Color(1.0f, 0.0f, 0.0f, 1.0f);
+		if (stageData[i].progress >= stageData[i].value) color = SimpleMath::Color(1.0f, 0.0f, 0.0f, 1.0f);
 
 		LabelDraw(pos);
 
@@ -131,13 +131,13 @@ void MissionRender::Render_EnemyMission(std::vector<Stage_Condition> stageData)
 	for (int i = 0; i < stageData.size(); i++)
 	{
 
-		DirectX::SimpleMath::Vector2 pos = m_position;
+		SimpleMath::Vector2 pos = m_position;
 
 		pos.y += m_lineCount * KERNING_Y;
 
-		DirectX::SimpleMath::Color color = DirectX::SimpleMath::Color(0.0f, 0.0f, 0.0f, 1.0f);
+		SimpleMath::Color color = SimpleMath::Color(0.0f, 0.0f, 0.0f, 1.0f);
 
-		if(stageData[i].progress >= stageData[i].value) color = DirectX::SimpleMath::Color(1.0f, 0.0f, 0.0f, 1.0f);
+		if(stageData[i].progress >= stageData[i].value) color = SimpleMath::Color(1.0f, 0.0f, 0.0f, 1.0f);
 
 		LabelDraw(pos);
 
@@ -203,7 +203,7 @@ void MissionRender::LineReset()
 	m_lineCount = 0;
 }
 
-void MissionRender::LabelDraw(DirectX::SimpleMath::Vector2 pos)
+void MissionRender::LabelDraw(SimpleMath::Vector2 pos)
 {
 
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
@@ -216,7 +216,7 @@ void MissionRender::LabelDraw(DirectX::SimpleMath::Vector2 pos)
 	pSB->Draw(pSL.GetMissionLabelTexture().Get(),
 		pos,
 		&labelRect,
-		DirectX::SimpleMath::Color(1.0f, 1.0f, 1.0f, 0.8f),
+		SimpleMath::Color(1.0f, 1.0f, 1.0f, 0.8f),
 		0.0f,
 		DirectX::XMFLOAT2(180 / 2, 48 / 2),
 		m_rage);

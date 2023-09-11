@@ -49,7 +49,7 @@ private:
 
 	std::vector<int> m_maxLows;
 
-	DirectX::SimpleMath::Vector2 m_prevMousePos; // 前のマウスのポジションの取得
+	SimpleMath::Vector2 m_prevMousePos; // 前のマウスのポジションの取得
 	bool m_keyContorlFlag;
 
 };

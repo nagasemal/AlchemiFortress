@@ -1,5 +1,7 @@
 #pragma once
 
+#include "NecromaLib/GameData/Animation.h"
+
 class MoveCamera
 {
 public:
@@ -13,17 +15,17 @@ public:
 	void Update(bool scroll,bool move);
 
 	// ビュー行列を取得する
-	DirectX::SimpleMath::Matrix GetViewMatrix() const		{ return m_view; }
+	SimpleMath::Matrix GetViewMatrix() const		{ return m_view; }
 	// デバッグカメラの座標を取得する
-	DirectX::SimpleMath::Vector3 GetEyePosition() const		{ return m_eye; }
+	SimpleMath::Vector3 GetEyePosition() const		{ return m_eye; }
 	// デバッグカメラの注視点座標を取得する
-	DirectX::SimpleMath::Vector3 GetTargetPosition() const	{ return m_target; }
+	SimpleMath::Vector3 GetTargetPosition() const	{ return m_target; }
 
-	void SetEyeProsition(DirectX::SimpleMath::Vector3 eye)			{ m_eye = eye;}
-	void SetTargetProsition(DirectX::SimpleMath::Vector3 target)	{ m_target = target; }
-	void SetSaveTargetProsition(DirectX::SimpleMath::Vector3 target) { m_saveTarget = target; }
+	void SetEyeProsition(SimpleMath::Vector3 eye)			{ m_eye = eye;}
+	void SetTargetProsition(SimpleMath::Vector3 target)	{ m_target = target; }
+	void SetSaveTargetProsition(SimpleMath::Vector3 target) { m_saveTarget = target; }
 
-	void TargetChange(DirectX::SimpleMath::Vector3 targetA, DirectX::SimpleMath::Vector3 targetB);
+	void TargetChange(SimpleMath::Vector3 targetA, SimpleMath::Vector3 targetB);
 	void ResetTargetChangeTimer() { m_targetChangeTime = 0; }
 
 
@@ -41,20 +43,20 @@ private:
 	// 前回のスクロール値
 	int m_prevWheelValue;						
 	// 移動値
-	DirectX::SimpleMath::Vector3 m_move;		
+	SimpleMath::Vector3 m_move;		
 	// 生成されたビュー行列
-	DirectX::SimpleMath::Matrix m_view;			
+	SimpleMath::Matrix m_view;			
 	// カメラの座標
-	DirectX::SimpleMath::Vector3 m_eye;
+	SimpleMath::Vector3 m_eye;
 	// 注視点
-	DirectX::SimpleMath::Vector3 m_target;
+	SimpleMath::Vector3 m_target;
 
 	// 前回の注視点
-	DirectX::SimpleMath::Vector3 m_saveTarget;
+	SimpleMath::Vector3 m_saveTarget;
 	// 引きで使うタイマー
-	float m_time;			
+	AnimationData m_time;			
 	// ターゲット変更に使うタイマー
-	float m_targetChangeTime;
+	AnimationData m_targetChangeTime;
 
 	// マウスポインタのドラッグ開始位置からの変位(相対値)
 	void DraggedDistance(int x, int y);

@@ -5,6 +5,10 @@
 #include "Scenes/DataManager.h"
 #include "SelectionBox.h"
 
+#define HP_GAUGE_POS        { 300.0f,50.0f }
+#define MP_GAUGE_POS        { 260.0f,100.0f }
+#define CRYSTAL_GAUGE_POS   {260.0f,130.0f}
+
 Gauge::Gauge()
 {
 }
@@ -25,9 +29,9 @@ void Gauge::Initialize()
 	//m_gauge = std::make_unique<UserInterface>();
 	//m_gauge->Create(device, L"Resources/Textures/Seizou.png",{100,300},{1,1},ANCHOR::MIDDLE_CENTER);
 
-    Add_Hp({ 300.0f,50.0f }, { 0.65f,0.5f }, UserInterface::ANCHOR::MIDDLE_CENTER);
-    Add_MP({ 260,100 }, { 0.4f,0.4f }, UserInterface::ANCHOR::MIDDLE_CENTER);
-    Add_Crystal({ 260,130 }, { 0.4f,0.4f }, UserInterface::ANCHOR::MIDDLE_CENTER);
+    Add_Hp( HP_GAUGE_POS, { 0.65f,0.5f }, UserInterface::ANCHOR::MIDDLE_CENTER);
+    Add_MP( MP_GAUGE_POS, { 0.4f,0.4f }, UserInterface::ANCHOR::MIDDLE_CENTER);
+    Add_Crystal( CRYSTAL_GAUGE_POS, { 0.4f,0.4f }, UserInterface::ANCHOR::MIDDLE_CENTER);
 
 }
 
@@ -69,7 +73,7 @@ void Gauge::Finalize()
 {
 }
 
-void Gauge::Add_Crystal(DirectX::SimpleMath::Vector2 position, DirectX::SimpleMath::Vector2 scale, UserInterface::ANCHOR anchor)
+void Gauge::Add_Crystal(SimpleMath::Vector2 position, SimpleMath::Vector2 scale, UserInterface::ANCHOR anchor)
 {
     auto device = ShareData::GetInstance().GetDeviceResources();
     int width = device->GetOutputSize().right;
@@ -93,7 +97,7 @@ void Gauge::Add_Crystal(DirectX::SimpleMath::Vector2 position, DirectX::SimpleMa
 
 }
 
-void Gauge::Add_Hp(DirectX::SimpleMath::Vector2 position, DirectX::SimpleMath::Vector2 scale, UserInterface::ANCHOR anchor)
+void Gauge::Add_Hp(SimpleMath::Vector2 position, SimpleMath::Vector2 scale, UserInterface::ANCHOR anchor)
 {
     auto device = ShareData::GetInstance().GetDeviceResources();
     int width = device->GetOutputSize().right;
@@ -117,7 +121,22 @@ void Gauge::Add_Hp(DirectX::SimpleMath::Vector2 position, DirectX::SimpleMath::V
 
 }
 
-void Gauge::Add_MP(DirectX::SimpleMath::Vector2 position,DirectX::SimpleMath::Vector2 scale,UserInterface::ANCHOR anchor)
+SimpleMath::Vector2 Gauge::GetHPGaugePos()
+{
+    return HP_GAUGE_POS;
+}
+
+SimpleMath::Vector2 Gauge::GetMPGaugePos()
+{
+    return MP_GAUGE_POS;
+}
+
+SimpleMath::Vector2 Gauge::GetCrystalGaugePos()
+{
+    return CRYSTAL_GAUGE_POS;
+}
+
+void Gauge::Add_MP(SimpleMath::Vector2 position,SimpleMath::Vector2 scale,UserInterface::ANCHOR anchor)
 {
     auto device = ShareData::GetInstance().GetDeviceResources();
     int width  = device->GetOutputSize().right;

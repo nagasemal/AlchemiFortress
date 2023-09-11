@@ -1,4 +1,6 @@
 {
+	"Tutorial":-1,
+
 	"Conditions_Machine":{
 	  "MACHINE_SPAWN":[
 		  {"TYPE":"Attacker",	"VALUE":1.0}

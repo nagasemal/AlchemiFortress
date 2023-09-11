@@ -109,6 +109,8 @@ struct Stage_Data
 
 	Stage_Resource resource;								// 初めから所持しているリソース群
 	std::vector<Stage_Machine> machine;						// 初めから設置されているマシン群
+	int tutorial;											// チュートリアル番号
+	
 };
 
 struct Stage_ClearData
@@ -147,7 +149,7 @@ namespace Json
 	ENEMY_TYPE ChangeEnemy(const std::string enemyName);
 
 	//  色変換
-	DirectX::SimpleMath::Color ChangeColor(ELEMENT element);
+	SimpleMath::Color ChangeColor(ELEMENT element);
 
 	void WritingJsonFile_ClearData(int number,std::vector<std::shared_ptr<AlchemicalMachineObject>> alchemicalMachineList,int time);
 

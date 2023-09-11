@@ -34,7 +34,7 @@ DebugFont::~DebugFont()
 }
 
 // 描画する文字列を登録する関数
-void DebugFont::AddString(const wchar_t * string, DirectX::SimpleMath::Vector2 pos, FXMVECTOR color, float scale)
+void DebugFont::AddString(const wchar_t * string, SimpleMath::Vector2 pos, FXMVECTOR color, float scale)
 {
 	String str;
 
@@ -100,7 +100,7 @@ Imase::DebugFont3D::~DebugFont3D()
 // 描画する文字列を登録する関数（3D版）
 void DebugFont3D::AddString(
 	const wchar_t* string,
-	DirectX::SimpleMath::Vector3 pos,
+	SimpleMath::Vector3 pos,
 	DirectX::FXMVECTOR color,
 	float scale)
 {
@@ -119,8 +119,8 @@ void DebugFont3D::AddString(
 void DebugFont3D::Render(
 	ID3D11DeviceContext* context,
 	DirectX::CommonStates* states,
-	const DirectX::SimpleMath::Matrix& view,
-	const DirectX::SimpleMath::Matrix& proj)
+	const SimpleMath::Matrix& view,
+	const SimpleMath::Matrix& proj)
 {
 	// スクリーン座標はY軸が＋－逆なので
 	SimpleMath::Matrix invertY = SimpleMath::Matrix::CreateScale(1.0f, -1.0f, 1.0f);

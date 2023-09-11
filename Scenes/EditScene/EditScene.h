@@ -43,7 +43,7 @@ public:
 	// I—¹ˆ—
 	void Finalize() override;
 
-	void AddMission(std::vector<std::unique_ptr<SelectionBox>> &ui, DirectX::SimpleMath::Vector2 pos, DirectX::SimpleMath::Vector2 rage);
+	void AddMission(std::vector<std::unique_ptr<SelectionBox>> &ui, SimpleMath::Vector2 pos, SimpleMath::Vector2 rage);
 
 	void WritingFile();
 

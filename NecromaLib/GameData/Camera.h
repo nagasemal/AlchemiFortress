@@ -16,19 +16,19 @@ public:
 private:
 
 	// ビュー行列
-	DirectX::SimpleMath::Matrix mView;
+	SimpleMath::Matrix mView;
 
 	// プロジェクション行列
-	DirectX::SimpleMath::Matrix mProjection;
+	SimpleMath::Matrix mProjection;
 
 	// カメラ座標
-	DirectX::SimpleMath::Vector3 mEye;
+	SimpleMath::Vector3 mEye;
 
 	// 注視点
-	DirectX::SimpleMath::Vector3 mTarget;
+	SimpleMath::Vector3 mTarget;
 
 	// 上向きベクトル
-	DirectX::SimpleMath::Vector3 mUp;
+	SimpleMath::Vector3 mUp;
 
 public:
 	// コンストラクタ
@@ -38,36 +38,36 @@ public:
 	virtual ~Camera();
 
 	// ビュー行列のアクセサ
-	void SetViewMatrix(DirectX::SimpleMath::Matrix view) { mView = view; }
+	void SetViewMatrix(SimpleMath::Matrix view) { mView = view; }
 
-	DirectX::SimpleMath::Matrix GetViewMatrix()
+	SimpleMath::Matrix GetViewMatrix()
 	{
 		CalculateViewMatrix();
 		return mView;
 	}
 
 	// プロジェクション行列のアクセサ
-	void SetProjectionMatrix(DirectX::SimpleMath::Matrix projection) { mProjection = projection; }
+	void SetProjectionMatrix(SimpleMath::Matrix projection) { mProjection = projection; }
 
 	void CameraReset();
 
-	DirectX::SimpleMath::Matrix GetProjectionMatrix()
+	SimpleMath::Matrix GetProjectionMatrix()
 	{
 		CalculateProjectionMatrix();
 		return mProjection;
 	}
 
 	// カメラ座標のアクセサ
-	void SetEyePosition(DirectX::SimpleMath::Vector3 eye) { mEye = eye; }
-	DirectX::SimpleMath::Vector3 GetEyePosition() const { return mEye; }
+	void SetEyePosition(SimpleMath::Vector3 eye) { mEye = eye; }
+	SimpleMath::Vector3 GetEyePosition() const { return mEye; }
 
 	// 注視点座標のアクセサ
-	void SetTargetPosition(DirectX::SimpleMath::Vector3 target) { mTarget = target; }
-	DirectX::SimpleMath::Vector3 GetTargetPosition() const { return mTarget; }
+	void SetTargetPosition(SimpleMath::Vector3 target) { mTarget = target; }
+	SimpleMath::Vector3 GetTargetPosition() const { return mTarget; }
 
 	// 上向きベクトルのアクセサ
-	void SetUpVector(DirectX::SimpleMath::Vector3 up) { mUp = up; }
-	DirectX::SimpleMath::Vector3 GetUpVector() const { return mUp; }
+	void SetUpVector(SimpleMath::Vector3 up) { mUp = up; }
+	SimpleMath::Vector3 GetUpVector() const { return mUp; }
 
 protected:
 

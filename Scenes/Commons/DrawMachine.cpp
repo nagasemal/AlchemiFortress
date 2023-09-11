@@ -74,14 +74,14 @@ void DrawMachine::MovingMachine(int number)
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
 
 	// 0,0,0‚ð’†S‚É‰ñ“]ˆÚ“®
-	DirectX::SimpleMath::Matrix matrix = DirectX::SimpleMath::Matrix::Identity;
+	SimpleMath::Matrix matrix = SimpleMath::Matrix::Identity;
 
-	matrix *= DirectX::SimpleMath::Matrix::CreateRotationY(XMConvertToRadians(0.1f)) * deltaTime;
+	matrix *= SimpleMath::Matrix::CreateRotationY(XMConvertToRadians(0.1f)) * deltaTime;
 
 	// ‰ñ“]Œã‚ÌÀ•W‚ð‘ã“ü
-  	m_AMobjects[number]->SetPos(DirectX::SimpleMath::Vector3::Transform(m_AMobjects[number]->GetPos(), matrix));
+  	m_AMobjects[number]->SetPos(SimpleMath::Vector3::Transform(m_AMobjects[number]->GetPos(), matrix));
 
-	m_AMobjects[number]->SetColor(DirectX::SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
+	m_AMobjects[number]->SetColor(SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
 
 }
 
@@ -103,7 +103,7 @@ void DrawMachine::SettingAMMachine_Title()
 			m_AMobjects[counter]->SetLine(i);
 			m_AMobjects[counter]->SummonAM(SetVelocityCircle(j, CIRCLE_MAX_MIN * i, i * CIRCLE_LINE_DISTANCE));
 
-			m_AMobjects[counter]->SetColor(DirectX::SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
+			m_AMobjects[counter]->SetColor(SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
 			counter++;
 		}
 	}
@@ -134,7 +134,7 @@ void DrawMachine::SettingAMMachine_Select(int number)
 			m_AMobjects[counter]->SetLine(i);
 			m_AMobjects[counter]->SummonAM(SetVelocityCircle(j, CIRCLE_MAX_MIN * i, i * CIRCLE_LINE_DISTANCE));
 
-			m_AMobjects[counter]->SetColor(DirectX::SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
+			m_AMobjects[counter]->SetColor(SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
 
 			counter++;
 		}

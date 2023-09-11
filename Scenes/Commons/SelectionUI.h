@@ -10,8 +10,8 @@ public:
 	// 初期化
 	void Initialize()			override;
 
-	// 更新
-	void Update()				override;
+	//// 更新
+	//void Update()				override;
 
 	// 終了処理
 	void Finalize()				override;
@@ -41,9 +41,10 @@ public:
 	void SetSelectFlag(bool flag) { m_selectFlag = flag; }
 	void SetKeySelectFlag(bool flag) { m_keySelectFlag = flag;}
 	// 色を自由に変えられます。(ボックスを強調したい際などに使用)
-	void SetLuminousColor(DirectX::SimpleMath::Color color) { m_boxColor = color; }
+	void SetLuminousColor(SimpleMath::Color color) { m_boxColor = color; }
 	void SetLuminousFlag(bool flag) { m_luminousFlag = flag; };
 
+	void SetRect(RECT rect) { m_rect = rect; }
 
 protected:
 
@@ -51,9 +52,11 @@ protected:
 	bool m_selectFlag;
 	bool m_keySelectFlag; // キーボード上にて選択されたことを示すフラグ
 
-	DirectX::SimpleMath::Color m_boxColor;
+	SimpleMath::Color m_boxColor;
 	bool m_luminousFlag;
 
 	bool m_activeFlag; //現在触れる状態か
+
+	RECT m_rect;
 
 };

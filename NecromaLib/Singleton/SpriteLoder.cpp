@@ -114,7 +114,9 @@ void SpriteLoder::Loading()
 		m_rule.ReleaseAndGetAddressOf()
 	);
 
-	LoadingPngFile(L"Resources/Textures/MagicRule.png", m_magicrule);
+	LoadingPngFile(L"Resources/Textures/154.png", m_magicrule);
+
+	LoadingPngFile(L"Resources/Textures/TitleText.png", m_pleaseMouseButtonText);
 
 	// マシン魔法陣
 	{
@@ -158,14 +160,6 @@ void SpriteLoder::Loading()
 			m_MagicCircleTexture[MACHINE_TYPE::RECOVERY].ReleaseAndGetAddressOf()
 		);
 
-		//// 魔法陣テクスチャ_Recovery
-		//DirectX::CreateWICTextureFromFile(
-		//	ShareData::GetInstance().GetDevice(),
-		//	L"Resources/Textures/MagicCircle/Attacker.png",
-		//	nullptr,
-		//	m_MagicCircleTexture[MACHINE_TYPE::RECOVERY].ReleaseAndGetAddressOf()
-		//);
-
 		// 魔法陣テクスチャ_Mining
 		DirectX::CreateWICTextureFromFile(
 			ShareData::GetInstance().GetDevice(),
@@ -185,6 +179,7 @@ void SpriteLoder::Loading()
 		//LoadingPngFile(L"Resources/Textures/Explanation/Excavator.png", m_explanationTexture[INSTRUCTION_TYPE::MINING]);
 		//LoadingPngFile(L"Resources/Textures/Explanation/Attacker.png", m_explanationTexture[INSTRUCTION_TYPE::OPERATION]);
 	}
+
 }
 
 void SpriteLoder::Finalize()

@@ -13,11 +13,25 @@ float4 main(PS_INPUT input) : SV_TARGET
 	// タイトルロゴの柄
 	float4 output_2 = tex2.Sample(samLinear, input.Tex);
 
+	// ルール画像
+	float4 output_Rule = tex3.Sample(samLinear, input.Tex);
+
+	// 柄をロゴに付ける
 	output.rgb = Colors.rgb;
+	output.r = mul(0.25f, diffuse.g);
+	output.g = mul(0.25f, diffuse.g);
+	output.b = mul(2.0f, diffuse.g);
 
 	output.r *= output_2.a;
 	output.g *= output_2.a;
 	output.b *= output_2.a;
+
+	// 出現させる
+	output.a *= step(output_Rule.x, diffuse.a);
+
+	output.x *= step(output_Rule.x, diffuse.a);
+	output.y *= step(output_Rule.y, diffuse.a);
+	output.z *= step(output_Rule.z, diffuse.a);
 
 	return output;
 }

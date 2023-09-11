@@ -24,18 +24,18 @@ EditScene::~EditScene()
 void EditScene::Initialize()
 {
 
-    m_ui_StageNumber = std::make_unique<Number>(DirectX::SimpleMath::Vector2(1128.0f, 600.0f), DirectX::SimpleMath::Vector2(1.0f, 1.0f));
-    m_stageNum_puls = std::make_unique <DrawArrow>(DirectX::SimpleMath::Vector2(1200.0f, 600.0f), DirectX::SimpleMath::Vector2(1.0f, 1.0f),2);
-    m_stageNum_minus = std::make_unique <DrawArrow>(DirectX::SimpleMath::Vector2(1000.0f, 600.0f), DirectX::SimpleMath::Vector2(1.0f, 1.0f),4);
+    m_ui_StageNumber = std::make_unique<Number>(SimpleMath::Vector2(1128.0f, 600.0f), SimpleMath::Vector2(1.0f, 1.0f));
+    m_stageNum_puls = std::make_unique <DrawArrow>(SimpleMath::Vector2(1200.0f, 600.0f), SimpleMath::Vector2(1.0f, 1.0f),2);
+    m_stageNum_minus = std::make_unique <DrawArrow>(SimpleMath::Vector2(1000.0f, 600.0f), SimpleMath::Vector2(1.0f, 1.0f),4);
 
-    m_decisionButton = std::make_unique<SelectionBox>(DirectX::SimpleMath::Vector2(1100.0f,600.0f),DirectX::SimpleMath::Vector2(2.0f,1.0f));
+    m_decisionButton = std::make_unique<SelectionBox>(SimpleMath::Vector2(1100.0f,600.0f),SimpleMath::Vector2(2.0f,1.0f));
 
-    m_missionRender = std::make_unique<MissionRender>(DirectX::SimpleMath::Vector2(300.0f, 150.0f), DirectX::SimpleMath::Vector2(1.0f, 1.0f));
+    m_missionRender = std::make_unique<MissionRender>(SimpleMath::Vector2(300.0f, 150.0f), SimpleMath::Vector2(1.0f, 1.0f));
 
     for (int i = 0; i < MACHINE_TYPE::NUM; i++)
     {
-        m_machineMissions_puls[i]  = std::make_unique<DrawArrow>(DirectX::SimpleMath::Vector2(550.0f, 150.0f + (i * 48)), DirectX::SimpleMath::Vector2(0.6f, 0.6f),2);
-        m_machineMissions_minus[i] = std::make_unique<DrawArrow>(DirectX::SimpleMath::Vector2(490.0f, 150.0f + (i * 48)), DirectX::SimpleMath::Vector2(0.6f, 0.6f),4);
+        m_machineMissions_puls[i]  = std::make_unique<DrawArrow>(SimpleMath::Vector2(550.0f, 150.0f + (i * 48)), SimpleMath::Vector2(0.6f, 0.6f),2);
+        m_machineMissions_minus[i] = std::make_unique<DrawArrow>(SimpleMath::Vector2(490.0f, 150.0f + (i * 48)), SimpleMath::Vector2(0.6f, 0.6f),4);
 
 
         Stage_Condition machineData;
@@ -140,7 +140,7 @@ void EditScene::Finalize()
 {
 }
 
-void EditScene::AddMission(std::vector<std::unique_ptr<SelectionBox>>& ui,DirectX::SimpleMath::Vector2 pos,DirectX::SimpleMath::Vector2 rage)
+void EditScene::AddMission(std::vector<std::unique_ptr<SelectionBox>>& ui,SimpleMath::Vector2 pos,SimpleMath::Vector2 rage)
 {
     ui.push_back(std::make_unique<SelectionBox>(pos, rage));
 }

@@ -1,7 +1,7 @@
 #include <pch.h>
 #include "ScreenToWorld.h"
 
-DirectX::SimpleMath::Vector3 CalcScreenToWorldN(int sX, int sY, float fZ, int screen_W, int screen_H, DirectX::SimpleMath::Matrix view, DirectX::SimpleMath::Matrix prj)
+SimpleMath::Vector3 CalcScreenToWorldN(int sX, int sY, float fZ, int screen_W, int screen_H, SimpleMath::Matrix view, SimpleMath::Matrix prj)
 {
 	// 各行列の逆行列を算出
 	DirectX::XMMATRIX invView, invPrj, vP, invViewport = DirectX::XMMATRIX::XMMATRIX();
@@ -22,18 +22,18 @@ DirectX::SimpleMath::Vector3 CalcScreenToWorldN(int sX, int sY, float fZ, int sc
 	invViewport = DirectX::XMMatrixInverse(nullptr, vP);
 
 	// 逆変換
-	DirectX::SimpleMath::Matrix tmp = invViewport * invPrj * invView;
+	SimpleMath::Matrix tmp = invViewport * invPrj * invView;
 
-	DirectX::SimpleMath::Vector3 pOut = DirectX::SimpleMath::Vector3::Zero;
+	SimpleMath::Vector3 pOut = SimpleMath::Vector3::Zero;
 
-	pOut = DirectX::XMVector3TransformCoord(DirectX::SimpleMath::Vector3(sX, sY, fZ), tmp);
+	pOut = DirectX::XMVector3TransformCoord(SimpleMath::Vector3(sX, sY, fZ), tmp);
 
 	return pOut;
 }
 
-DirectX::SimpleMath::Vector3 CalcScreenToXZN(int sX, int sY, int screen_W, int screen_H, DirectX::SimpleMath::Matrix view, DirectX::SimpleMath::Matrix prj)
+SimpleMath::Vector3 CalcScreenToXZN(int sX, int sY, int screen_W, int screen_H, SimpleMath::Matrix view, SimpleMath::Matrix prj)
 {
-	DirectX::SimpleMath::Vector3 nearPos, farPos, ray = DirectX::SimpleMath::Vector3::Zero;
+	SimpleMath::Vector3 nearPos, farPos, ray = SimpleMath::Vector3::Zero;
 
 	// 最近点
 	nearPos = CalcScreenToWorldN(sX, sY, 0.0f, screen_W, screen_H, view, prj);
@@ -44,14 +44,14 @@ DirectX::SimpleMath::Vector3 CalcScreenToXZN(int sX, int sY, int screen_W, int s
 	ray = farPos - nearPos;
 	ray.Normalize();
 
-	DirectX::SimpleMath::Vector3 pOut = DirectX::SimpleMath::Vector3::Zero;
+	SimpleMath::Vector3 pOut = SimpleMath::Vector3::Zero;
 
 	// カメラから見てYが無限に続くかどうか　交点が存在するかどうか
 	if (ray.y <= 0)
 	{
 		// 床交点
-		DirectX::SimpleMath::Vector3 lRay = DirectX::XMVector3Dot(ray, DirectX::SimpleMath::Vector3(0, 1, 0));
-		DirectX::SimpleMath::Vector3 lp0 = DirectX::XMVector3Dot(-nearPos, DirectX::SimpleMath::Vector3(0, 1, 0));
+		SimpleMath::Vector3 lRay = DirectX::XMVector3Dot(ray, SimpleMath::Vector3(0, 1, 0));
+		SimpleMath::Vector3 lp0 = DirectX::XMVector3Dot(-nearPos, SimpleMath::Vector3(0, 1, 0));
 
 		pOut = nearPos + (lp0 / lRay) * ray;
 

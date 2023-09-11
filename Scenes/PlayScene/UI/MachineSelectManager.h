@@ -90,8 +90,8 @@ private:
 
 	std::unique_ptr<Camera> m_camera;
 
-	DirectX::SimpleMath::Matrix m_dispView;
-	DirectX::SimpleMath::Matrix m_dispProj;
+	SimpleMath::Matrix m_dispView;
+	SimpleMath::Matrix m_dispProj;
 
 	//‰æ–Ê‚É‘å‚«‚­oŒ»‚³‚¹‚é–‚–@w
 	std::unique_ptr<DisplayMagicCircle>			m_displayMagicCircle;

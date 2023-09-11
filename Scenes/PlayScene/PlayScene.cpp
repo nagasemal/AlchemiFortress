@@ -65,7 +65,7 @@ void PlayScene::Initialize()
 		auto lights = dynamic_cast<IEffectLights*>(effect);
 
 		// 光の当たり方変更
-		lights->SetAmbientLightColor(DirectX::SimpleMath::Color(0.7f, 0.7f, 1.f, 0.8f));
+		lights->SetAmbientLightColor(SimpleMath::Color(0.7f, 0.7f, 1.f, 0.8f));
 
 	});
 }
@@ -74,7 +74,7 @@ GAME_SCENE PlayScene::Update()
 {
 	ShareData& pSD = ShareData::GetInstance();
 
-	m_tutorial->Update();
+	m_tutorial->Update(m_AM_Manager.get(), m_gauge.get());
 
 	// チュートリアル中ならば以下の処理を通さない
 	if (m_tutorial->GetTutorialFlag()) return GAME_SCENE();
@@ -142,13 +142,13 @@ void PlayScene::Draw()
 	std::wostringstream oss;
 	oss << "PlayScene";
 
-	pSD.GetDebugFont()->AddString(oss.str().c_str(), DirectX::SimpleMath::Vector2(0.f, 60.f));
+	pSD.GetDebugFont()->AddString(oss.str().c_str(), SimpleMath::Vector2(0.f, 60.f));
 
 	pSD.GetSpriteBatch()->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
-	DirectX::SimpleMath::Matrix modelData = DirectX::SimpleMath::Matrix::Identity;
-	modelData = DirectX::SimpleMath::Matrix::CreateScale({ 1.8f,1.8f,1.8f });
-	modelData = DirectX::SimpleMath::Matrix::CreateTranslation({0.0f,70.0f,0.0f });
+	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
+	modelData = SimpleMath::Matrix::CreateScale({ 1.8f,1.8f,1.8f });
+	modelData = SimpleMath::Matrix::CreateTranslation({0.0f,70.0f,0.0f });
 
 	m_skySphere->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection());
 
@@ -168,6 +168,8 @@ void PlayScene::DrawUI()
 	m_AM_Manager		->DrawUI();
 	m_gauge				->Render();
 	m_missionManager	->Render();
+
+	m_tutorial->Render_Layer2();
 }
 
 void PlayScene::Finalize()

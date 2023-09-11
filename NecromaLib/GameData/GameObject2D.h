@@ -16,8 +16,8 @@ protected:
 
 	struct ObjectData2D
 	{
-		SimpleMath::Vector2 pos;
-		SimpleMath::Vector2 rage;
+		SimpleMath::Vector2 pos = SimpleMath::Vector2();
+		SimpleMath::Vector2 rage = SimpleMath::Vector2();
 	};
 
 	ObjectData2D m_data;
@@ -44,8 +44,8 @@ public:
 	SimpleMath::Vector2 GetRage() { return m_data.rage; }
 	SimpleMath::Vector2 GetPos() { return m_data.pos; }
 
-	void SetPos(DirectX::SimpleMath::Vector2 pos) { m_data.pos = pos;}
-	void SetRage(DirectX::SimpleMath::Vector2 rage) { m_data.rage = rage; }
+	void SetPos(SimpleMath::Vector2 pos) { m_data.pos = pos;}
+	void SetRage(SimpleMath::Vector2 rage) { m_data.rage = rage;}
 
 	// 当たる対象のオブジェクト
 	bool  HitObject(SimpleMath::Vector2 pos);
@@ -68,6 +68,6 @@ public:
 /// <param name="height">縦幅</param>
 /// <param name="percent">0 ~ 1の範囲の拡縮率</param>
 /// <returns></returns>
-	bool HitObject_RageSet(SimpleMath::Vector2 pos, float width = 64.0f, float height = 64.0f, DirectX::SimpleMath::Vector2 percent = {1.0f,1.0f});
+	bool HitObject_RageSet(SimpleMath::Vector2 pos, float width = 64.0f, float height = 64.0f, SimpleMath::Vector2 percent = {1.0f,1.0f});
 
 };

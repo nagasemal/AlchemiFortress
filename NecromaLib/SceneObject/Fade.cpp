@@ -56,10 +56,10 @@ void Fade::Render()
 	if (mNowFlag)
 	{
 		// 画面のサイズ
-		DirectX::SimpleMath::Rectangle screenBound = DirectX::SimpleMath::Rectangle(0, 0, mScreenW,mScreenH);
+		SimpleMath::Rectangle screenBound = SimpleMath::Rectangle(0, 0, mScreenW,mScreenH);
 
 		// フェードの色
-		DirectX::SimpleMath::Color colour = DirectX::SimpleMath::Color(0.0f, 0.0f, 0.0f, mTime);
+		SimpleMath::Color colour = SimpleMath::Color(0.0f, 0.0f, 0.0f, mTime);
 
 		// 描画
 		pSB->Draw(mFadeTexture.Get(), screenBound, colour);

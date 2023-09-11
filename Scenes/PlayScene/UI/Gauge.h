@@ -27,17 +27,22 @@ public:
 	void Finalize();
 
 	// ï°êîÇÃUserInterfaseÇìØÇ∂à íuÇ…èoåªÇ≥ÇπÇÈÇΩÇﬂÇÃä÷êî
-	void Add_MP(DirectX::SimpleMath::Vector2 position
-			,DirectX::SimpleMath::Vector2 scale
+	void Add_MP(SimpleMath::Vector2 position
+			,SimpleMath::Vector2 scale
 			, UserInterface::ANCHOR anchor);
 
-	void Add_Crystal(DirectX::SimpleMath::Vector2 position
-		, DirectX::SimpleMath::Vector2 scale
+	void Add_Crystal(SimpleMath::Vector2 position
+		, SimpleMath::Vector2 scale
 		, UserInterface::ANCHOR anchor);
 
-	void Add_Hp(DirectX::SimpleMath::Vector2 position
-		, DirectX::SimpleMath::Vector2 scale
+	void Add_Hp(SimpleMath::Vector2 position
+		, SimpleMath::Vector2 scale
 		, UserInterface::ANCHOR anchor);
+
+	SimpleMath::Vector2 GetHPGaugePos();
+	SimpleMath::Vector2 GetMPGaugePos();
+	SimpleMath::Vector2 GetCrystalGaugePos();
+
 
 private:
 

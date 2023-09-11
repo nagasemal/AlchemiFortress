@@ -27,7 +27,7 @@ void AM_Attacker::Initialize()
 
 	for (int i = 0; i < 4; i++)
 	{
-		m_selectBox[i] = std::make_unique<SelectionBox>(DirectX::SimpleMath::Vector2(80.f + ((float)i * 65.f), 560.f), DirectX::SimpleMath::Vector2(1.0f, 1.0f));
+		m_selectBox[i] = std::make_unique<SelectionBox>(SimpleMath::Vector2(80.f + ((float)i * 65.f), 560.f), SimpleMath::Vector2(1.0f, 1.0f));
 	}
 
 	m_color = ShareJsonData::GetInstance().GetElementColor(m_element);
@@ -89,7 +89,7 @@ void AM_Attacker::Draw()
 	/*===[ データの表示 ]===*/
 	std::wostringstream oss;
 	oss << "Element - " << m_element;
-	pSD.GetDebugFont()->AddString(oss.str().c_str(), DirectX::SimpleMath::Vector2(120.f, 360.f));
+	pSD.GetDebugFont()->AddString(oss.str().c_str(), SimpleMath::Vector2(120.f, 360.f));
 }
 
 void AM_Attacker::Finalize()

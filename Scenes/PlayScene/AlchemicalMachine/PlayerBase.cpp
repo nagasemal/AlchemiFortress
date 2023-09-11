@@ -6,7 +6,7 @@
 
 #include "NecromaLib/Singleton/ShareJsonData.h"
 
-#define RAGE DirectX::SimpleMath::Vector3(3, 3, 3)
+#define RAGE SimpleMath::Vector3(3, 3, 3)
 
 PlayerBase::PlayerBase() :
 	m_baseLv(),
@@ -31,7 +31,7 @@ void PlayerBase::Initialize()
 	m_exp = 0;
 	m_hp = 50;
 
-	m_data.pos  = DirectX::SimpleMath::Vector3(0,0,0);
+	m_data.pos  = SimpleMath::Vector3(0,0,0);
 	m_data.rage = RAGE;
 
 	auto pDataM = DataManager::GetInstance();
@@ -60,7 +60,7 @@ void PlayerBase::Update()
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
 	m_invincibleTime += deltaTime;
 
-	DirectX::SimpleMath::Vector3 mouseWolrdPos = InputSupport::GetInstance().GetMousePosWolrd();
+	SimpleMath::Vector3 mouseWolrdPos = InputSupport::GetInstance().GetMousePosWolrd();
 
 	if (PointerToCircle(GetCircle(), mouseWolrdPos)) m_hitMouseFlag = true;
 
@@ -90,9 +90,9 @@ void PlayerBase::Draw()
 	std::wostringstream oss;
 	oss << "Base-";
 	if (m_hitMouseFlag) oss << "Hit";
-	pSD.GetDebugFont()->AddString(oss.str().c_str(), DirectX::SimpleMath::Vector2(0.f, 100.f));
+	pSD.GetDebugFont()->AddString(oss.str().c_str(), SimpleMath::Vector2(0.f, 100.f));
 
-	DirectX::SimpleMath::Matrix textBox = DirectX::SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y + 3.0f, m_data.pos.z);
+	SimpleMath::Matrix textBox = SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y + 3.0f, m_data.pos.z);
 
 	m_testBox->Draw(textBox, pSD.GetView(), pSD.GetProjection(), Colors::Chocolate);
 
@@ -103,10 +103,10 @@ void PlayerBase::Render(DirectX::Model* model)
 	ShareData& pSD = ShareData::GetInstance();
 
 	// ƒ‚ƒfƒ‹î•ñ(ˆÊ’u,‘å‚«‚³)
-	DirectX::SimpleMath::Matrix modelData = DirectX::SimpleMath::Matrix::Identity;
-	modelData = DirectX::SimpleMath::Matrix::CreateScale(m_data.rage);
-	modelData *= DirectX::SimpleMath::Matrix::CreateRotationY(XMConvertToRadians(180));
-	modelData *= DirectX::SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y - 1.5f, m_data.pos.z);
+	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
+	modelData = SimpleMath::Matrix::CreateScale(m_data.rage);
+	modelData *= SimpleMath::Matrix::CreateRotationY(XMConvertToRadians(180));
+	modelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y - 1.5f, m_data.pos.z);
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection());
 
 }

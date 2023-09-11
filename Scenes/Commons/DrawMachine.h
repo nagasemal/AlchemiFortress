@@ -27,7 +27,7 @@ public:
 private:
 
 	// ‰~üã‚É•À‚×‚éˆ—
-	DirectX::SimpleMath::Vector3 SetVelocityCircle(int index, int max, float range)
+	SimpleMath::Vector3 SetVelocityCircle(int index, int max, float range)
 	{
 
 		float radian = XM_2PI / static_cast<float>(max);
@@ -36,7 +36,7 @@ private:
 		float x = range * cosf(radian * index);
 		float z = range * sinf(radian * index);
 
-		DirectX::SimpleMath::Vector3 pos = { x,0,z };
+		SimpleMath::Vector3 pos = { x,0,z };
 
 		return pos;
 	}

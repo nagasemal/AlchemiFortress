@@ -12,8 +12,8 @@
 const std::vector<D3D11_INPUT_ELEMENT_DESC> TitleLogo::INPUT_LAYOUT =
 {
 	{ "POSITION",	0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	{ "COLOR",	0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, sizeof(DirectX::SimpleMath::Vector3), D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	{ "TEXCOORD",	0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(DirectX::SimpleMath::Vector3) + sizeof(DirectX::SimpleMath::Vector4), D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "COLOR",	0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, sizeof(SimpleMath::Vector3), D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "TEXCOORD",	0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(SimpleMath::Vector3) + sizeof(SimpleMath::Vector4), D3D11_INPUT_PER_VERTEX_DATA, 0 },
 };
 
 TitleLogo::TitleLogo():
@@ -23,12 +23,12 @@ TitleLogo::TitleLogo():
 	, m_textureWidth(0)
 	, m_texture(nullptr)
 	, m_res(nullptr)
-	, m_scale(DirectX::SimpleMath::Vector2::One)
-	, m_position(DirectX::SimpleMath::Vector2::Zero)
+	, m_scale(SimpleMath::Vector2::One)
+	, m_position(SimpleMath::Vector2::Zero)
 	, m_color(1.0f, 1.0f, 1.0f, 1.0f)
 	, m_rotationMatrix()
-	, m_transparentTime()
-	, m_transparentDeltaTime()
+	, m_animationTime()
+	, m_animationSin()
 {
 }
 
@@ -58,8 +58,8 @@ void TitleLogo::Create(const wchar_t* path)
 	auto resouce = ShareData::GetInstance().GetDeviceResources();
 	RECT windowSize = resouce->GetOutputSize();
 
-	m_position = { static_cast<float>(windowSize.right / 2),static_cast<float>(windowSize.bottom / 2) };
-	m_baseScale = m_scale = { 0.6f,0.6f };
+	//m_position = { static_cast<float>(windowSize.right / 1.2),static_cast<float>(windowSize.bottom / 1.2) };
+	m_baseScale = m_scale = { 0.3f,0.3f };
 
 	//シェーダーの作成
 	CreateShader();
@@ -78,6 +78,9 @@ void TitleLogo::Create(const wchar_t* path)
 
 void TitleLogo::Update()
 {
+	m_animationTime += 0.008f;
+
+	m_animationSin = 1.25f + sinf(m_animationTime * 2.5f);
 }
 
 void TitleLogo::Render()
@@ -91,18 +94,18 @@ void TitleLogo::Render()
 	// Position.z	:アンカータイプ(0～8)の整数で指定
 	// Color.xy　	:アンカー座標(ピクセル指定:1280 ×720)
 	// Color.zw		:画像サイズ
-	// Tex.xy		:x 未使用　y 半透明化処理
+	// Tex.xy		:x 未使用　y 未使用
 	DirectX::VertexPositionColorTexture vertex[1] = {
-		DirectX::VertexPositionColorTexture(DirectX::SimpleMath::Vector3(m_scale.x, m_scale.y, static_cast<float>(ANCHOR::MIDDLE_CENTER))
-		, DirectX::SimpleMath::Vector4(m_position.x, m_position.y, static_cast<float>(m_textureWidth), static_cast<float>(m_textureHeight))
-		, DirectX::SimpleMath::Vector2(1,1))
+		DirectX::VertexPositionColorTexture(SimpleMath::Vector3(m_scale.x, m_scale.y, static_cast<float>(ANCHOR::MIDDLE_CENTER))
+		, SimpleMath::Vector4(m_position.x, m_position.y, static_cast<float>(m_textureWidth), static_cast<float>(m_textureHeight))
+		, SimpleMath::Vector2(1,1))
 	};
 
 	//シェーダーに渡す追加のバッファを作成する。(ConstBuffer）
 	ConstBuffer cbuff;
-	cbuff.windowSize = DirectX::SimpleMath::Vector4(static_cast<float>(m_windowWidth), static_cast<float>(m_windowHeight), 1, 1);
+	cbuff.windowSize = SimpleMath::Vector4(static_cast<float>(m_windowWidth), static_cast<float>(m_windowHeight), 1, 1);
 	cbuff.color = m_color;
-	cbuff.diffuse = DirectX::SimpleMath::Vector4(1, 1, 1, 1);
+	cbuff.diffuse = SimpleMath::Vector4(1, m_animationSin, 1, m_animationTime);
 
 	//受け渡し用バッファの内容更新(ConstBufferからID3D11Bufferへの変換）
 	context->UpdateSubresource(m_cBuffer.Get(), 0, NULL, &cbuff, 0, 0);
@@ -137,6 +140,7 @@ void TitleLogo::Render()
 	//ピクセルシェーダにテクスチャを登録する。
 	context->PSSetShaderResources(0, 1, SpriteLoder::GetInstance().GetTitleLogo().GetAddressOf());
 	context->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetMagicCircleTexture(2).GetAddressOf());
+	context->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetRule().GetAddressOf());
 
 	//インプットレイアウトの登録
 	context->IASetInputLayout(m_inputLayout.Get());
@@ -160,12 +164,12 @@ void TitleLogo::SetWindowSize(const int& width, const int& height)
 
 }
 
-void TitleLogo::SetScale(DirectX::SimpleMath::Vector2 scale)
+void TitleLogo::SetScale(SimpleMath::Vector2 scale)
 {
 	m_scale = scale;
 }
 
-void TitleLogo::SetPosition(DirectX::SimpleMath::Vector2 position)
+void TitleLogo::SetPosition(SimpleMath::Vector2 position)
 {
 	m_position = position;
 }

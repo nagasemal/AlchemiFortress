@@ -35,7 +35,7 @@ public:
 	void Finalize()				override;
 
 	// モデルを描画するための関数
-	void DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture,DirectX::Model* model,DirectX::SimpleMath::Matrix view,DirectX::SimpleMath::Matrix proj, DirectX::Model* secondModel = nullptr);
+	void DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture,DirectX::Model* model,SimpleMath::Matrix view,SimpleMath::Matrix proj, DirectX::Model* secondModel = nullptr);
 
 public:
 
@@ -45,7 +45,7 @@ public:
 	bool GetHitMouseFlag()											{ return m_hitMouseFlag; }
 	void SetHitMouseFlag(bool flag)									{ m_hitMouseFlag = flag; }
 
-	void SetPosition(DirectX::SimpleMath::Vector2 pos)				{ m_data.pos = pos; }
+	void SetPosition(SimpleMath::Vector2 pos)				{ m_data.pos = pos; }
 
 	void SetMachineType(MACHINE_TYPE type) { m_selectMachineType = type;}
 	MACHINE_TYPE GetMachineType()			{ return m_selectMachineType;}
@@ -76,7 +76,7 @@ private:
 	std::unique_ptr<Number>		  m_numberRender;
 
 	// ボックスの色味
-	DirectX::SimpleMath::Color m_boxColor;
+	SimpleMath::Color m_boxColor;
 	bool m_changeColorFlag;
 
 	// 色を変化させる時間変数

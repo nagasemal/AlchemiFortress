@@ -17,10 +17,10 @@ public:
 	//データ受け渡し用コンスタントバッファ(送信側)
 	struct ConstBuffer
 	{
-		DirectX::SimpleMath::Matrix		matWorld;
-		DirectX::SimpleMath::Matrix		matView;
-		DirectX::SimpleMath::Matrix		matProj;
-		DirectX::SimpleMath::Vector4	Diffuse;
+		SimpleMath::Matrix		matWorld;
+		SimpleMath::Matrix		matView;
+		SimpleMath::Matrix		matProj;
+		SimpleMath::Vector4	Diffuse;
 	};
 
 	enum EFFECT_TYPE : int
@@ -46,9 +46,9 @@ public:
 	void Initialize();
 
 	// 常時用
-	void Update(DirectX::SimpleMath::Vector3 pos);
+	void Update(SimpleMath::Vector3 pos);
 	// 単発用
-	bool OnShot(DirectX::SimpleMath::Vector3 pos, bool flag, DirectX::SimpleMath::Color color = {1.0f,1.0f,1.0f,1.0f});
+	bool OnShot(SimpleMath::Vector3 pos, bool flag, SimpleMath::Color color = {1.0f,1.0f,1.0f,1.0f});
 
 	// パーティクルを動かす/消す処理
 	void UpdateParticle();
@@ -83,12 +83,12 @@ private:
 	// ジオメトリシェーダ
 	Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_geometryShader;
 
-	DirectX::SimpleMath::Matrix m_billboard;
-	DirectX::SimpleMath::Matrix m_view;
-	DirectX::SimpleMath::Matrix m_proj;
+	SimpleMath::Matrix m_billboard;
+	SimpleMath::Matrix m_view;
+	SimpleMath::Matrix m_proj;
 
-	DirectX::SimpleMath::Vector3 m_cameraPosition;
-	DirectX::SimpleMath::Vector3 m_cameraTarget;
+	SimpleMath::Vector3 m_cameraPosition;
+	SimpleMath::Vector3 m_cameraTarget;
 
 	// 一度に出すParticleの量
 	int m_particleNum;
@@ -104,6 +104,6 @@ private:
 
 	void CreateShader();
 
-	ParticleUtility CreateEffectParam(EFFECT_TYPE type, DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Color color = {1.0f,1.0f,1.0f,1.0f});
+	ParticleUtility CreateEffectParam(EFFECT_TYPE type, SimpleMath::Vector3 pos, SimpleMath::Color color = {1.0f,1.0f,1.0f,1.0f});
 
 };

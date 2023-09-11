@@ -62,7 +62,7 @@ public:
 	void StageDataCleanUP();
 
 	// ƒGƒŒƒƒ“ƒg‚É•R‚Ã‚­Fî•ñ‚ğæ“¾
-	DirectX::SimpleMath::Color GetElementColor(ELEMENT element);
+	SimpleMath::Color GetElementColor(ELEMENT element);
 
 
 private:

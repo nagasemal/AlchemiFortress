@@ -26,9 +26,9 @@ public:
 	//データ受け渡し用コンスタントバッファ(送信側)
 	struct ConstBuffer
 	{
-		DirectX::SimpleMath::Vector4	windowSize;
-		DirectX::SimpleMath::Vector4	color;
-		DirectX::SimpleMath::Vector4	diffuse;
+		SimpleMath::Vector4	windowSize;
+		SimpleMath::Vector4	color;
+		SimpleMath::Vector4	diffuse;
 	};
 
 public:
@@ -44,11 +44,11 @@ public:
 
 	void SetWindowSize(const int& width, const int& height);
 
-	void SetScale(DirectX::SimpleMath::Vector2 scale);
-	void SetPosition(DirectX::SimpleMath::Vector2 position);
+	void SetScale(SimpleMath::Vector2 scale);
+	void SetPosition(SimpleMath::Vector2 position);
 
-	void SetColor(DirectX::SimpleMath::Color color) { m_color = color; }
-	DirectX::SimpleMath::Color GetColor() { return m_color; }
+	void SetColor(SimpleMath::Color color) { m_color = color; }
+	SimpleMath::Color GetColor() { return m_color; }
 
 	static const std::vector<D3D11_INPUT_ELEMENT_DESC> INPUT_LAYOUT;
 
@@ -78,15 +78,15 @@ private:
 	int m_windowWidth, m_windowHeight;
 	int m_textureWidth, m_textureHeight;
 
-	DirectX::SimpleMath::Vector2 m_scale;
-	DirectX::SimpleMath::Vector2 m_baseScale;
-	DirectX::SimpleMath::Vector2 m_position;
-	DirectX::SimpleMath::Color m_color;
-	DirectX::SimpleMath::Matrix	m_rotationMatrix;
+	SimpleMath::Vector2 m_scale;
+	SimpleMath::Vector2 m_baseScale;
+	SimpleMath::Vector2 m_position;
+	SimpleMath::Color m_color;
+	SimpleMath::Matrix	m_rotationMatrix;
 
 	// 魔法陣を透明→半透明に出現させる時間計測変数
-	float m_transparentTime;
-	float m_transparentDeltaTime;
+	float m_animationTime;
+	float m_animationSin;
 
 private:
 

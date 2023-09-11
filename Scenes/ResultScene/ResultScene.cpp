@@ -7,17 +7,17 @@
 
 #include "Scenes/DataManager.h"
 
-#define UI_POS		DirectX::SimpleMath::Vector2{1280.0f / 2.0f,720.0f / 2.0f}
+#define UI_POS		SimpleMath::Vector2{1280.0f / 2.0f,720.0f / 2.0f}
 
-#define UI_RAGE 	DirectX::SimpleMath::Vector2{2.5f, 1.5f}
+#define UI_RAGE 	SimpleMath::Vector2{2.5f, 1.5f}
 
 ResultScene::ResultScene()
 {
-	m_selectionBox_Next = std::make_unique<SelectionBox>(DirectX::SimpleMath::Vector2{ UI_POS.x - 200, UI_POS.y }, UI_RAGE);
+	m_selectionBox_Next = std::make_unique<SelectionBox>(SimpleMath::Vector2{ UI_POS.x - 200, UI_POS.y }, UI_RAGE);
 
 	m_selectionBox_Retry = std::make_unique<SelectionBox>(UI_POS, UI_RAGE);
 
-	m_selectionBox_Back = std::make_unique<SelectionBox>(DirectX::SimpleMath::Vector2{ UI_POS.x + 200, UI_POS.y }, UI_RAGE);
+	m_selectionBox_Back = std::make_unique<SelectionBox>(SimpleMath::Vector2{ UI_POS.x + 200, UI_POS.y }, UI_RAGE);
 
 	m_uiKeyControl = std::make_unique<UIKeyControl>();
 
@@ -75,7 +75,7 @@ void ResultScene::Draw()
 	/*===[ デバッグ文字描画 ]===*/
 	std::wostringstream oss;
 	oss << "ResultScene";
-	ShareData::GetInstance().GetDebugFont()->AddString(oss.str().c_str(), DirectX::SimpleMath::Vector2(0.f, 60.f));
+	ShareData::GetInstance().GetDebugFont()->AddString(oss.str().c_str(), SimpleMath::Vector2(0.f, 60.f));
 }
 
 void ResultScene::DrawUI()

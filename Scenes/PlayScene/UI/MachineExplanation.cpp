@@ -8,9 +8,9 @@
 #include "NecromaLib/Singleton/InputSupport.h"
 #include <WICTextureLoader.h>
 
-#define MAX_RAGE DirectX::SimpleMath::Vector2(450,300)
+#define MAX_RAGE SimpleMath::Vector2(450,300)
 
-#define MINI_BOX_POS DirectX::SimpleMath::Vector2(-85,-95)
+#define MINI_BOX_POS SimpleMath::Vector2(-85,-95)
 
 #define BIG_BOX_RAGEPERCENT 5.0f
 
@@ -75,12 +75,12 @@ void MachineExplanation::Draw()
 	RECT srcRect = {0, 0, 64, 64 };
 
 	// ログの色
-	DirectX::SimpleMath::Color colour = DirectX::SimpleMath::Color(0.8f, 0.8f, 0.8f, 0.8f);
+	SimpleMath::Color colour = SimpleMath::Color(0.8f, 0.8f, 0.8f, 0.8f);
 
 	// BOX描画
 	pSB->Draw(m_texture.Get(),m_data.pos,&srcRect,colour,0.0f,XMFLOAT2(64 / 2, 64 / 2), BIG_BOX_RAGEPERCENT);
 
-	DirectX::SimpleMath::Vector2 miniBox_pos = { m_data.pos.x + MINI_BOX_POS.x ,m_data.pos.y + MINI_BOX_POS.y };
+	SimpleMath::Vector2 miniBox_pos = { m_data.pos.x + MINI_BOX_POS.x ,m_data.pos.y + MINI_BOX_POS.y };
 
 	// 内部BOX (オブジェクトを配置する箇所)
 	pSB->Draw(m_texture.Get(), miniBox_pos, &srcRect, colour, 0.0f, XMFLOAT2(64 / 2,64 / 2), 1.5f);
@@ -98,14 +98,14 @@ void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* se
 	DX::DeviceResources* pDR = pSD.GetDeviceResources();
 
 	// モデル情報(位置,大きさ)
-	DirectX::SimpleMath::Matrix modelData = DirectX::SimpleMath::Matrix::Identity;
-	modelData = DirectX::SimpleMath::Matrix::CreateScale(0.35f,0.35f, 0.35f);
+	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
+	modelData = SimpleMath::Matrix::CreateScale(0.35f,0.35f, 0.35f);
 
 	modelData *= SimpleMath::Matrix::CreateRotationX(-20);
 	modelData *= SimpleMath::Matrix::CreateRotationZ(m_moveTime);
 
 	// ワールド座標変換
-	DirectX::SimpleMath::Vector3 worldPos = CalcScreenToXZN((int)m_data.pos.x - 78,
+	SimpleMath::Vector3 worldPos = CalcScreenToXZN((int)m_data.pos.x - 78,
 															(int)m_data.pos.y - 64,
 															pDR->GetOutputSize().right,
 															pDR->GetOutputSize().bottom,
@@ -114,7 +114,7 @@ void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* se
 
 	worldPos.z = 2.0f;
 
-	modelData *= DirectX::SimpleMath::Matrix::CreateTranslation(worldPos);
+	modelData *= SimpleMath::Matrix::CreateTranslation(worldPos);
 
 	model->UpdateEffects([&](IEffect* effect)
 		{
@@ -136,7 +136,7 @@ void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* se
 				auto lights = dynamic_cast<IEffectLights*>(effect);
 
 				// 色変更
-				lights->SetLightDiffuseColor(0, DirectX::SimpleMath::Color((float)object->GetPowerUpFlag(),(float)object->GetPowerUpFlag(), 0.0f, 1.0f));
+				lights->SetLightDiffuseColor(0, SimpleMath::Color((float)object->GetPowerUpFlag(),(float)object->GetPowerUpFlag(), 0.0f, 1.0f));
 			});
 
 		secondModel->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());

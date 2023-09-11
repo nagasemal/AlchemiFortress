@@ -22,9 +22,9 @@ private:
 	float mAngleY;								// 横回転角
 	int mPrevX, mPrevY;							// 前回のマウス座標(X,Y)
 	int mScrollWheelValue;						// マウスホイールのスクロール値
-	DirectX::SimpleMath::Matrix mView;			// 生成されたビュー行列
-	DirectX::SimpleMath::Vector3 mEye;			// カメラの座標
-	DirectX::SimpleMath::Vector3 mTarget;		// 注視点
+	SimpleMath::Matrix mView;			// 生成されたビュー行列
+	SimpleMath::Vector3 mEye;			// カメラの座標
+	SimpleMath::Vector3 mTarget;		// 注視点
 
 public:
 	// コンストラクタ
@@ -36,11 +36,11 @@ public:
 	void Update();
 
 	// ビュー行列を取得する
-	DirectX::SimpleMath::Matrix GetViewMatrix() const		{ return mView; }
+	SimpleMath::Matrix GetViewMatrix() const		{ return mView; }
 	// デバッグカメラの座標を取得する
-	DirectX::SimpleMath::Vector3 GetEyePosition() const		{ return mEye; }
+	SimpleMath::Vector3 GetEyePosition() const		{ return mEye; }
 	// デバッグカメラの注視点座標を取得する
-	DirectX::SimpleMath::Vector3 GetTargetPosition() const	{ return mTarget; }
+	SimpleMath::Vector3 GetTargetPosition() const	{ return mTarget; }
 
 private:
 	// マウスポインタのドラッグ開始位置からの変位(相対値)

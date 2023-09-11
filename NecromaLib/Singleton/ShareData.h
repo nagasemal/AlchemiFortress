@@ -59,9 +59,9 @@ public:
 	Camera* GetCamera()									{ return m_camera; }
 
 	// Views—ñ
-	DirectX::SimpleMath::Matrix GetView()				{ return m_camera->GetViewMatrix(); }
+	SimpleMath::Matrix GetView()				{ return m_camera->GetViewMatrix(); }
 	// Projections—ñ
-	DirectX::SimpleMath::Matrix GetProjection()			{ return m_camera->GetProjectionMatrix(); }
+	SimpleMath::Matrix GetProjection()			{ return m_camera->GetProjectionMatrix(); }
 
 
 private:

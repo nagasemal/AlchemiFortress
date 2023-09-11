@@ -20,8 +20,8 @@ public:
 
 	// マシンのHPゲージ
 	void AddHPGauge(
-		  DirectX::SimpleMath::Vector2 position
-		, DirectX::SimpleMath::Vector2 scale
+		  SimpleMath::Vector2 position
+		, SimpleMath::Vector2 scale
 		, UserInterface::ANCHOR anchor);
 
 	void Update(int hp,int maxHp);

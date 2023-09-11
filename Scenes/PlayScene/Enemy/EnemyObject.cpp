@@ -12,7 +12,7 @@
 
 #define GRAVITY 0.2f
 
-EnemyObject::EnemyObject(ENEMY_TYPE type, DirectX::SimpleMath::Vector3 startPos, int lv) :
+EnemyObject::EnemyObject(ENEMY_TYPE type, SimpleMath::Vector3 startPos, int lv) :
 	m_power(1),
 	m_hp(10),
 	m_lv(lv),
@@ -28,7 +28,7 @@ EnemyObject::EnemyObject(ENEMY_TYPE type, DirectX::SimpleMath::Vector3 startPos,
 {
 
 	m_data.pos = startPos;
-	m_data.rage = DirectX::SimpleMath::Vector3(0.25f, 0.25f, 0.25f);
+	m_data.rage = SimpleMath::Vector3(0.25f, 0.25f, 0.25f);
 
 }
 
@@ -55,10 +55,10 @@ void EnemyObject::Update()
 	if (m_data.pos.y <= 0.0f)	m_data.pos.y = 0.0f;
 
 	// ƒ^[ƒQƒbƒg‚ÉŽ‹ü‚ðŒü‚¯‚éˆ—
-	DirectX::SimpleMath::Vector3 targetDiff = m_targetPos - m_data.pos;
+	SimpleMath::Vector3 targetDiff = m_targetPos - m_data.pos;
 	targetDiff.y = 0;
 	targetDiff.Normalize();
-	m_rotation = DirectX::SimpleMath::Quaternion::FromToRotation(DirectX::SimpleMath::Vector3::UnitX, targetDiff);
+	m_rotation = SimpleMath::Quaternion::FromToRotation(SimpleMath::Vector3::UnitX, targetDiff);
 
 	// ˆÚ“®‚ðŽ~‚ß‚éˆ—
 	if (!m_stopFlag)
@@ -80,7 +80,7 @@ void EnemyObject::Update()
 	m_stopFlag = false;
 
 	// ‰Šú‰»
-	m_lengthVec = DirectX::SimpleMath::Vector3();
+	m_lengthVec = SimpleMath::Vector3();
 }
 
 void EnemyObject::Draw()
@@ -93,10 +93,10 @@ void EnemyObject::Render(Model* model)
 
 	ShareData& pSD = ShareData::GetInstance();
 
-	DirectX::SimpleMath::Matrix modelMatrix = 
+	SimpleMath::Matrix modelMatrix = 
 		SimpleMath::Matrix::CreateFromQuaternion(m_rotation)
-		* DirectX::SimpleMath::Matrix::CreateScale(m_data.rage * 5.0f)
-		* DirectX::SimpleMath::Matrix::CreateTranslation(m_data.pos);
+		* SimpleMath::Matrix::CreateScale(m_data.rage * 5.0f)
+		* SimpleMath::Matrix::CreateTranslation(m_data.pos);
 
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelMatrix, pSD.GetView(), pSD.GetProjection());
 
@@ -112,7 +112,7 @@ void EnemyObject::Finalize()
 	m_moveCommands.clear();
 }
 
-bool EnemyObject::GotoTarget(DirectX::SimpleMath::Vector3 target)
+bool EnemyObject::GotoTarget(SimpleMath::Vector3 target)
 {
 	target;
 

@@ -19,8 +19,8 @@ protected:
 		SimpleMath::Vector3 pos;
 		SimpleMath::Vector3 rage;
 
-		ObjectData3D(DirectX::SimpleMath::Vector3 pos  = DirectX::SimpleMath::Vector3::Zero,
-					 DirectX::SimpleMath::Vector3 rage = DirectX::SimpleMath::Vector3::Zero) 
+		ObjectData3D(SimpleMath::Vector3 pos  = SimpleMath::Vector3::Zero,
+					 SimpleMath::Vector3 rage = SimpleMath::Vector3::Zero) 
 					 { this->pos = pos, this->rage = rage; }
 	};
 
@@ -53,6 +53,6 @@ public:
 	Circle GetCircle()								{ return Circle(m_data.pos, m_data.rage.x * 1.5f); }
 
 	// target‚Ì•ûŒü‚ÖŠp“x‚ðŒü‚¯‚éQuaternion‚ð•Ô‚µ‚Ü‚·
-	DirectX::SimpleMath::Quaternion LookAt(DirectX::SimpleMath::Vector3 target);
+	SimpleMath::Quaternion LookAt(SimpleMath::Vector3 target);
 
 };

@@ -155,6 +155,12 @@
     <Filter Include="Scene\TitleScene\TitleLogo">
       <UniqueIdentifier>{84dd3a9a-7bbf-4b8e-964c-13e3a0605ae0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\Veil">
+      <UniqueIdentifier>{51c9fcbe-06da-42e7-aab2-b8aedc7850b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Button">
+      <UniqueIdentifier>{97069f2e-c772-4b0a-a374-6a86543a2644}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -412,6 +418,18 @@
     <ClInclude Include="Scenes\TitleScene\TitleLogo\TitleLogo.h">
       <Filter>Scene\TitleScene\TitleLogo</Filter>
     </ClInclude>
+    <ClInclude Include="NecromaLib\GameData\ShaderTemplate.h">
+      <Filter>NecromaLib\GameData</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\TitleScene\TitleLogo\Veil.h">
+      <Filter>Scene\TitleScene\TitleLogo</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Commons\ShaderButton.h">
+      <Filter>Scene\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Commons\PopLine.h">
+      <Filter>Scene\Commons</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -582,9 +600,6 @@
     <ClCompile Include="Scenes\TitleScene\Camera\TitleCamera.cpp">
       <Filter>Scene\TitleScene\camera</Filter>
     </ClCompile>
-    <ClCompile Include="NecromaLib\GameData\Animation.cpp">
-      <Filter>NecromaLib\GameData</Filter>
-    </ClCompile>
     <ClCompile Include="Scenes\PlayScene\UI\DisplayMagicCircle.cpp">
       <Filter>Scene\PlayScene\UI</Filter>
     </ClCompile>
@@ -650,6 +665,18 @@
     </ClCompile>
     <ClCompile Include="Scenes\TitleScene\TitleLogo\TitleLogo.cpp">
       <Filter>Scene\TitleScene\TitleLogo</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\GameData\ShaderTemplate.cpp">
+      <Filter>NecromaLib\GameData</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\TitleScene\TitleLogo\Veil.cpp">
+      <Filter>Scene\TitleScene\TitleLogo</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\Commons\ShaderButton.cpp">
+      <Filter>Scene\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\Commons\PopLine.cpp">
+      <Filter>Scene\Commons</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -731,6 +758,12 @@
     <None Include="Resources\Shader\CutTexture.hlsli">
       <Filter>Shader\CutTexture</Filter>
     </None>
+    <None Include="Resources\Shader\Veil.hlsli">
+      <Filter>Shader\Veil</Filter>
+    </None>
+    <None Include="Resources\Shader\Button.hlsli">
+      <Filter>Shader\Button</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Transition_GS.hlsl">
@@ -786,6 +819,24 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\CutTexture_VS.hlsl">
       <Filter>Shader\CutTexture</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Veil_GS.hlsl">
+      <Filter>Shader\Veil</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Veil_PS.hlsl">
+      <Filter>Shader\Veil</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Veil_VS.hlsl">
+      <Filter>Shader\Veil</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Button_GS.hlsl">
+      <Filter>Shader\Button</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Button_PS.hlsl">
+      <Filter>Shader\Button</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\Button_VS.hlsl">
+      <Filter>Shader\Button</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

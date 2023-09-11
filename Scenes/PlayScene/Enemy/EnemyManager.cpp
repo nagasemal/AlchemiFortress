@@ -27,7 +27,7 @@ void EnemyManager::Initialize()
 
 	ShareData& pSD = ShareData::GetInstance();
 
-	m_testBox = GeometricPrimitive::CreateBox(pSD.GetContext(), DirectX::SimpleMath::Vector3(1,1,1));
+	m_testBox = GeometricPrimitive::CreateBox(pSD.GetContext(), SimpleMath::Vector3(1,1,1));
 	m_enemyObject = std::make_unique<std::list<EnemyObject>>();
 
 	//m_particle_hit = std::make_unique<Particle>(Particle::HIT_BULLET);
@@ -48,7 +48,7 @@ void EnemyManager::Initialize()
 	ShareJsonData::GetInstance().LoadingJsonFile_Enemy();
 }
 
-void EnemyManager::Update(DirectX::SimpleMath::Vector3 basePos)
+void EnemyManager::Update(SimpleMath::Vector3 basePos)
 {
 
 	basePos;
@@ -112,7 +112,7 @@ void EnemyManager::Render()
 	///*===[ デバッグ文字描画 ]===*/
 	//std::wostringstream oss;
 	//oss << "EnemyNum - " << m_enemyObject->size();
-	//pSD.GetDebugFont()->AddString(oss.str().c_str(), DirectX::SimpleMath::Vector2(400.f, 20.f));
+	//pSD.GetDebugFont()->AddString(oss.str().c_str(), SimpleMath::Vector2(400.f, 20.f));
 
 	//m_particle_hit	->Render();
 	m_particle_delete	->Render();
@@ -154,7 +154,7 @@ EnemyObject EnemyManager::GetEnemyStatus(ENEMY_TYPE type,int spawnNumber)
 	int remoteness = (int)((float)pSJD.GetStageData().enemys_Spawn[spawnNumber].remoteness * 1.5f);
 	float direction = (float)pSJD.GetStageData().enemys_Spawn[spawnNumber].direction;
 
-	EnemyObject enemy(type,DirectX::SimpleMath::Vector3(remoteness * cosf(direction), 0.0f, remoteness * sinf(direction)),1);
+	EnemyObject enemy(type,SimpleMath::Vector3(remoteness * cosf(direction), 0.0f, remoteness * sinf(direction)),1);
 
 	Enemy_Data enemyData = pSJD.GetEnemyData(pSJD.GetStageData().enemys_Spawn[spawnNumber].type);
 

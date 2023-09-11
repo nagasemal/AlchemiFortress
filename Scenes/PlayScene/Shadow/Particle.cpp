@@ -13,8 +13,8 @@
 const std::vector<D3D11_INPUT_ELEMENT_DESC> Particle::INPUT_LAYOUT =
 {
 	{ "POSITION",	0, DXGI_FORMAT_R32G32B32_FLOAT,		0,							 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	{ "COLOR"	,	0, DXGI_FORMAT_R32G32B32A32_FLOAT,  0,	sizeof(DirectX::SimpleMath::Vector3), D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	{ "TEXCOORD",	0, DXGI_FORMAT_R32G32_FLOAT,		0,  sizeof(DirectX::SimpleMath::Vector3) + sizeof(DirectX::SimpleMath::Vector4), D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "COLOR"	,	0, DXGI_FORMAT_R32G32B32A32_FLOAT,  0,	sizeof(SimpleMath::Vector3), D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "TEXCOORD",	0, DXGI_FORMAT_R32G32_FLOAT,		0,  sizeof(SimpleMath::Vector3) + sizeof(SimpleMath::Vector4), D3D11_INPUT_PER_VERTEX_DATA, 0 },
 };
 
 Particle::Particle(EFFECT_TYPE type) :
@@ -50,10 +50,10 @@ void Particle::CreateBillboard()
 	auto camera = ShareData::GetInstance().GetCamera();
 
 	m_billboard =
-		DirectX::SimpleMath::Matrix::CreateBillboard(DirectX::SimpleMath::Vector3::Zero,
+		SimpleMath::Matrix::CreateBillboard(SimpleMath::Vector3::Zero,
 			camera->GetEyePosition() - camera->GetTargetPosition(), camera->GetUpVector());
 
-	DirectX::SimpleMath::Matrix rot = DirectX::SimpleMath::Matrix::Identity;
+	SimpleMath::Matrix rot = SimpleMath::Matrix::Identity;
 	rot._11 = -1;
 	rot._33 = -1;
 
@@ -79,7 +79,7 @@ void Particle::Initialize()
 
 }
 
-void Particle::Update(DirectX::SimpleMath::Vector3 pos)
+void Particle::Update(SimpleMath::Vector3 pos)
 {
 	m_timer += DeltaTime::GetInstance().GetDeltaTime();
 
@@ -98,7 +98,7 @@ void Particle::Update(DirectX::SimpleMath::Vector3 pos)
 	}
 }
 
-bool Particle::OnShot(DirectX::SimpleMath::Vector3 pos, bool flag, DirectX::SimpleMath::Color color)
+bool Particle::OnShot(SimpleMath::Vector3 pos, bool flag, SimpleMath::Color color)
 {
 	// flaseなら通さない
 	if (!flag) return false;
@@ -136,7 +136,7 @@ void Particle::Render()
 	auto proj = ShareData::GetInstance().GetProjection();
 
 	// 頂点情報(板ポリゴンの４頂点の座標情報）
-	DirectX::SimpleMath::Vector3 cameraDir = m_cameraTarget - m_cameraPosition;
+	SimpleMath::Vector3 cameraDir = m_cameraTarget - m_cameraPosition;
 	cameraDir.Normalize();
 
 	m_particleUtility.sort(
@@ -176,7 +176,7 @@ void Particle::Render()
 	cbuff.matView = view.Transpose();
 	cbuff.matProj = proj.Transpose();
 	cbuff.matWorld = m_billboard.Transpose();
-	cbuff.Diffuse = DirectX::SimpleMath::Vector4(1, 1, 1, 1);
+	cbuff.Diffuse = SimpleMath::Vector4(1, 1, 1, 1);
 
 	//受け渡し用バッファの内容更新(ConstBufferからID3D11Bufferへの変換）
 	context->UpdateSubresource(m_cBuffer.Get(), 0, NULL, &cbuff, 0, 0);
@@ -280,7 +280,7 @@ void Particle::CreateShader()
 	device->CreateBuffer(&bd, nullptr, &m_cBuffer);
 }
 
-ParticleUtility Particle::CreateEffectParam(EFFECT_TYPE type, DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Color color)
+ParticleUtility Particle::CreateEffectParam(EFFECT_TYPE type, SimpleMath::Vector3 pos, SimpleMath::Color color)
 {
 
 	std::random_device seed;
@@ -291,14 +291,14 @@ ParticleUtility Particle::CreateEffectParam(EFFECT_TYPE type, DirectX::SimpleMat
 
 	ParticleUtility pU(
 		1.0f,																					// 生存時間
-		DirectX::SimpleMath::Vector3::Zero,														// 基準座標
-		DirectX::SimpleMath::Vector3::Zero,														// 速度
-		DirectX::SimpleMath::Vector3::Zero,														// 加速度
-		DirectX::SimpleMath::Vector3(0.7f, 0.7f, 0.7f), DirectX::SimpleMath::Vector3::Zero,		// 初期スケール、最終スケール
-		DirectX::SimpleMath::Color(color), DirectX::SimpleMath::Color(0.f, 0.f, 0.f, 0.f)		// 初期カラー、最終カラー
+		SimpleMath::Vector3::Zero,														// 基準座標
+		SimpleMath::Vector3::Zero,														// 速度
+		SimpleMath::Vector3::Zero,														// 加速度
+		SimpleMath::Vector3(0.7f, 0.7f, 0.7f), SimpleMath::Vector3::Zero,		// 初期スケール、最終スケール
+		SimpleMath::Color(color), SimpleMath::Color(0.f, 0.f, 0.f, 0.f)		// 初期カラー、最終カラー
 	);
 
-	DirectX::SimpleMath::Vector3 vectol = pU.GetPosition() - pos;
+	SimpleMath::Vector3 vectol = pU.GetPosition() - pos;
 
 
 	switch (type)
@@ -309,12 +309,12 @@ ParticleUtility Particle::CreateEffectParam(EFFECT_TYPE type, DirectX::SimpleMat
 
 		pU.SetLife(0.8f);
 
-		pU.SetPosition(DirectX::SimpleMath::Vector3(
+		pU.SetPosition(SimpleMath::Vector3(
 			pos.x + range * cosf(rand),
 			pos.y + range * sinf(rand),
 			pos.z + range * cosf(rand)));
 
-		pU.SetVelocity(DirectX::SimpleMath::Vector3(0.0f,0.8f,0.0f));
+		pU.SetVelocity(SimpleMath::Vector3(0.0f,0.8f,0.0f));
 
 		pU.SetEndColor({color.R(),color.G(),color.B(),0.0f});
 
@@ -322,22 +322,22 @@ ParticleUtility Particle::CreateEffectParam(EFFECT_TYPE type, DirectX::SimpleMat
 
 		break;
 	case Particle::SPAWN_ENEMY:
-		pU.SetPosition(DirectX::SimpleMath::Vector3(pos.x + range * cosf(rand),
+		pU.SetPosition(SimpleMath::Vector3(pos.x + range * cosf(rand),
 			pos.y,
 			pos.z + range * sinf(rand)));
 
-		pU.SetVelocity(DirectX::SimpleMath::Vector3(0.0f, 0.8f, 0.0f));
+		pU.SetVelocity(SimpleMath::Vector3(0.0f, 0.8f, 0.0f));
 
 		m_particleNum = 10;
 		break;
 	case Particle::DELETE_ENEMY:
 
-		pU.SetPosition(DirectX::SimpleMath::Vector3(pos.x + range * cosf(rand),
+		pU.SetPosition(SimpleMath::Vector3(pos.x + range * cosf(rand),
 													pos.y,
 													pos.z + range * sinf(rand)));
 
-		pU.SetVelocity(DirectX::SimpleMath::Vector3(0.0f, 0.8f, 0.0f));
-		pU.SetAccele(DirectX::SimpleMath::Vector3(0.0f, -0.025f, 0.0f));
+		pU.SetVelocity(SimpleMath::Vector3(0.0f, 0.8f, 0.0f));
+		pU.SetAccele(SimpleMath::Vector3(0.0f, -0.025f, 0.0f));
 
 		m_particleNum = 10;
 		break;

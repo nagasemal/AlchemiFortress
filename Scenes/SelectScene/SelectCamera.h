@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include "NecromaLib/GameData/Animation.h"
+
 class SelectCamera
 {
 public:
@@ -26,13 +28,13 @@ public:
 	void AnimationReset();
 
 	// ビュー行列を取得する
-	DirectX::SimpleMath::Matrix GetViewMatrix() const { return m_view; }
+	SimpleMath::Matrix GetViewMatrix() const { return m_view; }
 	// デバッグカメラの座標を取得する
-	DirectX::SimpleMath::Vector3 GetEyePosition() const { return m_eye; }
+	SimpleMath::Vector3 GetEyePosition() const { return m_eye; }
 	// デバッグカメラの注視点座標を取得する
-	DirectX::SimpleMath::Vector3 GetTargetPosition() const { return m_target; }
+	SimpleMath::Vector3 GetTargetPosition() const { return m_target; }
 
-	float GetAnimationTimer() const { return m_animationTimer_Select;}
+	float GetAnimationTimer() { return m_animationTimer_Select;}
 
 private:
 
@@ -41,14 +43,14 @@ private:
 	int m_prevX, m_prevY;						// 前回のマウス座標(X,Y)
 	int m_scrollWheelValue;						// マウスホイールのスクロール値
 	int m_prevWheelValue;						// 前回のスクロール値
-	DirectX::SimpleMath::Vector3 m_move;		// 移動値
-	DirectX::SimpleMath::Matrix m_view;			// 生成されたビュー行列
-	DirectX::SimpleMath::Vector3 m_eye;			// カメラの座標
-	DirectX::SimpleMath::Vector3 m_target;		// 注視点
+	SimpleMath::Vector3 m_move;		// 移動値
+	SimpleMath::Matrix m_view;			// 生成されたビュー行列
+	SimpleMath::Vector3 m_eye;			// カメラの座標
+	SimpleMath::Vector3 m_target;		// 注視点
 
-	float m_animationTimer_Start;				// 始めに使われるタイマー
+	AnimationData m_animationTimer_Start;				// 始めに使われるタイマー
 
-	float m_animationTimer_Select;				// ステージの切り替わりで使われるタイマー
+	AnimationData m_animationTimer_Select;				// ステージの切り替わりで使われるタイマー
 
 	float saveAngleY;
 

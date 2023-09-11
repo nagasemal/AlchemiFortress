@@ -60,6 +60,9 @@ public:
 	// マシンが設置されたことを知らせるフラグ
 	MACHINE_TYPE SpawnMachineNotification() { return m_spawnMachine; }
 
+	// マシンの選択番号を変更する
+	void SetSelectMachineNumber(int index) { m_selectNumber = index; }
+
 private:
 
 	// 専用の更新処理を回す
@@ -93,7 +96,7 @@ private:
 private:
 
 	// 円周上に並べる処理
-	DirectX::SimpleMath::Vector3 SetVelocityCircle(int index, int max, float range)
+	SimpleMath::Vector3 SetVelocityCircle(int index, int max, float range)
 	{
 
 		float radian = XM_2PI / static_cast<float>(max);
@@ -102,7 +105,7 @@ private:
 		float x = range * cosf(radian * index);
 		float z = range * sinf(radian * index);
 
-		DirectX::SimpleMath::Vector3 pos = { x,0,z};
+		SimpleMath::Vector3 pos = { x,0,z};
 
 		return pos;
 	}
@@ -148,7 +151,7 @@ private:
 
 	// 現在選択されているオブジェクトの番号
 	int m_selectNumber;
-	DirectX::SimpleMath::Vector3 m_prevSelectMachinePos;
+	SimpleMath::Vector3 m_prevSelectMachinePos;
 
 	// Mpが追加されるまでの時間
 	float m_mpPulsTimer;

@@ -33,7 +33,7 @@ void FieldObjectManager::Initialize()
 			auto lights = dynamic_cast<IEffectLights*>(effect);
 
 			// 光の当たり方変更
-			lights->SetAmbientLightColor(DirectX::SimpleMath::Color(0.4f, 0.4f, 1.f, 0.2f));
+			lights->SetAmbientLightColor(SimpleMath::Color(0.4f, 0.4f, 1.f, 0.2f));
 
 		});
 
@@ -47,7 +47,7 @@ void FieldObjectManager::Initialize()
 
 	CrystalSpawn(30);
 
-	//m_crystals->push_back(*std::make_unique<Crystal>(DirectX::SimpleMath::Vector3(1, -1.0f,5), cos(5)));
+	//m_crystals->push_back(*std::make_unique<Crystal>(SimpleMath::Vector3(1, -1.0f,5), cos(5)));
 
 	// クリスタルの初期化処理
 	for (std::list<Crystal>::iterator it = m_crystals->begin(); it != m_crystals->end(); it++)
@@ -138,6 +138,6 @@ void FieldObjectManager::CrystalSpawn(int num)
 
 	//	float rand2 = static_cast<float>(dist2(gen));
 
-	//	m_crystals->push_back(*std::make_unique<Crystal>(DirectX::SimpleMath::Vector3(rand2 * cosf(rand), -1.0f, rand2 * sinf(rand)),cos(rand2)));
+	//	m_crystals->push_back(*std::make_unique<Crystal>(SimpleMath::Vector3(rand2 * cosf(rand), -1.0f, rand2 * sinf(rand)),cos(rand2)));
 	//}
 }

@@ -20,9 +20,9 @@ int Easing::Leap(int a, int b, float t)
 	return (int)p;
 }
 
-DirectX::SimpleMath::Vector3 Easing::Leap(DirectX::SimpleMath::Vector3 a, DirectX::SimpleMath::Vector3 b, float time)
+SimpleMath::Vector3 Easing::Leap(SimpleMath::Vector3 a, SimpleMath::Vector3 b, float time)
 {
-	DirectX::SimpleMath::Vector3 p;
+	SimpleMath::Vector3 p;
 
 	p.x = Leap(a.x, b.x, time);
 	p.y = Leap(a.y, b.y, time);
@@ -31,9 +31,9 @@ DirectX::SimpleMath::Vector3 Easing::Leap(DirectX::SimpleMath::Vector3 a, Direct
 	return p;
 }
 
-DirectX::SimpleMath::Vector3 Easing::Sleap(DirectX::SimpleMath::Vector3 a, DirectX::SimpleMath::Vector3 b, float time)
+SimpleMath::Vector3 Easing::Sleap(SimpleMath::Vector3 a, SimpleMath::Vector3 b, float time)
 {
-	DirectX::SimpleMath::Vector3 out, s, e;
+	SimpleMath::Vector3 out, s, e;
 
 	s.Normalize(a);
 	e.Normalize(b);
@@ -51,9 +51,9 @@ DirectX::SimpleMath::Vector3 Easing::Sleap(DirectX::SimpleMath::Vector3 a, Direc
 	return out;
 }
 
-DirectX::SimpleMath::Matrix Easing::CalcLookAt(DirectX::SimpleMath::Matrix matrix, DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 look, DirectX::SimpleMath::Vector3 up)
+SimpleMath::Matrix Easing::CalcLookAt(SimpleMath::Matrix matrix, SimpleMath::Vector3 pos, SimpleMath::Vector3 look, SimpleMath::Vector3 up)
 {
-	DirectX::SimpleMath::Vector3 X, Y, Z, D;
+	SimpleMath::Vector3 X, Y, Z, D;
 	D = look - pos;
 	D.Normalize();
 
@@ -73,7 +73,7 @@ DirectX::SimpleMath::Matrix Easing::CalcLookAt(DirectX::SimpleMath::Matrix matri
 	return matrix;
 }
 
-DirectX::SimpleMath::Vector3 Easing::Moveing(DirectX::SimpleMath::Vector3 a, DirectX::SimpleMath::Vector3 b)
+SimpleMath::Vector3 Easing::Moveing(SimpleMath::Vector3 a, SimpleMath::Vector3 b)
 {
 
 	float sb, sbx, sbz, ax, az, bx, bz = 0.f;
@@ -89,12 +89,12 @@ DirectX::SimpleMath::Vector3 Easing::Moveing(DirectX::SimpleMath::Vector3 a, Dir
 
 	sb = sqrtf(sbx * sbx + sbz * sbz);
 
-	DirectX::SimpleMath::Vector3 out = DirectX::SimpleMath::Vector3(sbx / sb, 0, sbz / sb);
+	SimpleMath::Vector3 out = SimpleMath::Vector3(sbx / sb, 0, sbz / sb);
 
 	return out;
 }
 
-float Easing::LookAt(DirectX::SimpleMath::Vector3 a, DirectX::SimpleMath::Vector3 b)
+float Easing::LookAt(SimpleMath::Vector3 a, SimpleMath::Vector3 b)
 {
 	float sb, sbx, sbz, ax, az, bx, bz = 0.f;
 

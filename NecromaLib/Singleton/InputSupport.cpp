@@ -40,12 +40,12 @@ void InputSupport::Update()
 										 pSD.GetView(), pSD.GetProjection());
 }
 
-DirectX::SimpleMath::Vector3 InputSupport::GetMousePosWolrd()
+SimpleMath::Vector3 InputSupport::GetMousePosWolrd()
 {
 	return m_WorldScreenMouse;
 }
 
-DirectX::SimpleMath::Vector2 InputSupport::GetMousePosScreen()
+SimpleMath::Vector2 InputSupport::GetMousePosScreen()
 {
 	return {(float)m_mouseTracker.GetLastState().x, (float)m_mouseTracker.GetLastState().y };
 }

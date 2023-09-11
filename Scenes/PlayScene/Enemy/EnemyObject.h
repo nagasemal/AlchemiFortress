@@ -22,7 +22,7 @@ class Enemy_Data;
 class EnemyObject : public GameObjct3D
 {
 public:
-	EnemyObject(ENEMY_TYPE type, DirectX::SimpleMath::Vector3 startPos,int lv);
+	EnemyObject(ENEMY_TYPE type, SimpleMath::Vector3 startPos,int lv);
 	~EnemyObject();
 
 	// 初期化
@@ -40,7 +40,7 @@ public:
 	void Finalize()						override;
 
 	// プレイヤー拠点へと向かう
-	bool GotoTarget(DirectX::SimpleMath::Vector3 target);
+	bool GotoTarget(SimpleMath::Vector3 target);
 
 	// 進まないようにする処理
 	void HitMachine(bool flag);
@@ -55,10 +55,10 @@ public:
 	void SetHp(int hp)									{ m_hp = hp; }
 
 	// ターゲット
-	void SetTargetPos(DirectX::SimpleMath::Vector3 targetPos) { m_targetPos = targetPos; }
+	void SetTargetPos(SimpleMath::Vector3 targetPos) { m_targetPos = targetPos; }
 
 	// 目的地までの距離
-	void SetLengthVec(DirectX::SimpleMath::Vector3 lengthVec) { m_lengthVec = lengthVec; }
+	void SetLengthVec(SimpleMath::Vector3 lengthVec) { m_lengthVec = lengthVec; }
 
 	// 止まる処理
 	void SetStopFlag(bool flag)							{ m_stopFlag = flag;}
@@ -78,11 +78,11 @@ public:
 	// とまっているフラグ
 	const bool GetStopFlag()							{ return m_stopFlag; }
 
-	const DirectX::SimpleMath::Vector3 GetTargetPos()	{ return m_targetPos;}
+	const SimpleMath::Vector3 GetTargetPos()	{ return m_targetPos;}
 	// 目的地までの距離
-	const DirectX::SimpleMath::Vector3 GetLengthVec()	{ return m_lengthVec;}
+	const SimpleMath::Vector3 GetLengthVec()	{ return m_lengthVec;}
 	// 加速度
-	const DirectX::SimpleMath::Vector3 GetAccele()		{ return m_accele;}
+	const SimpleMath::Vector3 GetAccele()		{ return m_accele;}
 	// 自身のエネミータイプ
 	const ENEMY_TYPE GetEnemyType()						{ return m_enemyType; }
 
@@ -108,17 +108,17 @@ private:
 	ENEMY_TYPE m_enemyType;
 
 	// 加速度
-	DirectX::SimpleMath::Vector3 m_accele;
+	SimpleMath::Vector3 m_accele;
 
-	DirectX::SimpleMath::Vector3 m_moveVec;
+	SimpleMath::Vector3 m_moveVec;
 
-	DirectX::SimpleMath::Quaternion m_rotation;
+	SimpleMath::Quaternion m_rotation;
 
 	// 目的地までの距離
-	DirectX::SimpleMath::Vector3 m_lengthVec;
+	SimpleMath::Vector3 m_lengthVec;
 
 	// 目標の位置
-	DirectX::SimpleMath::Vector3 m_targetPos;
+	SimpleMath::Vector3 m_targetPos;
 
 	std::vector<ICommand_Enemy*> m_moveCommands;
 	// 動きのデータが入るコマンド

@@ -17,6 +17,11 @@ DrawArrow::~DrawArrow()
 {
 }
 
+void DrawArrow::Update()
+{
+	m_keySelectFlag = false;
+}
+
 void DrawArrow::Draw()
 {
 	auto pSB = ShareData::GetInstance().GetSpriteBatch();
@@ -25,7 +30,7 @@ void DrawArrow::Draw()
 
 	// ‰æ‘œ‚ÌƒTƒCƒY
 	RECT srcRect = { 0, 0, 64, 64 };
-	DirectX::SimpleMath::Color colour = { 1.0f,1.0f,1.0f,1.0f };
+	SimpleMath::Color colour = { 1.0f,1.0f,1.0f,1.0f };
 
 	if (m_luminousFlag) colour = m_boxColor;
 

@@ -32,13 +32,13 @@ namespace Imase
 		struct String
 		{
 			// 位置
-			DirectX::SimpleMath::Vector2 pos;
+			SimpleMath::Vector2 pos;
 
 			// 文字列
 			std::wstring string;
 
 			// 色
-			DirectX::SimpleMath::Color color;
+			SimpleMath::Color color;
 
 			// スケール
 			float scale = 1.0f;
@@ -69,7 +69,7 @@ namespace Imase
 		// 描画する文字列を登録する関数
 		void AddString(
 			const wchar_t* string,
-			DirectX::SimpleMath::Vector2 pos,
+			SimpleMath::Vector2 pos,
 			DirectX::FXMVECTOR color = DirectX::Colors::White,
 			float scale = 1.0f);
 
@@ -88,13 +88,13 @@ namespace Imase
 		struct String
 		{
 			// 位置
-			DirectX::SimpleMath::Vector3 pos;
+			SimpleMath::Vector3 pos;
 
 			// 文字列
 			std::wstring string;
 
 			// 色
-			DirectX::SimpleMath::Color color;
+			SimpleMath::Color color;
 
 			// スケール
 			float scale = 1.0f;
@@ -123,7 +123,7 @@ namespace Imase
 		// 描画する文字列を登録する関数
 		void AddString(
 			const wchar_t* string,
-			DirectX::SimpleMath::Vector3 pos,
+			SimpleMath::Vector3 pos,
 			DirectX::FXMVECTOR color = DirectX::Colors::White,
 			float scale = 1.0f);
 
@@ -131,8 +131,8 @@ namespace Imase
 		void Render(
 			ID3D11DeviceContext* context,
 			DirectX::CommonStates* states,
-			const DirectX::SimpleMath::Matrix& view,
-			const DirectX::SimpleMath::Matrix& proj);
+			const SimpleMath::Matrix& view,
+			const SimpleMath::Matrix& proj);
 
 		// フォントの高さを取得する関数
 		float GetFontHeight() { return m_fontHeight; }

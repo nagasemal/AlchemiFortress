@@ -18,21 +18,21 @@ public:
 	static float Leap(float a, float b, float t);
 
 	static int   Leap(int a, int b, float t);
-	static DirectX::SimpleMath::Vector3 Leap(DirectX::SimpleMath::Vector3 a, DirectX::SimpleMath::Vector3 b, float time);
+	static SimpleMath::Vector3 Leap(SimpleMath::Vector3 a, SimpleMath::Vector3 b, float time);
 
-	static DirectX::SimpleMath::Vector3 Sleap(DirectX::SimpleMath::Vector3 a, DirectX::SimpleMath::Vector3 b, float time);
+	static SimpleMath::Vector3 Sleap(SimpleMath::Vector3 a, SimpleMath::Vector3 b, float time);
 
-	static DirectX::SimpleMath::Matrix CalcLookAt(
-		DirectX::SimpleMath::Matrix matrix,
-		DirectX::SimpleMath::Vector3 pos,
-		DirectX::SimpleMath::Vector3 look,
-		DirectX::SimpleMath::Vector3 up);
+	static SimpleMath::Matrix CalcLookAt(
+		SimpleMath::Matrix matrix,
+		SimpleMath::Vector3 pos,
+		SimpleMath::Vector3 look,
+		SimpleMath::Vector3 up);
 
 	// 距離減衰なく動けます。少し重い。
-	static DirectX::SimpleMath::Vector3 Moveing(DirectX::SimpleMath::Vector3 a, DirectX::SimpleMath::Vector3 b);
+	static SimpleMath::Vector3 Moveing(SimpleMath::Vector3 a, SimpleMath::Vector3 b);
 
 	// 向きを出します
-	static float LookAt(DirectX::SimpleMath::Vector3 a, DirectX::SimpleMath::Vector3 b);
+	static float LookAt(SimpleMath::Vector3 a, SimpleMath::Vector3 b);
 
 
 	static float Angle(float a1, float a2, float b1, float b2);

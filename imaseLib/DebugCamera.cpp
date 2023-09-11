@@ -17,7 +17,7 @@ DebugCamera::DebugCamera()
 	, mPrevX(0)
 	, mPrevY(0)
 	, mScrollWheelValue(0)
-	, mView(DirectX::SimpleMath::Matrix::Identity)
+	, mView(SimpleMath::Matrix::Identity)
 	, mEye{0.0f}
 	, mTarget{0.0f}
 {
@@ -87,20 +87,20 @@ void DebugCamera::DraggedDistance(int x, int y)
 void DebugCamera::CalculateViewMatrix()
 {
 	// ビュー行列を算出する
-	DirectX::SimpleMath::Matrix rotY = DirectX::SimpleMath::Matrix::CreateRotationY(mAngleY);
-	DirectX::SimpleMath::Matrix rotX = DirectX::SimpleMath::Matrix::CreateRotationX(mAngleX);
+	SimpleMath::Matrix rotY = SimpleMath::Matrix::CreateRotationY(mAngleY);
+	SimpleMath::Matrix rotX = SimpleMath::Matrix::CreateRotationX(mAngleX);
 
-	DirectX::SimpleMath::Matrix rt = rotY * rotX;
+	SimpleMath::Matrix rt = rotY * rotX;
 
-	DirectX::SimpleMath::Vector3    eye(0.0f, 0.0f, 1.0f);
-	DirectX::SimpleMath::Vector3 target(0.0f, 0.0f, 0.0f);
-	DirectX::SimpleMath::Vector3     up(0.0f, 1.0f, 0.0f);
+	SimpleMath::Vector3    eye(0.0f, 0.0f, 1.0f);
+	SimpleMath::Vector3 target(0.0f, 0.0f, 0.0f);
+	SimpleMath::Vector3     up(0.0f, 1.0f, 0.0f);
 
-	eye = DirectX::SimpleMath::Vector3::Transform(eye, rt.Invert());
+	eye = SimpleMath::Vector3::Transform(eye, rt.Invert());
 	eye *= (DEFAULT_CAMERA_DISTANCE - mScrollWheelValue / 100);
-	up = DirectX::SimpleMath::Vector3::Transform(up, rt.Invert());
+	up = SimpleMath::Vector3::Transform(up, rt.Invert());
 
 	mEye = eye;
 	mTarget = target;
-	mView = DirectX::SimpleMath::Matrix::CreateLookAt(eye, target, up);
+	mView = SimpleMath::Matrix::CreateLookAt(eye, target, up);
 }

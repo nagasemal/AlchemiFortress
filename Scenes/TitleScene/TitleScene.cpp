@@ -2,6 +2,7 @@
 #include "TitleScene.h"
 
 #include "Scenes/PlayScene/Shadow/MagicCircle.h"
+#include "Scenes/Commons/PopLine.h"
 
 #include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/ShareData.h"
@@ -9,13 +10,11 @@
 
 #include "NecromaLib/Singleton/ShareJsonData.h"
 
-#define COLOR DirectX::SimpleMath::Color(1.0f, 1.0f, 1.0f, 0.55f)
+#define COLOR SimpleMath::Color(1.0f, 1.0f, 1.0f, 0.55f)
 
 TitleScene::TitleScene()
 {
-
 	ShareJsonData::GetInstance().LoadingJsonFile_Machine();
-
 }
 
 TitleScene::~TitleScene()
@@ -41,11 +40,11 @@ void TitleScene::Initialize()
 
 	m_skySphere->UpdateEffects([&](IEffect* effect)
 		{
-			// 今回はライトだけ欲しい
-			auto lights = dynamic_cast<IEffectLights*>(effect);
+			//// 今回はライトだけ欲しい
+			//auto lights = dynamic_cast<IEffectLights*>(effect);
 
-			// 光の当たり方変更
-			lights->SetAmbientLightColor(DirectX::SimpleMath::Color(0.7f, 0.7f, 1.f, 0.8f));
+			//// 光の当たり方変更
+			//lights->SetAmbientLightColor(SimpleMath::Color(0.7f, 0.7f, 1.f, 0.8f));
 
 		});
 
@@ -58,9 +57,24 @@ void TitleScene::Initialize()
 	m_titleLogo = std::make_unique<TitleLogo>();
 	m_titleLogo->Create(pSL.GetTitleLogoPath());
 	m_titleLogo->SetWindowSize(width, height);
-	m_titleLogo->SetColor(DirectX::SimpleMath::Color(0.2f, 0.2f, 0.65f, 1.0f));
-	m_titleLogo->SetPosition(DirectX::SimpleMath::Vector2(width / 2, height / 2.6f));
+	m_titleLogo->SetColor(SimpleMath::Color(0.4f, 0.4f, 0.6f, 1.0f));
+	m_titleLogo->SetPosition(SimpleMath::Vector2(width / 1.3f, height / 1.2f));
 
+	m_veil = std::make_unique<Veil>();
+	m_veil->Create(L"Resources/Textures/TitleText.png");
+	m_veil->LoadShaderFile(L"Veil");
+	m_veil->SetWindowSize(width, height);
+	m_veil->SetColor(SimpleMath::Color(0.4f, 0.4f, 0.4f, 0.5f));
+	m_veil->SetScale(SimpleMath::Vector2(450,height));
+	m_veil->SetPosition(SimpleMath::Vector2(width / 1.95f, 0.0f));
+
+
+	// ボタンのアップデート
+	for (int i = 0; i < ButtonType::Num; i++)
+	{
+		m_selectionButton[i] = std::make_unique<PopLine>(SimpleMath::Vector2(width / 1.4f, 30 + (i * 120.0f)),
+														 SimpleMath::Vector2(150,60),SimpleMath::Vector2(150.0f,60.0f));
+	}
 }
 
 GAME_SCENE TitleScene::Update()
@@ -71,6 +85,11 @@ GAME_SCENE TitleScene::Update()
 	m_titleCall->Update();
 	m_titleCamera->Update();
 	m_magicCircle->Update();
+	if (m_titleCamera->GetAnimTime() >= 0.75f)
+	{
+		m_titleLogo->Update();
+		m_veil->Update();
+	}
 
 	// カメラを動かす
 	pSD.GetCamera()->SetViewMatrix(m_titleCamera->GetViewMatrix());
@@ -78,10 +97,18 @@ GAME_SCENE TitleScene::Update()
 	pSD.GetCamera()->SetEyePosition(m_titleCamera->GetEyePosition());
 
 	// 魔法陣展開
-	m_magicCircle->CreateMagicCircle(DirectX::SimpleMath::Vector3{ 0,0,0 },30);
+	m_magicCircle->CreateMagicCircle(SimpleMath::Vector3{ 0,0,0 },30);
+
+	// ボタンのアップデート
+	for(int i = 0;i < ButtonType::Num;i++)
+	{
+		m_selectionButton[i]->Update();
+	}
+
+
 
 	//　ステージセレクトシーンに遷移
- 	if (pINP->GetKeybordState().IsKeyReleased(DirectX::Keyboard::Space)) return GAME_SCENE::SELECT;
+ 	if (m_selectionButton[ButtonType::Restert]->ClickMouse()) return GAME_SCENE::SELECT;
 
 	return GAME_SCENE();
 }
@@ -92,7 +119,7 @@ void TitleScene::Draw()
 	/*===[ デバッグ文字描画 ]===*/
 	std::wostringstream oss;
 	oss << "TitleScene";
-	ShareData::GetInstance().GetDebugFont()->AddString(oss.str().c_str(), DirectX::SimpleMath::Vector2(0.f, 60.f));
+	ShareData::GetInstance().GetDebugFont()->AddString(oss.str().c_str(), SimpleMath::Vector2(0.f, 60.f));
 
 	m_magicCircle->CreateWorld();
 	m_magicCircle->Render(0);
@@ -108,13 +135,14 @@ void TitleScene::DrawUI()
 	int width = device->GetOutputSize().right;
 	int height = device->GetOutputSize().bottom;
 
+	m_veil->Render();
+
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
 	// 画像のサイズ
-	RECT rect_title = { 0, 0, 1000, 580 };
 	RECT rect_circle = { 0, 0, 1280, 1280 };
 
-	DirectX::SimpleMath::Vector2 box_Pos = {(float) width / 2.0f,(float)height / 2.0f};
+	SimpleMath::Vector2 box_Pos = { (float)width,0.0f};
 
 	// 魔法陣描画
 	pSB->Draw(pSL.GetMagicCircleTexture(1).Get(),
@@ -125,15 +153,14 @@ void TitleScene::DrawUI()
 			  DirectX::XMFLOAT2(1280 / 2, 1280 / 2),
 			  0.5f);
 
-	//// タイトル描画
-	//pSB->Draw(pSL.GetTitleLogo().Get(),
-	//		  box_Pos,
-	//		  &rect_title,
-	//		  DirectX::SimpleMath::Color(1.0f,1.0f,1.0f,1.0f),
-	//		  0.0f,
-	//		  DirectX::XMFLOAT2(1000 / 2, 580 / 2),
-	//		  1.0f);
 
+	// ボタンの描画
+	for (int i = 0; i < ButtonType::Num; i++)
+	{
+
+		m_selectionButton[i]->Draw();
+
+	}
 
 	pSB->End();
 

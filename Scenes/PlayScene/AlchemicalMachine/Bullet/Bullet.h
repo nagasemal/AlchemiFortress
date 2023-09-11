@@ -16,8 +16,8 @@ public:
 	};
 
 public:
-	Bullet(float speed, float damage, float life,DirectX::SimpleMath::Color color, DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 targetVector);
-	Bullet(BulletData data, DirectX::SimpleMath::Color color, DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 targetVector);
+	Bullet(float speed, float damage, float life,SimpleMath::Color color, SimpleMath::Vector3 pos, SimpleMath::Vector3 targetVector);
+	Bullet(BulletData data, SimpleMath::Color color, SimpleMath::Vector3 pos, SimpleMath::Vector3 targetVector);
 	~Bullet();
 
 	// èâä˙âª
@@ -45,15 +45,15 @@ public:
 	float GetDamage()			{ return m_bulletData.damage;}
 	float GetLife()				{ return m_bulletData.life; }
 	bool GetEnemyHit()			{ return m_enemyHit; }
-	DirectX::SimpleMath::Color GetColor()	{ return m_color; }
+	SimpleMath::Color GetColor()	{ return m_color; }
 
 private:
 
 	BulletData  m_bulletData;
 
-	DirectX::SimpleMath::Color m_color;
-	DirectX::SimpleMath::Vector3 m_startPos;
-	DirectX::SimpleMath::Vector3 m_targetVectol;
+	SimpleMath::Color m_color;
+	SimpleMath::Vector3 m_startPos;
+	SimpleMath::Vector3 m_targetVectol;
 
 	bool m_enemyHit;
 };

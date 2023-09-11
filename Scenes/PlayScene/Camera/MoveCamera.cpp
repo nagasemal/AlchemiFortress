@@ -17,7 +17,7 @@ MoveCamera::MoveCamera()
 	, m_prevY(0)
 	, m_move{ 0.f }
 	, m_scrollWheelValue(0)
-	, m_view(DirectX::SimpleMath::Matrix::Identity)
+	, m_view(SimpleMath::Matrix::Identity)
 	, m_eye(0.0f, 0.0f, 0.0f)
 	, m_target{ 0.f }
 	, m_saveTarget{ 0.f }
@@ -36,13 +36,12 @@ void MoveCamera::Initialize()
 	m_angleX = m_angleY = 0.0f;
 	m_prevX  = m_prevY  = 0;
 	m_scrollWheelValue = 0;
-	m_time = 0;
+	m_time = m_targetChangeTime = AnimationData();
 
-
-	m_view	    = DirectX::SimpleMath::Matrix::Identity;
-	m_move		= DirectX::SimpleMath::Vector3::Zero;
-	m_eye		= DirectX::SimpleMath::Vector3::Zero;
-	m_target	= DirectX::SimpleMath::Vector3::Zero;
+	m_view	    = SimpleMath::Matrix::Identity;
+	m_move		= SimpleMath::Vector3::Zero;
+	m_eye		= SimpleMath::Vector3::Zero;
+	m_target	= SimpleMath::Vector3::Zero;
 
 }
 
@@ -52,19 +51,12 @@ void MoveCamera::Update(bool scroll, bool move)
 	auto keyboard = InputSupport::GetInstance().GetKeybordState().GetLastState();
 
 	// 開始時引く為の処理
-	if (m_time <= 1)
-	{
-		m_time += DeltaTime::GetInstance().GetDeltaTime();
+	m_time += DeltaTime::GetInstance().GetDeltaTime();
 
-		m_move.y = m_time * 1.2f;
-		m_move.z = m_time * 1.3f;
-
-	}
+	m_move.y = m_time * 1.2f;
+	m_move.z = m_time * 1.3f;
 
 	m_targetChangeTime += DeltaTime::GetInstance().GetDeltaTime() * 1.15f;
-
-	if (m_targetChangeTime <= 0) m_targetChangeTime = 0;
-	if (m_targetChangeTime >= 1) m_targetChangeTime = 1;
 
 	// カメラ移動をするか否か
 	if (move)
@@ -122,9 +114,9 @@ void MoveCamera::Update(bool scroll, bool move)
 	CalculateViewMatrix();
 }
 
-void MoveCamera::TargetChange(DirectX::SimpleMath::Vector3 targetA, DirectX::SimpleMath::Vector3 targetB)
+void MoveCamera::TargetChange(SimpleMath::Vector3 targetA, SimpleMath::Vector3 targetB)
 {
-	DirectX::SimpleMath::Vector3 diffpos = targetA - targetB;
+	SimpleMath::Vector3 diffpos = targetA - targetB;
 
 	m_target.x = Easing::EaseOutQuint(m_saveTarget.x, m_saveTarget.x - diffpos.x, m_targetChangeTime);
 	m_target.y = Easing::EaseOutBounce(m_saveTarget.y, m_saveTarget.y - diffpos.y, m_targetChangeTime);
@@ -153,20 +145,20 @@ void MoveCamera::DraggedDistance(int x, int y)
 void MoveCamera::CalculateViewMatrix()
 {
 	// ビュー行列を算出する
-	DirectX::SimpleMath::Matrix rotY = DirectX::SimpleMath::Matrix::CreateRotationY(m_angleY);
-	DirectX::SimpleMath::Matrix rotX = DirectX::SimpleMath::Matrix::CreateRotationX(m_angleX);
+	SimpleMath::Matrix rotY = SimpleMath::Matrix::CreateRotationY(m_angleY);
+	SimpleMath::Matrix rotX = SimpleMath::Matrix::CreateRotationX(m_angleX);
 
-	DirectX::SimpleMath::Matrix rt = rotY * rotX;
+	SimpleMath::Matrix rt = rotY * rotX;
 
-	DirectX::SimpleMath::Vector3    eye(m_move.x, m_move.y, m_move.z);
-	DirectX::SimpleMath::Vector3 target(0.0f, 0.0f, 0.0f);
-	DirectX::SimpleMath::Vector3     up(0.0f, 1.0f, 0.0f);
+	SimpleMath::Vector3    eye(m_move.x, m_move.y, m_move.z);
+	SimpleMath::Vector3 target(0.0f, 0.0f, 0.0f);
+	SimpleMath::Vector3     up(0.0f, 1.0f, 0.0f);
 
-	eye = DirectX::SimpleMath::Vector3::Transform(eye, rt.Invert());
+	eye = SimpleMath::Vector3::Transform(eye, rt.Invert());
 	eye *= (DEFAULT_CAMERA_DISTANCE - (float)m_scrollWheelValue / 100);
-	up = DirectX::SimpleMath::Vector3::Transform(up, rt.Invert());
+	up = SimpleMath::Vector3::Transform(up, rt.Invert());
 
 	m_eye		= eye;
 	m_target	= target;
-	m_view		= DirectX::SimpleMath::Matrix::CreateLookAt(eye, target, up);
+	m_view		= SimpleMath::Matrix::CreateLookAt(eye, target, up);
 }

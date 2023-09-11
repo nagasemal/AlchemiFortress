@@ -5,7 +5,7 @@
 
 #include "NecromaLib/Singleton/SpriteLoder.h"
 
-SelectionBox::SelectionBox(DirectX::SimpleMath::Vector2 pos, DirectX::SimpleMath::Vector2 rage)
+SelectionBox::SelectionBox(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage)
 {
 
 	m_data.pos = pos;
@@ -17,10 +17,17 @@ SelectionBox::SelectionBox(DirectX::SimpleMath::Vector2 pos, DirectX::SimpleMath
 	m_boxColor = { 0.0f,0.0f,0.0f,0.0f };
 	m_luminousFlag = false;
 
+	m_rect = { 0, 0, 64, 64 };
+
 }
 
 SelectionBox::~SelectionBox()
 {
+}
+
+void SelectionBox::Update()
+{
+	m_keySelectFlag = false;
 }
 
 void SelectionBox::Draw()
@@ -33,10 +40,10 @@ void SelectionBox::Draw()
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
 	// 画像のサイズ
-	RECT srcRect = { 0, 0, 64, 64 };
+	//RECT srcRect = { 0, 0, 64, 64 };
 
 		// ログの色
-	DirectX::SimpleMath::Color colour = { 1.0f,1.0f,1.0f,1.0f };
+	SimpleMath::Color colour = { 1.0f,1.0f,1.0f,1.0f };
 
 	if (m_luminousFlag) colour =  m_boxColor;
 
@@ -44,17 +51,17 @@ void SelectionBox::Draw()
 
 	if (HoldMouse()) colour = { 0.7f, 0.7f, 0.7f, 1.0f };
 
-	DirectX::SimpleMath::Vector2 box_Pos = { m_data.pos.x,m_data.pos.y };
+	SimpleMath::Vector2 box_Pos = { m_data.pos.x,m_data.pos.y };
 
 	// 選択BOX
-	pSB->Draw(pSL->GetSelectBoxTexture().Get(), box_Pos, &srcRect, colour, 0.0f, DirectX::XMFLOAT2(64 / 2, 64 / 2), m_data.rage);
+	pSB->Draw(pSL->GetSelectBoxTexture().Get(), box_Pos, &m_rect, colour, 0.0f, DirectX::XMFLOAT2(static_cast<float>(m_rect.right) / 2, static_cast<float>(m_rect.bottom) / 2), m_data.rage);
 
 	pSB->End();
 
 }
 
 void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsTexture,
-						  RECT rect,DirectX::SimpleMath::Color pulsTextureCol)
+						  RECT rect,SimpleMath::Color pulsTextureCol)
 {
 	ShareData& pSD = ShareData::GetInstance();
 	auto pSB = pSD.GetSpriteBatch();
@@ -62,11 +69,8 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsT
 
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
-	// 画像のサイズ
-	RECT srcRect = { 0, 0, 64, 64 };
-
 	// ログの色
-	DirectX::SimpleMath::Color colour = { 1.0f,1.0f,1.0f,1.0f };
+	SimpleMath::Color colour = { 1.0f,1.0f,1.0f,1.0f };
 
 	if (m_luminousFlag) colour =  m_boxColor;
 
@@ -74,10 +78,10 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsT
 
 	if (HoldMouse()) colour = { 0.7f, 0.7f, 0.7f, 1.0f };
 
-	DirectX::SimpleMath::Vector2 box_Pos = { m_data.pos.x,m_data.pos.y };
+	SimpleMath::Vector2 box_Pos = { m_data.pos.x,m_data.pos.y };
 
 	// 選択BOX
-	pSB->Draw(pSL->GetSelectBoxTexture().Get(), box_Pos, &srcRect, colour, 0.0f, DirectX::XMFLOAT2(64 / 2, 64 / 2), m_data.rage);
+	pSB->Draw(pSL->GetSelectBoxTexture().Get(), box_Pos, &m_rect, colour, 0.0f, DirectX::XMFLOAT2(static_cast<float>(m_rect.right) / 2, static_cast<float>(m_rect.bottom) / 2), m_data.rage);
 
 	// 中に表示するテクスチャがある場合
 	if (pulsTexture)
@@ -89,13 +93,37 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsT
 
 }
 
+void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture, float rotate)
+{
+	ShareData& pSD = ShareData::GetInstance();
+	auto pSB = pSD.GetSpriteBatch();
+
+	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
+
+	// ログの色
+	SimpleMath::Color colour = { 1.0f,1.0f,1.0f,1.0f };
+
+	if (m_luminousFlag) colour = m_boxColor;
+
+	if (m_hitMouseFlag) colour = { 0.9f,0.9f,0.9f,1.0f };
+
+	if (HoldMouse()) colour = { 0.7f, 0.7f, 0.7f, 1.0f };
+
+	SimpleMath::Vector2 box_Pos = { m_data.pos.x,m_data.pos.y };
+
+	// 選択BOX
+	pSB->Draw(texture.Get(), box_Pos, &m_rect, colour, rotate, DirectX::XMFLOAT2(static_cast<float>(m_rect.right) / 2.0f, static_cast<float>(m_rect.bottom) / 2.0f));
+
+	pSB->End();
+}
+
 void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture,
 						  Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsTexture,
 						  RECT rect, 
-						  DirectX::SimpleMath::Color pulsTextureCol,
-						  DirectX::SimpleMath::Color nomalColor,
-						  DirectX::SimpleMath::Color onColor,
-						  DirectX::SimpleMath::Color pressdColor)
+						  SimpleMath::Color pulsTextureCol,
+						  SimpleMath::Color nomalColor,
+						  SimpleMath::Color onColor,
+						  SimpleMath::Color pressdColor)
 {
 	ShareData& pSD = ShareData::GetInstance();
 	auto pSB = pSD.GetSpriteBatch();
@@ -106,7 +134,7 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textu
 	RECT srcRect = { 0, 0, 64, 64 };
 
 	// ログの色
-	DirectX::SimpleMath::Color colour = nomalColor;
+	SimpleMath::Color colour = nomalColor;
 
 	if (m_luminousFlag) colour = nomalColor + m_boxColor;
 
@@ -114,7 +142,7 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textu
 
 	if (HoldMouse()) colour = pressdColor;
 
-	DirectX::SimpleMath::Vector2 box_Pos = { m_data.pos.x,m_data.pos.y };
+	SimpleMath::Vector2 box_Pos = { m_data.pos.x,m_data.pos.y };
 
 	// 選択BOX
 	pSB->Draw(texture.Get(), box_Pos, &srcRect, colour, 0.0f, DirectX::XMFLOAT2(64 / 2, 64 / 2), m_data.rage);

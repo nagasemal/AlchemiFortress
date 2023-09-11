@@ -16,21 +16,25 @@
 class SelectionBox : public SelectionUI
 {
 public:
-	SelectionBox(DirectX::SimpleMath::Vector2 pos,DirectX::SimpleMath::Vector2 rage);
+	SelectionBox(SimpleMath::Vector2 pos,SimpleMath::Vector2 rage);
 	~SelectionBox();
 
+	void Update()				override;
 	// ï`âÊ
 	void Draw()					override;
 
 	void DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsTexture = nullptr,
 		RECT rect = { 0,0,64,64 },
-		DirectX::SimpleMath::Color pulsTextureCol = { 1.0f,1.0f,1.0f,1.0f });
+		SimpleMath::Color pulsTextureCol = { 1.0f,1.0f,1.0f,1.0f });
+
+	// âÊëúÇÃägëÂñ≥ÇµÉoÅ[ÉWÉáÉì
+	void DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture,float rotate);
 
 	void DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture,
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsTexture = nullptr,
 		RECT rect = { 0,0,64,64 },
-		DirectX::SimpleMath::Color pulsTextureCol = {1.0f,1.0f,1.0f,1.0f},
-		DirectX::SimpleMath::Color nomalColor	= {1.0f,1.0f,1.0f,1.0f},
-		DirectX::SimpleMath::Color onColor		= {0.9f,0.9f,0.9f,1.0f},
-		DirectX::SimpleMath::Color pressdColor	= {0.7f,0.7f,0.7f,1.0f});
+		SimpleMath::Color pulsTextureCol = {1.0f,1.0f,1.0f,1.0f},
+		SimpleMath::Color nomalColor	= {1.0f,1.0f,1.0f,1.0f},
+		SimpleMath::Color onColor		= {0.9f,0.9f,0.9f,1.0f},
+		SimpleMath::Color pressdColor	= {0.7f,0.7f,0.7f,1.0f});
 };

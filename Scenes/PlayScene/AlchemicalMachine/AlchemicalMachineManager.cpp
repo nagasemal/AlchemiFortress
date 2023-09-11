@@ -146,8 +146,8 @@ void AlchemicalMachineManager::Update(
 		}
 		else
 		{
-			m_prevSelectMachinePos = DirectX::SimpleMath::Vector3();
-			moveCamera->SetSaveTargetProsition(DirectX::SimpleMath::Vector3());
+			m_prevSelectMachinePos = SimpleMath::Vector3();
+			moveCamera->SetSaveTargetProsition(SimpleMath::Vector3());
 		}
 
 		// 選択状態の解除
@@ -250,33 +250,6 @@ void AlchemicalMachineManager::Update(
 		m_AMnums[m_selectManager->GetSelectMachineType()]++;
 	}
 
-	// 選択状態のオブジェクトがある
-	//if (m_selectNumber != -1)
-	//{
-	//	// 注視点移動
-	//	moveCamera->TargetChange(m_prevSelectMachinePos, m_AMObject[m_selectNumber]->GetData().pos);
-	//	// Noneを弾く
-	//	if (m_AMObject[m_selectNumber]->GetModelID() == AlchemicalMachineObject::MACHINE_TYPE::NONE) return;
-	//	// 説明文のアップデート処理を回す
-	//	m_machineExplanation->Update();
-	//	m_machineExplanation->Update_MachineData(m_AMObject[m_selectNumber].get());
-	//	// 選択済みのオブジェクトの特殊アップデートを回す
-	//	m_AMObject[m_selectNumber]->SelectUpdate();
-	//	m_AMObject[m_selectNumber]->SelectUpdate_Common();
-	//	// 選択オブジェクトに魔法陣展開
-	//	m_magicCircle->CreateMagicCircle(
-	//		m_AMObject[m_selectNumber]->GetPos(),
-	//		m_AMObject[m_selectNumber]->GetMagicCircle().r,
-	//		m_AMObject[m_selectNumber]->GetColor());
-	//}
-	//else
-	//{
-	//	m_machineExplanation->ResetMoveTime();
-	//	m_magicCircle->DeleteMagicCircle();
-	//	// 注視点移動
-	//	moveCamera->TargetChange(m_prevSelectMachinePos, { 0,0,0 });
-	//}
-
 	// 離したのでマウスの当たり判定を元の大きさに戻す
 	if(leftRelease)  pMP->ReleaseLeftButtom();
 
@@ -297,7 +270,7 @@ void AlchemicalMachineManager::Update(
 
 	// 魔法陣展開
 	m_magicCircle_Field->CreateMagicCircle(
-		DirectX::SimpleMath::Vector3{ 0,MAGICCIRCLE_HEIGHT,0 },
+		SimpleMath::Vector3{ 0,MAGICCIRCLE_HEIGHT,0 },
 		pPlayerBase->GetBaseLv() * CIRCLE_LINE_DISTANCE);
 }
 
@@ -497,12 +470,12 @@ void AlchemicalMachineManager::MovingMachine(int number)
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
 
 	// 0,0,0を中心に回転移動
-	DirectX::SimpleMath::Matrix matrix = DirectX::SimpleMath::Matrix::Identity;
+	SimpleMath::Matrix matrix = SimpleMath::Matrix::Identity;
 
-	matrix *= DirectX::SimpleMath::Matrix::CreateRotationY(XMConvertToRadians(10.0f * deltaTime));
+	matrix *= SimpleMath::Matrix::CreateRotationY(XMConvertToRadians(10.0f * deltaTime));
 
 	// 回転後の座標を代入
-	m_AMObject[number]->SetPos(DirectX::SimpleMath::Vector3::Transform(m_AMObject[number]->GetPos(), matrix));
+	m_AMObject[number]->SetPos(SimpleMath::Vector3::Transform(m_AMObject[number]->GetPos(), matrix));
 
 }
 
@@ -569,7 +542,7 @@ void AlchemicalMachineManager::SpawnAMMachine(bool leftButtom)
 		if (m_AMnums[m_selectManager->GetSelectMachineType()] <= 0) return;
 
 		// 位置情報を取得
-		DirectX::SimpleMath::Vector3 savePos = m_AMObject[m_selectNumber]->GetData().pos;
+		SimpleMath::Vector3 savePos = m_AMObject[m_selectNumber]->GetData().pos;
 
 		// ライン情報を取得
 		int saveLine = m_AMObject[m_selectNumber]->GetLine();
@@ -598,7 +571,7 @@ void AlchemicalMachineManager::Dismantling(int index)
 {
 
 	// 位置情報を取得
-	DirectX::SimpleMath::Vector3 savePos = m_AMObject[index]->GetData().pos;
+	SimpleMath::Vector3 savePos = m_AMObject[index]->GetData().pos;
 
 	// ライン情報を取得
 	int saveLine = m_AMObject[index]->GetLine();
@@ -632,7 +605,7 @@ void AlchemicalMachineManager::JsonLoadResources()
 	for (int i = 0; i < pSJD->GetStageData().machine.size(); i++)
 	{
 		// 位置情報を取得
-		DirectX::SimpleMath::Vector3 savePos = m_AMObject[i]->GetData().pos;
+		SimpleMath::Vector3 savePos = m_AMObject[i]->GetData().pos;
 
 		// ライン情報を取得
 		int saveLine = m_AMObject[i]->GetLine();

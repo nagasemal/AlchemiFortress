@@ -17,10 +17,10 @@ public:
 	//データ受け渡し用コンスタントバッファ(送信側)
 	struct ConstBuffer
 	{
-		DirectX::SimpleMath::Matrix		m_matWorld;
-		DirectX::SimpleMath::Matrix		m_matView;
-		DirectX::SimpleMath::Matrix		m_matProj;
-		DirectX::SimpleMath::Vector4	m_diffuse;
+		SimpleMath::Matrix		m_matWorld;
+		SimpleMath::Matrix		m_matView;
+		SimpleMath::Matrix		m_matProj;
+		SimpleMath::Vector4	m_diffuse;
 	};
 
 public:
@@ -35,7 +35,7 @@ public:
 	void CreateShader();
 
 	// vector配列に中身を入れる
-	void CreateMagicCircle(DirectX::SimpleMath::Vector3 pos, float r, DirectX::SimpleMath::Color color = {1.0f,1.0f,1.0f,1.0f});
+	void CreateMagicCircle(SimpleMath::Vector3 pos, float r, SimpleMath::Color color = {1.0f,1.0f,1.0f,1.0f});
 
 	void DeleteMagicCircle();
 
@@ -71,9 +71,9 @@ private:
 	// ジオメトリシェーダ
 	Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_geometryShader;
 
-	DirectX::SimpleMath::Matrix m_world;
-	DirectX::SimpleMath::Matrix m_view;
-	DirectX::SimpleMath::Matrix m_proj;
+	SimpleMath::Matrix m_world;
+	SimpleMath::Matrix m_view;
+	SimpleMath::Matrix m_proj;
 
 	float m_animationTime;
 };

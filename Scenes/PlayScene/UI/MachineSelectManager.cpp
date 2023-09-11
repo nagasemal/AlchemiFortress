@@ -9,7 +9,7 @@
 #include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/ShareJsonData.h"
 
-#define POS 		DirectX::SimpleMath::Vector2(532, 64)
+#define POS 		SimpleMath::Vector2(532, 64)
 #define DIRECTION	120.f
 
 MachineSelectManager::MachineSelectManager() :

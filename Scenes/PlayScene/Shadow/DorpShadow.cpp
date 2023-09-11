@@ -13,8 +13,8 @@
 const std::vector<D3D11_INPUT_ELEMENT_DESC> DorpShadow::INPUT_LAYOUT =
 {
 	{ "POSITION",	0, DXGI_FORMAT_R32G32B32_FLOAT,		0,							 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	{ "COLOR",		0, DXGI_FORMAT_R32G32B32A32_FLOAT,	0, sizeof(DirectX::SimpleMath::Vector3), D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	{ "TEXCOORD",	0, DXGI_FORMAT_R32G32_FLOAT,		0, sizeof(DirectX::SimpleMath::Vector3) + sizeof(DirectX::SimpleMath::Vector4), D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "COLOR",		0, DXGI_FORMAT_R32G32B32A32_FLOAT,	0, sizeof(SimpleMath::Vector3), D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "TEXCOORD",	0, DXGI_FORMAT_R32G32_FLOAT,		0, sizeof(SimpleMath::Vector3) + sizeof(SimpleMath::Vector4), D3D11_INPUT_PER_VERTEX_DATA, 0 },
 };
 
 DorpShadow::DorpShadow():
@@ -47,11 +47,11 @@ void DorpShadow::Update()
 {
 }
 
-void DorpShadow::CreateShadow(DirectX::SimpleMath::Vector3 pos)
+void DorpShadow::CreateShadow(SimpleMath::Vector3 pos)
 {
 	pos.y = -1.25f;
 
-	m_vertices.push_back({pos,DirectX::SimpleMath::Color(0.2f,0.2f,0.2f,0.2f),DirectX::SimpleMath::Vector2(2.0f, 0.0f)});
+	m_vertices.push_back({pos,SimpleMath::Color(0.2f,0.2f,0.2f,0.2f),SimpleMath::Vector2(2.0f, 0.0f)});
 }
 
 void DorpShadow::DeleteShadow()
@@ -64,9 +64,9 @@ void DorpShadow::DeleteShadow()
 void DorpShadow::CreateWorld()
 {
 
-	m_world = DirectX::SimpleMath::Matrix::Identity;
+	m_world = SimpleMath::Matrix::Identity;
 
-	DirectX::SimpleMath::Matrix rot = DirectX::SimpleMath::Matrix::CreateRotationX(RAD_90);
+	SimpleMath::Matrix rot = SimpleMath::Matrix::CreateRotationX(RAD_90);
 
 	m_world = rot * m_world;
 }
@@ -83,7 +83,7 @@ void DorpShadow::Render()
 	cbuff.m_matView = view.Transpose();
 	cbuff.m_matProj = proj.Transpose();
 	cbuff.m_matWorld = m_world.Transpose();
-	cbuff.m_diffuse = DirectX::SimpleMath::Vector4(1, 1, 1, 1);
+	cbuff.m_diffuse = SimpleMath::Vector4(1, 1, 1, 1);
 
 	//受け渡し用バッファの内容更新(ConstBufferからID3D11Bufferへの変換）
 	context->UpdateSubresource(m_CBuffer.Get(), 0, NULL, &cbuff, 0, 0);

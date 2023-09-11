@@ -21,7 +21,7 @@ void AM_None::Update()
 {
 	m_magicCircle.p = m_data.pos;
 
-	m_color = DirectX::SimpleMath::Color(0,0,0, 1);
+	m_color = SimpleMath::Color(0,0,0, 1);
 
 	// 選択モード時、色を変える
 	if (m_selectModeFlag)
@@ -30,7 +30,7 @@ void AM_None::Update()
 
 		float transitionVal = sinf(m_selectModeTime);
 
-		m_color = DirectX::SimpleMath::Color(transitionVal, transitionVal, transitionVal / 1.25f, 1.0f);
+		m_color = SimpleMath::Color(transitionVal, transitionVal, transitionVal / 1.25f, 1.0f);
 	}
 	else
 	{
@@ -40,7 +40,7 @@ void AM_None::Update()
 	// マウスが触れている間、色を変える
 	if (m_hitMouseFlag)
 	{
-		m_color = DirectX::SimpleMath::Color(1, 1, 1, 1);
+		m_color = SimpleMath::Color(1, 1, 1, 1);
 	}
 }
 

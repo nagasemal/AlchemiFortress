@@ -19,17 +19,17 @@ bool GameObjct2D::HitObject(SimpleMath::Vector2 pos)
 
 bool GameObjct2D::HitObject_RageSet(SimpleMath::Vector2 pos, float width, float height, float percent)
 {
-	DirectX::SimpleMath::Vector2 leftUpPos		= { m_data.pos.x - (width * percent) / 2,m_data.pos.y - (height * percent) / 2};
-	DirectX::SimpleMath::Vector2 rightBottomPos = { m_data.pos.x + (width * percent) / 2,m_data.pos.y + (height * percent) / 2};
+	SimpleMath::Vector2 leftUpPos		= { m_data.pos.x - (width * percent) / 2,m_data.pos.y - (height * percent) / 2};
+	SimpleMath::Vector2 rightBottomPos = { m_data.pos.x + (width * percent) / 2,m_data.pos.y + (height * percent) / 2};
 
 	return	PointerToBox(pos,
 		leftUpPos,rightBottomPos);
 }
 
-bool GameObjct2D::HitObject_RageSet(SimpleMath::Vector2 pos, float width, float height, DirectX::SimpleMath::Vector2 percent)
+bool GameObjct2D::HitObject_RageSet(SimpleMath::Vector2 pos, float width, float height, SimpleMath::Vector2 percent)
 {
-	DirectX::SimpleMath::Vector2 leftUpPos =	  { m_data.pos.x - (width * percent.x) / 2 ,m_data.pos.y - (height * percent.y) / 2 };
-	DirectX::SimpleMath::Vector2 rightBottomPos = { m_data.pos.x + (width * percent.x) / 2,m_data.pos.y +  (height * percent.y) / 2 };
+	SimpleMath::Vector2 leftUpPos =	  { m_data.pos.x - (width * percent.x) / 2 ,m_data.pos.y - (height * percent.y) / 2 };
+	SimpleMath::Vector2 rightBottomPos = { m_data.pos.x + (width * percent.x) / 2,m_data.pos.y +  (height * percent.y) / 2 };
 
 	return	PointerToBox(pos,
 		leftUpPos, rightBottomPos);

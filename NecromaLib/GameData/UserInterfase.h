@@ -36,8 +36,8 @@ public:
 	//データ受け渡し用コンスタントバッファ(送信側)
 	struct ConstBuffer
 	{
-		DirectX::SimpleMath::Vector4	windowSize;
-		DirectX::SimpleMath::Vector4	color;
+		SimpleMath::Vector4	windowSize;
+		SimpleMath::Vector4	color;
 	};
 
 	//変数
@@ -68,10 +68,10 @@ private:
 	int m_windowWidth, m_windowHeight;
 	int m_textureWidth, m_textureHeight;
 
-	DirectX::SimpleMath::Vector2 m_scale;
-	DirectX::SimpleMath::Vector2 m_baseScale;
-	DirectX::SimpleMath::Vector2 m_position;
-	DirectX::SimpleMath::Color m_color;
+	SimpleMath::Vector2 m_scale;
+	SimpleMath::Vector2 m_baseScale;
+	SimpleMath::Vector2 m_position;
+	SimpleMath::Color m_color;
 	float m_value;	// 明暗
 
 	// 表示位置
@@ -92,25 +92,25 @@ public:
 
 	void Create(DX::DeviceResources* pDR
 		, const wchar_t* path
-		, DirectX::SimpleMath::Vector2 position
-		, DirectX::SimpleMath::Vector2 scale
+		, SimpleMath::Vector2 position
+		, SimpleMath::Vector2 scale
 		, ANCHOR anchor);
 
 	void Create(DX::DeviceResources* pDR
 		, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture
-		, DirectX::SimpleMath::Vector2 position
-		, DirectX::SimpleMath::Vector2 scale
+		, SimpleMath::Vector2 position
+		, SimpleMath::Vector2 scale
 		, ANCHOR anchor);
 
 	void Render();
 
 	void SetWindowSize(const int& width, const int& height);
 
-	void SetScale(DirectX::SimpleMath::Vector2 scale);
-	DirectX::SimpleMath::Vector2 GetScale() { return m_scale; }
-	DirectX::SimpleMath::Vector2 GetBaseScale() { return m_baseScale; }
-	void SetPosition(DirectX::SimpleMath::Vector2 position);
-	DirectX::SimpleMath::Vector2 GetPosition() { return m_position; }
+	void SetScale(SimpleMath::Vector2 scale);
+	SimpleMath::Vector2 GetScale() { return m_scale; }
+	SimpleMath::Vector2 GetBaseScale() { return m_baseScale; }
+	void SetPosition(SimpleMath::Vector2 position);
+	SimpleMath::Vector2 GetPosition() { return m_position; }
 	void SetAnchor(ANCHOR anchor);
 	ANCHOR GetAnchor() { return m_anchor; }
 
@@ -124,8 +124,8 @@ public:
 	void SetValue(float value) { m_value = value;}
 	float GetValue() { return m_value;}
 
-	void SetColor(DirectX::SimpleMath::Color color) { m_color = color;}
-	DirectX::SimpleMath::Color GetColor()			{ return m_color;}
+	void SetColor(SimpleMath::Color color) { m_color = color;}
+	SimpleMath::Color GetColor()			{ return m_color;}
 
 private:
 

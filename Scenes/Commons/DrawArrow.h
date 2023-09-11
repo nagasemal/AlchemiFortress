@@ -18,6 +18,7 @@ public:
 	DrawArrow(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage,int direciton);
 	~DrawArrow();
 
+	void Update()				override;
 	// •`‰æ
 	void Draw()					override;
 

@@ -76,8 +76,8 @@ void UserInterface::LoadTexture(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>
 // ê∂ê¨ä÷êî
 void UserInterface::Create(DX::DeviceResources* pDR
 	, const wchar_t* path
-	, DirectX::SimpleMath::Vector2 position
-	, DirectX::SimpleMath::Vector2 scale
+	, SimpleMath::Vector2 position
+	, SimpleMath::Vector2 scale
 	, ANCHOR anchor)
 {
 	m_pDR = pDR;
@@ -99,7 +99,7 @@ void UserInterface::Create(DX::DeviceResources* pDR
 
 }
 
-void UserInterface::Create(DX::DeviceResources* pDR, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture, DirectX::SimpleMath::Vector2 position, DirectX::SimpleMath::Vector2 scale, ANCHOR anchor)
+void UserInterface::Create(DX::DeviceResources* pDR, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture, SimpleMath::Vector2 position, SimpleMath::Vector2 scale, ANCHOR anchor)
 {
 	m_pDR = pDR;
 	auto device = pDR->GetD3DDevice();
@@ -119,11 +119,11 @@ void UserInterface::Create(DX::DeviceResources* pDR, Microsoft::WRL::ComPtr<ID3D
 	m_states = std::make_unique<CommonStates>(device);
 }
 
-void UserInterface::SetScale(DirectX::SimpleMath::Vector2 scale)
+void UserInterface::SetScale(SimpleMath::Vector2 scale)
 {
 	m_scale = scale;
 }
-void UserInterface::SetPosition(DirectX::SimpleMath::Vector2 position)
+void UserInterface::SetPosition(SimpleMath::Vector2 position)
 {
 	m_position = position;
 }

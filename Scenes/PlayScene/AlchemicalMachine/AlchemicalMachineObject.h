@@ -62,7 +62,7 @@ public:
 	void ModelRender(DirectX::Model* model,DirectX::Model* ring = nullptr);
 
 	// 召喚
-	void SummonAM(DirectX::SimpleMath::Vector3 pos);
+	void SummonAM(SimpleMath::Vector3 pos);
 
 // アクセサ
 public:
@@ -102,7 +102,7 @@ public:
 
 	// 保有している色情報
 	// HPが0ならば黒を返します
-	const DirectX::SimpleMath::Color GetColor()				const { return m_hp <= 0 ? DirectX::SimpleMath::Color(0, 0, 0, 1): m_color;}
+	const SimpleMath::Color GetColor()				const { return m_hp <= 0 ? SimpleMath::Color(0, 0, 0, 1): m_color;}
 
 	// 何かの要因で変化を受けている状態
 	const bool GetPowerUpFlag()								const { return m_powerUPFlag; }
@@ -123,14 +123,14 @@ public:
 	const int GetDismantlingCrystal();
 
 	void SetLv(int lv)									{ m_lv = lv; }
-	void SetPos(DirectX::SimpleMath::Vector3 pos)		{ m_data.pos = pos; }
+	void SetPos(SimpleMath::Vector3 pos)		{ m_data.pos = pos; }
 	void SetMagicCircle(Circle circle)					{ m_magicCircle = circle;}
 	void SetActive(bool flag)							{ m_active = flag; }
 	void SetLine(int line)								{ m_line = line; }
 	void SetPowerUpFlag(bool flag)						{ m_powerUPFlag = flag; }
 	void SetSelectModeFlag(bool flag)					{ m_selectModeFlag = flag;}
 	void SetElement(ELEMENT element)			{ m_element = element; }
-	void SetColor(DirectX::SimpleMath::Color color)		{ m_color = color;}
+	void SetColor(SimpleMath::Color color)		{ m_color = color;}
 
 private:
 
@@ -184,7 +184,7 @@ protected:
 	std::string m_objectName;
 
 	// オブジェクトの色
-	DirectX::SimpleMath::Color m_color;
+	SimpleMath::Color m_color;
 
 	// オブジェクトの属性
 	ELEMENT m_element;

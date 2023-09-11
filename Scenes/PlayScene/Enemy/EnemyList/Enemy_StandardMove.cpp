@@ -25,7 +25,7 @@ void Enemy_StanderMove::Execute()
 	if (m_time <= m_param.delay || m_enemyPtr->GetStopFlag()) return;
 
 	// ‘¬“x‚ÌŒvŽZ
-	DirectX::SimpleMath::Vector3 lengthVec;
+	SimpleMath::Vector3 lengthVec;
 
 	lengthVec = Easing::Moveing(m_enemyPtr->GetTargetPos(), m_enemyPtr->GetData().pos);
 	lengthVec.Normalize();

@@ -45,7 +45,7 @@ void AM_Mining::Update()
 	m_magicCircle.r = (float)pSJD.GetMachineData(m_machineID).effect_rage + (float)(m_lv / 2.0f);
 
 	m_timer += DeltaTime::GetInstance().GetDeltaTime();
-	m_color = DirectX::SimpleMath::Color(1, 1, 1, 1);
+	m_color = SimpleMath::Color(1, 1, 1, 1);
 }
 
 void AM_Mining::SelectUpdate()
@@ -69,7 +69,7 @@ void AM_Mining::AllFieldObject(FieldObjectManager* fieldManager)
 	{
 		if (CircleCollider(it->GetCircle(), m_magicCircle))
 		{
-			m_color = DirectX::SimpleMath::Color(1, 0, 1, 1);
+			m_color = SimpleMath::Color(1, 0, 1, 1);
 
 			// ‰ñûŠJn
 			if (m_timer >= m_span)

@@ -443,9 +443,9 @@ ENEMY_TYPE Json::ChangeEnemy(const std::string machine)
 	return type;
 }
 
-DirectX::SimpleMath::Color Json::ChangeColor(ELEMENT element)
+SimpleMath::Color Json::ChangeColor(ELEMENT element)
 {
-	DirectX::SimpleMath::Color colors = COLOR_WIGHT;
+	SimpleMath::Color colors = COLOR_WIGHT;
 
 	switch (element)
 	{

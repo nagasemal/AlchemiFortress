@@ -50,7 +50,7 @@ private:
 
 	float m_moveTime;
 
-	DirectX::SimpleMath::Vector3 m_modelPos;
+	SimpleMath::Vector3 m_modelPos;
 
 	std::unique_ptr<Camera> m_camera;
 

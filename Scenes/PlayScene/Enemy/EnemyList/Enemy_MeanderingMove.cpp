@@ -30,7 +30,7 @@ void Enemy_MeanderingMove::Execute()
 	if (m_time <= m_param.delay || m_enemyPtr->GetStopFlag()) return;
 
 	// ‘¬“x‚ÌŒvŽZ
-	DirectX::SimpleMath::Vector3 lengthVec = DirectX::SimpleMath::Vector3();
+	SimpleMath::Vector3 lengthVec = SimpleMath::Vector3();
 
 	lengthVec.x = /*cosf(m_time) / m_param.value*/ Map(cosf(m_time), -1.0f, 1.0f, 0.0f, 1.0f);
 	lengthVec.z = /*sinf(m_time) / m_param.value*/ Map(sinf(m_time), -1.0f, 1.0f, 0.0f, 1.0f);

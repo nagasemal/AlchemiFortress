@@ -15,8 +15,8 @@
 const std::vector<D3D11_INPUT_ELEMENT_DESC> MagicCircle::INPUT_LAYOUT =
 {
 	{ "POSITION",	0, DXGI_FORMAT_R32G32B32_FLOAT,		0,							 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	{ "COLOR",		0, DXGI_FORMAT_R32G32B32A32_FLOAT,	0, sizeof(DirectX::SimpleMath::Vector3), D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	{ "TEXCOORD",	0, DXGI_FORMAT_R32G32_FLOAT,		0, sizeof(DirectX::SimpleMath::Vector3) + sizeof(DirectX::SimpleMath::Vector4), D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "COLOR",		0, DXGI_FORMAT_R32G32B32A32_FLOAT,	0, sizeof(SimpleMath::Vector3), D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	{ "TEXCOORD",	0, DXGI_FORMAT_R32G32_FLOAT,		0, sizeof(SimpleMath::Vector3) + sizeof(SimpleMath::Vector4), D3D11_INPUT_PER_VERTEX_DATA, 0 },
 };
 
 MagicCircle::MagicCircle() :
@@ -47,13 +47,13 @@ void MagicCircle::Update()
 {
 }
 
-void MagicCircle::CreateMagicCircle(DirectX::SimpleMath::Vector3 pos,float r, DirectX::SimpleMath::Color color)
+void MagicCircle::CreateMagicCircle(SimpleMath::Vector3 pos,float r, SimpleMath::Color color)
 {
 	// 全て消去
 	m_vertices.clear();
 
 	color.A(0.55f);
-	m_vertices.push_back({ pos,color,DirectX::SimpleMath::Vector2(r * 2.5f,0.0f) });
+	m_vertices.push_back({ pos,color,SimpleMath::Vector2(r * 2.5f,0.0f) });
 }
 
 void MagicCircle::DeleteMagicCircle()
@@ -66,18 +66,16 @@ void MagicCircle::DeleteMagicCircle()
 void MagicCircle::CreateWorld()
 {
 
-	m_world = DirectX::SimpleMath::Matrix::Identity;
+	m_world = SimpleMath::Matrix::Identity;
 
-	DirectX::SimpleMath::Matrix rot = DirectX::SimpleMath::Matrix::CreateRotationX(RAD_90);
+	SimpleMath::Matrix rot = SimpleMath::Matrix::CreateRotationX(RAD_90);
 	
 	// 常に右回りに回転
-	rot *= DirectX::SimpleMath::Matrix::CreateRotationY(0.25f * m_animationTime);
+	rot *= SimpleMath::Matrix::CreateRotationY(0.25f * m_animationTime);
 
 	m_animationTime += DeltaTime::GetInstance().GetDeltaTime();
 
 	m_world *= rot * m_world;
-
-	//if (m_animationTime >= 1.0f) m_animationTime = 0.0f;
 
 }
 
@@ -93,7 +91,7 @@ void MagicCircle::Render(int magicCircleNumber)
 	cbuff.m_matView = view.Transpose();
 	cbuff.m_matProj = proj.Transpose();
 	cbuff.m_matWorld = m_world.Transpose();
-	cbuff.m_diffuse = DirectX::SimpleMath::Vector4(1, 1, 1, m_animationTime);
+	cbuff.m_diffuse = SimpleMath::Vector4(1, 1, 1, m_animationTime);
 
 	//受け渡し用バッファの内容更新(ConstBufferからID3D11Bufferへの変換）
 	context->UpdateSubresource(m_cBuffer.Get(), 0, NULL, &cbuff, 0, 0);

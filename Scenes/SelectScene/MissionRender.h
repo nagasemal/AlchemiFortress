@@ -16,7 +16,7 @@ class MissionRender
 {
 public:
 
-	MissionRender(DirectX::SimpleMath::Vector2 pos,DirectX::SimpleMath::Vector2 rage);
+	MissionRender(SimpleMath::Vector2 pos,SimpleMath::Vector2 rage);
 	~MissionRender();
 
 	void Render();
@@ -39,14 +39,14 @@ public:
 
 private:
 
-	void LabelDraw(DirectX::SimpleMath::Vector2 pos);
+	void LabelDraw(SimpleMath::Vector2 pos);
 
 private:
 
 	std::unique_ptr<Number> m_number;
 
-	DirectX::SimpleMath::Vector2 m_position;
-	DirectX::SimpleMath::Vector2 m_rage;
+	SimpleMath::Vector2 m_position;
+	SimpleMath::Vector2 m_rage;
 
 	int m_lineCount;
 

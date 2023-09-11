@@ -14,10 +14,10 @@ public:
 	//データ受け渡し用コンスタントバッファ(送信側)
 	struct ConstBuffer
 	{
-		DirectX::SimpleMath::Matrix		m_matWorld;
-		DirectX::SimpleMath::Matrix		m_matView;
-		DirectX::SimpleMath::Matrix		m_matProj;
-		DirectX::SimpleMath::Vector4	m_diffuse;
+		SimpleMath::Matrix		m_matWorld;
+		SimpleMath::Matrix		m_matView;
+		SimpleMath::Matrix		m_matProj;
+		SimpleMath::Vector4	m_diffuse;
 	};
 
 public:
@@ -31,7 +31,7 @@ public:
 	void CreateShader();
 
 	// vector配列に中身を入れる
-	void CreateShadow(DirectX::SimpleMath::Vector3 pos);
+	void CreateShadow(SimpleMath::Vector3 pos);
 	// vector配列の中身を消去する
 	void DeleteShadow();
 
@@ -61,8 +61,8 @@ private:
 	// ジオメトリシェーダ
 	Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_geometryShader;
 
-	DirectX::SimpleMath::Matrix m_world;
-	DirectX::SimpleMath::Matrix m_view;
-	DirectX::SimpleMath::Matrix m_proj;
+	SimpleMath::Matrix m_world;
+	SimpleMath::Matrix m_view;
+	SimpleMath::Matrix m_proj;
 
 };

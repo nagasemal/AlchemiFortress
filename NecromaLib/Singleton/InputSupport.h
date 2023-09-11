@@ -10,7 +10,7 @@ private:
 	DirectX::Mouse::ButtonStateTracker m_mouseTracker;
 
 	//ワールド空間座標上のマウス
-	DirectX::SimpleMath::Vector3 m_WorldScreenMouse;
+	SimpleMath::Vector3 m_WorldScreenMouse;
 
 public:
 	~InputSupport() = default;
@@ -34,9 +34,9 @@ public:
 	DirectX::Mouse::ButtonStateTracker GetMouseState() { return m_mouseTracker; }
 
 	//===[ マウス座標(ワールド空間) ]===//
-	DirectX::SimpleMath::Vector3 GetMousePosWolrd();
+	SimpleMath::Vector3 GetMousePosWolrd();
 
 	//===[ マウス座標(スクリーン空間) ]===//
-	DirectX::SimpleMath::Vector2 GetMousePosScreen();
+	SimpleMath::Vector2 GetMousePosScreen();
 
 };

@@ -3,11 +3,11 @@
 
 #include "NecromaLib/Singleton/InputSupport.h"
 
-Crystal::Crystal(DirectX::SimpleMath::Vector3 pos, float rotateY)
+Crystal::Crystal(SimpleMath::Vector3 pos, float rotateY)
 {
 
 	m_data.pos = pos;
-	m_data.rage = DirectX::SimpleMath::Vector3(0.8f, 0.8f, 0.8f);
+	m_data.rage = SimpleMath::Vector3(0.8f, 0.8f, 0.8f);
 	m_rotateY = rotateY;
 
 	m_type = CRYSTAL;
@@ -38,10 +38,10 @@ void Crystal::Render(Model* model)
 	ShareData& pSD = ShareData::GetInstance();
 
 	// ƒ‚ƒfƒ‹î•ñ(ˆÊ’u,‘å‚«‚³)
-	DirectX::SimpleMath::Matrix modelData = DirectX::SimpleMath::Matrix::Identity;
-	modelData = DirectX::SimpleMath::Matrix::CreateScale(m_data.rage);
-	modelData *= DirectX::SimpleMath::Matrix::CreateRotationY(m_rotateY);
-	modelData *= DirectX::SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y, m_data.pos.z);
+	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
+	modelData = SimpleMath::Matrix::CreateScale(m_data.rage);
+	modelData *= SimpleMath::Matrix::CreateRotationY(m_rotateY);
+	modelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y, m_data.pos.z);
 
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection());
 
@@ -54,7 +54,7 @@ bool Crystal::DeleteRequest()
 
 bool Crystal::GetHitMouse()
 {
-	DirectX::SimpleMath::Vector3 mouseWolrdPos = InputSupport::GetInstance().GetMousePosWolrd();
+	SimpleMath::Vector3 mouseWolrdPos = InputSupport::GetInstance().GetMousePosWolrd();
 
 	Circle mouseCircle(mouseWolrdPos, 1.2f);
 
