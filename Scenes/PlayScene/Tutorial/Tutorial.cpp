@@ -10,15 +10,19 @@
 #include "NecromaLib/GameData/SpriteCutter.h"
 #include "Scenes/Commons/DrawArrow.h"
 #include "Scenes/PlayScene/UI/SelectionBox.h"
-#include "Scenes/Commons/PopLine.h"
+#include "Scenes/Commons/DrawLine.h"
+#include "Scenes/Commons/DrawBox.h"
 
 // UIを指すにあたり必要となるクラス
 #include "Scenes/PlayScene/AlchemicalMachine/AlchemicalMachineManager.h"
 #include "Scenes/PlayScene/AlchemicalMachine/AlchemicalMachineObject.h"
+#include "Scenes/PlayScene/AlchemicalMachine/AM_Attacker.h"
 #include "Scenes/PlayScene/UI/MachineSelectManager.h"
 #include "Scenes/PlayScene/UI/Gauge.h"
+#include "Scenes/SelectScene/MissionRender.h"
 
-#define CANCEL_BUTTON SimpleMath::Vector2(1220.0f,64.0f)
+#define EXPLANATION_BUTTON		SimpleMath::Vector2(1220.0f,64.0f)
+#define TUTORIAL_EXIT_BUTTON	SimpleMath::Vector2(1100.0f,540.0f)
 
 #define TUTORIAL_TEXT_POS SimpleMath::Vector2(200.0f,200.0f)
 
@@ -52,9 +56,11 @@ const std::vector<const wchar_t*> Tutorial::FILENAME =
 };
 
 Tutorial::Tutorial():
+	m_explanationFlag(false),
 	m_tutorialFlag(false),
+	m_cameraFlag(false),
 	m_selectNumber(1),
-	m_doubleSpeedNum()
+	m_tutorialNumber(0)
 {
 
 }
@@ -63,71 +69,105 @@ Tutorial::~Tutorial()
 {
 }
 
-void Tutorial::Initialize()
+void Tutorial::Initialize(int tutorialNumber)
 {
+
+	m_selectNumber = tutorialNumber;
+	m_tutorialFlag = (bool)m_selectNumber;
 
 	auto device = ShareData::GetInstance().GetDeviceResources();
 	int width = device->GetOutputSize().right;
 	int height = device->GetOutputSize().bottom;
 
+	// 取得
 	m_arrowL = std::make_unique<DrawArrow>(SimpleMath::Vector2((width / 2) + ARROW_POS_X + TUTORIAL_TEXT_POS.x, height / 2 + TUTORIAL_TEXT_POS.y), SimpleMath::Vector2(1.0f, 1.0f),2);
 	m_arrowR = std::make_unique<DrawArrow>(SimpleMath::Vector2((width / 2) - ARROW_POS_X + TUTORIAL_TEXT_POS.x, height / 2 + TUTORIAL_TEXT_POS.y), SimpleMath::Vector2(1.0f, 1.0f),4);
 
-	m_cancelButton = std::make_unique<SelectionBox>(CANCEL_BUTTON, SimpleMath::Vector2(1.0f, 1.0f));
+	m_explanationButton = std::make_unique<SelectionBox>(EXPLANATION_BUTTON, SimpleMath::Vector2(1.0f, 1.0f));
 
-	m_doubleSpeedButton = std::make_unique<SelectionBox>(SimpleMath::Vector2(width - 100.0f, height - 100.0f), SimpleMath::Vector2(1.0f, 1.0f));
+	m_tutorialExitButton = std::make_unique<SelectionBox>(TUTORIAL_EXIT_BUTTON, SimpleMath::Vector2(2.0f, 1.0f));
 
-	m_showLine = std::make_unique<PopLine>(SimpleMath::Vector2(), LINE_RAGE, LINE_RAGE,15.0f);
-	m_showLine->SetColor(SimpleMath::Color(1.0f,0.6f,0.6f,1.0f));
+	m_showBox = std::make_unique<DrawBox>(SimpleMath::Vector2(), LINE_RAGE, 5.0f);
+	m_showBox->SetColor(SimpleMath::Color(1.0f, 0.0f, 0.0f, 1.0f));
+
+	// チュートリアル表示用 マシンUI
+	m_amMachine = std::make_unique<AM_Attacker>();
+	m_amMachine->Initialize();
+
+	m_machineExplanation = std::make_unique<MachineExplanation>();
+	m_machineExplanation->Initialize();
+
 	CreateInterfase();
 }
 
-void Tutorial::Update(AlchemicalMachineManager* machineManager, Gauge* gauge)
+void Tutorial::Update(AlchemicalMachineManager* machineManager, Gauge* gauge, MissionRender* missionRender, bool stopFlag)
 {
-	DeltaTime& pDltaT = DeltaTime::GetInstance();
 
-	m_showLine->Update();
-	m_showLine->SetHitMouseFlag(m_tutorialFlag);
+	m_cameraFlag = stopFlag;
 
-	if (m_tutorialFlag)
+	m_showBox->Update();
+	m_showBox->SetHitMouseFlag( GetTutorialFlag() );
+
+
+	if(!m_cameraFlag) m_showBox->ResetAnimationData();
+
+	if (m_explanationFlag)
 	{
 		m_arrowL->HitMouse();
 		m_arrowR->HitMouse();
 
-
-		// 上限下限設定
-		m_selectNumber = std::min(std::max(m_selectNumber, 1), (const int)SpriteLoder::INSTRUCTION_TYPE::NUM);
-
 		// 左ボタンでm_selectNumber増加
-		if (m_arrowL->ClickMouse() && m_selectNumber < SpriteLoder::INSTRUCTION_TYPE::NUM)
+		if (m_arrowL->ClickMouse())
 		{
 			m_selectNumber++;
+			// 上限下限設定
+			m_selectNumber = std::min(std::max(m_selectNumber, 1), (const int)INSTRUCTION_TYPE::NUM);
 			m_textTexture->LoadTexture(FILENAME[m_selectNumber]);
 
+			// 線を引く位置を決める
+			LinePosSet(machineManager, gauge, missionRender, m_selectNumber);
+
 			// アニメーション値を0に戻す
-			m_showLine->ResetAnimationData();
+			m_showBox->ResetAnimationData();
 		}
 
 		// 右ボタンでm_selectNumber増加
-		if (m_arrowR->ClickMouse() && m_selectNumber > 0)
+		if (m_arrowR->ClickMouse())
 		{
+
 			m_selectNumber--;
+			// 上限下限設定
+			m_selectNumber = std::min(std::max(m_selectNumber, 1), (const int)INSTRUCTION_TYPE::NUM);
 			m_textTexture->LoadTexture(FILENAME[m_selectNumber]);
 
-			// アニメーション値を0に戻す
-			m_showLine->ResetAnimationData();
-		}
+			// 線を引く位置を決める
+			LinePosSet(machineManager, gauge, missionRender, m_selectNumber);
 
-		// 線を引く位置を決める
-		LinePosSet(machineManager, gauge);
+			// アニメーション値を0に戻す
+			m_showBox->ResetAnimationData();
+		}
 
 	}
 
-	m_cancelButton->HitMouse();
-
-	if (m_cancelButton->ClickMouse())
+	if (m_tutorialFlag && m_cameraFlag)
 	{
-		m_tutorialFlag = !m_tutorialFlag;
+		// テクスチャ読み込み
+		m_textTexture->LoadTexture(FILENAME[m_selectNumber]);
+		// 線を引く位置を決める
+		LinePosSet(machineManager, gauge, missionRender, m_selectNumber);
+
+		m_tutorialExitButton->HitMouse();
+		if (m_tutorialExitButton->ClickMouse()) 			m_tutorialFlag = false;
+
+	}
+
+	m_explanationButton->HitMouse();
+	if (m_explanationButton->ClickMouse())
+	{
+		m_explanationFlag = !m_explanationFlag;
+
+		// 線を引く位置を決める
+		LinePosSet(machineManager, gauge, missionRender,m_selectNumber);
 	}
 
 }
@@ -142,35 +182,41 @@ void Tutorial::Render()
 	float width = (float)device->GetOutputSize().right;
 	float height = (float)device->GetOutputSize().bottom;
 
-	if (m_tutorialFlag)
+	if ( GetTutorialFlag() )
 	{
 		// 背景黒くする
 		pSD.GetSpriteBatch()->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
 		RECT rect = { 0,0,800,600};
 
-		pSB->Draw(pSL.GetMagicRule().Get(), SimpleMath::Vector2(width / 2.0f,height / 2.0f),
+		// 背景を黒くする
+		pSB->Draw(pSL.GetMagicRule(0).Get(), SimpleMath::Vector2(width / 2.0f,height / 2.0f),
 				  &rect,
 				  SimpleMath::Color(0.0f,0.0f,0.0f,0.3f),
 				  0.0f,
 				  DirectX::XMFLOAT2{800.0f / 2.0f,600.0f / 2.0f}, 2.0f);
 
 		pSD.GetSpriteBatch()->End();
+		
+		// マシンUIの説明の際に描画
+		if ( m_selectNumber == MACHINE_UI )
+		{
+			m_machineExplanation		->Draw();
+			m_amMachine					->SelectRenderUI_Common();
+			m_amMachine					->RenderUI(pSL.GetSelectBoxTexture());
+		}
 
 	}
 
-	m_cancelButton->DrawUI(pSL.GetUIIcons().Get(), SpriteCutter(64, 64, SpriteLoder::UIICON_TYPE::EXPRANATION, 0), { 0.0f,0.0f,0.0f,1.0f });
-	m_doubleSpeedButton->DrawUI();
+	m_explanationButton->DrawUI(pSL.GetUIIcons().Get(), SpriteCutter(64, 64, SpriteLoder::UIICON_TYPE::EXPRANATION, 0), { 0.0f,0.0f,0.0f,1.0f });
 }
 
 void Tutorial::Render_Layer2()
 {
 
 	ShareData& pSD = ShareData::GetInstance();
-	SpriteLoder& pSL = SpriteLoder::GetInstance();
-	SpriteBatch* pSB = pSD.GetSpriteBatch();
 
-	if (m_tutorialFlag)
+	if ( GetTutorialFlag() )
 	{
 		// テキスト描画
 		m_backFlame->Render();
@@ -179,15 +225,27 @@ void Tutorial::Render_Layer2()
 		// 示す先の線と矢印UI描画
 		pSD.GetSpriteBatch()->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
-		// 
-		m_showLine->Draw();
+		//　対象を明確にする
+		m_showBox->Draw();
 
-		//
-		if (m_selectNumber < SpriteLoder::INSTRUCTION_TYPE::NUM)m_arrowL->Draw();
-		if (m_selectNumber > 0)m_arrowR->Draw();
+		// チュートリアル時には描画しない
+		if ( !m_tutorialFlag )
+		{
+			// 選択移動矢印の描画　(上限下限に達したら描画を切る)
+			if (m_selectNumber < INSTRUCTION_TYPE::NUM)m_arrowL->Draw();
+			if (m_selectNumber > 0)					   m_arrowR->Draw();
+		}
 
 		pSD.GetSpriteBatch()->End();
+
+		// チュートリアル時に描画する
+		if ( m_tutorialFlag )
+		{
+			m_tutorialExitButton->DrawUI();
+		}
+
 	}
+
 }
 
 void Tutorial::Finalize()
@@ -196,11 +254,11 @@ void Tutorial::Finalize()
 
 void Tutorial::CreateInterfase()
 {
-	ShareData& pSD = ShareData::GetInstance();
 	auto device = ShareData::GetInstance().GetDeviceResources();
 	float width = static_cast<float>(device->GetOutputSize().right);
 	float height = static_cast<float>(device->GetOutputSize().bottom);
 
+	// テクスチャを描画する際の位置情報と大きさ
 	SimpleMath::Vector2 pos{ width / 4.0f + TUTORIAL_TEXT_POS.x,100.0f + TUTORIAL_TEXT_POS.y};
 	SimpleMath::Vector2 rage{ 0.5f,0.5f};
 
@@ -222,7 +280,7 @@ void Tutorial::CreateInterfase()
 
 }
 
-void Tutorial::LinePosSet(AlchemicalMachineManager* machineManager, Gauge* gauge)
+void Tutorial::LinePosSet(AlchemicalMachineManager* machineManager, Gauge* gauge, MissionRender* missionRender, int number)
 {
 
 	SimpleMath::Vector2 linePos = SimpleMath::Vector2();
@@ -230,61 +288,89 @@ void Tutorial::LinePosSet(AlchemicalMachineManager* machineManager, Gauge* gauge
 
 	MachineSelect* machineSelect = machineManager->GetMachineSelect()->get()->GetMachineSelect(MACHINE_TYPE::ATTACKER);
 	machineSelect->SetHitMouseFlag(false);
+
+	// チュートリアル画面時は常に未選択とする。
 	machineManager->SetSelectMachineNumber(-1);
 
-	// 何を指しているのか分かるようにする
-	// :マシン範囲
-	if (m_selectNumber <= MACHINE_EXPLANATION && m_selectNumber >= 1)
+	// ボタンを押した1Fの間にのみ反応する為、ここでは不問とする
+	switch ((INSTRUCTION_TYPE)number)
 	{
-		linePos = machineManager->GetMachineSelect()->get()->GetMachineSelect(m_selectNumber)->GetData().pos;
-	}
+	case INSTRUCTION_TYPE::NONE:
 
-	if (m_selectNumber == SpriteLoder::INSTRUCTION_TYPE::OPERATION)
+		break;
+
+	case INSTRUCTION_TYPE::ATTACKER:
+	case INSTRUCTION_TYPE::DEFENSER:
+	case INSTRUCTION_TYPE::UPPER:
+	case INSTRUCTION_TYPE::RECOVERY:
+	case INSTRUCTION_TYPE::MINING:
 	{
-		linePos  = SimpleMath::Vector2(892.0f,64.0f);
+
+		linePos = machineManager->GetMachineSelect()->get()->GetMachineSelect(number)->GetData().pos;
+		lineRage = LINE_RAGE;
+
+		break;
+	}
+	case INSTRUCTION_TYPE::OPERATION:
+	{
+		linePos = SimpleMath::Vector2(892.0f, 64.0f);
 		lineRage = SimpleMath::Vector2(300.0f, 50.0f);
-	}
 
-	if (m_selectNumber == SpriteLoder::INSTRUCTION_TYPE::OPERATION_MACHINE)
+		break;
+	}
+	case INSTRUCTION_TYPE::OPERATION_MACHINE:
 	{
 		machineSelect->SetHitMouseFlag(true);
 		linePos = machineSelect->GetManufacturingBox()->GetPos();
-		lineRage = SimpleMath::Vector2(85.0f, 40.0f);
-	}
+		lineRage = SimpleMath::Vector2(100.0f, 35.0f);
 
-	if (m_selectNumber == SpriteLoder::INSTRUCTION_TYPE::MACHINE_UI)
+		break;
+	}
+	case INSTRUCTION_TYPE::MACHINE_UI:
 	{
-
-		machineManager->SetSelectMachineNumber(0);
-
-		linePos = SimpleMath::Vector2();
-		lineRage = SimpleMath::Vector2();
+		linePos = m_machineExplanation->GetPos();
+		lineRage = m_machineExplanation->GetRage();
+		break;
 	}
-
-	if (m_selectNumber == SpriteLoder::INSTRUCTION_TYPE::GAUGE_HP)
+	case INSTRUCTION_TYPE::GAUGE_HP:
 	{
 		linePos = gauge->GetHPGaugePos();
-		lineRage = SimpleMath::Vector2(230.0f, 20.0f);
-	}
+		lineRage = SimpleMath::Vector2(280.0f, 19.0f);
 
-	if (m_selectNumber == SpriteLoder::INSTRUCTION_TYPE::GAUGE_MP)
+		break;
+	}
+	case INSTRUCTION_TYPE::GAUGE_MP:
 	{
 		linePos = gauge->GetMPGaugePos();
-		lineRage = SimpleMath::Vector2(180.0f, 15.0f);
-	}
+		lineRage = SimpleMath::Vector2(180.0f, 14.0f);
 
-	if (m_selectNumber == SpriteLoder::INSTRUCTION_TYPE::GAUGE_CRYSTAL)
+		break;
+	}
+	case INSTRUCTION_TYPE::GAUGE_CRYSTAL:
 	{
 		linePos = gauge->GetCrystalGaugePos();
-		lineRage = SimpleMath::Vector2(180.0f, 15.0f);
+		lineRage = SimpleMath::Vector2(180.0f, 14.0f);
+
+		break;
+	}
+	case INSTRUCTION_TYPE::MISSION:
+	{
+
+		linePos = missionRender->GetPos();
+		lineRage = missionRender->GetRage();
+
+		break;
+	}
+	case INSTRUCTION_TYPE::ALCHEMI:
+		break;
+	case INSTRUCTION_TYPE::SPAWN:
+		break;
+	default:
+		break;
 	}
 
-	if (m_selectNumber == SpriteLoder::INSTRUCTION_TYPE::ALCHEMI)
-	{
-	}
-	m_showLine->SetPos(linePos);
-	m_showLine->SetRage(lineRage);
-	m_showLine->SetMaxRage(lineRage);
+	m_showBox->SetPos(linePos);
+	m_showBox->SetRage(lineRage);
 
 }
 

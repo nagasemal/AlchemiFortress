@@ -9,6 +9,7 @@
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/ShareJsonData.h"
+#include "NecromaLib/Singleton/SoundData.h"
 
 #include <WICTextureLoader.h>
 
@@ -33,6 +34,7 @@ Game::Game() noexcept(false)
     ShareData::Create();
     SpriteLoder::Create();
     ShareJsonData::Create();
+    SoundData::Create();
 }
 Game::~Game()
 {
@@ -47,6 +49,8 @@ Game::~Game()
     SpriteLoder::Destroy();
 
     ShareJsonData::Destroy();
+
+    SoundData::Destroy();
 
     m_SceneManager.get()->Finalize();
     m_SceneManager.reset();
@@ -72,6 +76,17 @@ void Game::Initialize(HWND window, int width, int height)
     
     m_timer.SetFixedTimeStep(true);
     m_timer.SetTargetElapsedSeconds(1.0 / 60);
+
+    // オーディオエンジンの作成
+    AUDIO_ENGINE_FLAGS eflags = AudioEngine_Default;
+#ifdef _DEBUG
+    eflags |= AudioEngine_Debug;
+#endif
+    m_audioEngine = std::make_unique<AudioEngine>(eflags);
+
+    SoundData& pSound = SoundData::GetInstance();
+
+    pSound.SoundLoad(m_audioEngine.get());
 
 }
 
@@ -110,6 +125,17 @@ void Game::Update(DX::StepTimer const& timer)
     pIS->SetMouseState(m_mouseTracker);
     // スクリーン座標からワールド空間座標への返還を常に行う
     pIS->Update();
+
+    // オーディオエンジンの更新
+    if (!m_audioEngine->Update())
+    {
+        // No audio device is active
+        if (m_audioEngine->IsCriticalError())
+        {
+            OutputDebugString(L"AudioEngine Error!\n");
+        }
+    }
+
 
 }
 #pragma endregion
@@ -260,6 +286,8 @@ void Game::CreateDeviceDependentResources()
     mCamera = std::make_unique<Camera>();
 
     pSD->SetCamera(mCamera.get());
+
+    pSD->CreateStencilData();
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.

@@ -93,5 +93,6 @@ namespace DX
 #include "PrimitiveBatch.h"
 #include "GeometricPrimitive.h"
 #include "Model.h"
+#include "Audio.h"
 
 using namespace DirectX;

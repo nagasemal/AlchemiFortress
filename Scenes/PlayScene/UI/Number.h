@@ -33,6 +33,7 @@ public:
 
 private:
 
+	// ”š‚ğ•`‰æ‚·‚é
 	void Number_Render(int num,SimpleMath::Vector2 pos);
 
 	SimpleMath::Vector2 m_position;

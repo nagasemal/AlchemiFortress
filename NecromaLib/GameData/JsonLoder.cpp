@@ -16,7 +16,6 @@
 #define COLOR_GREEN		{0.0f,1.0f,0.0f,1.0f}
 #define COLOR_YELLOW	{0.8f,0.8f,0.0f,1.0f}
 
-
 Bullet_Data Json::FileLoad_BulletData(const std::string filePath)
 {
 	//	読み込み用変数
@@ -166,7 +165,7 @@ Enemy_Data Json::FileLoad_EnemyData(const std::string filePath)
 	data.moveType = status["MOVETYPE"].get<std::string>();
 	data.hp = (int)status["HP"].get<double>();
 	data.exp = (int)status["EXP"].get<double>();
-	data.power = (int)status["STR"].get<double>();
+	data.power = (float)status["STR"].get<double>();
 
 	picojson::array moves = status["MOVEING"].get<picojson::array>();
 
@@ -266,9 +265,10 @@ Stage_Data Json::FileLoad_StageData(const std::string filePath)
 
 		Enemys_Spawn enemySpawn;
 		enemySpawn.type = ChangeEnemy(it->get<picojson::object>()["TYPE"].get<std::string>());
-		enemySpawn.spawnTime = (float)	it->get<picojson::object>()["SPAWNTIME"].get<double>();
-		enemySpawn.direction = (int)	it->get<picojson::object>()["AZIMUTH"].get<double>();
-		enemySpawn.remoteness =(int)	it->get<picojson::object>()["REMOTENESS"].get<double>();
+		enemySpawn.spawnTime  = (float)	it->get<picojson::object>()["SPAWNTIME"].get<double>();
+		enemySpawn.spawnPos.x = (float)	it->get<picojson::object>()["SPAWN_X"].get<double>();
+		enemySpawn.spawnPos.y = (float)	it->get<picojson::object>()["SPAWN_Y"].get<double>();
+		enemySpawn.spawnPos.z =	(float)	it->get<picojson::object>()["SPAWN_Z"].get<double>();
 
 		// 説明モード時のフラグ
 		if (it->get<picojson::object>()["CONDITION"].get<std::string>() == "Explanation")
@@ -284,13 +284,14 @@ Stage_Data Json::FileLoad_StageData(const std::string filePath)
 	picojson::object& defaulet_machine = val.get<picojson::object>()["MACHINE_DEFAULET"].get<picojson::object>();
 	picojson::array& machine = defaulet_machine["MACHINES"].get<picojson::array>();
 
-	for (picojson::array::iterator it = machine.begin(); it != machine.end(); it++) {
+	for (picojson::array::iterator it = machine.begin(); it != machine.end(); it++)
+	{
 
 		Stage_Machine stage_machine;
-		stage_machine.lv = (int)it->get<picojson::object>()["LV"].get<double>();
-		stage_machine.type = ChangeMachine(it->get<picojson::object>()["TYPE"].get<std::string>());
-		stage_machine.element = ChangeElement(it->get<picojson::object>()["ELEMENT"].get<std::string>());
-		stage_machine.number = (int)it->get<picojson::object>()["NUMBER"].get<double>();
+		stage_machine.lv			= (int)it->get<picojson::object>()["LV"].get<double>();
+		stage_machine.type			= ChangeMachine(it->get<picojson::object>()["TYPE"].get<std::string>());
+		stage_machine.element		= ChangeElement(it->get<picojson::object>()["ELEMENT"].get<std::string>());
+		stage_machine.number		= (int)it->get<picojson::object>()["NUMBER"].get<double>();
 
 		status.machine.push_back(stage_machine);
 
@@ -310,6 +311,25 @@ Stage_Data Json::FileLoad_StageData(const std::string filePath)
 	stage_resource.recovery		= (int)default_resource["RECOVERY"].get<double>();
 
 	status.resource = stage_resource;
+
+	// チュートリアル番号
+	status.tutorial = (int)default_resource["TUTORIAL"].get<double>();
+
+	// クリスタルの位置を決める
+	picojson::object& defaulet_crystal = val.get<picojson::object>()["CRYSTAL_SPAWN"].get<picojson::object>();
+	picojson::array& crystal = defaulet_crystal["CRYSTALS"].get<picojson::array>();
+
+	for (picojson::array::iterator it = crystal.begin(); it != crystal.end(); it++)
+	{
+		SimpleMath::Vector2 crystalPos = SimpleMath::Vector2();
+
+		// メモリ的効率を考慮してVector2を採用
+		crystalPos.x = (float)it->get<picojson::object>()["SPAWN_X"].get<double>();
+		crystalPos.y = (float)it->get<picojson::object>()["SPAWN_Z"].get<double>();
+
+		status.crystalPos.push_back(crystalPos);
+
+	}
 
 	return status;
 
@@ -432,15 +452,33 @@ std::string Json::ChangeMachineString(const MACHINE_TYPE type)
 
 }
 
-ENEMY_TYPE Json::ChangeEnemy(const std::string machine)
+ENEMY_TYPE Json::ChangeEnemy(const std::string enemy_Name)
 {
 	ENEMY_TYPE type = ENEMY_TYPE::ENMEY_NONE;
 
-	if (machine == "None")			type = ENEMY_TYPE::ENMEY_NONE;
-	else if (machine == "Slime")	type = ENEMY_TYPE::SLIME;
-	else if (machine == "Worm")		type = ENEMY_TYPE::WORM;
+	if (enemy_Name == "None")			type = ENEMY_TYPE::ENMEY_NONE;
+	else if (enemy_Name == "Slime")	type = ENEMY_TYPE::SLIME;
+	else if (enemy_Name == "Worm")		type = ENEMY_TYPE::WORM;
 
 	return type;
+}
+
+std::string Json::ChangeEnemyString(const ENEMY_TYPE enemy_Type)
+{
+	
+	switch (enemy_Type)
+	{
+	case ENMEY_NONE:
+		return "None";
+	case SLIME:
+		return "Slime";
+	case WORM:
+		return "Worm";
+	default:
+		break;
+	}
+
+	return "None";
 }
 
 SimpleMath::Color Json::ChangeColor(ELEMENT element)
@@ -615,9 +653,10 @@ void Json::WritingJsonFile_StageData(int number, Stage_Data stageData)
 		for (int i = 0; i < stageData.enemys_Spawn.size(); i++)
 		{
 			picojson::object id;
-			id.insert(std::make_pair("TYPE", stageData.enemys_Spawn[i].condition));
-			id.insert(std::make_pair("AZIMUTH", (double)stageData.enemys_Spawn[i].direction));
-			id.insert(std::make_pair("REMOTENESS", (double)stageData.enemys_Spawn[i].remoteness));
+			id.insert(std::make_pair("TYPE", ChangeEnemyString(stageData.enemys_Spawn[i].type)));
+			id.insert(std::make_pair("SPAWN_X", (double)stageData.enemys_Spawn[i].spawnPos.x));
+			id.insert(std::make_pair("SPAWN_Y", (double)stageData.enemys_Spawn[i].spawnPos.y));
+			id.insert(std::make_pair("SPAWN_Z", (double)stageData.enemys_Spawn[i].spawnPos.z));
 			id.insert(std::make_pair("SPAWNTIME", (double)stageData.enemys_Spawn[i].spawnTime));
 			id.insert(std::make_pair("CONDITION", stageData.enemys_Spawn[i].condition));
 
@@ -647,7 +686,6 @@ void Json::WritingJsonFile_StageData(int number, Stage_Data stageData)
 
 		}
 	}
-
 	// ステージのリソース群
 	{
 		// 書き換える情報をjsonから取得
@@ -665,9 +703,79 @@ void Json::WritingJsonFile_StageData(int number, Stage_Data stageData)
 		default_Resource.insert(std::make_pair("DEFFENCER", picojson::value((double)stageData.resource.deffencer)));
 		default_Resource.insert(std::make_pair("MINING", picojson::value((double)stageData.resource.mining)));
 		default_Resource.insert(std::make_pair("RECOVERY", picojson::value((double)stageData.resource.recovery)));
+		// チュートリアルの取得
+		default_Resource.insert(std::make_pair("TUTORIAL", picojson::value((double)stageData.tutorial)));
+	}
+
+	// クリスタルの初期位置情報
+	{
+		picojson::object& stageData_Crystal = val.get<picojson::object>()["CRYSTAL_SPAWN"].get<picojson::object>();
+		picojson::array& spawnCrystal_array = stageData_Crystal["CRYSTALS"].get<picojson::array>();
+
+		spawnCrystal_array.clear();
+		for (int i = 0; i < stageData.crystalPos.size(); i++)
+		{
+			picojson::object id;
+			id.insert(std::make_pair("SPAWN_X", (double)stageData.crystalPos[i].x));
+			// メモリ的都合が良い為YをZとして扱う
+			id.insert(std::make_pair("SPAWN_Z", (double)stageData.crystalPos[i].y));
+
+			spawnCrystal_array.emplace_back(picojson::value(id));
+
+		}
 	}
 
 	std::ofstream ofs(filePath);
 
 	ofs << picojson::value(val).serialize(true) << std::endl;
+}
+
+void Json::InitializationClearStageData()
+{
+	// numberに応じたファイルパスを読み込む
+
+	for (int i = 0; i < 10; i++)
+	{
+
+		std::ostringstream oss;
+		oss << i;
+		std::string filePath = "Resources/Json/ClearData/ClearData_" + oss.str() + ".json";
+
+		//	読み込み用変数
+		std::ifstream ifs;
+
+		//	ファイル読み込み
+		ifs.open(filePath, std::ios::binary);
+
+		std::ifstream empty_file; // 空のフォーマット
+		std::ofstream writing_file;// 書き込むファイル
+
+		// ファイル生成(空のフォーマットをコピーする 読み取り専用)
+		empty_file.open("Resources/Json/ClearData/ClearData_ENPTY.json", std::ios::in);
+		writing_file.open(filePath, std::ios::out);
+
+		std::string line;
+		while (std::getline(empty_file, line)) {
+			writing_file << line << std::endl;
+		}
+
+		empty_file.close();
+		writing_file.close();
+
+		//	読み込みチェック
+		//	ifs変数にデータがなければエラー
+		assert(ifs);
+
+		//	Picojsonへ読み込む
+		picojson::value val;
+		ifs >> val;
+
+		//	ifs変数はもう使わないので閉じる
+		ifs.close();
+
+		std::ofstream ofs(filePath);
+
+		ofs << picojson::value(val).serialize(true) << std::endl;
+
+	}
 }

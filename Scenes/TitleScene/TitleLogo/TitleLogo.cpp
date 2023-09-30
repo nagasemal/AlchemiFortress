@@ -29,6 +29,7 @@ TitleLogo::TitleLogo():
 	, m_rotationMatrix()
 	, m_animationTime()
 	, m_animationSin()
+	, m_ripplesData()
 {
 }
 
@@ -81,14 +82,13 @@ void TitleLogo::Update()
 	m_animationTime += 0.008f;
 
 	m_animationSin = 1.25f + sinf(m_animationTime * 2.5f);
+
+	m_ripplesData += 0.008f;
 }
 
 void TitleLogo::Render()
 {
 	auto context = ShareData::GetInstance().GetContext();
-	auto common = ShareData::GetInstance().GetCommonStates();
-
-
 	// 頂点情報
 	// Position.xy	:拡縮用スケール
 	// Position.z	:アンカータイプ(0～8)の整数で指定
@@ -105,7 +105,7 @@ void TitleLogo::Render()
 	ConstBuffer cbuff;
 	cbuff.windowSize = SimpleMath::Vector4(static_cast<float>(m_windowWidth), static_cast<float>(m_windowHeight), 1, 1);
 	cbuff.color = m_color;
-	cbuff.diffuse = SimpleMath::Vector4(1, m_animationSin, 1, m_animationTime);
+	cbuff.diffuse = SimpleMath::Vector4(m_ripplesData, m_animationSin, 1, m_animationTime);
 
 	//受け渡し用バッファの内容更新(ConstBufferからID3D11Bufferへの変換）
 	context->UpdateSubresource(m_cBuffer.Get(), 0, NULL, &cbuff, 0, 0);

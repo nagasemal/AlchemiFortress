@@ -31,28 +31,9 @@ public:
 
 	};
 
-	enum INSTRUCTION_TYPE : int
+	enum DIRECTION :int
 	{
-		NONE		= 0,		// 指定なし
-		ATTACKER	= 1,		// 攻撃型
-		DEFENSER	= 2,		// 防御型
-		UPPER		= 3,		// 範囲内強化型
-		RECOVERY	= 4,		// 魔力回収型
-		MINING		= 5,		// 採掘型
 
-		OPERATION	= 6,		// 操作方法
-		OPERATION_MACHINE = 7,	// 操作方法_マシン
-		MACHINE_UI	= 8,		// マシンUIの操作について
-
-		GAUGE_HP	= 9,		// HPについて
-		GAUGE_MP	= 10,		// MPについて
-		GAUGE_CRYSTAL = 11,		// クリスタルについて
-
-		MISSION		= 12,		// ミッションについて
-		ALCHEMI		= 13,		// 錬金について
-		SPAWN		= 14,		// 設置について
-
-		NUM
 	};
 
 public:
@@ -131,7 +112,8 @@ public:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetRule() { return m_rule; }
 	const wchar_t* GetRulePath() { return L"Resources/Textures/MagicRule.png"; }
 
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetMagicRule() { return m_magicrule; }
+	// 0~3
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetMagicRule(int index) { return m_transition[index]; }
 
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetPleaseMouseButton() { return m_pleaseMouseButtonText; }
 
@@ -184,7 +166,7 @@ private:
 	// ルール画像
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_rule;
 
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_magicrule;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_transition[4];
 
 	// PleaseMouseButtonのテキスト画像
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_pleaseMouseButtonText;

@@ -17,7 +17,7 @@ class EnemyCommander;
 class Enemy_StanderMove;
 class Enemy_MeanderingMove;
 class ICommand_Enemy;
-class Enemy_Data;
+struct Enemy_Data;
 
 class EnemyObject : public GameObjct3D
 {

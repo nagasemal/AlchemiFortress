@@ -6,10 +6,19 @@
 #include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/ShareJsonData.h"
 #include "NecromaLib/Singleton/InputSupport.h"
+#include "NecromaLib/Singleton/SpriteLoder.h"
 
 #include "Scenes/SelectScene/MissionRender.h"
 #include "Scenes/Commons/DrawArrow.h"
+#include "Scenes/Commons/DrawSlider.h"
 #include "Scenes/PlayScene/UI/Number.h"
+#include "Scenes/TitleScene/TitleLogo/TitleLogo.h"
+
+#include "Scenes/DataManager.h"
+
+#define SLIDER_POS_X 250
+
+#define SLIDER_POS_Y 50
 
 EditScene::EditScene():
     m_stageData(),
@@ -37,16 +46,33 @@ void EditScene::Initialize()
         m_machineMissions_puls[i]  = std::make_unique<DrawArrow>(SimpleMath::Vector2(550.0f, 150.0f + (i * 48)), SimpleMath::Vector2(0.6f, 0.6f),2);
         m_machineMissions_minus[i] = std::make_unique<DrawArrow>(SimpleMath::Vector2(490.0f, 150.0f + (i * 48)), SimpleMath::Vector2(0.6f, 0.6f),4);
 
-
         Stage_Condition machineData;
 
-        machineData.condition = Json::ChangeMachineString((MACHINE_TYPE)i);
-        machineData.progress = 0;
-        machineData.value = 0;
+        machineData.condition   = Json::ChangeMachineString((MACHINE_TYPE)i);
+        machineData.progress    = 0;
+        machineData.value       = 0;
 
         m_stageData.condition_Machine.push_back(machineData);
-    
     }
+
+    m_resource_MP       = std::make_unique<DrawSlider>(SimpleMath::Vector2(SLIDER_POS_X, SLIDER_POS_Y    ), SimpleMath::Vector2(0.5f, 0.5f));
+    m_resource_MP       ->Initialize();
+
+    m_resource_Crystal  = std::make_unique<DrawSlider>(SimpleMath::Vector2(SLIDER_POS_X, SLIDER_POS_Y * 2), SimpleMath::Vector2(0.5f, 0.5f));
+    m_resource_Crystal  ->Initialize();
+
+
+    auto device = ShareData::GetInstance().GetDeviceResources();
+    int width = device->GetOutputSize().right;
+    int height = device->GetOutputSize().bottom;
+
+    SpriteLoder& pSL = SpriteLoder::GetInstance();
+
+    m_titleLogo = std::make_unique<TitleLogo>();
+    m_titleLogo->Create(pSL.GetTitleLogoPath());
+    m_titleLogo->SetWindowSize(width, height);
+    m_titleLogo->SetColor(SimpleMath::Color(0.4f, 0.4f, 0.6f, 1.0f));
+    m_titleLogo->SetPosition(SimpleMath::Vector2(width / 1.3f, height / 1.8f));
 
 }
 
@@ -75,14 +101,23 @@ GAME_SCENE EditScene::Update()
 
     m_stageNum_puls->HitMouse();
     m_stageNum_minus->HitMouse();
+
+    // ステージ番号の加減
     m_stageNum += m_stageNum_puls->ClickMouse();
     m_stageNum -= m_stageNum_minus->ClickMouse();
 
+    // ステージ番号の上限下限設定
     m_stageNum = std::min(std::max(m_stageNum, 0), 99);
 
     m_ui_StageNumber->SetNumber(m_stageNum);
 
+    m_resource_MP           ->Update();
+    m_resource_Crystal      ->Update();
+
+    // 書き込む
     WritingFile();
+
+    m_titleLogo->Update();
 
     return GAME_SCENE();
 }
@@ -97,23 +132,26 @@ void EditScene::Draw()
 
     pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
-    //m_missionRender->Render_MachineMission(m_stageData.condition_Machine);
-    //m_missionRender->Render_EnemyMission(m_stageData.condition_Enemy);
-    //m_missionRender->Render_TimerMission(m_stageData.condition_Time);
-
+    // ミッション内容の描画(マシンのみ)
     m_missionRender->Render(m_stageData);
 
+    // マシンミッションの加減矢印の描画
     for (int i = 1; i < MACHINE_TYPE::NUM; i++)
     {
         m_machineMissions_puls[i]->Draw();
         m_machineMissions_minus[i]->Draw();
     }
 
-    m_stageNum_puls->Draw();
-    m_stageNum_minus->Draw();
-
+    // ステージ指定の矢印描画
+    m_stageNum_puls     ->Draw();
+    m_stageNum_minus    ->Draw();
 
     pSB->End();
+
+    // リソース描画
+    m_resource_MP       ->Render();
+    m_resource_Crystal  ->Render();
+
 }
 
 void EditScene::DrawUI()
@@ -134,6 +172,8 @@ void EditScene::DrawUI()
         missionTime->Draw();
     }
 
+
+    m_titleLogo->Render();
 }
 
 void EditScene::Finalize()
@@ -145,6 +185,18 @@ void EditScene::AddMission(std::vector<std::unique_ptr<SelectionBox>>& ui,Simple
     ui.push_back(std::make_unique<SelectionBox>(pos, rage));
 }
 
+// ステージデータの0要素を切ります
+template <class T>
+void ZeroCut(std::vector<T>& Val)
+{
+
+    Val.erase(std::remove_if(std::begin(Val),
+        std::end(Val),
+        [](Stage_Condition s) { return s.value == 0; }),
+        std::cend(Val));
+
+}
+
 void EditScene::WritingFile()
 {
 
@@ -154,10 +206,40 @@ void EditScene::WritingFile()
     if (m_decisionButton->ClickMouse())
     {
 
+        Stage_Condition testEnemyMission;
+        testEnemyMission.condition = "Slime";
+        testEnemyMission.value = 1;
 
+        Enemys_Spawn spawn;
+        spawn.spawnTime = 2;
+        spawn.spawnPos.x = 10;
+        spawn.spawnPos.y = 10;
+        spawn.type = SLIME;
+
+        Stage_Condition testTimeMission;
+        testTimeMission.condition = "True";
+        testTimeMission.value = 20;
+
+        m_stageData.condition_Enemy.push_back(testEnemyMission);
+        m_stageData.enemys_Spawn.push_back(spawn);
+        m_stageData.condition_Time.push_back(testTimeMission);
+
+        Stage_Data stageCondition = m_stageData;
+
+        // 要素0を切る                  
+        ZeroCut(stageCondition.condition_Machine);
+        ZeroCut(stageCondition.condition_Enemy);  
+        ZeroCut(stageCondition.condition_Time);   
+
+        DataManager* pDataM = DataManager::GetInstance();
+
+        pDataM->Initialize();
+
+        stageCondition.resource.crystal = m_resource_Crystal->GetValue() * (float)pDataM->GetNowCrystal_MAX();
+        stageCondition.resource.mp      = m_resource_MP->GetValue()      * (float)pDataM->GetNowMP_MAX();
 
         // 書き込み
-        Json::WritingJsonFile_StageData(m_stageNum,m_stageData);
+        Json::WritingJsonFile_StageData(m_stageNum, stageCondition);
     }
 
 }

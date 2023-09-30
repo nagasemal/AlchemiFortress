@@ -8,9 +8,10 @@
 //--------------------------------------------------------------------------------------
 #pragma once
 #include "Scenes/PlayScene/UI/Number.h"
+
 class Stage_Condition;
 class SpriteLoder;
-class Stage_Data;
+struct Stage_Data;
 
 class MissionRender
 {
@@ -35,7 +36,10 @@ public:
 	void LineReset();
 
 	// ラインのカウンターを返す
-	int GetLineCount() { return m_lineCount; }
+	const int GetLineCount() const  { return m_lineCount; }
+
+	const SimpleMath::Vector2 GetPos()  ;
+	const SimpleMath::Vector2 GetRage() ;
 
 private:
 
@@ -49,5 +53,6 @@ private:
 	SimpleMath::Vector2 m_rage;
 
 	int m_lineCount;
+	int m_missionNum;
 
 };

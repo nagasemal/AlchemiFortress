@@ -36,7 +36,6 @@ void Number::Render()
 
 	ShareData& pSD = ShareData::GetInstance();
 	auto pSB = pSD.GetSpriteBatch();
-	auto pDR = pSD.GetDeviceResources();
 	SpriteLoder::GetInstance().GetNumberTexture();
 
 	SimpleMath::Color color(1, 1, 1, 1);
@@ -87,7 +86,7 @@ void Number::Render_SelectScene(int first, int next)
 
 void Number::Number_Render(int num, SimpleMath::Vector2 pos)
 {
-
+	pos;
 	ShareData& pSD = ShareData::GetInstance();
 	auto pSB = pSD.GetSpriteBatch();
 
@@ -104,12 +103,12 @@ void Number::Number_Render(int num, SimpleMath::Vector2 pos)
 			int digit = (num / base) % 10;
 			RECT numRect = SpriteCutter(64, 64, digit, 0);
 
-			SimpleMath::Vector2 pos = m_position;
-			pos.x -= ((64 * (m_rage.x / 2)) * j);
+			SimpleMath::Vector2 render_pos = m_position;
+			render_pos.x -= ((64 * (m_rage.x / 2)) * j);
 
 			// 数字描画
 			pSB->Draw(SpriteLoder::GetInstance().GetNumberTexture().Get(),
-				pos,
+				render_pos,
 				&numRect,
 				color,
 				0.0f,

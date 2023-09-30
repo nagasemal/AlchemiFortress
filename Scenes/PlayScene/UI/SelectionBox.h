@@ -2,7 +2,7 @@
 // File		: SelectionBox.h
 //
 // オブジェクト選択時等に現れる選択可能UI
-// 基本機能 触れる　クリック　ホールド　ボタン式　離れた瞬間　取得
+// 基本機能 触れる　クリック　ホールド　ボタン式　離れた瞬間　 の取得
 // 
 // Use		: MachineSelect AlchemicalMachineObject
 //			  AM_Attacker AM_Upeer
@@ -34,7 +34,7 @@ public:
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsTexture = nullptr,
 		RECT rect = { 0,0,64,64 },
 		SimpleMath::Color pulsTextureCol = {1.0f,1.0f,1.0f,1.0f},
-		SimpleMath::Color nomalColor	= {1.0f,1.0f,1.0f,1.0f},
-		SimpleMath::Color onColor		= {0.9f,0.9f,0.9f,1.0f},
-		SimpleMath::Color pressdColor	= {0.7f,0.7f,0.7f,1.0f});
+		SimpleMath::Color nomalColor	 = {1.0f,1.0f,1.0f,1.0f},
+		SimpleMath::Color onColor		 = {0.9f,0.9f,0.9f,1.0f},
+		SimpleMath::Color pressdColor	 = {0.7f,0.7f,0.7f,1.0f});
 };

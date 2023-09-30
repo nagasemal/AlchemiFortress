@@ -161,6 +161,12 @@
     <Filter Include="Shader\Button">
       <UniqueIdentifier>{97069f2e-c772-4b0a-a374-6a86543a2644}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene\TitleScene\Option">
+      <UniqueIdentifier>{5ce456b7-b105-480a-af36-c6fdc41a7d9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NecromaLib\GameData\Audio">
+      <UniqueIdentifier>{27089278-6b6f-4855-b2d8-90fc6bb22092}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -427,7 +433,28 @@
     <ClInclude Include="Scenes\Commons\ShaderButton.h">
       <Filter>Scene\Commons</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\Commons\PopLine.h">
+    <ClInclude Include="Scenes\Commons\DrawLine.h">
+      <Filter>Scene\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Commons\DrawBox.h">
+      <Filter>Scene\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\Singleton\SoundData.h">
+      <Filter>NecromaLib\DesinPattern\Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\TitleScene\Option\RenderOption.h">
+      <Filter>Scene\TitleScene\Option</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\GameData\Audio\BGMs.h">
+      <Filter>NecromaLib\GameData\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\GameData\Audio\SEs.h">
+      <Filter>NecromaLib\GameData\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="NecromaLib\GameData\Audio\SystemSE.h">
+      <Filter>NecromaLib\GameData\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Commons\DrawSlider.h">
       <Filter>Scene\Commons</Filter>
     </ClInclude>
   </ItemGroup>
@@ -675,7 +702,22 @@
     <ClCompile Include="Scenes\Commons\ShaderButton.cpp">
       <Filter>Scene\Commons</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\Commons\PopLine.cpp">
+    <ClCompile Include="Scenes\Commons\DrawLine.cpp">
+      <Filter>Scene\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\Commons\DrawBox.cpp">
+      <Filter>Scene\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\Singleton\SoundData.cpp">
+      <Filter>NecromaLib\DesinPattern\Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\TitleScene\Option\RenderOption.cpp">
+      <Filter>Scene\TitleScene\Option</Filter>
+    </ClCompile>
+    <ClCompile Include="NecromaLib\GameData\Audio\SEs.cpp">
+      <Filter>NecromaLib\GameData\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\Commons\DrawSlider.cpp">
       <Filter>Scene\Commons</Filter>
     </ClCompile>
   </ItemGroup>
@@ -837,6 +879,12 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\Button_VS.hlsl">
       <Filter>Shader\Button</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\ModelShadow_PS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\EnemySilhouettePS.hlsl">
+      <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

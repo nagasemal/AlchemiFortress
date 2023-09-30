@@ -94,8 +94,7 @@ struct Enemys_Spawn
 { 
 	ENEMY_TYPE type = ENEMY_TYPE::ENMEY_NONE;
 	float spawnTime = 0.0f;		// 召喚するまでの時間
-	int direction = 1;			// 召喚場所(1~8の東西南北)
-	int remoteness = 1;			// 遠さ(ライン) 
+	SimpleMath::Vector3 spawnPos;	// 召喚場所
 	bool condition = false;		// 召喚を開始するタイミング
 };
 
@@ -109,6 +108,9 @@ struct Stage_Data
 
 	Stage_Resource resource;								// 初めから所持しているリソース群
 	std::vector<Stage_Machine> machine;						// 初めから設置されているマシン群
+
+	std::vector<SimpleMath::Vector2> crystalPos;			// クリスタルの番号
+
 	int tutorial;											// チュートリアル番号
 	
 };
@@ -146,7 +148,8 @@ namespace Json
 	std::string ChangeMachineString(const MACHINE_TYPE type);
 
 	//　エネミー変換
-	ENEMY_TYPE ChangeEnemy(const std::string enemyName);
+	ENEMY_TYPE ChangeEnemy(const std::string enemy_Name);
+	std::string ChangeEnemyString(const ENEMY_TYPE enemy_Type);
 
 	//  色変換
 	SimpleMath::Color ChangeColor(ELEMENT element);
@@ -155,4 +158,7 @@ namespace Json
 
 	// エディターに使用　ステージのデータを書き込む
 	void WritingJsonFile_StageData(int number,Stage_Data stageData);
+
+	// ステージのクリアデータを初期化する
+	void InitializationClearStageData();
 }

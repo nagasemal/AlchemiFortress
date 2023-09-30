@@ -244,7 +244,6 @@ void DisplayMagicCircle::SpritebatchRender()
 {
 	auto& pSD = ShareData::GetInstance();
 	auto pSB = pSD.GetSpriteBatch();
-	auto pDR = pSD.GetDeviceResources();
 
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 

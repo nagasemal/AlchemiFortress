@@ -1,6 +1,8 @@
 #pragma once
 #include "PrimitiveBatch.h"
 
+#include "NecromaLib/GameData/Animation.h"
+
 class TitleLogo
 {
 public:
@@ -87,6 +89,9 @@ private:
 	// 魔法陣を透明→半透明に出現させる時間計測変数
 	float m_animationTime;
 	float m_animationSin;
+
+	// 波紋の表現に使用
+	AnimationData m_ripplesData;
 
 private:
 

@@ -20,6 +20,8 @@ public:
 	SimpleMath::Vector3 GetEyePosition() const		{ return m_eye; }
 	// デバッグカメラの注視点座標を取得する
 	SimpleMath::Vector3 GetTargetPosition() const	{ return m_target; }
+	// ゲーム開始時の引きが終わったことを知らせるフラグ
+	bool GetStopCameraFlag();
 
 	void SetEyeProsition(SimpleMath::Vector3 eye)			{ m_eye = eye;}
 	void SetTargetProsition(SimpleMath::Vector3 target)	{ m_target = target; }
@@ -27,8 +29,6 @@ public:
 
 	void TargetChange(SimpleMath::Vector3 targetA, SimpleMath::Vector3 targetB);
 	void ResetTargetChangeTimer() { m_targetChangeTime = 0; }
-
-
 
 private:
 

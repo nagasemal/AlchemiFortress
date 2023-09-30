@@ -19,6 +19,11 @@ MissionRender::MissionRender(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage)
 
 	m_number = std::make_unique<Number>(pos,SimpleMath::Vector2(0.35f,0.25f));
 
+
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
+	Stage_Data missionData = pSJD.GetStageData();
+	m_missionNum = static_cast<int>(missionData.condition_Enemy.size() + missionData.condition_Machine.size() + missionData.condition_Time.size());
+
 }
 
 MissionRender::~MissionRender()
@@ -201,6 +206,25 @@ void MissionRender::Render_TimerMission(std::vector<Stage_Condition> stageData)
 void MissionRender::LineReset()
 {
 	m_lineCount = 0;
+}
+
+const SimpleMath::Vector2 MissionRender::GetPos()
+{
+
+	SimpleMath::Vector2 pos = SimpleMath::Vector2();
+
+
+	pos.x = 190.0f;
+	pos.y += m_position.y +  GetRage().y - KERNING_Y;
+
+	return pos;
+}
+
+const SimpleMath::Vector2 MissionRender::GetRage()
+{
+	SimpleMath::Vector2 rage = SimpleMath::Vector2(190.0f, 24.0f * (float)m_missionNum);
+
+	return rage;
 }
 
 void MissionRender::LabelDraw(SimpleMath::Vector2 pos)

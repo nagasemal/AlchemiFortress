@@ -27,6 +27,4 @@ private:
 	// アニメーション用の時間遷移を行うクラス
 	AnimationData m_animData[2];
 
-	int m_selectTextNumber;
-
 };

@@ -309,6 +309,7 @@ void AlchemicalMachineManager::Render()
 
 	m_magicCircle_Field->CreateWorld();
 	m_magicCircle_Field->Render(0);
+
 }
 
 void AlchemicalMachineManager::DrawUI()

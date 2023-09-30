@@ -72,6 +72,7 @@ private:
 	SimpleMath::Vector2 m_baseScale;
 	SimpleMath::Vector2 m_position;
 	SimpleMath::Color m_color;
+
 	float m_value;	// –¾ˆÃ
 
 	// •\Ž¦ˆÊ’u

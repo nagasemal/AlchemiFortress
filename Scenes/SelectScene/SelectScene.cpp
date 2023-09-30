@@ -3,6 +3,7 @@
 #include "NecromaLib/Singleton/InputSupport.h"
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/ShareJsonData.h"
+#include "NecromaLib/Singleton/SoundData.h"
 
 #include "Scenes/Commons/DrawArrow.h"
 #include "Scenes/Commons/UIKeyControl.h"
@@ -14,11 +15,11 @@
 #define MAX_STAGE 10
 #define MIN_STAGE 1
 
-#define MISSION_POS SimpleMath::Vector2{545,720 / 2}
-#define NEXTBOTTOM_POS SimpleMath::Vector2{1280.0f / 2.0f,720.0f / 1.15f}
-#define NUMBER_POS SimpleMath::Vector2{1280.0f / 2.0f,100}
-#define ARROW_POS_L SimpleMath::Vector2{200,500}
-#define ARROW_POS_R SimpleMath::Vector2{1080,500}
+#define MISSION_POS SimpleMath::Vector2			{545,720 / 2}
+#define NEXTBOTTOM_POS SimpleMath::Vector2		{1280.0f / 2.0f,720.0f / 1.15f}
+#define NUMBER_POS SimpleMath::Vector2			{1280.0f / 2.0f,100}
+#define ARROW_POS_L SimpleMath::Vector2			{200,500}
+#define ARROW_POS_R SimpleMath::Vector2			{1080,500}
 
 SelectScene::SelectScene():
 	m_selectStageNumber(1),
@@ -51,17 +52,25 @@ void SelectScene::Initialize()
 	m_nextSceneBox = std::make_unique<SelectionBox>(NEXTBOTTOM_POS, SimpleMath::Vector2{5,1});
 
 	m_uiKeyControl = std::make_unique<UIKeyControl>();
-	m_uiKeyControl->AddUI(m_arrowDraw[0].get(), 0, 0);
-	m_uiKeyControl->AddUI(m_arrowDraw[1].get(), 1, 0);
-	m_uiKeyControl->AddUI(m_nextSceneBox.get(), 0, 1);
+	m_uiKeyControl->AddUI(m_arrowDraw[0].get());
+	m_uiKeyControl->AddUI(m_arrowDraw[1].get());
+	m_uiKeyControl->AddUI(m_nextSceneBox.get());
 
 	m_stageNumber = std::make_unique<Number>(NUMBER_POS, SimpleMath::Vector2{ 2.0f,2.0f});
 
+
+	// 上部に発生する黒い幕の初期設定
+	auto device = ShareData::GetInstance().GetDeviceResources();
+	int width = device->GetOutputSize().right;
+	int height = device->GetOutputSize().bottom;
 }
 
 GAME_SCENE SelectScene::Update()
 {
 	ShareData& pSD = ShareData::GetInstance();
+	SoundData& pSound = SoundData::GetInstance();
+
+	pSound.PlayBGM(XACT_WAVEBANK_BGMS_BGM_SELECT, false);
 
 	m_selectCamera->Update();
 	m_machineDraw->Update();
@@ -71,6 +80,7 @@ GAME_SCENE SelectScene::Update()
 	pSD.GetCamera()->SetTargetPosition(m_selectCamera->GetTargetPosition());
 	pSD.GetCamera()->SetEyePosition(m_selectCamera->GetEyePosition());
  
+	// 右側の矢印更新処理
 	m_arrowDraw[0]->HitMouse();
 	if (m_arrowDraw[0]->ClickMouse() && m_selectStageNumber > 1)
 	{
@@ -79,7 +89,7 @@ GAME_SCENE SelectScene::Update()
 		m_selectCamera->AnimationReset();
 	}
 
-
+	// 左側の矢印更新処理
 	m_arrowDraw[1]->HitMouse();
 	if (m_arrowDraw[1]->ClickMouse() && m_selectStageNumber < MAX_STAGE)
 	{

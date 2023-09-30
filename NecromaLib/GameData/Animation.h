@@ -1,4 +1,5 @@
 #pragma once
+#include "Easing.h"
 
 struct AnimationData
 {
@@ -20,6 +21,8 @@ struct AnimationData
 	Type type;
 	// 何度繰り返しているか
 	int iterations;
+	// 実際の遷移値
+	float anim;
 
 	/// <summary>
 	/// アニメーションに特化した構造体
@@ -38,6 +41,7 @@ struct AnimationData
 		this->max = max;
 		this->middle = middle;
 		this->type = type;
+		anim = 0;
 
 		iterations = 0;
 	}

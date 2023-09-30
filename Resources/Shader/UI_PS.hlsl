@@ -25,7 +25,7 @@ float4 main(PS_INPUT input) : SV_TARGET
 
 	outputw.rgb *= input.color.rgb;
 
-	// if•¶‚Ì•`‚«•û‚Æ“¯‚¶ í‚é
+	// if•¶‚Ì•`‚«•û‚Æ“¯‚¶ Š„‡‚Åí‚é
 	outputw.a *= lerp(1.0f, 0.0f, step(input.color.a, input.tex.x));
 
 	return outputw;

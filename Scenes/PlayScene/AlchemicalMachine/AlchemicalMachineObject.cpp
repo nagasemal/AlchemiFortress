@@ -144,18 +144,6 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 	// 常に縦に揺れる
 	modelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y + (sinf(m_rotateAnimation) * 0.5f), m_data.pos.z);
 
-	// エフェクトの設定
-	model->UpdateEffects([&](IEffect* effect)
-		{
-			// 今回はライトだけ欲しい
-			auto lights = dynamic_cast<IEffectLights*>(effect);
-
-			// 色変更
-			lights->SetLightDiffuseColor(0, GetColor());
-		});
-
-	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection());
-
 	// 追加パーツが存在する場合
 	if (ring != nullptr)
 	{
@@ -164,22 +152,64 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 		ringData *= SimpleMath::Matrix::CreateRotationY(-m_rotateAnimation * 1.5f);
 		ringData *= SimpleMath::Matrix::CreateTranslation
 		(m_data.pos.x,
-		 m_data.pos.y + (sinf(m_rotateAnimation) * 0.5f),
-		 m_data.pos.z);
+			m_data.pos.y + (sinf(m_rotateAnimation) * 0.5f),
+			m_data.pos.z);
 
 		// エフェクトの設定
 		ring->UpdateEffects([&](IEffect* effect)
+			{
+				// 今回はライトだけ欲しい
+				auto lights = dynamic_cast<IEffectLights*>(effect);
+				// 色変更
+				lights->SetLightDiffuseColor(0, SimpleMath::Color((float)m_powerUPFlag, (float)m_powerUPFlag, 0.0f, 1.0f));
+			});
+
+		ring->Draw(pSD.GetContext(), *pSD.GetCommonStates(), ringData, pSD.GetView(), pSD.GetProjection(), false, [&]
+			{
+				// 深度ステンシルステートの設定
+				pSD.GetContext()->OMSetDepthStencilState(pSD.GetStencilShadow().Get(), 1);
+				pSD.GetContext()->PSSetShader(pSD.GetModelShadowShader().Get(), nullptr, 0);
+			});
+
+		pSD.GetContext()->PSSetShader(nullptr, nullptr, 0);
+		pSD.GetContext()->OMSetDepthStencilState(nullptr, 0);
+
+		ring->Draw(pSD.GetContext(), *pSD.GetCommonStates(), ringData, pSD.GetView(), pSD.GetProjection(), false, [&]
+			{
+				// 深度ステンシルステートの設定
+				pSD.GetContext()->OMSetDepthStencilState(nullptr, 3);
+			});
+
+	}
+
+	// エフェクトの設定
+	model->UpdateEffects([&](IEffect* effect)
 		{
 			// 今回はライトだけ欲しい
 			auto lights = dynamic_cast<IEffectLights*>(effect);
 			// 色変更
-			lights->SetLightDiffuseColor(0,SimpleMath::Color((float)m_powerUPFlag,(float)m_powerUPFlag,0.0f,1.0f));
+			lights->SetLightDiffuseColor(0, GetColor());
 		});
 
-		ring->Draw(pSD.GetContext(), *pSD.GetCommonStates(), ringData, pSD.GetView(), pSD.GetProjection());
+	{
+		// 重なった際、影を描画
+		model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false, [&]
+			{
+				// 深度ステンシルステートの設定
+				pSD.GetContext()->OMSetDepthStencilState(pSD.GetStencilShadow().Get(), 1);
+				pSD.GetContext()->PSSetShader(pSD.GetModelShadowShader().Get(), nullptr, 0);
+			});
+
+		pSD.GetContext()->PSSetShader(nullptr, nullptr, 0);
+		pSD.GetContext()->OMSetDepthStencilState(nullptr, 0);
+
+		model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false, [&]
+			{
+				// 深度ステンシルステートの設定
+				pSD.GetContext()->OMSetDepthStencilState(nullptr, 3);
+			});
 
 	}
-
 }
 
 void AlchemicalMachineObject::SummonAM(SimpleMath::Vector3 pos)

@@ -114,6 +114,11 @@ void MoveCamera::Update(bool scroll, bool move)
 	CalculateViewMatrix();
 }
 
+bool MoveCamera::GetStopCameraFlag()
+{
+	return m_time.MaxCheck();
+}
+
 void MoveCamera::TargetChange(SimpleMath::Vector3 targetA, SimpleMath::Vector3 targetB)
 {
 	SimpleMath::Vector3 diffpos = targetA - targetB;

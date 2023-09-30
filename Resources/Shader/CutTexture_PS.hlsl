@@ -7,14 +7,12 @@ SamplerState samLinear : register(s0);
 
 float4 main(PS_INPUT input) : SV_TARGET
 {
-	// タイトルロゴ
-	float4 output = tex.Sample(samLinear, input.Tex);
-
-	// タイトルロゴの柄
-	float4 output_2 = tex2.Sample(samLinear, input.Tex);
-
 	// ルール画像
 	float4 output_Rule = tex3.Sample(samLinear, input.Tex);
+	// タイトルロゴ
+	float4 output = tex.Sample(samLinear, input.Tex);
+	// タイトルロゴの柄
+	float4 output_2 = tex2.Sample(samLinear, input.Tex);
 
 	// 柄をロゴに付ける
 	output.rgb = Colors.rgb;

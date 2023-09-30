@@ -10,6 +10,8 @@
 #include "Scenes/SelectScene/SelectScene.h"
 #include "Scenes/EditScene/EditScene.h"
 
+#include "NecromaLib/Singleton/SoundData.h"
+
 // 名前空間の利用
 using namespace DirectX;
 
@@ -57,7 +59,6 @@ void SceneManager::Initialize()
 void SceneManager::Update(const DX::StepTimer& timer)
 {
 	InputSupport& pINP = InputSupport::GetInstance();
-
 	m_Fade->Update(timer);
 	m_DataManager->Update();
 
@@ -78,6 +79,9 @@ void SceneManager::Update(const DX::StepTimer& timer)
 
 		// シーン作成
 		CreateScene();
+
+		// BGMを切る
+		SoundData::GetInstance().StopBGM();
 	}
 
 	//	フェードが終了するまで処理が行われないようにする
@@ -202,10 +206,8 @@ void SceneManager::DeleteScene()
 	{
 		return;
 	}
-
 	// 現シーンの終了処理
 	m_Scene->Finalize();
-
 	// 現シーンの削除
 	delete m_Scene;
 	m_Scene = nullptr;

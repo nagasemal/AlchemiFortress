@@ -2,6 +2,8 @@
 #include "ResultScene.h"
 
 #include "NecromaLib/Singleton/ShareJsonData.h"
+#include "NecromaLib/Singleton/SoundData.h"
+
 #include "Scenes/PlayScene/UI/SelectionBox.h"
 #include "Scenes/Commons/UIKeyControl.h"
 
@@ -21,9 +23,9 @@ ResultScene::ResultScene()
 
 	m_uiKeyControl = std::make_unique<UIKeyControl>();
 
-	m_uiKeyControl->AddUI(m_selectionBox_Next.get(), 0, 0);
-	m_uiKeyControl->AddUI(m_selectionBox_Retry.get(), 1, 0);
-	m_uiKeyControl->AddUI(m_selectionBox_Back.get(), 2, 0);
+	m_uiKeyControl->AddUI(m_selectionBox_Next.get());
+	m_uiKeyControl->AddUI(m_selectionBox_Retry.get());
+	m_uiKeyControl->AddUI(m_selectionBox_Back.get());
 
 }
 
@@ -37,6 +39,9 @@ void ResultScene::Initialize()
 
 GAME_SCENE ResultScene::Update()
 {
+	SoundData& pSound = SoundData::GetInstance();
+	pSound.PlayBGM(XACT_WAVEBANK_BGMS_BGM_RESULT, false);
+
 	m_selectionBox_Next->HitMouse();
 	m_selectionBox_Back->HitMouse();
 	m_selectionBox_Retry->HitMouse();

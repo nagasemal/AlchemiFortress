@@ -63,6 +63,17 @@ public:
 	// Projection行列
 	SimpleMath::Matrix GetProjection()			{ return m_camera->GetProjectionMatrix(); }
 
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GetStencilBase()	{ return m_depthStencilState_Base;}
+	// オブジェクトの後ろにモデルが入ったら描画されるステンシル
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GetStencilShadow()	{ return m_depthStencilState_Shadow;}
+
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GetStencilNomal() { return m_depthStencilState_Nomal; }
+
+	// モデルのシルエット用
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> GetModelShadowShader()	{ return m_modelShadowShader;}
+
+	void CreateStencilData();
+
 
 private:
 	ShareData();
@@ -79,5 +90,11 @@ private:
 	DirectX::SpriteBatch*			m_spriteBatch;
 
 	DirectX::EffectFactory*			m_effectFactory;
+
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_depthStencilState_Base;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_depthStencilState_Shadow;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_depthStencilState_Nomal;
+
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_modelShadowShader;
 
 };

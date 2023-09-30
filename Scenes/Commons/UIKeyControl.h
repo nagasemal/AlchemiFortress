@@ -28,24 +28,27 @@ public:
 	UIKeyControl();
 	~UIKeyControl();
 
-	void Update();
+	void Update(SimpleMath::Vector2 moveNum = SimpleMath::Vector2(100.0f,100.0f));
 
-	void AddUI(SelectionUI* ui,int low,int col);
+	void AddUI(SelectionUI* ui);
 
 	void DeleteUI(SelectionUI* ui);
 
 private:
+	// ç≈Ç‡ãﬂÇ¢
+	void LookUpPosition();
 
 	bool ArrowKeyPush();
-
 private:
 
-	std::vector<UI_Data> m_selectionUIs;
+	std::vector<SelectionUI*> m_selectionUIs;
 
-	int m_nowCol; // åªç›ÇÃçs
-	int m_nowLow; // åªç›ÇÃóÒ
+	SimpleMath::Vector2 m_nowUIPos;
 
-	int m_maxCol; // åªç›ÇÃçsÇÃç≈ëÂíl
+	int m_index;
+	int m_prevIndex;
+
+private:
 
 	std::vector<int> m_maxLows;
 

@@ -48,26 +48,37 @@ public:
 
 private:
 
+	// フィールドに存在するオブジェクトを管理
 	std::unique_ptr<FieldObjectManager>			m_fieldManager;
 
+	// マウスポインターにかかる処理
 	std::unique_ptr<MousePointer>				m_mousePointer;
 
+	// マシンユニット/マシンに関連するUIの管理
 	std::unique_ptr<AlchemicalMachineManager>	m_AM_Manager;
 
+	// カメラに対する処理
 	std::unique_ptr<MoveCamera>					m_moveCamera;
 
+	// エネミーを管理
 	std::unique_ptr<EnemyManager>				m_enemyManager;
 
+	// ミッションを管理
 	std::unique_ptr<MissionManager>				m_missionManager;
 
-	// テスト用
-	std::unique_ptr<Gauge>						m_gauge;
+	// HP,
+	std::unique_ptr<Gauge>						m_resourceGauge;
+
+	// チュートリアルクラス
+	std::unique_ptr<Tutorial>					m_tutorial;
 
 	std::unique_ptr<DirectX::Model>				m_skySphere;
 
-	std::unique_ptr<Tutorial>					m_tutorial;
-
+	// 倍速ボタン
+	std::unique_ptr<SelectionBox> m_doubleSpeedButton; 
 	// ステージ番号
 	int m_stageNumber;
+	// 倍速倍率
+	int m_doubleSpeedNum;
 
 };

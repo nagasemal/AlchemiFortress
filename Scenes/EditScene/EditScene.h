@@ -18,6 +18,8 @@
 class MissonRender;
 class DrawArrow;
 class Number;
+class DrawSlider;
+class TitleLogo;
 
 class EditScene : public SceneObj
 {
@@ -62,20 +64,22 @@ private:
 	std::vector<std::unique_ptr<SelectionBox>> m_timeMissions;
 
 	// ステージ番号を管理
-	std::unique_ptr<Number> m_ui_StageNumber;
-	std::unique_ptr<DrawArrow> m_stageNum_puls;
-	std::unique_ptr<DrawArrow> m_stageNum_minus;
+	std::unique_ptr<Number>		 m_ui_StageNumber;
+	std::unique_ptr<DrawArrow>	 m_stageNum_puls;
+	std::unique_ptr<DrawArrow>	 m_stageNum_minus;
 
 	// リソース群
-	std::unique_ptr<SelectionBox> m_resource_Machine[MACHINE_TYPE::NUM];
-	std::unique_ptr<SelectionBox> m_resource_Lv;
-	std::unique_ptr<SelectionBox> m_resource_MP;
-	std::unique_ptr<SelectionBox> m_resource_Crystal;
+	std::unique_ptr<SelectionBox>	m_resource_Machine[MACHINE_TYPE::NUM];
+	std::unique_ptr<SelectionBox>	m_resource_Lv;
+	std::unique_ptr<DrawSlider>		m_resource_MP;
+	std::unique_ptr<DrawSlider>		m_resource_Crystal;
 
 	// 読み込みボタン
 	std::unique_ptr<SelectionBox> m_writingButton;
 
 	// 決定ボタン
 	std::unique_ptr<SelectionBox> m_decisionButton;
+
+	std::unique_ptr<TitleLogo>			m_titleLogo;
 
 };

@@ -7,8 +7,13 @@
 #include "Scenes/TitleScene/TitleLogo/TitleLogo.h"
 #include "Scenes/TitleScene/TitleLogo/Veil.h"
 
+#include "NecromaLib/GameData/Animation.h"
+#include "Scenes/Commons/UIKeyControl.h"
+#include "Scenes/TitleScene/Option/RenderOption.h"
+
 class MagicCircle;
-class PopLine;
+class DrawLine;
+class DrawBox;
 class ShaderButton;
 
 class TitleScene : public SceneObj
@@ -51,12 +56,24 @@ private:
 	std::unique_ptr<TitleLogo>			m_titleLogo;
 
 	// ボタン
-	std::unique_ptr<PopLine>			m_selectionButton[ButtonType::Num];
+	std::unique_ptr<DrawLine>			m_selectionButton[ButtonType::Num];
 
 	std::unique_ptr<MagicCircle>		m_magicCircle;
 
 	std::unique_ptr<DirectX::Model>		m_skySphere;
 
 	std::unique_ptr<Veil>				m_veil;
+
+	std::unique_ptr<UIKeyControl>		m_uiKeyControl;
+
+	std::unique_ptr<RenderOption>		m_renderOption;
+
+	AnimationData m_animationData;
+	bool m_rotateNowFlag;
+
+	// 押したボタンの状態を保存しておく
+	ButtonType m_nextType;
+
+	float m_rotateYSpeed;
 
 };

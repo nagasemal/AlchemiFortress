@@ -21,7 +21,7 @@ namespace
 
 
 //project‚Ì–¼‘O
-LPCWSTR g_szAppName = L"Game_Title";
+LPCWSTR g_szAppName = L"AlchemiFortress";
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void ExitGame() noexcept;

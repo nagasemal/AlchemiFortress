@@ -17,6 +17,8 @@ public:
 	void Initialize();
 	void Update(AlchemicalMachineManager* alchemicalManager,EnemyManager* enemyManager);
 
+	std::unique_ptr<MissionRender>* GetMissionRender() { return &m_missionRender;}
+
 	void Render();
 
 	bool MissionComplete();

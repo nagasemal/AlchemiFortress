@@ -48,17 +48,18 @@ public:
 //アクセサ
 public:
 
-	bool GetHitMouseFlag(int number)									{ return m_AMObject[number]->GetHitMouse();}
+	const bool GetHitMouseFlag(int number)									const { return m_AMObject[number]->GetHitMouse();}
 
-	std::vector<std::shared_ptr<AlchemicalMachineObject>> GetAlchemicalMachineObject()		{ return m_AMObject; }
-	std::shared_ptr<AlchemicalMachineObject>* GetAlchemicalMachineObject(int index)			{ return &m_AMObject[index];}
+	const std::vector<std::shared_ptr<AlchemicalMachineObject>> GetAlchemicalMachineObject()		const { return m_AMObject; }
+	const std::shared_ptr<AlchemicalMachineObject>* GetAlchemicalMachineObject(int index)			const { return &m_AMObject[index];}
 
-	std::list<std::unique_ptr<Bullet>>* GetBullet()						{ return &m_bullets;}
+	std::list<std::unique_ptr<Bullet>>* GetBullet()									{ return &m_bullets;}
 
-	std::unique_ptr<MachineSelectManager>* GetMachineSelect()			{ return &m_selectManager; }
+	const std::unique_ptr<MachineSelectManager>* GetMachineSelect()			const { return &m_selectManager; }
+	const std::unique_ptr<MachineExplanation>* GetMachineExplanation()		const { return &m_machineExplanation;}
 
 	// マシンが設置されたことを知らせるフラグ
-	MACHINE_TYPE SpawnMachineNotification() { return m_spawnMachine; }
+	const MACHINE_TYPE SpawnMachineNotification() const { return m_spawnMachine; }
 
 	// マシンの選択番号を変更する
 	void SetSelectMachineNumber(int index) { m_selectNumber = index; }

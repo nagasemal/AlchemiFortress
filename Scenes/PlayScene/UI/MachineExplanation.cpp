@@ -40,7 +40,7 @@ void MachineExplanation::Initialize()
 	m_camera = std::make_unique<Camera>();
 
 	m_data.pos  = { 180,550};
-	m_data.rage = { 300,300};
+	m_data.rage = { 150,150};
 
 	m_machineGauge = std::make_unique<MachineGauge>();
 	m_machineGauge->AddHPGauge({m_data.pos.x + 50,m_data.pos.y - 110}, { 0.20,0.20 }, UserInterface::MIDDLE_CENTER);

@@ -26,7 +26,7 @@ SimpleMath::Vector3 CalcScreenToWorldN(int sX, int sY, float fZ, int screen_W, i
 
 	SimpleMath::Vector3 pOut = SimpleMath::Vector3::Zero;
 
-	pOut = DirectX::XMVector3TransformCoord(SimpleMath::Vector3(sX, sY, fZ), tmp);
+	pOut = DirectX::XMVector3TransformCoord(SimpleMath::Vector3((float)sX, (float)sY, (float)fZ), tmp);
 
 	return pOut;
 }

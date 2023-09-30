@@ -114,7 +114,8 @@ void SpriteLoder::Loading()
 		m_rule.ReleaseAndGetAddressOf()
 	);
 
-	LoadingPngFile(L"Resources/Textures/154.png", m_magicrule);
+	LoadingPngFile(L"Resources/Textures/Rule/Right_Transition.png", m_transition[0]);
+	LoadingPngFile(L"Resources/Textures/Rule/UP_Transition.png", m_transition[1]);
 
 	LoadingPngFile(L"Resources/Textures/TitleText.png", m_pleaseMouseButtonText);
 

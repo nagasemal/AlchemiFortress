@@ -98,7 +98,23 @@ void EnemyObject::Render(Model* model)
 		* SimpleMath::Matrix::CreateScale(m_data.rage * 5.0f)
 		* SimpleMath::Matrix::CreateTranslation(m_data.pos);
 
-	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelMatrix, pSD.GetView(), pSD.GetProjection());
+	// 重なった際、影を描画
+	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelMatrix, pSD.GetView(), pSD.GetProjection(), false, [&]
+		{
+			// 深度ステンシルステートの設定
+			pSD.GetContext()->OMSetDepthStencilState(pSD.GetStencilShadow().Get(), 1);
+			pSD.GetContext()->PSSetShader(pSD.GetModelShadowShader().Get(), nullptr, 0);
+		});
+
+	pSD.GetContext()->PSSetShader(nullptr, nullptr, 0);
+	pSD.GetContext()->OMSetDepthStencilState(nullptr, 0);
+
+	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelMatrix, pSD.GetView(), pSD.GetProjection(), false, [&]
+		{
+			// 深度ステンシルステートの設定
+			pSD.GetContext()->OMSetDepthStencilState(nullptr, 3);
+		});
+
 
 }
 

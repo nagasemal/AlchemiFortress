@@ -3,23 +3,25 @@
 
 #include "NecromaLib/Singleton/ShareJsonData.h"
 #include "NecromaLib/Singleton/InputSupport.h"
+#include "NecromaLib/Singleton/SoundData.h"
+#include "NecromaLib/Singleton/DeltaTime.h"
 
 #include "NecromaLib/GameData/JsonLoder.h"
 
 #include "Scenes/DataManager.h"
 
+#define MAX_SPEED 4
+
 PlayScene::PlayScene()
 {
-
 	m_stageNumber = DataManager::GetInstance()->GetStageNum();
 
 	ShareJsonData::GetInstance().LoadingJsonFile_Bullet();
 	ShareJsonData::GetInstance().LoadingJsonFile_Machine();
 	ShareJsonData::GetInstance().LoadingJsonFile_Stage(m_stageNumber);
 
-	//Json::FileLoad_EnemyData("Resources/Json/EnemyData/EnemyData_Slime.json");
-
-	//DataManager::GetInstance()->Initialize();
+	// 等倍速に設定
+	m_doubleSpeedNum = 1;
 }
 
 PlayScene::~PlayScene()
@@ -28,31 +30,41 @@ PlayScene::~PlayScene()
 
 void PlayScene::Initialize()
 {
+	// 画面の縦横値の取得
+	auto device = ShareData::GetInstance().GetDeviceResources();
+	int width = device->GetOutputSize().right;
+	int height = device->GetOutputSize().bottom;
 
+	// フィールドマネージャークラスの生成
 	m_fieldManager = std::make_unique<FieldObjectManager>();
 	m_fieldManager ->Initialize();
-
+	// マウスポインタークラスの生成
 	m_mousePointer	= std::make_unique<MousePointer>();
 	m_mousePointer	->Initialize();
-
+	// ユニット(マシン)マネージャークラスの生成
 	m_AM_Manager	= std::make_unique<AlchemicalMachineManager>();
 	m_AM_Manager	->Initialize();
-
+	// カメラを動かすクラスの生成
 	m_moveCamera	= std::make_unique<MoveCamera>();
 	m_moveCamera	->Initialize();
-
+	// エネミーマネージャークラスの生成
 	m_enemyManager  = std::make_unique<EnemyManager>();
 	m_enemyManager	->Initialize();
-
-	m_gauge = std::make_unique<Gauge>();
-	m_gauge->Initialize();
-
+	// リソースを示すゲージクラスの生成
+	m_resourceGauge = std::make_unique<Gauge>();
+	m_resourceGauge	->Initialize();
+	// ミッションマネージャークラスの生成
 	m_missionManager = std::make_unique<MissionManager>();
 	m_missionManager->Initialize();
 
+	// チュートリアルクラスの生成
 	m_tutorial = std::make_unique<Tutorial>();
-	m_tutorial->Initialize();
+	m_tutorial->Initialize(ShareJsonData::GetInstance().GetStageData().tutorial);
 
+	// 倍速ボタンの生成
+	m_doubleSpeedButton = std::make_unique<SelectionBox>(SimpleMath::Vector2(width - 100.0f, height - 100.0f), SimpleMath::Vector2(1.0f, 1.0f));
+
+	// 天球モデルのロード
 	ShareData& pSD = ShareData::GetInstance();
 	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
 	fx->SetDirectory(L"Resources/Models");
@@ -73,47 +85,62 @@ void PlayScene::Initialize()
 GAME_SCENE PlayScene::Update()
 {
 	ShareData& pSD = ShareData::GetInstance();
+	SoundData& pSound = SoundData::GetInstance();
+	DeltaTime& pDelta = DeltaTime::GetInstance();
+	bool tutorialFlag = m_tutorial->GetTutorialFlag();
 
-	m_tutorial->Update(m_AM_Manager.get(), m_gauge.get());
+	pSound.PlayBGM(XACT_WAVEBANK_BGMS_BGM_PLAY, false);
+
+	m_tutorial			->Update(m_AM_Manager.get(),
+								 m_resourceGauge.get(),
+								 m_missionManager->GetMissionRender()->get(),
+								 m_moveCamera->GetStopCameraFlag());
 
 	// チュートリアル中ならば以下の処理を通さない
-	if (m_tutorial->GetTutorialFlag()) return GAME_SCENE();
+	if (tutorialFlag) 		return GAME_SCENE();
 
-	m_moveCamera->Update(!m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven(), true);
+	// 倍速ボタンのアップデート
+	m_doubleSpeedButton->HitMouse();
+	m_doubleSpeedNum += m_doubleSpeedButton->ClickMouse();
+	if (m_doubleSpeedNum > MAX_SPEED) m_doubleSpeedNum = 1;
+	// 倍速にする
+	pDelta.SetDeltaTime(pDelta.GetDeltaTime() * m_doubleSpeedNum);
 
-	m_fieldManager->Update();
-	m_mousePointer->Update();
+	m_moveCamera		->Update(!m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven(), true);
 
-	m_AM_Manager->Update(m_fieldManager.get(),
+	m_fieldManager		->Update();
+	m_mousePointer		->Update();
+
+	// ユニット(マシン)マネージャーのアップデート
+	m_AM_Manager		->Update(m_fieldManager.get(),
 						 m_mousePointer.get(),
 						 m_enemyManager.get(),
 						 m_moveCamera.get());
 
-	m_enemyManager->Update(m_fieldManager->GetPlayerBase()->GetPos());
+	m_enemyManager		->Update(m_fieldManager->GetPlayerBase()->GetPos());
 
-	m_gauge->Update();
+	m_resourceGauge		->Update();
 
-	m_missionManager->Update(m_AM_Manager.get(),m_enemyManager.get());
+	m_missionManager	->Update(m_AM_Manager.get(),m_enemyManager.get());
 
-	bool enemyActivs = !m_enemyManager->GetEnemyData()->empty();
+	bool enemyActivs	= !m_enemyManager->GetEnemyData()->empty();
+
 	// エネミーToバレット
 	// ダングリング対策
-	if (!m_AM_Manager->GetBullet()->empty() && enemyActivs) EnemyToBullet();
+	if (!m_AM_Manager	->GetBullet()->empty() && enemyActivs) EnemyToBullet();
 
-	// エネミーToプレイヤーベース
-	if (enemyActivs) EnemyToPlayerBase();
+	// エネミーToプレイヤーベース(当たり判定)
+	if (enemyActivs)	  EnemyToPlayerBase();
 
 	// カメラを動かす
-	pSD.GetCamera()->SetViewMatrix		(m_moveCamera->GetViewMatrix());
-	pSD.GetCamera()->SetTargetPosition	(m_moveCamera->GetTargetPosition());
-	pSD.GetCamera()->SetEyePosition		(m_moveCamera->GetEyePosition());
+	pSD.GetCamera()		->SetViewMatrix		(m_moveCamera->GetViewMatrix());
+	pSD.GetCamera()		->SetTargetPosition	(m_moveCamera->GetTargetPosition());
+	pSD.GetCamera()		->SetEyePosition	(m_moveCamera->GetEyePosition());
 
 	// 拠点のHPが0になったらリザルトへ切り替える
-	if (m_fieldManager->GetPlayerBase()->GetHP() <= 0 || m_missionManager->MissionmFailure())
-	{
-		return GAME_SCENE::RESULT;
-	}
+	if (m_fieldManager	->GetPlayerBase()->GetHP() <= 0 || m_missionManager->MissionmFailure())		return GAME_SCENE::RESULT;
 
+	// ミッションを全て達成したらリザルトへ切り替える
 	if (m_missionManager->MissionComplete())
 	{
 		// ステージ攻略情報を得る
@@ -125,6 +152,7 @@ GAME_SCENE PlayScene::Update()
 	}
 
 	InputSupport* pINP = &InputSupport::GetInstance();
+
 	// マシンのデータ再読み込み
 	if (pINP->GetKeybordState().IsKeyReleased(Keyboard::M))
 	{
@@ -155,6 +183,17 @@ void PlayScene::Draw()
 	m_fieldManager      ->Draw();
 	m_mousePointer		->Draw();
 
+
+	//D3D11_DEPTH_STENCIL_DESC desc =
+	//{
+	//	TRUE, D3D11_DEPTH_WRITE_MASK_ALL, D3D11_COMPARISON_LESS,
+	//	FALSE, D3D11_DEFAULT_STENCIL_READ_MASK, D3D11_DEFAULT_STENCIL_WRITE_MASK,
+	//	D3D11_STENCIL_OP_ZERO, D3D11_STENCIL_OP_ZERO, D3D11_STENCIL_OP_ZERO, D3D11_COMPARISON_ALWAYS
+	//};
+	//ID3D11DepthStencilState* stencilState = nullptr;
+	//pSD.GetDevice()->CreateDepthStencilState(&desc, &stencilState);
+
+
 	m_enemyManager		->Render();
 	m_AM_Manager		->Render();
 
@@ -166,10 +205,12 @@ void PlayScene::DrawUI()
 	m_tutorial->Render();
 
 	m_AM_Manager		->DrawUI();
-	m_gauge				->Render();
+	m_resourceGauge		->Render();
 	m_missionManager	->Render();
 
 	m_tutorial->Render_Layer2();
+
+	m_doubleSpeedButton->DrawUI();
 }
 
 void PlayScene::Finalize()

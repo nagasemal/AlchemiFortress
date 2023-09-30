@@ -151,10 +151,10 @@ EnemyObject EnemyManager::GetEnemyStatus(ENEMY_TYPE type,int spawnNumber)
 	//std::uniform_real_distribution<> dist(0, XM_2PI);
 	//float rand = static_cast<float>(dist(engine));
 
-	int remoteness = (int)((float)pSJD.GetStageData().enemys_Spawn[spawnNumber].remoteness * 1.5f);
-	float direction = (float)pSJD.GetStageData().enemys_Spawn[spawnNumber].direction;
+	//int remoteness = (int)((float)pSJD.GetStageData().enemys_Spawn[spawnNumber].remoteness * 1.5f);
+	//float direction = (float)pSJD.GetStageData().enemys_Spawn[spawnNumber].direction;
 
-	EnemyObject enemy(type,SimpleMath::Vector3(remoteness * cosf(direction), 0.0f, remoteness * sinf(direction)),1);
+	EnemyObject enemy(type, pSJD.GetStageData().enemys_Spawn[spawnNumber].spawnPos,1);
 
 	Enemy_Data enemyData = pSJD.GetEnemyData(pSJD.GetStageData().enemys_Spawn[spawnNumber].type);
 

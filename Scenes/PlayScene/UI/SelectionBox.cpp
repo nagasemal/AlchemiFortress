@@ -4,6 +4,7 @@
 #include "NecromaLib/GameData/UserInterfase.h"
 
 #include "NecromaLib/Singleton/SpriteLoder.h"
+#include "NecromaLib/Singleton/SoundData.h"
 
 SelectionBox::SelectionBox(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage)
 {
@@ -28,6 +29,8 @@ SelectionBox::~SelectionBox()
 void SelectionBox::Update()
 {
 	m_keySelectFlag = false;
+
+	if (m_selectFlag) SoundData::GetInstance().PlaySystemSE(XACT_WAVEBANK_SYSTEMSE_BUTTONSELECT);
 }
 
 void SelectionBox::Draw()

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "FieldObjectManager.h"
 #include "NecromaLib/Singleton/ShareData.h"
+#include "NecromaLib/Singleton/ShareJsonData.h"
 
 #include <algorithm>
 #include <random>
@@ -47,7 +48,16 @@ void FieldObjectManager::Initialize()
 
 	CrystalSpawn(30);
 
-	//m_crystals->push_back(*std::make_unique<Crystal>(SimpleMath::Vector3(1, -1.0f,5), cos(5)));
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
+
+	for (int i = 0; i < pSJD.GetStageData().crystalPos.size(); i++)
+	{
+		SimpleMath::Vector2 loadCrysralPos = pSJD.GetStageData().crystalPos[i];
+
+		SimpleMath::Vector3 crystalPos = SimpleMath::Vector3(loadCrysralPos.x,-1.0f, loadCrysralPos.y);
+
+		m_crystals->push_back(*std::make_unique<Crystal>(crystalPos, cos(5)));
+	}
 
 	// ƒNƒŠƒXƒ^ƒ‹‚Ì‰Šú‰»ˆ—
 	for (std::list<Crystal>::iterator it = m_crystals->begin(); it != m_crystals->end(); it++)
@@ -122,6 +132,8 @@ void FieldObjectManager::Finalize()
 
 void FieldObjectManager::CrystalSpawn(int num)
 {
+
+	num;
 	//int minRage = 2;
 
 	//for (int i = 0; i < num; i++)

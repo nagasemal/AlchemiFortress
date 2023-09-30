@@ -25,8 +25,6 @@ PlayerBase::~PlayerBase()
 
 void PlayerBase::Initialize()
 {
-
-	ShareData& pSD = ShareData::GetInstance();
 	m_baseLv = ShareJsonData::GetInstance().GetStageData().resource.lv;
 	m_exp = 0;
 	m_hp = 50;
@@ -107,7 +105,13 @@ void PlayerBase::Render(DirectX::Model* model)
 	modelData = SimpleMath::Matrix::CreateScale(m_data.rage);
 	modelData *= SimpleMath::Matrix::CreateRotationY(XMConvertToRadians(180));
 	modelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y - 1.5f, m_data.pos.z);
-	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection());
+
+	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(),
+		false, [&]()
+		{
+			// 深度ステンシルステートの設定
+			pSD.GetContext()->OMSetDepthStencilState(pSD.GetStencilBase().Get(), 1);
+		});
 
 }
 

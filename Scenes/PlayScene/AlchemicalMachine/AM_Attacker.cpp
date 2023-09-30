@@ -3,6 +3,8 @@
 #include "NecromaLib/Singleton/InputSupport.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
+#include "NecromaLib/Singleton/SoundData.h"
+
 #include "NecromaLib/GameData/SpriteCutter.h"
 
 AM_Attacker::AM_Attacker():
@@ -83,13 +85,6 @@ void AM_Attacker::SelectUpdate()
 
 void AM_Attacker::Draw()
 {
-
-	ShareData& pSD = ShareData::GetInstance();
-
-	/*===[ データの表示 ]===*/
-	std::wostringstream oss;
-	oss << "Element - " << m_element;
-	pSD.GetDebugFont()->AddString(oss.str().c_str(), SimpleMath::Vector2(120.f, 360.f));
 }
 
 void AM_Attacker::Finalize()
@@ -133,6 +128,10 @@ bool AM_Attacker::BulletRequest(std::list<EnemyObject>* enemys)
 			// スパン毎に生成
 			if (m_timer >= m_bulletStatus.span && pDataM->GetNowMP() > 0)
 			{
+				SoundData& pSound = SoundData::GetInstance();
+
+				pSound.PlaySE(ConvertToElement(m_element));
+
 				m_timer = 0.0f;
 				m_targetPos = it->GetPos();
 
@@ -163,12 +162,6 @@ void AM_Attacker::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> text
 
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
 
-	//RECT rect_UI = SpriteCutter(64, 64, m_lv,0);
-	//m_selectLvUpBox->DrawUI(texture,pSL.GetNumberTexture(), rect_UI);
-
-	//rect_UI = SpriteCutter(64, 64, SpriteLoder::REPAIR, 0);
-	//m_repairBox->DrawUI(texture, pSL.GetUIIcons(), rect_UI);
-
 	if (m_element != NOMAL) return;
 
 	for (int i = 0; i < 4; i++)
@@ -177,9 +170,6 @@ void AM_Attacker::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> text
 
 		m_selectBox[i]->DrawUI(texture, pSL.GetElementTexture(), rect_element);
 	}
-
-	//rect_UI = SpriteCutter(64, 64, SpriteLoder::DISMATIONG, 0);
-	//m_dismantlingBox->DrawUI(texture, pSL.GetUIIcons(),rect_UI);
 }
 
 void AM_Attacker::LvUp()

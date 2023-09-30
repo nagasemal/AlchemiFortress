@@ -4,25 +4,25 @@
       {
         "ELEMENT": "Nomal",
         "LV": 1,
-        "NAME": "Attacker",
+        "NAME": "None",
         "NUMBER": 0
       },
       {
         "ELEMENT": "Nomal",
         "LV": 1,
-        "NAME": "Defenser",
+        "NAME": "None",
         "NUMBER": 1
       },
       {
         "ELEMENT": "Nomal",
         "LV": 1,
-        "NAME": "Upper",
+        "NAME": "None",
         "NUMBER": 2
       },
       {
         "ELEMENT": "Nomal",
         "LV": 1,
-        "NAME": "Mining",
+        "NAME": "None",
         "NUMBER": 3
       },
       {

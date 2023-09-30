@@ -58,5 +58,4 @@ protected:
 	bool m_activeFlag; //Œ»İG‚ê‚éó‘Ô‚©
 
 	RECT m_rect;
-
 };

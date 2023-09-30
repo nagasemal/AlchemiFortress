@@ -52,9 +52,6 @@ void DrawMachine::Render()
 {
 	for (int i = 0; i < m_AMobjects.size(); i++)
 	{
-		//// Noneならば飛ばす
-		//if (m_AMobjects[i]->GetModelID() == NONE) return;
-
 		// モデルの描画			オブジェクトに割り当てられたIDをもとにモデル配列からデータを取り出す
 		m_AMobjects[i]->ModelRender(
 			m_AMFilter->HandOverAMModel(m_AMobjects[i]->GetModelID()),

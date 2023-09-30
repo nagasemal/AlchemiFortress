@@ -33,7 +33,6 @@ void Veil::Update()
 
 void Veil::Render()
 {
-	//auto device = ShareData::GetInstance().GetDevice();
 	auto context = ShareData::GetInstance().GetContext();
 	// 頂点情報
 	// Position.xy	:拡縮用スケール
@@ -42,7 +41,7 @@ void Veil::Render()
 	// Color.zw		:画像サイズ
 	// Tex.xy		:x 未使用　y 未使用
 	DirectX::VertexPositionColorTexture vertex[1] = {
-		DirectX::VertexPositionColorTexture(SimpleMath::Vector3(m_scale.x, m_scale.y, static_cast<float>(m_selectTextNumber))
+		DirectX::VertexPositionColorTexture(SimpleMath::Vector3(m_scale.x, m_scale.y, static_cast<float>(0))
 		, SimpleMath::Vector4(m_position.x, m_position.y, static_cast<float>(1.0f), static_cast<float>(1.0f))
 		, SimpleMath::Vector2(1,1))
 	};
@@ -85,7 +84,7 @@ void Veil::Render()
 
 	//ピクセルシェーダにテクスチャを登録する。
 	context->PSSetShaderResources(0, 1, m_texture.GetAddressOf());
-	context->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetMagicRule().GetAddressOf());
+	context->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetMagicRule(0).GetAddressOf());
 	context->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetMissionLabelTexture().GetAddressOf());
 
 	//インプットレイアウトの登録
