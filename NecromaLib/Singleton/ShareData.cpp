@@ -19,9 +19,12 @@ ShareData::ShareData():
 void ShareData::CreateStencilData()
 {
 
-	BinaryFile PSData = BinaryFile::LoadFile(L"Resources/Shader/ModelShadow_PS.cso");
+	BinaryFile PSData_Shadow = BinaryFile::LoadFile(L"Resources/Shader/ModelShadow_PS.cso");
 	// ピクセルシェーダ作成
-	GetDevice()->CreatePixelShader(PSData.GetData(), PSData.GetSize(), NULL, m_modelShadowShader.ReleaseAndGetAddressOf());
+	GetDevice()->CreatePixelShader(PSData_Shadow.GetData(), PSData_Shadow.GetSize(), NULL, m_modelShadowShader.ReleaseAndGetAddressOf());
+
+	BinaryFile PSData_Transparent = BinaryFile::LoadFile(L"Resources/Shader/ModelTransparent_PS.cso");
+	GetDevice()->CreatePixelShader(PSData_Transparent.GetData(), PSData_Transparent.GetSize(), NULL, m_modelTransparentShader.ReleaseAndGetAddressOf());
 
 	// ----- 深度ステンシルの作成 ----- /
 

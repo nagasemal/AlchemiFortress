@@ -24,15 +24,16 @@ public:
 		START = 3,
 		SOUND = 4,
 		SE = 5,
-		REPAIR = 6,
-		LVUP = 7,
-		MACHINE = 8,
-		DISMATIONG = 9,
-
-	};
-
-	enum DIRECTION :int
-	{
+		SYSTEMSE = 6,
+		REPAIR = 7,
+		LVUP = 8,
+		MACHINE = 9,
+		DISMATIONG = 10,
+		SPEED_1 = 11,
+		SPEED_2 = 12,
+		SPEED_3 = 13,
+		SPEED_4 = 14,
+		CANCEL = 15
 
 	};
 
@@ -56,6 +57,14 @@ public:
 	// 選択ボックスのテクスチャを渡す
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetSelectBoxTexture() { return m_selectBoxTexture; }
 	const wchar_t* GetSelectBoxTexturePath() { return L"Resources/Textures/log.png"; }
+
+	// 錬金用選択ボックスのテクスチャを渡す
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetAlchemiButtonTexture() { return m_alchemiSelectTexture; }
+	const wchar_t* GetAlchemiButtonTexturePath() { return L"Resources/Textures/AlchemiButton.png"; }
+
+	// マウスのテクスチャを渡す
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetMouseTexture() { return m_mouseTexture; }
+	const wchar_t* GetMouseTexturePath() { return L"Resources/Textures/Mouse.png"; }
 
 	// 属性アイコンを渡す
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetElementTexture() { return m_elementTextures;}
@@ -88,6 +97,10 @@ public:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetManufacturingTexture() { return m_ManufacturingTexture; }
 	const wchar_t* GetManufacturingTexturePath() { return L"Resources/Textures/Seizou.png"; }
 
+	// ステージクリア、失敗を示すアイコンを渡す
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetStageClearTextTexture() { return m_stageClearTextTexture; }
+	const wchar_t* GetStageClearTextTexturePath() { return L"Resources/Textures/SuccessFailureText.png"; }
+
 	// デザイン数字テクスチャを渡す
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetNumberTexture() { return m_NumberTexture; }
 	const wchar_t* GetNumberTexturePath() { return L"Resources/Textures/number.png"; }
@@ -99,6 +112,14 @@ public:
 	// タイトルロゴテクスチャを渡す
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetTitleLogo() { return m_titleLogo; }
 	const wchar_t* GetTitleLogoPath() { return L"Resources/Textures/TitleLogo.png"; }
+
+	// プレイシーンで描画する操作説明文字テクスチャを渡す
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetExplanationTextTexture() { return m_explanationTextTexture; }
+	const wchar_t* GetExplanationTextTexturePath() { return L"Resources/Textures/Explanation_Text.png"; }
+
+	// リザルトで描画する文字テクスチャを渡す
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetResultTextTexture() { return m_resultTextTexture; }
+	const wchar_t* GetResultTextTexturePath() { return L"Resources/Textures/Result_Text.png"; }
 
 	// UIアイコンテクスチャを渡す
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetUIIcons() { return m_uiIcons; }
@@ -130,6 +151,12 @@ private:
 	//　選択ボックスのテクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_selectBoxTexture;
 
+	// 錬金用選択ボックスのテクスチャ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_alchemiSelectTexture;
+
+	// マウスのテクスチャ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_mouseTexture;
+
 	//　属性アイコンのテクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_elementTextures;
 
@@ -142,6 +169,8 @@ private:
 	// 製造の文字テクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_ManufacturingTexture;
 
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_explanationTextTexture;
+
 	// をテクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_letterTexture;
 
@@ -153,6 +182,12 @@ private:
 
 	// デザイン数字テクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_NumberTexture;
+
+	// リザルト画面にて使用する文字テクスチャ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_resultTextTexture;
+
+	// ステージクリア,失敗を示す文字テクスチャ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_stageClearTextTexture;
 
 	// 魔法陣のテクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_MagicCircleTexture[6];

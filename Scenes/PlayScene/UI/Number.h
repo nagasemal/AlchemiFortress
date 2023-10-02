@@ -24,6 +24,7 @@ public:
 	void SetPosition(SimpleMath::Vector2 position) { m_position = position; }
 	void SetRage(SimpleMath::Vector2 rage) { m_rage = rage; }
 
+	void SetColor(SimpleMath::Color color) { m_color = color; }
 
 	// ”š‰æ‘œ•`‰æ
 	void Render();
@@ -38,6 +39,8 @@ private:
 
 	SimpleMath::Vector2 m_position;
 	SimpleMath::Vector2 m_rage;
+
+	SimpleMath::Color m_color;
 
 	int m_num;
 

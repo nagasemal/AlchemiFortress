@@ -38,6 +38,8 @@ public:
 
 	void LvUp() override;
 
+	void HitEnemy(std::list<EnemyObject>* enemy);
+
 	void MPPuls(DataManager* pDM);
 
 private:

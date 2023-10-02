@@ -13,10 +13,8 @@
 #include "AlchemicalMachineObject.h"
 #include "Scenes/PlayScene/Mouse/MousePointer.h"
 #include "Scenes/PlayScene/AlchemicalMachine/Bullet/BulletDataBase.h"
-#include <list>
 
-
-class AM_Attacker : public AlchemicalMachineObject
+class AM_Attacker final : public AlchemicalMachineObject
 {
 public:
 

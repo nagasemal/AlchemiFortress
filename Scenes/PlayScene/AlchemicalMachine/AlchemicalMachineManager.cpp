@@ -103,7 +103,10 @@ void AlchemicalMachineManager::Update(
 	leftDrag;
 
 	// 回転を止めるフラグ
-	m_rotationStop = mouse.rightButton == mouse.HELD && !keyboard.GetLastState().LeftShift;
+	if (mouse.rightButton == mouse.PRESSED && !keyboard.GetLastState().LeftShift)
+	{
+		m_rotationStop = !m_rotationStop;
+	}
 
 	// プレイヤー拠点
 	auto pPlayerBase = fieldManager->GetPlayerBase();
@@ -195,6 +198,7 @@ void AlchemicalMachineManager::Update(
 		// アルケミカルマシンを中心点を軸に回す
 		MovingMachine(i);
 		m_AMObject[i]->SetSelectModeFlag(m_selectManager->GetHitMouseToSelectBoxEven());
+		m_AMObject[i]->Update_Common();
 
 		// オブジェクトにマウスが入っているかどうか
 		if (m_AMObject[i]->GetHitMouse())
@@ -230,7 +234,8 @@ void AlchemicalMachineManager::Update(
 		// アルケミカルマシンの個別更新処理
 		Update_Attacker(i, enemys);
 		Update_Defenser(i, enemys);
-		Update_Mining(i, fieldManager);
+		Update_Mining(i, fieldManager,enemys);
+		Update_Upper(i, enemys);
 	}
 
 	// MP追加処理
@@ -238,7 +243,7 @@ void AlchemicalMachineManager::Update(
 	{
 		m_mpPulsTimer = 0;
 		pDM.SetNowMP(pDM.GetNowMP() + ((int)MPPLUSNUM * (amNum - amNum_Nomal)));
-		Update_Recovery();
+		Update_Recovery(enemys);
 	}
 
 	// マシンを召喚する処理
@@ -253,6 +258,7 @@ void AlchemicalMachineManager::Update(
 	// 離したのでマウスの当たり判定を元の大きさに戻す
 	if(leftRelease)  pMP->ReleaseLeftButtom();
 
+	// パーティクルの更新
 	m_particle_hit->UpdateParticle();
 
 	// バレットの更新処理
@@ -322,9 +328,9 @@ void AlchemicalMachineManager::DrawUI()
 		m_selectManager->ModelRender(m_AMFilter->HandOverAMModel((MACHINE_TYPE)i), i,
 			m_AMFilter->GetRingModel((MACHINE_TYPE)i));
 
-		// 所持数
+		// 所持数描画
 		m_machineNumRender->SetNumber(m_AMnums[i]);
-		m_machineNumRender->SetPosition({540 + 120.0f * i,120.0f});
+		m_machineNumRender->SetPosition({580 + 120.0f * i,110.0f});
 		m_machineNumRender->Render();
 
 	}
@@ -435,7 +441,7 @@ void AlchemicalMachineManager::Update_Defenser(int index, EnemyManager* enemys)
 	defenser->EnemyHit(enemys->GetEnemyData());
 }
 
-void AlchemicalMachineManager::Update_Mining(int index, FieldObjectManager* fieldManager)
+void AlchemicalMachineManager::Update_Mining(int index, FieldObjectManager* fieldManager, EnemyManager* enemys)
 {
 	if (m_AMObject[index]->GetHP() <= 0) return;
 	if (m_AMObject[index]->GetModelID() != MACHINE_TYPE::MINING) return;
@@ -443,10 +449,10 @@ void AlchemicalMachineManager::Update_Mining(int index, FieldObjectManager* fiel
 	AM_Mining* mining = dynamic_cast<AM_Mining*>(m_AMObject[index].get());
 
 	mining->AllFieldObject(fieldManager);
-
+	mining->HitEnemy(enemys->GetEnemyData());
 }
 
-void AlchemicalMachineManager::Update_Recovery()
+void AlchemicalMachineManager::Update_Recovery(EnemyManager* enemys)
 {
 	DataManager& pDM = *DataManager::GetInstance();
 
@@ -459,7 +465,20 @@ void AlchemicalMachineManager::Update_Recovery()
 		AM_Recovery* recovery = dynamic_cast<AM_Recovery*>(m_AMObject[i].get());
 
 		recovery->MPPuls(&pDM);
+		recovery->HitEnemy(enemys->GetEnemyData());
 	}
+
+}
+
+void AlchemicalMachineManager::Update_Upper(int index,EnemyManager* enemyManager)
+{
+
+	if (m_AMObject[index]->GetHP() <= 0) return;
+	if (m_AMObject[index]->GetModelID() != MACHINE_TYPE::UPPER) return;
+
+	AM_Upper* upper = dynamic_cast<AM_Upper*>(m_AMObject[index].get());
+
+	upper->HitEnemy(enemyManager->GetEnemyData());
 
 }
 

@@ -15,24 +15,24 @@
       {
         "TYPE": "Attacker",
         "VALUE": 1
-      },
+      }
+    ]
+  },
+    "Conditions_Alchemi": {
+    "MACHINE_ALCHEMI": [
       {
-        "TYPE": "Defenser",
-        "VALUE": 1
-      },
-      {
-        "TYPE": "Upper",
-        "VALUE": 1
-      },
-      {
-        "TYPE": "Recovery",
-        "VALUE": 1
-      },
-      {
-        "TYPE": "Mining",
+        "TYPE": "Attacker",
         "VALUE": 1
       }
     ]
+  },
+  "Conditions_BaseLv":{
+  "BASE_LV":[
+  		{
+  		 "TYPE": "Standerd",
+         "VALUE":1
+  		}
+  	]
   },
   "Conditions_Time": {
     "TIME": [

@@ -39,6 +39,7 @@ void PlayerBase::Initialize()
 	pDataM->BaseHPMAXRecalculation	(m_baseLv);
 
 	pDataM->Initialize();
+
 }
 
 void PlayerBase::Update()

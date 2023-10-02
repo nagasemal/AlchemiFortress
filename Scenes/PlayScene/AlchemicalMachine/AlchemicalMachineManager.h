@@ -61,6 +61,9 @@ public:
 	// マシンが設置されたことを知らせるフラグ
 	const MACHINE_TYPE SpawnMachineNotification() const { return m_spawnMachine; }
 
+	// 回転停止のフラグ
+	const bool GetRotateStopFlag()	const { return m_rotationStop; }
+
 	// マシンの選択番号を変更する
 	void SetSelectMachineNumber(int index) { m_selectNumber = index; }
 
@@ -73,9 +76,11 @@ private:
 
 	void Update_Defenser(int index, EnemyManager* enemyManager);
 
-	void Update_Mining(int index, FieldObjectManager* fieldManager);
+	void Update_Mining(int index, FieldObjectManager* fieldManager, EnemyManager* enemyManager);
 
-	void Update_Recovery();
+	void Update_Recovery(EnemyManager* enemyManager);
+
+	void Update_Upper(int index,EnemyManager* enemyManager);
 
 	// 回す
 	void MovingMachine(int number);

@@ -36,6 +36,8 @@ public:
 
 	void AllFieldObject(FieldObjectManager* fieldManager);
 
+	void HitEnemy(std::list<EnemyObject>* enemy);
+
 	void RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture) override;
 
 	void LvUp() override;

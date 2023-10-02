@@ -30,6 +30,9 @@ public:
 	// 画像の拡大無しバージョン
 	void DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture,float rotate);
 
+	// 中身がUIアイコンである場合に使用
+	void DrawUI(int UInumber);
+
 	void DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture,
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsTexture = nullptr,
 		RECT rect = { 0,0,64,64 },

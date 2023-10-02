@@ -219,6 +219,7 @@
     <ClInclude Include="Scenes\Commons\DrawMachine.h" />
     <ClInclude Include="Scenes\Commons\DrawLine.h" />
     <ClInclude Include="Scenes\Commons\DrawSlider.h" />
+    <ClInclude Include="Scenes\Commons\DrawTimer.h" />
     <ClInclude Include="Scenes\Commons\SelectionUI.h" />
     <ClInclude Include="Scenes\Commons\ShaderButton.h" />
     <ClInclude Include="Scenes\Commons\UIKeyControl.h" />
@@ -240,6 +241,7 @@
     <ClInclude Include="Scenes\PlayScene\Camera\MoveCamera.h" />
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyCommand_Identifier.h" />
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyList\EnemyCommander.h" />
+    <ClInclude Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_HoppingMove.h" />
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_MeanderingMove.h" />
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_StandardMove.h" />
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyList\ICommand_Enemy.h" />
@@ -256,6 +258,7 @@
     <ClInclude Include="Scenes\PlayScene\Shadow\Particle.h" />
     <ClInclude Include="Scenes\PlayScene\Shadow\ParticleUtility.h" />
     <ClInclude Include="Scenes\PlayScene\Stage\MissionManager.h" />
+    <ClInclude Include="Scenes\PlayScene\Tutorial\Explanation.h" />
     <ClInclude Include="Scenes\PlayScene\Tutorial\Tutorial.h" />
     <ClInclude Include="Scenes\PlayScene\UI\DisplayMagicCircle.h" />
     <ClInclude Include="Scenes\PlayScene\UI\Gauge.h" />
@@ -265,6 +268,7 @@
     <ClInclude Include="Scenes\PlayScene\UI\MachineSelectManager.h" />
     <ClInclude Include="Scenes\PlayScene\UI\SelectionBox.h" />
     <ClInclude Include="Scenes\PlayScene\UI\Number.h" />
+    <ClInclude Include="Scenes\ResultScene\Camera\ResultCamera.h" />
     <ClInclude Include="Scenes\ResultScene\ResultScene.h" />
     <ClInclude Include="Scenes\ResultScene\ResultUIManager.h" />
     <ClInclude Include="Scenes\SelectScene\MissionRender.h" />
@@ -318,6 +322,7 @@
     <ClCompile Include="Scenes\Commons\DrawMachine.cpp" />
     <ClCompile Include="Scenes\Commons\DrawLine.cpp" />
     <ClCompile Include="Scenes\Commons\DrawSlider.cpp" />
+    <ClCompile Include="Scenes\Commons\DrawTimer.cpp" />
     <ClCompile Include="Scenes\Commons\SelectionUI.cpp" />
     <ClCompile Include="Scenes\Commons\ShaderButton.cpp" />
     <ClCompile Include="Scenes\Commons\UIKeyControl.cpp" />
@@ -338,6 +343,7 @@
     <ClCompile Include="Scenes\PlayScene\Camera\MoveCamera.cpp" />
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyCommand_Identifier.cpp" />
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyList\EnemyCommander.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_HoppingMove.cpp" />
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_MeanderingMove.cpp" />
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_StandardMove.cpp" />
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyManager.cpp" />
@@ -353,6 +359,7 @@
     <ClCompile Include="Scenes\PlayScene\Shadow\Particle.cpp" />
     <ClCompile Include="Scenes\PlayScene\Shadow\ParticleUtility.cpp" />
     <ClCompile Include="Scenes\PlayScene\Stage\MissionManager.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Tutorial\Explanation.cpp" />
     <ClCompile Include="Scenes\PlayScene\Tutorial\Tutorial.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\DisplayMagicCircle.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\Gauge.cpp" />
@@ -362,6 +369,7 @@
     <ClCompile Include="Scenes\PlayScene\UI\MachineSelectManager.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\Number.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\SelectionBox.cpp" />
+    <ClCompile Include="Scenes\ResultScene\Camera\ResultCamera.cpp" />
     <ClCompile Include="Scenes\ResultScene\ResultScene.cpp" />
     <ClCompile Include="Scenes\ResultScene\ResultUIManager.cpp" />
     <ClCompile Include="Scenes\SelectScene\MissionRender.cpp" />
@@ -390,6 +398,7 @@
     <None Include="Resources\Json\BulletData\BulletData_Flame.json" />
     <None Include="Resources\Json\BulletData\BulletData_Nomal.json" />
     <None Include="Resources\Json\BulletData\BulletData_Wind.json" />
+    <None Include="Resources\Json\EnemyData\EnemyData_Hop.json" />
     <None Include="Resources\Json\EnemyData\EnemyData_None.json" />
     <None Include="Resources\Json\EnemyData\EnemyData_Slime.json" />
     <None Include="Resources\Json\EnemyData\EnemyData_Worm.json" />
@@ -403,6 +412,7 @@
     <None Include="Resources\Shader\Button.hlsli" />
     <None Include="Resources\Shader\CutTexture.hlsli" />
     <None Include="Resources\Shader\DisplayMagicCircle.hlsli" />
+    <None Include="Resources\Shader\Header.hlsli" />
     <None Include="Resources\Shader\MagicCircle.hlsli" />
     <None Include="Resources\Shader\Shadow.hlsli" />
     <None Include="Resources\Shader\Transition.hlsli" />
@@ -486,13 +496,23 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\EnemySilhouettePS.hlsl">
+    <FxCompile Include="Resources\Shader\ModelTransparent_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\GeometryShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Resources\Shader\MagicCircle_GS.hlsl">
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
@@ -521,6 +541,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\PixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Resources\Shader\Shadow_GS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
@@ -623,6 +649,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\VertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

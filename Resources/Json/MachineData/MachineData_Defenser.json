@@ -2,7 +2,7 @@
   "Status": {
     "ELEMENT": "Nomal",       
     "LV":1.0,                 
-    "HP":120.0,                
+    "HP":30.0,                
     "MULTIPLIER_HP":1.40,     
     "AREAEFFECT":2.0,         
     "MULTIPLIER_EFFECT":1.00, 

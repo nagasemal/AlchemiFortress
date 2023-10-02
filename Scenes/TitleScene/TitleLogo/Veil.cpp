@@ -4,8 +4,9 @@
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
 
-Veil::Veil():
-	m_animationTime()
+Veil::Veil(int ruleType):
+	m_animationTime(),
+	m_rule(ruleType)
 {
 	auto device = ShareData::GetInstance().GetDevice();
 
@@ -84,8 +85,8 @@ void Veil::Render()
 
 	//ピクセルシェーダにテクスチャを登録する。
 	context->PSSetShaderResources(0, 1, m_texture.GetAddressOf());
-	context->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetMagicRule(0).GetAddressOf());
-	context->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetMissionLabelTexture().GetAddressOf());
+	context->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetMagicRule(m_rule).GetAddressOf());
+	//context->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetAlchemiButtonTexture().GetAddressOf());
 
 	//インプットレイアウトの登録
 	context->IASetInputLayout(m_inputLayout.Get());

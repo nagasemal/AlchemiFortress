@@ -18,22 +18,38 @@
       }
     ]
   },
+    "Conditions_Alchemi": {
+    "MACHINE_ALCHEMI": [
+      {
+        "TYPE": "Attacker",
+        "VALUE": -1
+      }
+    ]
+  },
+  "Conditions_BaseLv":{
+  "BASE_LV":[
+  		{
+  		 "TYPE": "Standerd",
+         "VALUE":-1
+  		}
+  	]
+  },
   "Conditions_Time": {
     "TIME": [
       {
         "TYPE": "True",
-        "VALUE": 20
+        "VALUE": -1
       }
     ]
   },
   "ENEMY_SPAWNTIME": {
     "ENEMYS": [
-      {
-        "CONDITION": "",
-        "SPAWNTIME": 2,
+        {
+        "CONDITION":"",
+        "SPAWNTIME": 5,
         "SPAWN_X": 10,
-        "SPAWN_Y": 10,
-        "SPAWN_Z": 0,
+        "SPAWN_Y": 1,
+        "SPAWN_Z": 10,
         "TYPE": "Slime"
       }
     ]
@@ -42,14 +58,14 @@
     "MACHINES": []
   },
   "RESOURCE_DEFAULET": {
-    "ATTACKER": 0,
-    "CRYSTAL": 107,
+    "ATTACKER": 4,
+    "CRYSTAL": 0,
     "DEFFENCER": 0,
     "LV": 0,
     "MINING": 0,
-    "MP": 200,
+    "MP": 500,
     "RECOVERY": 0,
-    "TUTORIAL": 0,
+    "TUTORIAL": 1,
     "UPPER": 0
   }
 }

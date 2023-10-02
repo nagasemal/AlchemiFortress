@@ -30,7 +30,9 @@ AlchemicalMachineObject::AlchemicalMachineObject():
 	m_element(ELEMENT::NOMAL),
 	m_powerUPFlag(),
 	m_line(),
-	m_dismantlingFlag()
+	m_dismantlingFlag(),
+	m_invincibleTime(),
+	m_invincibleFlag()
 {
 	m_selectLvUpBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(170, 490),
 		SimpleMath::Vector2(1.0f, 1.0f));
@@ -41,6 +43,22 @@ AlchemicalMachineObject::AlchemicalMachineObject():
 	m_dismantlingBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(250, 650),
 		SimpleMath::Vector2(1.0f, 1.0f));
 
+}
+
+void AlchemicalMachineObject::Update_Common()
+{
+	// 無敵時間計測
+	if (m_invincibleFlag)
+	{
+		m_invincibleTime += DeltaTime::GetInstance().GetDeltaTime();
+
+		// 既定の時間に達したらフラグをFalseにして無敵状態を解除する
+		if (m_invincibleTime >= 1.0f)
+		{
+			m_invincibleTime = 0.0f;
+			m_invincibleFlag = false;
+		}
+	}
 }
 
 void AlchemicalMachineObject::SelectUpdate_Common()
@@ -144,16 +162,17 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 	// 常に縦に揺れる
 	modelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y + (sinf(m_rotateAnimation) * 0.5f), m_data.pos.z);
 
+	SimpleMath::Matrix ringData = SimpleMath::Matrix::Identity;
+	ringData = SimpleMath::Matrix::CreateScale(m_data.rage);
+	ringData *= SimpleMath::Matrix::CreateRotationY(-m_rotateAnimation * 1.5f);
+	ringData *= SimpleMath::Matrix::CreateTranslation
+	(m_data.pos.x,
+		m_data.pos.y + (sinf(m_rotateAnimation) * 0.5f),
+		m_data.pos.z);
+
 	// 追加パーツが存在する場合
 	if (ring != nullptr)
 	{
-		SimpleMath::Matrix ringData = SimpleMath::Matrix::Identity;
-		ringData = SimpleMath::Matrix::CreateScale(m_data.rage);
-		ringData *= SimpleMath::Matrix::CreateRotationY(-m_rotateAnimation * 1.5f);
-		ringData *= SimpleMath::Matrix::CreateTranslation
-		(m_data.pos.x,
-			m_data.pos.y + (sinf(m_rotateAnimation) * 0.5f),
-			m_data.pos.z);
 
 		// エフェクトの設定
 		ring->UpdateEffects([&](IEffect* effect)
@@ -164,21 +183,31 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 				lights->SetLightDiffuseColor(0, SimpleMath::Color((float)m_powerUPFlag, (float)m_powerUPFlag, 0.0f, 1.0f));
 			});
 
-		ring->Draw(pSD.GetContext(), *pSD.GetCommonStates(), ringData, pSD.GetView(), pSD.GetProjection(), false, [&]
-			{
-				// 深度ステンシルステートの設定
-				pSD.GetContext()->OMSetDepthStencilState(pSD.GetStencilShadow().Get(), 1);
-				pSD.GetContext()->PSSetShader(pSD.GetModelShadowShader().Get(), nullptr, 0);
-			});
-
-		pSD.GetContext()->PSSetShader(nullptr, nullptr, 0);
-		pSD.GetContext()->OMSetDepthStencilState(nullptr, 0);
-
-		ring->Draw(pSD.GetContext(), *pSD.GetCommonStates(), ringData, pSD.GetView(), pSD.GetProjection(), false, [&]
-			{
-				// 深度ステンシルステートの設定
-				pSD.GetContext()->OMSetDepthStencilState(nullptr, 3);
-			});
+		//ring->Draw(pSD.GetContext(), *pSD.GetCommonStates(), ringData, pSD.GetView(), pSD.GetProjection(), false, [&]
+		//	{
+		//		//画像用サンプラーの登録
+		//		ID3D11SamplerState* sampler[1] = { pSD.GetCommonStates()->LinearWrap() };
+		//		pSD.GetContext()->PSSetSamplers(0, 1, sampler);
+		//		//半透明描画指定
+		//		ID3D11BlendState* blendstate = pSD.GetCommonStates()->NonPremultiplied();
+		//		// 透明判定処理
+		//		pSD.GetContext()->OMSetBlendState(blendstate, nullptr, 0xFFFFFFFF);
+		//		//// 深度バッファに書き込み参照する
+		//		//pSD.GetContext()->OMSetDepthStencilState(pSD.GetCommonStates()->DepthDefault(), 0);
+		//		// 
+		//		// 深度ステンシルステートの設定
+		//		pSD.GetContext()->OMSetDepthStencilState(pSD.GetStencilShadow().Get(), 1);
+		//		// カングは左周り
+		//		pSD.GetContext()->RSSetState(pSD.GetCommonStates()->CullNone());
+		//		pSD.GetContext()->PSSetShader(pSD.GetModelShadowShader().Get(), nullptr, 0);
+		//	});
+		//pSD.GetContext()->PSSetShader(nullptr, nullptr, 0);
+		//pSD.GetContext()->OMSetDepthStencilState(nullptr, 0);
+		//ring->Draw(pSD.GetContext(), *pSD.GetCommonStates(), ringData, pSD.GetView(), pSD.GetProjection(), false, [&]
+		//	{
+		//		// 深度ステンシルステートの設定
+		//		pSD.GetContext()->OMSetDepthStencilState(nullptr, 3);
+		//	});
 
 	}
 
@@ -191,25 +220,38 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 			lights->SetLightDiffuseColor(0, GetColor());
 		});
 
-	{
-		// 重なった際、影を描画
-		model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false, [&]
-			{
-				// 深度ステンシルステートの設定
-				pSD.GetContext()->OMSetDepthStencilState(pSD.GetStencilShadow().Get(), 1);
-				pSD.GetContext()->PSSetShader(pSD.GetModelShadowShader().Get(), nullptr, 0);
-			});
+	//// 重なった際、影を描画
+	//model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false, [&]
+	//	{
+	//		//画像用サンプラーの登録
+	//		ID3D11SamplerState* sampler[1] = { pSD.GetCommonStates()->LinearWrap()};
+	//		pSD.GetContext()->PSSetSamplers(0, 1, sampler);
+	//		//半透明描画指定
+	//		ID3D11BlendState* blendstate = pSD.GetCommonStates()->NonPremultiplied();
+	//		// 透明判定処理
+	//		pSD.GetContext()->OMSetBlendState(blendstate, nullptr, 0xFFFFFFFF);
+	//
+	//		// 深度ステンシルステートの設定
+	//		pSD.GetContext()->OMSetDepthStencilState(pSD.GetStencilShadow().Get(), 1);
+	//		
+	//		// カリングは左周り
+	//		pSD.GetContext()->RSSetState(pSD.GetCommonStates()->CullNone());
+	//
+	//		pSD.GetContext()->PSSetShader(pSD.GetModelShadowShader().Get(), nullptr, 0);
+	//	});
 
-		pSD.GetContext()->PSSetShader(nullptr, nullptr, 0);
-		pSD.GetContext()->OMSetDepthStencilState(nullptr, 0);
+	// シェーダーの適応
+	if (ring != nullptr) 		SilhouetteRender(ring, ringData);
+	SilhouetteRender(model,modelData);
 
-		model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false, [&]
-			{
-				// 深度ステンシルステートの設定
-				pSD.GetContext()->OMSetDepthStencilState(nullptr, 3);
-			});
+	// シェーダーの解除
+	pSD.GetContext()->PSSetShader(nullptr, nullptr, 0);
+	pSD.GetContext()->OMSetDepthStencilState(nullptr, 0);
 
-	}
+	// 通常描画
+	if (ring != nullptr) 		NomalRender(ring, ringData);
+	NomalRender(model, modelData);
+
 }
 
 void AlchemicalMachineObject::SummonAM(SimpleMath::Vector3 pos)
@@ -238,4 +280,77 @@ const int AlchemicalMachineObject::GetDismantlingCrystal()
 	auto pSJD = &ShareJsonData::GetInstance();
 
 	return m_lv * (int)pSJD->GetMachineData(m_machineID).dismantling_crystal;
+}
+
+void AlchemicalMachineObject::SilhouetteRender(DirectX::Model* model, SimpleMath::Matrix matrix)
+{
+
+	ShareData& pSD = ShareData::GetInstance();
+
+	// 重なった際、影を描画
+	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), matrix, pSD.GetView(), pSD.GetProjection(), false, [&]
+		{
+
+			//画像用サンプラーの登録
+			ID3D11SamplerState* sampler[1] = { pSD.GetCommonStates()->LinearWrap() };
+			pSD.GetContext()->PSSetSamplers(0, 1, sampler);
+			//半透明描画指定
+			ID3D11BlendState* blendstate = pSD.GetCommonStates()->NonPremultiplied();
+			// 透明判定処理
+			pSD.GetContext()->OMSetBlendState(blendstate, nullptr, 0xFFFFFFFF);
+
+			// 深度ステンシルステートの設定
+			pSD.GetContext()->OMSetDepthStencilState(pSD.GetStencilShadow().Get(), 1);
+
+			// カリングは左周り
+			pSD.GetContext()->RSSetState(pSD.GetCommonStates()->CullNone());
+
+			// ピクセルシェーダーに適応
+			pSD.GetContext()->PSSetShader(pSD.GetModelShadowShader().Get(), nullptr, 0);
+
+
+		});
+
+}
+
+void AlchemicalMachineObject::NomalRender(DirectX::Model* model, SimpleMath::Matrix matrix)
+{
+	ShareData& pSD = ShareData::GetInstance();
+
+	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), matrix, pSD.GetView(), pSD.GetProjection(), false, [&]
+		{
+			// 深度ステンシルステートの設定
+			pSD.GetContext()->OMSetDepthStencilState(nullptr, 3);
+		});
+}
+
+void AlchemicalMachineObject::TransparentRender(DirectX::Model* model, SimpleMath::Matrix matrix)
+{
+
+	ShareData& pSD = ShareData::GetInstance();
+
+	// 重なった際、影を描画
+	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), matrix, pSD.GetView(), pSD.GetProjection(), false, [&]
+		{
+
+			//画像用サンプラーの登録
+			ID3D11SamplerState* sampler[1] = { pSD.GetCommonStates()->LinearWrap() };
+			pSD.GetContext()->PSSetSamplers(0, 1, sampler);
+			//半透明描画指定
+			ID3D11BlendState* blendstate = pSD.GetCommonStates()->NonPremultiplied();
+			// 透明判定処理
+			pSD.GetContext()->OMSetBlendState(blendstate, nullptr, 0xFFFFFFFF);
+
+			// 深度ステンシルステートの設定
+			pSD.GetContext()->OMSetDepthStencilState(pSD.GetCommonStates()->DepthNone(), 1);
+
+			// カリングは左周り
+			pSD.GetContext()->RSSetState(pSD.GetCommonStates()->CullNone());
+
+			// ピクセルシェーダーに適応
+			pSD.GetContext()->PSSetShader(pSD.GetModelTransparentShader().Get(), nullptr, 0);
+
+
+		});
+
 }

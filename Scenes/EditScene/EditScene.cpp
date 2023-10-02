@@ -41,6 +41,17 @@ void EditScene::Initialize()
 
     m_missionRender = std::make_unique<MissionRender>(SimpleMath::Vector2(300.0f, 150.0f), SimpleMath::Vector2(1.0f, 1.0f));
 
+    // èâä˙âª
+    m_stageData.condition_Alchemi   .push_back(Stage_Condition());
+    m_stageData.condition_Enemy     .push_back(Stage_Condition());
+    m_stageData.condition_BaseLv    .push_back(Stage_Condition());
+    m_stageData.condition_Time      .push_back(Stage_Condition());
+    m_stageData.crystalPos          .push_back(SimpleMath::Vector2());
+    m_stageData.enemys_Spawn        .push_back(Enemys_Spawn());
+    m_stageData.machine             .push_back(Stage_Machine());
+    m_stageData.resource            = Stage_Resource();
+    m_stageData.tutorial            = 0;
+
     for (int i = 0; i < MACHINE_TYPE::NUM; i++)
     {
         m_machineMissions_puls[i]  = std::make_unique<DrawArrow>(SimpleMath::Vector2(550.0f, 150.0f + (i * 48)), SimpleMath::Vector2(0.6f, 0.6f),2);
@@ -220,11 +231,11 @@ void EditScene::WritingFile()
         testTimeMission.condition = "True";
         testTimeMission.value = 20;
 
-        m_stageData.condition_Enemy.push_back(testEnemyMission);
-        m_stageData.enemys_Spawn.push_back(spawn);
-        m_stageData.condition_Time.push_back(testTimeMission);
-
         Stage_Data stageCondition = m_stageData;
+        stageCondition.condition_Enemy.push_back(testEnemyMission);
+        stageCondition.enemys_Spawn.push_back(spawn);
+        stageCondition.condition_Time.push_back(testTimeMission);
+
 
         // óvëf0ÇêÿÇÈ                  
         ZeroCut(stageCondition.condition_Machine);

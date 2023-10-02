@@ -17,7 +17,7 @@ RenderOption::RenderOption()
 	m_userBar_SE			= std::make_unique<DrawSlider>(SimpleMath::Vector2(500, 280), RAGE);
 	m_userBar_SystemSE		= std::make_unique<DrawSlider>(SimpleMath::Vector2(500, 360), RAGE);
 
-	m_cancelButton = std::make_unique<SelectionBox>(SimpleMath::Vector2(580, 200),SimpleMath::Vector2(1.0f,1.0f));
+	m_cancelButton = std::make_unique<SelectionBox>(SimpleMath::Vector2(1280 / 2, 120),SimpleMath::Vector2(1.0f,1.0f));
 }
 
 RenderOption::~RenderOption()
@@ -33,16 +33,13 @@ void RenderOption::Update()
 	SoundData& pSound = SoundData::GetInstance();
 
 	m_userBar_BGM		->Update();
-	//pSound.SetBGMVol(m_userBar_BGM->GetValue(), m_userBar_BGM->GetValue());
-	pSound.SetBGMVol(0, 0);
+	pSound.SetBGMVol(m_userBar_BGM->GetValue(), m_userBar_BGM->GetValue());
 
 	m_userBar_SE		->Update();
-	//pSound.SetSEVol(m_userBar_SE->GetValue(), m_userBar_SE->GetValue());
-	pSound.SetSEVol(0, 0);
+	pSound.SetSEVol(m_userBar_SE->GetValue(), m_userBar_SE->GetValue());
 
 	m_userBar_SystemSE	->Update();
-	//pSound.SetSystemSEVol(m_userBar_SystemSE->GetValue(), m_userBar_SystemSE->GetValue());
-	pSound.SetSystemSEVol(0, 0);
+	pSound.SetSystemSEVol(m_userBar_SystemSE->GetValue(), m_userBar_SystemSE->GetValue());
 
 	m_cancelButton->HitMouse();
 
@@ -73,9 +70,9 @@ void RenderOption::Render()
 
 	m_userBar_BGM		->Render(pSL.GetUIIcons().Get(), SpriteCutter(64, 64, SpriteLoder::SOUND, 0));
 	m_userBar_SE		->Render(pSL.GetUIIcons().Get(), SpriteCutter(64, 64, SpriteLoder::SE, 0));
-	m_userBar_SystemSE	->Render(pSL.GetUIIcons().Get(), SpriteCutter(64, 64, SpriteLoder::SE, 0));
+	m_userBar_SystemSE	->Render(pSL.GetUIIcons().Get(), SpriteCutter(64, 64, SpriteLoder::SYSTEMSE, 0));
 
-	m_cancelButton->DrawUI();
+	m_cancelButton->DrawUI(SpriteLoder::UIICON_TYPE::CANCEL);
 }
 
 void RenderOption::Finalize()

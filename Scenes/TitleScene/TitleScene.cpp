@@ -68,12 +68,12 @@ void TitleScene::Initialize()
 	m_titleLogo->SetPosition(SimpleMath::Vector2(width / 1.3f, height / 1.2f));
 
 	// ‰æ–Ê‰E‘¤‚Ì–‹‚Ìİ’è
-	m_veil = std::make_unique<Veil>();
+	m_veil = std::make_unique<Veil>(0);
 	m_veil->Create(L"Resources/Textures/TitleText.png");
 	m_veil->LoadShaderFile(L"Veil");
 	m_veil->SetWindowSize(width, height);
 	m_veil->SetColor(SimpleMath::Color(0.4f, 0.4f, 0.4f, 0.5f));
-	m_veil->SetScale(SimpleMath::Vector2(480.0f, (float)height));
+	m_veil->SetScale(SimpleMath::Vector2(width / 1.5f, (float)height));
 	m_veil->SetPosition(SimpleMath::Vector2(width / 1.95f, 0.0f));
 
 	m_uiKeyControl = std::make_unique<UIKeyControl>();

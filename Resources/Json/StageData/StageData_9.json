@@ -1,42 +1,107 @@
 {
-	"Conditions_Machine":{
-	  "MACHINE_SPAWN":[
-		  {"TYPE":"Attacker",	"VALUE":1.0}
-
-		]
-	},
-	
-	"Conditions_Enemy":{
-		  "ENEMY_KNOCKDOWN":[
-		  {"TYPE":"Slime",		"VALUE":1.0}
-		]
-	},
-
-	"Conditions_Time":{
-		"TIME":[
-		 {"TYPE":"Standerd",	"VALUE":20.0}
-		]
-	},
-
-	"ENEMY_SPAWNTIME":{
-		"ENEMYS":[
-			{"TYPE":"Slime",		"AZIMUTH":4.5,	"REMOTENESS":5.0,		"SPAWNTIME":5.0,	"CONDITION":"Explanation"}
-		]
-	}
-		,
-	"MACHINE_DEFAULET":{
-		"MACHINES":[
-			{"TYPE":"Attacker","ELEMENT":"NOMAL","NUMBER":0,"LV":1}
-		]
-	},
-	"RESOURCE_DEFAULET":{
-		"CRYSTAL":500.0,
-		"MP":400.0,
-		"LV":1.0,
-		"ATTACKER":1.0,
-		"UPPER":1.0,
-		"DEFFENCER":1.0,
-		"MINING":1.0,
-		"RECOVERY":1.0
-	}
+  "CRYSTAL_SPAWN": {
+    "CRYSTALS": [
+    	{"SPAWN_X":-4,"SPAWN_Z":4},
+    	{"SPAWN_X":8,"SPAWN_Z":-8}
+    ]
+  },
+  "Conditions_Enemy": {
+    "ENEMY_KNOCKDOWN": [
+      {
+        "TYPE": "All",
+        "VALUE": 4
+      }
+    ]
+  },
+  "Conditions_Machine": {
+    "MACHINE_SPAWN": [
+      {
+        "TYPE": "Attacker",
+        "VALUE": 2
+      },
+      {
+        "TYPE": "Defenser",
+        "VALUE": 2
+      },
+      {
+        "TYPE": "Upper",
+        "VALUE": 2
+      }
+    ]
+  },
+    "Conditions_Alchemi": {
+    "MACHINE_ALCHEMI": [
+      {
+        "TYPE": "Attacker",
+        "VALUE": -1
+      }
+    ]
+  },
+  "Conditions_BaseLv":{
+  "BASE_LV":[
+  		{
+  		 "TYPE": "Standerd",
+         "VALUE":-1
+  		}
+  	]
+  },
+  "Conditions_Time": {
+    "TIME": [
+      {
+        "TYPE": "True",
+        "VALUE": -1
+      }
+    ]
+  },
+  "ENEMY_SPAWNTIME": {
+    "ENEMYS": [
+        {
+        "CONDITION":"",
+        "SPAWNTIME": 10,
+        "SPAWN_X": 20,
+        "SPAWN_Y": 1,
+        "SPAWN_Z": 20,
+        "TYPE": "Worm"
+      },
+      {
+        "CONDITION":"",
+        "SPAWNTIME": 20,
+        "SPAWN_X": 20,
+        "SPAWN_Y": 1,
+        "SPAWN_Z": -20,
+        "TYPE": "Worm"
+      },
+      {
+        "CONDITION":"",
+        "SPAWNTIME": 30,
+        "SPAWN_X": -20,
+        "SPAWN_Y": 1,
+        "SPAWN_Z": -20,
+        "TYPE": "Worm"
+      },
+      {
+        "CONDITION":"",
+        "SPAWNTIME": 40,
+        "SPAWN_X": -15,
+        "SPAWN_Y": 1,
+        "SPAWN_Z": 15,
+        "TYPE": "Worm"
+      }
+    ]
+  },
+  "MACHINE_DEFAULET": {
+    "MACHINES": [
+    ]
+  },
+  "RESOURCE_DEFAULET": {
+    "ATTACKER": 2,
+    "CRYSTAL": 215,
+    "DEFFENCER": 2,
+    "LV": 2,
+    "MINING": 2,
+    "MP": 400,
+    "RECOVERY": 2,
+    "TUTORIAL": 0,
+    "UPPER": 2
+  }
 }

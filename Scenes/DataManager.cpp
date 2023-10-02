@@ -17,7 +17,7 @@ DataManager::DataManager() :
 	m_nowBaseHp_MAX	(),
 	m_round			(),
 	m_nowEnemyKill	(),
-	m_stageNum		(),
+	m_stageNum		(1),
 	m_stageClearFlag()
 {
 

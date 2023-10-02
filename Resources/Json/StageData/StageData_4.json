@@ -7,18 +7,6 @@
       {
         "TYPE": "Slime",
         "VALUE": 1
-      },
-      {
-        "TYPE": "Slime",
-        "VALUE": 1
-      },
-      {
-        "TYPE": "Slime",
-        "VALUE": 1
-      },
-      {
-        "TYPE": "Slime",
-        "VALUE": 1
       }
     ]
   },
@@ -30,75 +18,56 @@
       }
     ]
   },
+    "Conditions_Alchemi": {
+    "MACHINE_ALCHEMI": [
+      {
+        "TYPE": "Attacker",
+        "VALUE": -1
+      }
+    ]
+  },
+  "Conditions_BaseLv":{
+  "BASE_LV":[
+  		{
+  		 "TYPE": "Standerd",
+         "VALUE":-1
+  		}
+  	]
+  },
   "Conditions_Time": {
     "TIME": [
       {
         "TYPE": "True",
-        "VALUE": 20
-      },
-      {
-        "TYPE": "True",
-        "VALUE": 20
-      },
-      {
-        "TYPE": "True",
-        "VALUE": 20
-      },
-      {
-        "TYPE": "True",
-        "VALUE": 20
+        "VALUE": -1
       }
     ]
   },
   "ENEMY_SPAWNTIME": {
     "ENEMYS": [
-      {
-        "CONDITION": false,
-        "SPAWNTIME": 2,
+        {
+        "CONDITION":"",
+        "SPAWNTIME": 15,
         "SPAWN_X": 10,
-        "SPAWN_Y": 10,
-        "SPAWN_Z": 0,
-        "TYPE": "Slime"
-      },
-      {
-        "CONDITION": false,
-        "SPAWNTIME": 2,
-        "SPAWN_X": 10,
-        "SPAWN_Y": 10,
-        "SPAWN_Z": 0,
-        "TYPE": "Slime"
-      },
-      {
-        "CONDITION": false,
-        "SPAWNTIME": 2,
-        "SPAWN_X": 10,
-        "SPAWN_Y": 10,
-        "SPAWN_Z": 0,
-        "TYPE": "Slime"
-      },
-      {
-        "CONDITION": false,
-        "SPAWNTIME": 2,
-        "SPAWN_X": 10,
-        "SPAWN_Y": 10,
-        "SPAWN_Z": 0,
+        "SPAWN_Y": 1,
+        "SPAWN_Z": 10,
         "TYPE": "Slime"
       }
     ]
   },
   "MACHINE_DEFAULET": {
-    "MACHINES": []
+    "MACHINES": [
+    {"LV":1,"TYPE":"Attacker","ELEMENT":"Nomal","NUMBER":0}
+    ]
   },
   "RESOURCE_DEFAULET": {
     "ATTACKER": 0,
-    "CRYSTAL": 107,
+    "CRYSTAL": 215,
     "DEFFENCER": 0,
     "LV": 0,
     "MINING": 0,
-    "MP": 200,
-    "RECOVERY": 0,
-    "TUTORIAL": 0,
+    "MP": 0,
+    "RECOVERY": 4,
+    "TUTORIAL": 4,
     "UPPER": 0
   }
 }
-

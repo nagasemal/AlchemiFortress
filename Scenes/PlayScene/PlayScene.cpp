@@ -61,6 +61,9 @@ void PlayScene::Initialize()
 	m_tutorial = std::make_unique<Tutorial>();
 	m_tutorial->Initialize(ShareJsonData::GetInstance().GetStageData().tutorial);
 
+	// 操作方法クラスの生成
+	m_explanation = std::make_unique<Explanation>();
+
 	// 倍速ボタンの生成
 	m_doubleSpeedButton = std::make_unique<SelectionBox>(SimpleMath::Vector2(width - 100.0f, height - 100.0f), SimpleMath::Vector2(1.0f, 1.0f));
 
@@ -96,6 +99,8 @@ GAME_SCENE PlayScene::Update()
 								 m_missionManager->GetMissionRender()->get(),
 								 m_moveCamera->GetStopCameraFlag());
 
+	m_explanation->Update();
+
 	// チュートリアル中ならば以下の処理を通さない
 	if (tutorialFlag) 		return GAME_SCENE();
 
@@ -121,7 +126,8 @@ GAME_SCENE PlayScene::Update()
 
 	m_resourceGauge		->Update();
 
-	m_missionManager	->Update(m_AM_Manager.get(),m_enemyManager.get());
+	m_missionManager	->Update(m_AM_Manager.get(),m_enemyManager.get(),m_fieldManager.get());
+
 
 	bool enemyActivs	= !m_enemyManager->GetEnemyData()->empty();
 
@@ -137,8 +143,8 @@ GAME_SCENE PlayScene::Update()
 	pSD.GetCamera()		->SetTargetPosition	(m_moveCamera->GetTargetPosition());
 	pSD.GetCamera()		->SetEyePosition	(m_moveCamera->GetEyePosition());
 
-	// 拠点のHPが0になったらリザルトへ切り替える
-	if (m_fieldManager	->GetPlayerBase()->GetHP() <= 0 || m_missionManager->MissionmFailure())		return GAME_SCENE::RESULT;
+	// 拠点のHPが0になる、ミッションの内容的にクリアが不可能になった場合リザルトへ切り替える
+	if (m_missionManager->MissionmFailure())		return GAME_SCENE::RESULT;
 
 	// ミッションを全て達成したらリザルトへ切り替える
 	if (m_missionManager->MissionComplete())
@@ -166,11 +172,11 @@ void PlayScene::Draw()
 {
 	ShareData& pSD = ShareData::GetInstance();
 
-	/*===[ デバッグ文字描画 ]===*/
-	std::wostringstream oss;
-	oss << "PlayScene";
+	///*===[ デバッグ文字描画 ]===*/
+	//std::wostringstream oss;
+	//oss << "PlayScene";
 
-	pSD.GetDebugFont()->AddString(oss.str().c_str(), SimpleMath::Vector2(0.f, 60.f));
+	//pSD.GetDebugFont()->AddString(oss.str().c_str(), SimpleMath::Vector2(0.f, 60.f));
 
 	pSD.GetSpriteBatch()->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
@@ -210,7 +216,13 @@ void PlayScene::DrawUI()
 
 	m_tutorial->Render_Layer2();
 
-	m_doubleSpeedButton->DrawUI();
+	// 倍速ボタン
+	m_doubleSpeedButton->DrawUI(10 + m_doubleSpeedNum);
+
+	m_explanation->Render(m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven(), m_AM_Manager->GetRotateStopFlag());
+
+	// 操作説明描画
+
 }
 
 void PlayScene::Finalize()
@@ -228,6 +240,9 @@ void PlayScene::Finalize()
 	m_enemyManager.reset();
 
 	m_moveCamera.reset();
+
+	ShareData& pSD = ShareData::GetInstance();
+
 
 }
 

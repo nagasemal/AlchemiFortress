@@ -30,26 +30,22 @@ MachineSelect::~MachineSelect()
 
 void MachineSelect::Initialize()
 {
-	m_data.rage = { 1.0f,1.0f };
+	m_data.rage = { 2.0f,2.0f };
 
 	m_machineBox = std::make_unique<SelectionBox>(m_data.pos, m_data.rage);
 	m_machineBox->Initialize();
 
-	// 選択可能ボックス
-	for (int i = 0; i < 3; i++)
-	{
-		m_selectionBox[i] = std::make_unique<SelectionBox>(SimpleMath::Vector2((m_data.pos.x - BOX_DISTANS_X) + (i * BOX_DISTANS_X),m_data.pos.y + BOX_DISTANS_Y),
-														   SimpleMath::Vector2(1.0f, 1.0f));
-		m_selectionBox[i]->Initialize();
-	}
-
-	// 製造ボタン
-	m_selectionManufacturing = std::make_unique<SelectionBox>(SimpleMath::Vector2(m_data.pos.x, m_data.pos.y + 150),
-							   SimpleMath::Vector2(3.0f,1.0f));
-
-	m_selectionManufacturing->Initialize();
-
 	m_colorChangeTime = 0;
+
+	m_selectionAlchemi = std::make_unique<SelectionBox>(SimpleMath::Vector2(m_data.pos.x + 40, m_data.pos.y + 40),
+							 SimpleMath::Vector2(0.5f, 0.5f));
+
+	RECT rect = RECT();
+	rect.right = 120;
+	rect.bottom = 120;
+
+	m_selectionAlchemi->SetRect(rect);
+	m_selectionAlchemi->SetRage(SimpleMath::Vector2(0.5f, 0.5f));
 
 }
 
@@ -61,23 +57,19 @@ void MachineSelect::Update()
 	m_colorChangeTime += deltaTime * 5.0f;
 	m_boxColor.G(0.5f + cosf(m_colorChangeTime) / 2);
 
-	//SimpleMath::Vector2 mousePos = pIS.GetMousePosScreen();
-	//bool leftFlag = pIS.GetMouseState().leftButton == Mouse::ButtonStateTracker::PRESSED;
-	//bool onMouseFlag = HitObject(mousePos);
-	//leftFlag;
-	//onMouseFlag;
-
+	// リストの中から選ばれた
 	m_onMouseFlag = m_machineBox->HitMouse();
 	m_hitMouseFlag = m_machineBox->SelectionMouse();
+
+	// 錬金ボタンが押された
+	m_selectionAlchemi->HitMouse();
+
+	m_manufacturingFlag = m_selectionAlchemi->ClickMouse();
 
 	// 選択されているならば、全体の速度を落とす
 	if (m_hitMouseFlag)
 	{
 		DeltaTime::GetInstance().SetDeltaTime(deltaTime / 2);
-
-		m_selectionManufacturing->HitMouse();
-		m_manufacturingFlag = m_selectionManufacturing->ClickMouse();
-
 	}
 
 }
@@ -114,7 +106,7 @@ void MachineSelect::DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceVie
 
 	if (m_changeColorFlag) colour = m_boxColor;
 	if(m_onMouseFlag) colour = SimpleMath::Color(0.9f, 0.95f, 0.8f, 0.9f);
-	if(m_hitMouseFlag) colour = SimpleMath::Color(0.9f, 0.9f, 0.85f, 0.98f);
+	if(m_hitMouseFlag) colour = SimpleMath::Color(0.95f, 0.95f, 0.95f, 0.98f);
 
 	SimpleMath::Vector2 box_Pos = { m_data.pos.x,m_data.pos.y};
 
@@ -123,21 +115,20 @@ void MachineSelect::DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceVie
 
 	pSB->End();
 
-	// 必要素材を表示する
-	if (m_hitMouseFlag)
-	{
+	m_selectionAlchemi->DrawUI(pSL.GetAlchemiButtonTexture().Get(),0.0f);
 
-		RECT rect[3] = {SpriteCutter(IMAGE_WIGHT, IMAGE_HEIGHT, 0, 0),						// 必要魔力量
-						SpriteCutter(IMAGE_WIGHT, IMAGE_HEIGHT, 1, 0),						// 必要結晶数
-						SpriteCutter(0, 0, m_selectMachineType, 1)};	// 必要魔法
-
-		for (int i = 0; i < 3; i++)
-		{
-			m_selectionBox[i]->DrawUI(texture.Get(),pSL.GetElementTexture(),rect[i]);
-		}
-
-		m_selectionManufacturing->DrawUI(texture.Get(), pSL.GetManufacturingTexture());
-	}
+	//// 必要素材を表示する
+	//if (m_hitMouseFlag)
+	//{
+	//	RECT rect[3] = {SpriteCutter(IMAGE_WIGHT, IMAGE_HEIGHT, 0, 0),						// 必要魔力量
+	//					SpriteCutter(IMAGE_WIGHT, IMAGE_HEIGHT, 1, 0),						// 必要結晶数
+	//					SpriteCutter(0, 0, m_selectMachineType, 1)};	// 必要魔法
+	//	for (int i = 0; i < 3; i++)
+	//	{
+	//		m_selectionBox[i]->DrawUI(texture.Get(),pSL.GetElementTexture(),rect[i]);
+	//	}
+	//	m_selectionManufacturing->DrawUI(texture.Get(), pSL.GetManufacturingTexture());
+	//}
 
 	// モデル情報(位置,大きさ)
 	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;

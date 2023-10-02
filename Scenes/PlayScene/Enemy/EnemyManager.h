@@ -26,6 +26,9 @@ public:
 
 	EnemyObject GetEnemyStatus(ENEMY_TYPE type,int spawnNumber);
 
+	EnemyObject GetRandomEnemy();
+
+
 	void HitAMObejct(AlchemicalMachineObject* alchemicalMachines);
 
 public:

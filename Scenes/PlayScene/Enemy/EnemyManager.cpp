@@ -65,21 +65,41 @@ void EnemyManager::Update(SimpleMath::Vector3 basePos)
 	m_timer += deltaTime;
 	m_totalTimer += deltaTime;
 
-	// 時間が来たら生成する
 
-	if (m_enemyNums < pSJD.GetStageData().enemys_Spawn.size())
+	// ランダムで出現
+	if (pSJD.GetStageData().enemys_Spawn[0].type == ENEMY_TYPE::ENMEY_NONE)
 	{
-		if (m_timer >= pSJD.GetStageData().enemys_Spawn[m_enemyNums].spawnTime)
+		if (m_timer >= pSJD.GetStageData().enemys_Spawn[0].spawnTime)
 		{
-			EnemyObject object = GetEnemyStatus(ENEMY_TYPE::SLIME, m_enemyNums);
+			EnemyObject object = GetRandomEnemy();
 
 			m_enemyObject->push_back(*std::make_unique<EnemyObject>(object));
 			// エフェクト表示
 			m_particle_spawn->OnShot(object.GetPos(), true);
 
 			// 次のエネミーを呼び出す準備
-			m_enemyNums++;
+			m_timer = 0.0f;
+
 		}
+	}
+	else
+	{
+		// 時間が来たら生成する
+		if (m_enemyNums < pSJD.GetStageData().enemys_Spawn.size())
+		{
+			if (m_timer >= pSJD.GetStageData().enemys_Spawn[m_enemyNums].spawnTime)
+			{
+				EnemyObject object = GetEnemyStatus(ENEMY_TYPE::SLIME, m_enemyNums);
+
+				m_enemyObject->push_back(*std::make_unique<EnemyObject>(object));
+				// エフェクト表示
+				m_particle_spawn->OnShot(object.GetPos(), true);
+
+				// 次のエネミーを呼び出す準備
+				m_enemyNums++;
+			}
+		}
+
 	}
 
 	// 更新処理
@@ -146,19 +166,40 @@ EnemyObject EnemyManager::GetEnemyStatus(ENEMY_TYPE type,int spawnNumber)
 {
 	ShareJsonData& pSJD = ShareJsonData::GetInstance();
 
-	//std::random_device seed;
-	//std::default_random_engine engine(seed());
-	//std::uniform_real_distribution<> dist(0, XM_2PI);
-	//float rand = static_cast<float>(dist(engine));
-
 	//int remoteness = (int)((float)pSJD.GetStageData().enemys_Spawn[spawnNumber].remoteness * 1.5f);
 	//float direction = (float)pSJD.GetStageData().enemys_Spawn[spawnNumber].direction;
 
-	EnemyObject enemy(type, pSJD.GetStageData().enemys_Spawn[spawnNumber].spawnPos,1);
-
+	EnemyObject enemy(type, pSJD.GetStageData().enemys_Spawn[spawnNumber].spawnPos, 1);
 	Enemy_Data enemyData = pSJD.GetEnemyData(pSJD.GetStageData().enemys_Spawn[spawnNumber].type);
 
 	enemy.Initialize();
+	enemy.SetEnemyData(enemyData);
+
+	return enemy;
+}
+
+EnemyObject EnemyManager::GetRandomEnemy()
+{
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
+
+	std::uniform_int_distribution<> dist_enemyType(1, 2);
+	std::random_device rd;
+	int enemyType_rand = static_cast<int>(dist_enemyType(rd));
+
+	std::random_device seed;
+	std::default_random_engine engine(seed());
+	std::uniform_real_distribution<> dist(0, XM_2PI);
+	
+	std::uniform_int_distribution<> dist2(20,40);
+	std::mt19937 gen(rd());
+	float rand = static_cast<float>(dist(engine));
+	float rand2 = static_cast<float>(dist2(gen));
+
+	EnemyObject enemy((ENEMY_TYPE)enemyType_rand, SimpleMath::Vector3(rand2 * cosf(rand), 1.0f, rand2 * sinf(rand)), 1);
+	Enemy_Data enemyData = pSJD.GetEnemyData((ENEMY_TYPE)enemyType_rand);
+
+	enemy.Initialize();
+
 	enemy.SetEnemyData(enemyData);
 
 	return enemy;

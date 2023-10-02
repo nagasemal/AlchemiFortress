@@ -1,6 +1,8 @@
 {
 "Conditions_Enemy":{"ENEMY_KNOCKDOWN":[]},
 "Conditions_Machine":{"MACHINE_SPAWN":[]},
+"Conditions_Alchemi":{"MACHINE_ALCHEMI":[]},
+"Conditions_BaseLv":{"BASE_LV":[]},
 "Conditions_Time":{"TIME":[]},
 "ENEMY_SPAWNTIME":{"ENEMYS":[]},
 "MACHINE_DEFAULET":{"MACHINES":[]},

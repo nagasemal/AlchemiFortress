@@ -17,6 +17,7 @@
 // UI関連
 #include "Scenes/PlayScene/UI/Gauge.h"
 #include "Scenes/PlayScene/Tutorial/Tutorial.h"
+#include "Scenes/PlayScene/Tutorial/Explanation.h"
 
 class PlayScene : public SceneObj
 {
@@ -71,6 +72,8 @@ private:
 
 	// チュートリアルクラス
 	std::unique_ptr<Tutorial>					m_tutorial;
+
+	std::unique_ptr<Explanation>				m_explanation;
 
 	std::unique_ptr<DirectX::Model>				m_skySphere;
 

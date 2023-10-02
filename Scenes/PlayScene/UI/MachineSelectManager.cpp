@@ -62,8 +62,6 @@ void MachineSelectManager::Initialize()
 	m_manufacturingFlag = false;
 
 	m_displayMagicCircle = std::make_unique<DisplayMagicCircle>();
-	m_displayMagicCircle->Create(SpriteLoder::GetInstance().GetMagicCircleTexturePath());
-
 }
 
 void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
@@ -85,12 +83,13 @@ void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
 		// 要素の更新処理
 		m_machineSelect[i]->Update();
 
-		// 要素から製造ボタンが押された判定を受け取る
+		// 要素から製造ボタンが押された判定を受け取る リソースが足りない場合は弾く
 		if (m_machineSelect[i]->GetManufacturingFlag() &&
 			datas->GetNowMP()		 - pSJD->GetMachineData((MACHINE_TYPE)i).alchemi_mp >= 0 &&
 			datas->GetNowCrystal()	 - pSJD->GetMachineData((MACHINE_TYPE)i).alchemi_crystal >= 0)
 		{
 			m_manufacturingFlag = true;
+			m_selectMachineType = m_machineSelect[i]->GetMachineType();
 			ReduceResource((MACHINE_TYPE)i);
 		}
 

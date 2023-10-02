@@ -5,6 +5,9 @@
 
 class SelectionBox;
 class UIKeyControl;
+class Veil;
+class DrawMachine;
+class ResultCamera;
 
 class ResultScene : public SceneObj
 {
@@ -36,6 +39,14 @@ private:
 	std::unique_ptr<SelectionBox> m_selectionBox_Retry;
 	std::unique_ptr<SelectionBox> m_selectionBox_Back;
 
+	std::unique_ptr<DrawMachine> m_drawMachine;
+
+	std::unique_ptr<Veil>		  m_veil;
+
 	std::unique_ptr<UIKeyControl> m_uiKeyControl;
+
+	std::unique_ptr<ResultCamera> m_resultCamera;
+
+	std::unique_ptr<DirectX::Model> m_baseModel;	//  ‹’“_‚Ì3Dƒ‚ƒfƒ‹
 
 };

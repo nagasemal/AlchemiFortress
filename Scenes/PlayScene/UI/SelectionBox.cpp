@@ -6,6 +6,8 @@
 #include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/SoundData.h"
 
+#include "NecromaLib/GameData/SpriteCutter.h"
+
 SelectionBox::SelectionBox(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage)
 {
 
@@ -115,9 +117,43 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textu
 	SimpleMath::Vector2 box_Pos = { m_data.pos.x,m_data.pos.y };
 
 	// 選択BOX
-	pSB->Draw(texture.Get(), box_Pos, &m_rect, colour, rotate, DirectX::XMFLOAT2(static_cast<float>(m_rect.right) / 2.0f, static_cast<float>(m_rect.bottom) / 2.0f));
+	pSB->Draw(texture.Get(), box_Pos, &m_rect, colour, rotate, DirectX::XMFLOAT2(static_cast<float>(m_rect.right) / 2.0f, static_cast<float>(m_rect.bottom) / 2.0f), m_data.rage);
 
 	pSB->End();
+}
+
+void SelectionBox::DrawUI(int UInumber)
+{
+
+	ShareData& pSD = ShareData::GetInstance();
+	auto pSB = pSD.GetSpriteBatch();
+	auto pSL = &SpriteLoder::GetInstance();
+
+	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
+
+		// ログの色
+	SimpleMath::Color colour = { 1.0f,1.0f,1.0f,1.0f };
+
+	if (m_luminousFlag) colour = m_boxColor;
+
+	if (m_hitMouseFlag) colour = { 0.9f,0.9f,0.9f,1.0f };
+
+	if (HoldMouse()) colour = { 0.7f, 0.7f, 0.7f, 1.0f };
+
+	SimpleMath::Vector2 box_Pos = { m_data.pos.x,m_data.pos.y };
+
+	// 選択BOX
+	pSB->Draw(pSL->GetSelectBoxTexture().Get(), box_Pos, &m_rect, colour, 0.0f, DirectX::XMFLOAT2(static_cast<float>(m_rect.right) / 2, static_cast<float>(m_rect.bottom) / 2), m_data.rage);
+
+
+	// 画像のサイズ
+	RECT srcRect = SpriteCutter(64, 64, UInumber, 0);
+	// 中のUI表示
+	pSB->Draw(pSL->GetUIIcons().Get(), box_Pos, &srcRect, SimpleMath::Color(0.0f,0.0f,0.0f,1.0f), 0.0f, DirectX::XMFLOAT2(64 / 2, 64 / 2), 0.8f);
+
+	pSB->End();
+
+
 }
 
 void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture,

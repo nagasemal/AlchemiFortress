@@ -84,6 +84,8 @@ public:
 	int GetStageNum()			const { return m_stageNum;}
 	void SetStageNum(int stageNum) { this->m_stageNum = stageNum; }
 
+	int GetStageMax()			const { return 10;}
+
 
 private:
 	DataManager();

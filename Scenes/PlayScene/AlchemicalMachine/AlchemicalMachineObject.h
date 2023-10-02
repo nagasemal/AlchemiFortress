@@ -43,6 +43,9 @@ public:
 	virtual void LvUp() = 0;
 
 	// 共通してアップデートをかける処理
+	void Update_Common();
+
+	// 共通してアップデートをかける処理
 	void SelectUpdate_Common();
 
 	// 共通して描画するUIの処理
@@ -102,13 +105,13 @@ public:
 
 	// 保有している色情報
 	// HPが0ならば黒を返します
-	const SimpleMath::Color GetColor()				const { return m_hp <= 0 ? SimpleMath::Color(0, 0, 0, 1): m_color;}
+	const SimpleMath::Color GetColor()						const { return m_hp <= 0 ? SimpleMath::Color(0, 0, 0, 1): m_color * (1.0f - m_invincibleTime);}
 
 	// 何かの要因で変化を受けている状態
 	const bool GetPowerUpFlag()								const { return m_powerUPFlag; }
 
 	// 現在の属性
-	const ELEMENT GetElement()						const { return m_element; }
+	const ELEMENT GetElement()								const { return m_element; }
 
 	// 現在どのライン上に存在しているか
 	const int GetLine()										const { return m_line; }
@@ -123,16 +126,26 @@ public:
 	const int GetDismantlingCrystal();
 
 	void SetLv(int lv)									{ m_lv = lv; }
-	void SetPos(SimpleMath::Vector3 pos)		{ m_data.pos = pos; }
+	void SetPos(SimpleMath::Vector3 pos)				{ m_data.pos = pos; }
 	void SetMagicCircle(Circle circle)					{ m_magicCircle = circle;}
 	void SetActive(bool flag)							{ m_active = flag; }
 	void SetLine(int line)								{ m_line = line; }
 	void SetPowerUpFlag(bool flag)						{ m_powerUPFlag = flag; }
 	void SetSelectModeFlag(bool flag)					{ m_selectModeFlag = flag;}
-	void SetElement(ELEMENT element)			{ m_element = element; }
-	void SetColor(SimpleMath::Color color)		{ m_color = color;}
+	void SetElement(ELEMENT element)					{ m_element = element; }
+	void SetColor(SimpleMath::Color color)				{ m_color = color;}
 
 private:
+
+	// シルエット描画
+	void SilhouetteRender(DirectX::Model* model,SimpleMath::Matrix matrix);
+
+	// 通常描画
+	void NomalRender(DirectX::Model* model, SimpleMath::Matrix matrix);
+
+	// 半透明描画
+	void TransparentRender(DirectX::Model* model, SimpleMath::Matrix matrix);
+
 
 protected:
 
@@ -156,6 +169,10 @@ protected:
 
 	// 次の効果発動までの時間
 	float m_span;
+
+	// 無敵時間,無敵状態
+	float m_invincibleTime;
+	bool m_invincibleFlag;
 
 	// Y軸回転させるための変数
 	float m_rotateAnimation;

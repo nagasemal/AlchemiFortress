@@ -36,6 +36,8 @@ public:
 
 	void RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture) override;
 
+	void HitEnemy(std::list<EnemyObject>* enemy);
+
 	void LvUp() override;
 
 private:

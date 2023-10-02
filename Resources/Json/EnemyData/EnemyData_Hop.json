@@ -1,0 +1,15 @@
+{
+  "Status": {
+    "ELEMENT":"Normal",
+    "TYPE":"Hop",
+    "MOVETYPE":"ALL",
+    "HP": 4.0,
+    "STR": 4.5,
+    "EXP": 15.0,
+
+    "MOVEING":[
+        {"TYPE":"Standard","TIME":0.0,"DELAY":0.0,"VALUE":1.5},
+        {"TYPE":"Hopping","TIME":0.0,"DELAY":0.0,"VALUE":1.5}
+    ]
+  }
+}

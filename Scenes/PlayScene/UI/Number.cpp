@@ -11,7 +11,8 @@
 Number::Number():
 	m_num(),
 	m_position(),
-	m_rage()
+	m_rage(),
+	m_color(0.0f,0.0f,0.0f,1.0f)
 {
 }
 
@@ -38,8 +39,6 @@ void Number::Render()
 	auto pSB = pSD.GetSpriteBatch();
 	SpriteLoder::GetInstance().GetNumberTexture();
 
-	SimpleMath::Color color(1, 1, 1, 1);
-
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
 	for (int i = MAX_NUM; i >= 0; i--)
@@ -60,7 +59,7 @@ void Number::Render()
 			pSB->Draw(SpriteLoder::GetInstance().GetNumberTexture().Get(),
 				pos,
 				&numRect,
-				color,
+				m_color,
 				0.0f,
 				DirectX::XMFLOAT2(64 / 2, 64 / 2),
 				m_rage);
@@ -90,8 +89,6 @@ void Number::Number_Render(int num, SimpleMath::Vector2 pos)
 	ShareData& pSD = ShareData::GetInstance();
 	auto pSB = pSD.GetSpriteBatch();
 
-	SimpleMath::Color color(1, 1, 1, 1);
-
 	for (int i = MAX_NUM; i >= 0; i--)
 	{
 		// 基数　桁数取得
@@ -110,7 +107,7 @@ void Number::Number_Render(int num, SimpleMath::Vector2 pos)
 			pSB->Draw(SpriteLoder::GetInstance().GetNumberTexture().Get(),
 				render_pos,
 				&numRect,
-				color,
+				m_color,
 				0.0f,
 				DirectX::XMFLOAT2(64 / 2, 64 / 2),
 				m_rage);

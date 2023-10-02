@@ -8,5 +8,8 @@ ENEMY_NOCKDOWN : 特定のエネミーをVALUE分倒してください
 Attacker
 Upper
 Defenser
-Minig
+Mining
 Recovery
+
+初めからマシンがあるタイプ
+{"LV":1,"TYPE":"Attacker","ELEMENT":"Nomal","NUMBER":0}

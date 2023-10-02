@@ -101,7 +101,9 @@ struct Enemys_Spawn
 struct Stage_Data
 {
 	std::vector<Stage_Condition> condition_Machine;			// ステージのクリア条件 (マシン配置条件)
+	std::vector<Stage_Condition> condition_Alchemi;			// ステージのクリア条件 (マシン錬金条件)
 	std::vector<Stage_Condition> condition_Enemy;			// ステージのクリア条件 (エネミー討伐)
+	std::vector<Stage_Condition> condition_BaseLv;			// ステージのクリア条件 (拠点のLV条件)
 	std::vector<Stage_Condition> condition_Time;			// ステージのクリア条件 (生存時間,規定時間)
 
 	std::vector<Enemys_Spawn> enemys_Spawn;					// エネミーの出現情報

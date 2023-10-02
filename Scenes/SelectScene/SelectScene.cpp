@@ -35,6 +35,8 @@ SelectScene::~SelectScene()
 void SelectScene::Initialize()
 {
 
+	m_selectStageNumber = DataManager::GetInstance()->GetStageNum();
+
 	ShareJsonData::GetInstance().LoadingJsonFile_ClearData(m_selectStageNumber);
 	ShareJsonData::GetInstance().LoadingJsonFile_Stage(m_selectStageNumber);
 
@@ -57,7 +59,7 @@ void SelectScene::Initialize()
 	m_uiKeyControl->AddUI(m_nextSceneBox.get());
 
 	m_stageNumber = std::make_unique<Number>(NUMBER_POS, SimpleMath::Vector2{ 2.0f,2.0f});
-
+	m_stageNumber->SetNumber(m_selectStageNumber);
 
 	// ã•”‚É”­¶‚·‚é•‚¢–‹‚Ì‰ŠúÝ’è
 	auto device = ShareData::GetInstance().GetDeviceResources();
@@ -91,7 +93,7 @@ GAME_SCENE SelectScene::Update()
 
 	// ¶‘¤‚Ì–îˆóXVˆ—
 	m_arrowDraw[1]->HitMouse();
-	if (m_arrowDraw[1]->ClickMouse() && m_selectStageNumber < MAX_STAGE)
+	if (m_arrowDraw[1]->ClickMouse() && m_selectStageNumber < DataManager::GetInstance()->GetStageMax())
 	{
 		m_selectStageNumber++;
 		m_changeMachine = false;

@@ -71,6 +71,8 @@ public:
 
 	// モデルのシルエット用
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> GetModelShadowShader()	{ return m_modelShadowShader;}
+	// モデルの半透明描画用
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> GetModelTransparentShader() { return m_modelTransparentShader; }
 
 	void CreateStencilData();
 
@@ -96,5 +98,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_depthStencilState_Nomal;
 
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_modelShadowShader;
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_modelTransparentShader;
 
 };

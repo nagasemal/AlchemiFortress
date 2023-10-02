@@ -45,13 +45,13 @@ public:
 	bool GetHitMouseFlag()											{ return m_hitMouseFlag; }
 	void SetHitMouseFlag(bool flag)									{ m_hitMouseFlag = flag; }
 
-	void SetPosition(SimpleMath::Vector2 pos)				{ m_data.pos = pos; }
+	void SetPosition(SimpleMath::Vector2 pos)						{ m_data.pos = pos; }
 
-	void SetMachineType(MACHINE_TYPE type) { m_selectMachineType = type;}
-	MACHINE_TYPE GetMachineType()			{ return m_selectMachineType;}
+	void SetMachineType(MACHINE_TYPE type)							{ m_selectMachineType = type;}
+	MACHINE_TYPE GetMachineType()									{ return m_selectMachineType;}
 
 	SelectionBox* GetMachineBox()									{ return m_machineBox.get();}
-	SelectionBox* GetManufacturingBox()								{ return m_selectionManufacturing.get(); }
+	SelectionBox* GetManufacturingBox()								{ return m_selectionAlchemi.get(); }
 
 	void SetChangeColorFlag(bool flag)								{ m_changeColorFlag = flag;}
 
@@ -66,11 +66,8 @@ private:
 	// 選択ボックス(マシン)
 	std::unique_ptr<SelectionBox> m_machineBox;
 
-	// 選択ボックス(UI表示用)
-	std::unique_ptr<SelectionBox> m_selectionBox[3];
-
-	// 選択ボックス(製造ボタン用)
-	std::unique_ptr<SelectionBox> m_selectionManufacturing;
+	// 選択ボックス(錬金ボタン用)
+	std::unique_ptr<SelectionBox> m_selectionAlchemi;
 
 	// 必要数表示
 	std::unique_ptr<Number>		  m_numberRender;

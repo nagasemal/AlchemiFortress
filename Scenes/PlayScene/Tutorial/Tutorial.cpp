@@ -22,7 +22,7 @@
 #include "Scenes/SelectScene/MissionRender.h"
 
 #define EXPLANATION_BUTTON		SimpleMath::Vector2(1220.0f,64.0f)
-#define TUTORIAL_EXIT_BUTTON	SimpleMath::Vector2(1100.0f,540.0f)
+#define TUTORIAL_EXIT_BUTTON	SimpleMath::Vector2(1180.0f,380.0f)
 
 #define TUTORIAL_TEXT_POS SimpleMath::Vector2(200.0f,200.0f)
 
@@ -44,13 +44,13 @@ const std::vector<const wchar_t*> Tutorial::FILENAME =
 	{L"Resources/Textures/Explanation/Instructions_1.png"},
 	{L"Resources/Textures/Explanation/Instructions_2.png"},
 	{L"Resources/Textures/Explanation/Instructions_3.png"},
-	{L"Resources/Textures/Explanation/None.png"},
-	{L"Resources/Textures/Explanation/None.png"},
-	{L"Resources/Textures/Explanation/None.png"},
-	{L"Resources/Textures/Explanation/None.png"},
-	{L"Resources/Textures/Explanation/None.png"},
-	{L"Resources/Textures/Explanation/None.png"},
-	{L"Resources/Textures/Explanation/None.png"},
+	{L"Resources/Textures/Explanation/Gauge_1.png"},
+	{L"Resources/Textures/Explanation/Gauge_2.png"},
+	{L"Resources/Textures/Explanation/Gauge_3.png"},
+	{L"Resources/Textures/Explanation/Mission.png"},
+	{L"Resources/Textures/Explanation/Instructions_4.png"},
+	{L"Resources/Textures/Explanation/Instructions_5.png"},
+	{L"Resources/Textures/Explanation/Instructions_6.png"},
 	{L"Resources/Textures/Explanation/None.png"},
 	{L"Resources/Textures/Explanation/None.png"},
 };
@@ -85,7 +85,7 @@ void Tutorial::Initialize(int tutorialNumber)
 
 	m_explanationButton = std::make_unique<SelectionBox>(EXPLANATION_BUTTON, SimpleMath::Vector2(1.0f, 1.0f));
 
-	m_tutorialExitButton = std::make_unique<SelectionBox>(TUTORIAL_EXIT_BUTTON, SimpleMath::Vector2(2.0f, 1.0f));
+	m_tutorialExitButton = std::make_unique<SelectionBox>(TUTORIAL_EXIT_BUTTON, SimpleMath::Vector2(1.0f, 1.0f));
 
 	m_showBox = std::make_unique<DrawBox>(SimpleMath::Vector2(), LINE_RAGE, 5.0f);
 	m_showBox->SetColor(SimpleMath::Color(1.0f, 0.0f, 0.0f, 1.0f));
@@ -98,6 +98,8 @@ void Tutorial::Initialize(int tutorialNumber)
 	m_machineExplanation->Initialize();
 
 	CreateInterfase();
+
+	m_textTexture->LoadTexture(FILENAME[m_selectNumber]);
 }
 
 void Tutorial::Update(AlchemicalMachineManager* machineManager, Gauge* gauge, MissionRender* missionRender, bool stopFlag)
@@ -152,7 +154,7 @@ void Tutorial::Update(AlchemicalMachineManager* machineManager, Gauge* gauge, Mi
 	if (m_tutorialFlag && m_cameraFlag)
 	{
 		// テクスチャ読み込み
-		m_textTexture->LoadTexture(FILENAME[m_selectNumber]);
+
 		// 線を引く位置を決める
 		LinePosSet(machineManager, gauge, missionRender, m_selectNumber);
 
@@ -208,7 +210,7 @@ void Tutorial::Render()
 
 	}
 
-	m_explanationButton->DrawUI(pSL.GetUIIcons().Get(), SpriteCutter(64, 64, SpriteLoder::UIICON_TYPE::EXPRANATION, 0), { 0.0f,0.0f,0.0f,1.0f });
+	m_explanationButton->DrawUI(SpriteLoder::UIICON_TYPE::EXPRANATION);
 }
 
 void Tutorial::Render_Layer2()
@@ -241,7 +243,7 @@ void Tutorial::Render_Layer2()
 		// チュートリアル時に描画する
 		if ( m_tutorialFlag )
 		{
-			m_tutorialExitButton->DrawUI();
+			m_tutorialExitButton->DrawUI(SpriteLoder::UIICON_TYPE::CANCEL);
 		}
 
 	}
@@ -322,7 +324,7 @@ void Tutorial::LinePosSet(AlchemicalMachineManager* machineManager, Gauge* gauge
 	{
 		machineSelect->SetHitMouseFlag(true);
 		linePos = machineSelect->GetManufacturingBox()->GetPos();
-		lineRage = SimpleMath::Vector2(100.0f, 35.0f);
+		lineRage = SimpleMath::Vector2(35.0f, 35.0f);
 
 		break;
 	}

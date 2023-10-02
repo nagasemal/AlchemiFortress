@@ -167,6 +167,12 @@
     <Filter Include="NecromaLib\GameData\Audio">
       <UniqueIdentifier>{27089278-6b6f-4855-b2d8-90fc6bb22092}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\Model">
+      <UniqueIdentifier>{ff34ec62-cc87-4d62-afd3-aaaa45dc8f41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\ResultScene\Camera">
+      <UniqueIdentifier>{c5bbdb0e-77d1-4a7d-91cd-8c4a30d45443}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -457,6 +463,18 @@
     <ClInclude Include="Scenes\Commons\DrawSlider.h">
       <Filter>Scene\Commons</Filter>
     </ClInclude>
+    <ClInclude Include="Scenes\Commons\DrawTimer.h">
+      <Filter>Scene\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Tutorial\Explanation.h">
+      <Filter>Scene\PlayScene\Tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_HoppingMove.h">
+      <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand\MoveList</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\ResultScene\Camera\ResultCamera.h">
+      <Filter>Scene\ResultScene\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -720,6 +738,18 @@
     <ClCompile Include="Scenes\Commons\DrawSlider.cpp">
       <Filter>Scene\Commons</Filter>
     </ClCompile>
+    <ClCompile Include="Scenes\Commons\DrawTimer.cpp">
+      <Filter>Scene\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Tutorial\Explanation.cpp">
+      <Filter>Scene\PlayScene\Tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_HoppingMove.cpp">
+      <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand\MoveList</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\ResultScene\Camera\ResultCamera.cpp">
+      <Filter>Scene\ResultScene\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -806,6 +836,12 @@
     <None Include="Resources\Shader\Button.hlsli">
       <Filter>Shader\Button</Filter>
     </None>
+    <None Include="Resources\Shader\Header.hlsli">
+      <Filter>Shader\Model</Filter>
+    </None>
+    <None Include="Resources\Json\EnemyData\EnemyData_Hop.json">
+      <Filter>Json\EnemyData</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Transition_GS.hlsl">
@@ -883,8 +919,17 @@
     <FxCompile Include="Resources\Shader\ModelShadow_PS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\EnemySilhouettePS.hlsl">
+    <FxCompile Include="Resources\Shader\ModelTransparent_PS.hlsl">
       <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\PixelShader.hlsl">
+      <Filter>Shader\Model</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\GeometryShader.hlsl">
+      <Filter>Shader\Model</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\VertexShader.hlsl">
+      <Filter>Shader\Model</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

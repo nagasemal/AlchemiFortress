@@ -224,6 +224,41 @@ Stage_Data Json::FileLoad_StageData(const std::string filePath)
 		}
 	}
 
+	// 錬金条件を得る
+	picojson::object& stageData_Alchemi = val.get<picojson::object>()["Conditions_Alchemi"].get<picojson::object>();
+	picojson::array& stageCondition_Alchemi = stageData_Alchemi["MACHINE_ALCHEMI"].get<picojson::array>();
+
+	// 要素分回す
+	for (picojson::array::iterator it = stageCondition_Alchemi.begin(); it != stageCondition_Alchemi.end(); it++) {
+
+		Stage_Condition condition;
+		condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
+		condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
+
+		if (condition.condition != "False")
+		{
+			status.condition_Alchemi.push_back(condition);
+		}
+	}
+
+	// 拠点のLVの達成条件を得る
+	picojson::object& stageData_Lv = val.get<picojson::object>()["Conditions_BaseLv"].get<picojson::object>();
+	picojson::array& stageCondition_Lv = stageData_Lv["BASE_LV"].get<picojson::array>();
+
+	// 要素分回す
+	for (picojson::array::iterator it = stageCondition_Lv.begin(); it != stageCondition_Lv.end(); it++) {
+
+		Stage_Condition condition;
+		condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
+		condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
+
+		if (condition.condition != "False")
+		{
+			status.condition_BaseLv.push_back(condition);
+		}
+	}
+
+
 	// stageDataからENEMY_KNOCKDOWNの配列の中身を得る
 	picojson::object& stageData_Enemy = val.get<picojson::object>()["Conditions_Enemy"].get<picojson::object>();
 	picojson::array& stageCondition_Enemy = stageData_Enemy["ENEMY_KNOCKDOWN"].get<picojson::array>();
@@ -614,6 +649,23 @@ void Json::WritingJsonFile_StageData(int number, Stage_Data stageData)
 		}
 	}
 
+	// ミッション内容：錬金
+	{
+		picojson::object& stageData_Alchemi = val.get<picojson::object>()["Conditions_Alchemi"].get<picojson::object>();
+		picojson::array& machine_array = stageData_Alchemi["MACHINE_ALCHEMI"].get<picojson::array>();
+
+		machine_array.clear();
+		for (int i = 0; i < stageData.condition_Alchemi.size(); i++)
+		{
+			picojson::object id;
+			id.insert(std::make_pair("TYPE", stageData.condition_Alchemi[i].condition));
+			id.insert(std::make_pair("VALUE", (double)stageData.condition_Alchemi[i].value));
+
+			machine_array.emplace_back(picojson::value(id));
+		}
+	}
+
+
 	// ミッション内容：エネミー
 	{
 		picojson::object& stageData_enemy = val.get<picojson::object>()["Conditions_Enemy"].get<picojson::object>();
@@ -641,6 +693,21 @@ void Json::WritingJsonFile_StageData(int number, Stage_Data stageData)
 			id.insert(std::make_pair("VALUE", (double)stageData.condition_Time[i].value));
 
 			time_array.emplace_back(picojson::value(id));
+		}
+	}
+
+	// ミッション内容：拠点LV
+	{
+		picojson::object& stageData_BaseLv = val.get<picojson::object>()["Conditions_BaseLv"].get<picojson::object>();
+		picojson::array& BaseLv_array = stageData_BaseLv["BASE_LV"].get<picojson::array>();
+		BaseLv_array.clear();
+		for (int i = 0; i < stageData.condition_BaseLv.size(); i++)
+		{
+			picojson::object id;
+			id.insert(std::make_pair("TYPE", stageData.condition_BaseLv[i].condition));
+			id.insert(std::make_pair("VALUE", (double)stageData.condition_BaseLv[i].value));
+
+			BaseLv_array.emplace_back(picojson::value(id));
 		}
 	}
 
@@ -721,7 +788,6 @@ void Json::WritingJsonFile_StageData(int number, Stage_Data stageData)
 			id.insert(std::make_pair("SPAWN_Z", (double)stageData.crystalPos[i].y));
 
 			spawnCrystal_array.emplace_back(picojson::value(id));
-
 		}
 	}
 
@@ -734,7 +800,7 @@ void Json::InitializationClearStageData()
 {
 	// numberに応じたファイルパスを読み込む
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 12; i++)
 	{
 
 		std::ostringstream oss;

@@ -14,11 +14,13 @@ public:
 	};
 
 public:
-	Veil();
+	Veil(int ruleType);
 	~Veil();
 
 	void Update() override;
 	void Render() override;
+
+	bool GetAnimationFin() { return m_animData[1].MaxCheck(); }
 
 private:
 
@@ -26,5 +28,7 @@ private:
 
 	// アニメーション用の時間遷移を行うクラス
 	AnimationData m_animData[2];
+
+	int m_rule;
 
 };

@@ -5,6 +5,8 @@
 #include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/ShareJsonData.h"
 
+#include "NecromaLib/Singleton/DeltaTime.h"
+
 AM_Defenser::AM_Defenser():
 	m_isBreak()
 {
@@ -104,9 +106,16 @@ void AM_Defenser::EnemyHit(std::list<EnemyObject>* enemys)
 			it->HitMachine(hitMachine);
 			it->Bouns();
 
-			// ‘Ì—ÍŒ¸­
-			m_hp -= (int)it->GetPower();
 
+			if (!m_invincibleFlag)
+			{
+				// ‘Ì—ÍŒ¸­
+				m_hp -= (int)it->GetPower();
+				// Ž©g‚ÌHP‚Ì3”{‚ÌUŒ‚‚ð—^‚¦‚é
+				it->SetHp(it->GetHp() - m_lv);
+
+				m_invincibleFlag = true;
+			}
 		}
 	}
 }

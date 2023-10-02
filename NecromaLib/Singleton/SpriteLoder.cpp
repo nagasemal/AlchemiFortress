@@ -11,12 +11,14 @@ void SpriteLoder::Loading()
 {
 
 	// 選択ボックスのテクスチャ
-	DirectX::CreateWICTextureFromFile(
-		ShareData::GetInstance().GetDevice(),
-		L"Resources/Textures/log.png",
-		nullptr,
-		m_selectBoxTexture.ReleaseAndGetAddressOf()
-	);
+	LoadingPngFile(L"Resources/Textures/log.png", m_selectBoxTexture);
+
+	// 錬金用選択ボタンの取得
+	LoadingPngFile(L"Resources/Textures/AlchemiButton.png",m_alchemiSelectTexture);
+
+	// マウステクスチャの取得
+	LoadingPngFile(L"Resources/Textures/Mouse.png", m_mouseTexture);
+
 
 	// テクスチャ
 	DirectX::CreateWICTextureFromFile(
@@ -66,6 +68,11 @@ void SpriteLoder::Loading()
 		m_missionTexture.ReleaseAndGetAddressOf()
 	);
 
+	// リザルトにて描画する文字テクスチャ
+	LoadingPngFile(L"Resources/Textures/Result_Text.png", m_resultTextTexture);
+
+	LoadingPngFile(L"Resources/Textures/SuccessFailureText.png", m_stageClearTextTexture);
+
 	// ラベルテクスチャ
 	DirectX::CreateWICTextureFromFile(
 		ShareData::GetInstance().GetDevice(),
@@ -89,6 +96,8 @@ void SpriteLoder::Loading()
 		nullptr,
 		m_titleLogo.ReleaseAndGetAddressOf()
 	);
+
+	LoadingPngFile(L"Resources/Textures/Explanation_Text.png", m_explanationTextTexture);
 
 	// UIアイコンテクスチャ
 	DirectX::CreateWICTextureFromFile(
@@ -116,6 +125,8 @@ void SpriteLoder::Loading()
 
 	LoadingPngFile(L"Resources/Textures/Rule/Right_Transition.png", m_transition[0]);
 	LoadingPngFile(L"Resources/Textures/Rule/UP_Transition.png", m_transition[1]);
+	LoadingPngFile(L"Resources/Textures/Rule/109.png", m_transition[2]);
+	LoadingPngFile(L"Resources/Textures/Rule/156.png", m_transition[3]);
 
 	LoadingPngFile(L"Resources/Textures/TitleText.png", m_pleaseMouseButtonText);
 

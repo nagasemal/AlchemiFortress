@@ -46,9 +46,9 @@ void EnemyObject::Update()
 	m_aliveTimer += deltaTime;
 
 	// 拡縮アニメーション
-	m_data.rage.y = Easing::EaseInCirc(0.25f, 0.35f, sinf(m_aliveTimer));
-	m_data.rage.x = Easing::EaseInCirc(0.25f, 0.35f, cosf(m_aliveTimer));
-	m_data.rage.z = Easing::EaseInCirc(0.25f, 0.35f, cosf(m_aliveTimer));
+	m_data.rage.y = Easing::EaseInCirc(0.25f, 0.30f, sinf(m_aliveTimer));
+	m_data.rage.x = Easing::EaseInCirc(0.25f, 0.30f, cosf(m_aliveTimer));
+	m_data.rage.z = Easing::EaseInCirc(0.25f, 0.30f, cosf(m_aliveTimer));
 
 	// 重力計算
 	m_data.pos.y -= GRAVITY;
@@ -154,9 +154,9 @@ void EnemyObject::Bouns()
 
 void EnemyObject::SetEnemyData(Enemy_Data data)
 {
-	m_hp		= data.hp;
-	m_exp		= data.exp;
-	m_power		= data.power;
+	m_hp		= data.hp		* m_lv;
+	m_exp		= data.exp		* m_lv;
+	m_power		= data.power	* m_lv;
 	m_enemyType = data.type;
 	m_moveType  = data.moveType;
 

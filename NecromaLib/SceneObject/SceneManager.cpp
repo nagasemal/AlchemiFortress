@@ -68,7 +68,7 @@ void SceneManager::Update(const DX::StepTimer& timer)
 	// 次のシーンが設定されていたらシーン切り替え
 	if (m_NextScene != GAME_SCENE::NONE)
 	{
-		//  一度だけフェードインのフラグを立てて、それ以降、フェードインならば
+		//  一度だけフェードインのフラグを立ててそれ以降、フェードインならば
 		//　シーン遷移は保留とする
 		if (!m_Fade->ProcessCheckFadeNow())	m_Fade->StartFadeIn();
 		if (m_Fade->ProcessCheckFadeIn())	return;

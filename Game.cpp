@@ -166,15 +166,15 @@ void Game::Render()
     // TODO: Add your rendering code here.
     context;
 
-    /*===[ デバッグ文字描画 ]===*/
-    std::wostringstream oss;
+    ///*===[ デバッグ文字描画 ]===*/
+    //std::wostringstream oss;
 
-    oss << "fps:" << m_timer.GetFramesPerSecond();
+    //oss << "fps:" << m_timer.GetFramesPerSecond();
 
-    m_debugFont->AddString(oss.str().c_str(), SimpleMath::Vector2(0.f, 0.f));
+    //m_debugFont->AddString(oss.str().c_str(), SimpleMath::Vector2(0.f, 0.f));
 
     m_SceneManager.get()->Render();
-    m_debugFont->Render(m_commonStates.get());
+    //m_debugFont->Render(m_commonStates.get());
 
     m_deviceResources->PIXEndEvent();
 
@@ -274,6 +274,7 @@ void Game::CreateDeviceDependentResources()
 
     ShareData* pSD = &ShareData::GetInstance();
 
+    // シングルトンクラスに渡し、二度目以降の生成をしなくても良いようにする
     pSD->SetDebugFont(m_debugFont.get());
     pSD->SetCommonStates(m_commonStates.get());
     pSD->SetDeviceResources(m_deviceResources.get()); 

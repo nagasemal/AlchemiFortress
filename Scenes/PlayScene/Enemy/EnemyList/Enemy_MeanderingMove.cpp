@@ -32,8 +32,8 @@ void Enemy_MeanderingMove::Execute()
 	// ‘¬“x‚ÌŒvŽZ
 	SimpleMath::Vector3 lengthVec = SimpleMath::Vector3();
 
-	lengthVec.x = /*cosf(m_time) / m_param.value*/ Map(cosf(m_time), -1.0f, 1.0f, 0.0f, 1.0f);
-	lengthVec.z = /*sinf(m_time) / m_param.value*/ Map(sinf(m_time), -1.0f, 1.0f, 0.0f, 1.0f);
+	lengthVec.x = cosf(m_time) / m_param.value;//Map(cosf(m_time), -1.0f, 1.0f, 0.0f, 1.0f);
+	lengthVec.z = sinf(m_time) / m_param.value;//Map(sinf(m_time), -1.0f, 1.0f, 0.0f, 1.0f);
 	lengthVec.Normalize();
 
 	m_enemyPtr->SetLengthVec(m_enemyPtr->GetLengthVec() + lengthVec * m_param.value);

@@ -29,6 +29,12 @@ public:
 	// エネミー系ののミッション内容を描画
 	void Render_EnemyMission(std::vector<Stage_Condition> stageData);
 
+	// 錬金系のミッション内容を描画
+	void Render_AlchemiMission(std::vector<Stage_Condition> stageData);
+
+	// 拠点Lvのミッション内容を描画
+	void Render_BaseLvMission(std::vector<Stage_Condition> stageData);
+
 	// タイマー系のミッション内容を描画
 	void Render_TimerMission(std::vector<Stage_Condition> stageData);
 

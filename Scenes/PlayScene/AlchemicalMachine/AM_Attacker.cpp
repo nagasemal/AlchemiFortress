@@ -54,6 +54,7 @@ void AM_Attacker::Update()
 
 	// 効果範囲を決定する
 	m_magicCircle.r = (float)pSJD.GetMachineData(m_machineID).effect_rage + (float)(m_lv / 2.0f);
+
 }
 
 void AM_Attacker::SelectUpdate()
@@ -117,10 +118,12 @@ bool AM_Attacker::BulletRequest(std::list<EnemyObject>* enemys)
 	for (std::list<EnemyObject>::iterator it = enemys->begin(); it != enemys->end(); it++)
 	{
 		// 自機とエネミーの当たり判定
-		if (CircleCollider(it->GetCircle(), GetCircle()))
+		if (CircleCollider(it->GetCircle(), GetCircle()) && !m_invincibleFlag)
 		{
-			// ダメージを毎F受ける
+			// ダメージを受ける
 			m_hp -= (int)it->GetPower();
+
+			m_invincibleFlag = true;
 		}
 
 		if (CircleCollider(it->GetCircle(), m_magicCircle))

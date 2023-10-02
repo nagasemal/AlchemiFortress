@@ -25,26 +25,24 @@ enum class GAME_SCENE : int
 
 class SceneObj
 {
-protected:
-
 public:
 
-	virtual ~SceneObj() = default;
+	virtual ~SceneObj()				= default;
 
 	// ‰Šú‰»
-	virtual void Initialize() = 0;
+	virtual void Initialize()		= 0;
 
 	// XV
-	virtual GAME_SCENE Update() = 0;
+	virtual GAME_SCENE Update()		= 0;
 
 	// •`‰æ
-	virtual void Draw() = 0;
+	virtual void Draw()				= 0;
 
 	// UIŒn•`‰æ
-	virtual void DrawUI() = 0;
+	virtual void DrawUI()			= 0;
 
 	// I—¹ˆ—
-	virtual void Finalize() = 0;
+	virtual void Finalize()			= 0;
 
 private:
 
