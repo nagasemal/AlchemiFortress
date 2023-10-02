@@ -10,7 +10,7 @@
 
 #pragma once
 #include "NecromaLib/GameData/GameObject3D.h"
-#include "PrimitiveBatch.h"
+#include "NecromaLib/GameData/Animation.h"
 
 class MousePointer : public GameObjct3D
 {
@@ -27,10 +27,14 @@ public:
 	// 描画
 	void Draw()			override;
 
+	void ModelDraw(DirectX::Model* model);
+
 	// 終了処理
 	void Finalize()		override;
 
 public:
+
+	void HitMachine(SimpleMath::Vector3 pos);
 
 	// オブジェクトを動かす際に動く処理
 	void ObjectDragMode();
@@ -43,16 +47,15 @@ public:
 
 private:
 
-	// 入力レイアウト 
-	Microsoft::WRL::ComPtr<ID3D11InputLayout>			m_InputLayout;
+	//// 入力レイアウト 
+	//Microsoft::WRL::ComPtr<ID3D11InputLayout>			m_InputLayout;
 
-	// テクスチャハンドル 
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	m_Texture;
+	//// テクスチャハンドル 
+	//Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	m_Texture;
 
-	// エフェクト 
-	std::unique_ptr<DirectX::AlphaTestEffect>			m_BatchEffect;
+	//// エフェクト 
+	//std::unique_ptr<DirectX::AlphaTestEffect>			m_BatchEffect;
 
-	// プリミティブバッチ 
-	std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionTexture>> m_Batch;
+	std::unique_ptr<DirectX::Model>				m_mouseCursorModel;
 
 };

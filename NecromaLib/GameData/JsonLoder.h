@@ -42,10 +42,10 @@ struct Machine_Data
 
 struct Enemy_MoveData
 {
-	std::string moveName;
-	float delay;
-	float time;
-	float value;
+	std::string moveName = "Standerd";
+	float delay = 0.0f;
+	float time = 0.0f;
+	float value = 0.0f;
 };
 
 struct Enemy_Data
@@ -70,14 +70,14 @@ struct Stage_Condition
 
 struct Stage_Resource
 {
-	int mp;
-	int crystal;
-	int lv;
-	int attacker;
-	int upper;
-	int deffencer;
-	int mining;
-	int recovery;
+	int mp  = 400;
+	int crystal = 215;
+	int lv = 1;
+	int attacker = 0;
+	int upper = 0;
+	int deffencer = 0;
+	int mining = 0;
+	int recovery = 0;
 };
 
 // ステージをクリアしたマシンの情報を格納
@@ -113,7 +113,7 @@ struct Stage_Data
 
 	std::vector<SimpleMath::Vector2> crystalPos;			// クリスタルの番号
 
-	int tutorial;											// チュートリアル番号
+	int tutorial = 0;											// チュートリアル番号
 	
 };
 

@@ -38,8 +38,6 @@ void MissionManager::Initialize()
 
 	// デバイスと画面サイズの確保
 	auto device = ShareData::GetInstance().GetDeviceResources();
-	int width = device->GetOutputSize().right;
-	int height = device->GetOutputSize().bottom;
 
 	auto pSJD = &ShareJsonData::GetInstance();
 
@@ -85,9 +83,9 @@ void MissionManager::Update(AlchemicalMachineManager* pAlchemicalManager, EnemyM
 
 	m_timer += pDeltaT->GetDeltaTime();
 
-	m_timeRender->Update((int)m_timer);
+	m_timeRender->Update(m_timer);
 
-	m_baseHP = pFieldManager->GetPlayerBase()->GetHP();
+	m_baseHP = (int)pFieldManager->GetPlayerBase()->GetHP();
 
 	// None以外ならば通す マシンが設置された際の処理
 	if (pAlchemicalManager->SpawnMachineNotification() != MACHINE_TYPE::NONE) 							MachineMission(pAlchemicalManager);

@@ -278,6 +278,8 @@ void AlchemicalMachineManager::Update(
 	m_magicCircle_Field->CreateMagicCircle(
 		SimpleMath::Vector3{ 0,MAGICCIRCLE_HEIGHT,0 },
 		pPlayerBase->GetBaseLv() * CIRCLE_LINE_DISTANCE);
+
+	if(!m_rotationStop) m_magicCircle_Field->CreateWorld();
 }
 
 void AlchemicalMachineManager::Render()
@@ -313,7 +315,6 @@ void AlchemicalMachineManager::Render()
 		it->get()->Render(m_testBox.get());
 	}
 
-	m_magicCircle_Field->CreateWorld();
 	m_magicCircle_Field->Render(0);
 
 }
@@ -380,6 +381,11 @@ void AlchemicalMachineManager::Finalize()
 	m_AMFilter.reset();
 	m_testBox.reset();
 
+}
+
+Model* AlchemicalMachineManager::GetSelectModel()
+{
+	return m_AMFilter->HandOverAMModel(m_selectManager->GetSelectMachineType());
 }
 
 void AlchemicalMachineManager::Update_None(int baseLv)

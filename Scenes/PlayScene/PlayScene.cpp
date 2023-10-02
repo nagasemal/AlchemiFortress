@@ -189,6 +189,8 @@ void PlayScene::Draw()
 	m_fieldManager      ->Draw();
 	m_mousePointer		->Draw();
 
+	m_mousePointer		->ModelDraw(m_AM_Manager->GetSelectModel());
+
 
 	//D3D11_DEPTH_STENCIL_DESC desc =
 	//{
@@ -240,9 +242,6 @@ void PlayScene::Finalize()
 	m_enemyManager.reset();
 
 	m_moveCamera.reset();
-
-	ShareData& pSD = ShareData::GetInstance();
-
 
 }
 

@@ -4,8 +4,8 @@
 #include <WICTextureLoader.h> 
 #include "NecromaLib/Singleton/InputSupport.h"
 
-#define POINTER_RAGE			SimpleMath::Vector3(0.5f, 0.1f, 0.5f)
-#define POINTER_RAGE_BIG		SimpleMath::Vector3(1.5f, 0.1f, 1.5f)
+#define POINTER_RAGE			SimpleMath::Vector3(0.5f, 0.5f, 0.5f)
+#define POINTER_RAGE_BIG		SimpleMath::Vector3(2.5f, 2.5f, 2.5f)
 
 MousePointer::MousePointer()
 {
@@ -17,41 +17,15 @@ MousePointer::~MousePointer()
 
 void MousePointer::Initialize()
 {
-	ShareData& pSD = ShareData::GetInstance();
-
-	auto device = pSD.GetDevice();
-	auto context = pSD.GetContext();
-
-	// エフェクトの作成  (透明度適応)
-	m_BatchEffect = std::make_unique<AlphaTestEffect>(device);
-	m_BatchEffect->SetAlphaFunction(D3D11_COMPARISON_EQUAL);
-	m_BatchEffect->SetReferenceAlpha(255);
-
-	// 入力レイアウト生成 
-	void const* shaderByteCode;
-	// ↑結局GPUになんかしら渡さないといけない
-
-	size_t byteCodeLength;
-	m_BatchEffect->GetVertexShaderBytecode(&shaderByteCode, &byteCodeLength);
-	device->CreateInputLayout(
-		VertexPositionTexture::InputElements,
-		VertexPositionTexture::InputElementCount,
-		shaderByteCode, byteCodeLength, m_InputLayout.GetAddressOf()
-	);
-
-	// テクスチャのロード 
-	CreateWICTextureFromFile(
-		device,
-		L"Resources/Textures/Fade.png",
-		nullptr,
-		m_Texture.GetAddressOf()
-	);
-
-	m_Batch = std::make_unique<PrimitiveBatch<VertexPositionTexture>>(context);
-
 	//　初期化　　オブジェクト配置時は当たり判定を大きくする
 	m_data.pos = SimpleMath::Vector3::Zero;
 	m_data.rage = POINTER_RAGE;
+
+	ShareData& pSD = ShareData::GetInstance();
+	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
+	fx->SetDirectory(L"Resources/Models");
+
+	m_mouseCursorModel = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/MouseCursor.cmo", *fx);
 
 }
 
@@ -60,64 +34,56 @@ void MousePointer::Update()
 	InputSupport& pINP = InputSupport::GetInstance();
 
 	m_data.pos = pINP.GetMousePosWolrd();
-	m_data.pos.y = -1.f;
+	m_data.pos.y = -1.0f;
+	m_data.rage = POINTER_RAGE;
 
 }
 
 void MousePointer::Draw()
 {
+	ModelDraw(m_mouseCursorModel.get());
+}
+
+void MousePointer::ModelDraw(DirectX::Model* model)
+{
+
+	// モデル情報(位置,大きさ)
+	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
+	modelData = SimpleMath::Matrix::CreateScale(POINTER_RAGE);
+	modelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos);
 
 	ShareData& pSD = ShareData::GetInstance();
 
-	//auto device = pSD.GetDevice();
-	auto context = pSD.GetContext();
-	auto states = pSD.GetCommonStates();
+	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false, [&]
+		{
+			//画像用サンプラーの登録
+			ID3D11SamplerState* sampler[1] = { pSD.GetCommonStates()->LinearWrap() };
+			pSD.GetContext()->PSSetSamplers(0, 1, sampler);
+			//半透明描画指定
+			ID3D11BlendState* blendstate = pSD.GetCommonStates()->NonPremultiplied();
+			// 透明判定処理
+			pSD.GetContext()->OMSetBlendState(blendstate, nullptr, 0xFFFFFFFF);
 
-	// 頂点情報（板ポリゴンの頂点） 
-	float rage = 1.f;
+			// 深度ステンシルステートの設定
+			pSD.GetContext()->OMSetDepthStencilState(pSD.GetCommonStates()->DepthNone(), 0);
 
-	VertexPositionTexture vertex[4] =
-	{
-		VertexPositionTexture(SimpleMath::Vector3(m_data.pos.x + m_data.rage.x, m_data.pos.y, m_data.pos.z + m_data.rage.z),	SimpleMath::Vector2(-rage,	-rage)),
-		VertexPositionTexture(SimpleMath::Vector3(m_data.pos.x - m_data.rage.x, m_data.pos.y, m_data.pos.z + m_data.rage.z),	SimpleMath::Vector2(rage,	-rage)),
-		VertexPositionTexture(SimpleMath::Vector3(m_data.pos.x - m_data.rage.x, m_data.pos.y, m_data.pos.z - m_data.rage.z),	SimpleMath::Vector2(rage,	rage)),
-		VertexPositionTexture(SimpleMath::Vector3(m_data.pos.x + m_data.rage.x, m_data.pos.y, m_data.pos.z - m_data.rage.z),	SimpleMath::Vector2(-rage,	rage)),
-	};
+			// カリングは左周り
+			pSD.GetContext()->RSSetState(pSD.GetCommonStates()->CullNone());
 
-	// テクスチャサンプラーの設定（クランプテクスチャアドレッシングモード） 
-	ID3D11SamplerState* samplers[1] = { states->LinearWrap() };
-	context->PSSetSamplers(0, 1, samplers);
+			// ピクセルシェーダーに適応
+			pSD.GetContext()->PSSetShader(pSD.GetModelTransparentShader().Get(), nullptr, 0);
+		});
 
-	// 深度バッファに書き込み参照する  Noneはなんかおもろい挙動しだす
-	context->OMSetDepthStencilState(states->DepthDefault(), 0);
-
-	// カリングは左周り（反時計回り） ポリゴンの向きを決めている(裏面カリングも可能)(両面カリングも可能)(プレイヤー)
-	context->RSSetState(states->CullCounterClockwise());
-
-	// 不透明のみ描画する設定 
-	m_BatchEffect->SetAlphaFunction(D3D11_COMPARISON_NOT_EQUAL);
-	m_BatchEffect->SetReferenceAlpha(0);
-	m_BatchEffect->SetWorld(SimpleMath::Matrix::Identity);
-	m_BatchEffect->SetView(pSD.GetView());
-	m_BatchEffect->SetProjection(pSD.GetProjection());
-	m_BatchEffect->SetTexture(m_Texture.Get());
-	m_BatchEffect->Apply(context);
-	context->IASetInputLayout(m_InputLayout.Get());
-
-	// 半透明部分を描画 
-	m_Batch->Begin();
-
-	m_Batch->DrawQuad(vertex[0], vertex[1], vertex[2], vertex[3]);
-
-	m_Batch->End();
 }
 
 void MousePointer::Finalize()
 {
-	m_Texture.Reset();
-	m_InputLayout.Reset();
-	m_Batch.reset();
-	m_BatchEffect.reset();
+}
+
+void MousePointer::HitMachine(SimpleMath::Vector3 pos)
+{
+	m_data.pos = pos;
+	m_data.rage = POINTER_RAGE_BIG;
 }
 
 void MousePointer::ObjectDragMode()

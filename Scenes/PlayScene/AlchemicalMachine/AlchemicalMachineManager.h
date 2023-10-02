@@ -58,6 +58,8 @@ public:
 	const std::unique_ptr<MachineSelectManager>* GetMachineSelect()			const { return &m_selectManager; }
 	const std::unique_ptr<MachineExplanation>* GetMachineExplanation()		const { return &m_machineExplanation;}
 
+	Model* GetSelectModel();
+
 	// マシンが設置されたことを知らせるフラグ
 	const MACHINE_TYPE SpawnMachineNotification() const { return m_spawnMachine; }
 

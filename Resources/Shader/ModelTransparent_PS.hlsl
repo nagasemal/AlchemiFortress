@@ -1,4 +1,4 @@
 float4 main() : SV_TARGET
 {
-	return float4(0.5f, 0.5f, 0.5f, 0.3f);
+	return float4(0.8f, 0.8f, 0.8f, 0.7f);
 }

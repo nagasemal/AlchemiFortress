@@ -246,8 +246,8 @@ void EditScene::WritingFile()
 
         pDataM->Initialize();
 
-        stageCondition.resource.crystal = m_resource_Crystal->GetValue() * (float)pDataM->GetNowCrystal_MAX();
-        stageCondition.resource.mp      = m_resource_MP->GetValue()      * (float)pDataM->GetNowMP_MAX();
+        stageCondition.resource.crystal = (int)(m_resource_Crystal->GetValue() * (float)pDataM->GetNowCrystal_MAX());
+        stageCondition.resource.mp      = (int)(m_resource_MP->GetValue()      * (float)pDataM->GetNowMP_MAX());
 
         // ‘‚«‚İ
         Json::WritingJsonFile_StageData(m_stageNum, stageCondition);

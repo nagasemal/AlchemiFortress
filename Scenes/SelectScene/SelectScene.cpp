@@ -60,11 +60,6 @@ void SelectScene::Initialize()
 
 	m_stageNumber = std::make_unique<Number>(NUMBER_POS, SimpleMath::Vector2{ 2.0f,2.0f});
 	m_stageNumber->SetNumber(m_selectStageNumber);
-
-	// ã•”‚É”­¶‚·‚é•‚¢–‹‚Ì‰ŠúÝ’è
-	auto device = ShareData::GetInstance().GetDeviceResources();
-	int width = device->GetOutputSize().right;
-	int height = device->GetOutputSize().bottom;
 }
 
 GAME_SCENE SelectScene::Update()

@@ -129,8 +129,11 @@ void AlchemicalMachineObject::HitToObject(MousePointer* pMP)
 	mouseWolrdPos.r = (pMP->GetRage().x + pMP->GetRage().z) / 2;
 
 	// オブジェクトとマウスポインターの当たり判定
-	if (CircleCollider(GetCircle(), mouseWolrdPos)) m_hitMouseFlag = true;
-
+	if (CircleCollider(GetCircle(), mouseWolrdPos))
+	{
+		pMP->HitMachine(m_data.pos);
+		m_hitMouseFlag = true;
+	}
 }
 
 bool AlchemicalMachineObject::OnCollisionEnter_MagicCircle(GameObjct3D* object)
@@ -300,7 +303,7 @@ void AlchemicalMachineObject::SilhouetteRender(DirectX::Model* model, SimpleMath
 			pSD.GetContext()->OMSetBlendState(blendstate, nullptr, 0xFFFFFFFF);
 
 			// 深度ステンシルステートの設定
-			pSD.GetContext()->OMSetDepthStencilState(pSD.GetStencilShadow().Get(), 1);
+			pSD.GetContext()->OMSetDepthStencilState(pSD.GetCommonStates()->DepthReadReverseZ(), 1);
 
 			// カリングは左周り
 			pSD.GetContext()->RSSetState(pSD.GetCommonStates()->CullNone());
