@@ -17,8 +17,8 @@ public:
 	Veil(int ruleType);
 	~Veil();
 
-	void Update() override;
-	void Render() override;
+	void Update();
+	void Render();
 
 	bool GetAnimationFin() { return m_animData[1].MaxCheck(); }
 

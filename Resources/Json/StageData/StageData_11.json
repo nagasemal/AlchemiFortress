@@ -85,8 +85,10 @@
     "MINING": 0,
     "MP": 200,
     "RECOVERY": 0,
-    "TUTORIAL": 0,
     "UPPER": 0
-  }
+  },
+    "TUTORIAL":[
+  	{"NUMBER":0}
+  ]
 }
 

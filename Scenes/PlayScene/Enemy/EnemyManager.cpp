@@ -14,7 +14,8 @@ EnemyManager::EnemyManager() :
 	m_nextEnemyTime(),
 	m_knokDownEnemyType(ENEMY_TYPE::ENMEY_NONE),
 	m_knokDownFlag(0),
-	m_enemyNums()
+	m_enemyNums(),
+	m_falmeTotalEnemyExp()
 {
 }
 
@@ -50,7 +51,8 @@ void EnemyManager::Initialize()
 
 void EnemyManager::Update(SimpleMath::Vector3 basePos)
 {
-
+	// 常にリセットをかける
+	m_falmeTotalEnemyExp = 0;
 	basePos;
 
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
@@ -113,9 +115,13 @@ void EnemyManager::Update(SimpleMath::Vector3 basePos)
 			m_knokDownFlag++;
 			m_knokDownEnemyType = it->GetEnemyType();
 
+			// EXPを獲得出来るようにする
+			m_falmeTotalEnemyExp += it->GetEXP();
+
 			m_particle_delete->OnShot(it->GetPos(), true);
 			it->Finalize();
 			it = m_enemyObject->erase(it);
+
 			if (it == m_enemyObject->end()) break;
 		}
 
@@ -166,13 +172,18 @@ EnemyObject EnemyManager::GetEnemyStatus(ENEMY_TYPE type,int spawnNumber)
 {
 	ShareJsonData& pSJD = ShareJsonData::GetInstance();
 
-	//int remoteness = (int)((float)pSJD.GetStageData().enemys_Spawn[spawnNumber].remoteness * 1.5f);
-	//float direction = (float)pSJD.GetStageData().enemys_Spawn[spawnNumber].direction;
+	Enemys_Spawn enemySpawn = pSJD.GetStageData().enemys_Spawn[spawnNumber];
 
-	EnemyObject enemy(type, pSJD.GetStageData().enemys_Spawn[spawnNumber].spawnPos, 1);
+	// エネミーオブジェクトを生成
+	EnemyObject enemy(type, enemySpawn.spawnPos, 1);
+
+	// エネミーのパラメータを生成
 	Enemy_Data enemyData = pSJD.GetEnemyData(pSJD.GetStageData().enemys_Spawn[spawnNumber].type);
 
+	// 初期化処理
 	enemy.Initialize();
+
+	// エネミーのパラメータを入れる
 	enemy.SetEnemyData(enemyData);
 
 	return enemy;
@@ -215,4 +226,9 @@ void EnemyManager::HitAMObejct(AlchemicalMachineObject* alchemicalMachines)
 		it->SetStopFlag(CircleCollider(it->GetCircle(), alchemicalMachines->GetCircle()));
 	}
 
+}
+
+int EnemyManager::GetNockDownEnemyExp()
+{
+	return m_falmeTotalEnemyExp;
 }

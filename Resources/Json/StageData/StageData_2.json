@@ -63,12 +63,14 @@
     "ATTACKER": 0,
     "CRYSTAL": 0,
     "DEFFENCER": 4,
-    "LV": 0,
+    "LV": 1,
     "MINING": 0,
     "MP": 400,
     "RECOVERY": 0,
-    "TUTORIAL": 2,
     "UPPER": 0
-  }
+  },
+    "TUTORIAL":[
+  	{"NUMBER":2}
+  ]
 }
 

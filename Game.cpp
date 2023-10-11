@@ -10,6 +10,7 @@
 #include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/ShareJsonData.h"
 #include "NecromaLib/Singleton/SoundData.h"
+#include "NecromaLib/Singleton/ModelShader.h"
 
 #include <WICTextureLoader.h>
 
@@ -35,10 +36,11 @@ Game::Game() noexcept(false)
     SpriteLoder::Create();
     ShareJsonData::Create();
     SoundData::Create();
+    ModelShader::Create();
 }
 Game::~Game()
 {
-
+    // メモリの解放をする
     DeltaTime::Destroy();
     InputSupport::Destroy();
     ShareData::Destroy();
@@ -51,6 +53,8 @@ Game::~Game()
     ShareJsonData::Destroy();
 
     SoundData::Destroy();
+
+    ModelShader::Destroy();
 
     m_SceneManager.get()->Finalize();
     m_SceneManager.reset();
@@ -68,25 +72,18 @@ void Game::Initialize(HWND window, int width, int height)
     m_deviceResources->CreateWindowSizeDependentResources();
     CreateWindowSizeDependentResources();
 
+    // 初期設定
     SpriteLoder& pSL = SpriteLoder::GetInstance();
     pSL.Loading();
+
+    ModelShader& pMS = ModelShader::GetInstance();
+    pMS.CreateModelShader();
 
     // TODO: Change the timer settings if you want something other than the default variable timestep mode.
     // e.g. for 60 FPS fixed timestep update logic, call:
     
     m_timer.SetFixedTimeStep(true);
     m_timer.SetTargetElapsedSeconds(1.0 / 60);
-
-    // オーディオエンジンの作成
-    AUDIO_ENGINE_FLAGS eflags = AudioEngine_Default;
-#ifdef _DEBUG
-    eflags |= AudioEngine_Debug;
-#endif
-    m_audioEngine = std::make_unique<AudioEngine>(eflags);
-
-    SoundData& pSound = SoundData::GetInstance();
-
-    pSound.SoundLoad(m_audioEngine.get());
 
 }
 
@@ -111,8 +108,6 @@ void Game::Update(DX::StepTimer const& timer)
     float elapsedTime = float(timer.GetElapsedSeconds());
     pDeltaT->SetDeltaTime(elapsedTime);
 
-    m_SceneManager.get()->Update(timer);
-
     //===[ 更新処理 ]===//
         //->　キーボード
     auto keyboardState = Keyboard::Get().GetState();
@@ -136,6 +131,8 @@ void Game::Update(DX::StepTimer const& timer)
         }
     }
 
+    // シーンマネージャーの更新
+    m_SceneManager.get()->Update(timer);
 
 }
 #pragma endregion
@@ -281,14 +278,24 @@ void Game::CreateDeviceDependentResources()
     pSD->SetSpriteBatch(m_SpriteBatch.get());
     pSD->SetEffectFactory(m_EffectFactory.get());
 
+    mCamera = std::make_unique<Camera>();
+    pSD->SetCamera(mCamera.get());
+
+    // オーディオエンジンの作成
+    AUDIO_ENGINE_FLAGS eflags = AudioEngine_Default;
+#ifdef _DEBUG
+    eflags |= AudioEngine_Debug;
+#endif
+    m_audioEngine = std::make_unique<AudioEngine>(eflags);
+
+    SoundData& pSound = SoundData::GetInstance();
+    pSound.SoundLoad(m_audioEngine.get());
+
+
     m_SceneManager = std::make_unique<SceneManager>();
     m_SceneManager.get()->Initialize();
 
-    mCamera = std::make_unique<Camera>();
-
-    pSD->SetCamera(mCamera.get());
-
-    pSD->CreateStencilData();
+    //pSD->CreateStencilData();
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.

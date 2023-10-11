@@ -2,6 +2,7 @@
 
 #include "NecromaLib/GameData/Animation.h"
 
+// 前方宣言
 class AlchemicalMachineManager;
 class FieldObjectManager;
 class EnemyManager;
@@ -9,6 +10,7 @@ class Stage_Condition;
 class Number;
 class MissionRender;
 class DrawTimer;
+class Veil;
 
 class MissionManager
 {
@@ -58,6 +60,9 @@ private:
 
 	// ミッション描画
 	std::unique_ptr<MissionRender> m_missionRender;
+
+	// 半透明幕(クリア時)の描画
+	std::unique_ptr<Veil> m_backVeil;
 
 	float m_timer;
 

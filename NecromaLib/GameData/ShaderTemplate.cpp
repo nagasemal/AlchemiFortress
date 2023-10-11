@@ -118,4 +118,33 @@ void ShaderTemplate::LoadShaderFile(const wchar_t* path)
 
 void ShaderTemplate::AdvanceRender()
 {
+	auto context = ShareData::GetInstance().GetContext();
+	//シェーダーにバッファを渡す
+	ID3D11Buffer* cb[1] = { m_cBuffer.Get() };
+	context->VSSetConstantBuffers(0, 1, cb);
+	context->GSSetConstantBuffers(0, 1, cb);
+	context->PSSetConstantBuffers(0, 1, cb);
+
+	//画像用サンプラーの登録
+	ID3D11SamplerState* sampler[1] = { m_states->LinearClamp() };
+	context->PSSetSamplers(0, 1, sampler);
+
+	//半透明描画指定
+	ID3D11BlendState* blendstate = m_states->NonPremultiplied();
+
+	// 透明判定処理
+	context->OMSetBlendState(blendstate, nullptr, 0xFFFFFFFF);
+
+	// 深度バッファに書き込み参照する
+	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
+
+	// カリングは左周り
+	context->RSSetState(m_states->CullNone());
+
+	//シェーダをセットする
+	context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
+	context->GSSetShader(m_geometryShader.Get(), nullptr, 0);
+	context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
+	//インプットレイアウトの登録
+	context->IASetInputLayout(m_inputLayout.Get());
 }

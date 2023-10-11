@@ -8,6 +8,8 @@
 
 #include "Scenes/SelectScene/MissionRender.h"
 
+#include "Scenes/TitleScene/TitleLogo/Veil.h"
+
 #include "Scenes/Commons/DrawTimer.h"
 
 #include "NecromaLib/Singleton/ShareJsonData.h"
@@ -38,6 +40,8 @@ void MissionManager::Initialize()
 
 	// デバイスと画面サイズの確保
 	auto device = ShareData::GetInstance().GetDeviceResources();
+	int width	= device->GetOutputSize().right;
+	int height	= device->GetOutputSize().bottom;
 
 	auto pSJD = &ShareJsonData::GetInstance();
 
@@ -45,7 +49,7 @@ void MissionManager::Initialize()
 	m_machineCondition = pSJD->GetStageData().condition_Machine;
 	m_alchemiCondition = pSJD->GetStageData().condition_Alchemi;
 	m_enemyCondition   = pSJD->GetStageData().condition_Enemy;
-	m_baseLvCondition = pSJD->GetStageData().condition_BaseLv;
+	m_baseLvCondition  = pSJD->GetStageData().condition_BaseLv;
 	m_timeCondition    = pSJD->GetStageData().condition_Time;
 
 	// それぞれの内容の合計値を得る
@@ -71,6 +75,14 @@ void MissionManager::Initialize()
 	m_timeRender = std::make_unique<DrawTimer>(SimpleMath::Vector2{220.0f,200.0f}, SimpleMath::Vector2{1.0f,1.0f});
 
 	m_missionRender = std::make_unique<MissionRender>(SimpleMath::Vector2{ 100.0f,300.0f }, SimpleMath::Vector2{ 1.0f,1.0f });
+
+	m_backVeil = std::make_unique<Veil>(3);
+	m_backVeil->Create(L"Resources/Textures/Fade.png");
+	m_backVeil->LoadShaderFile(L"Veil");
+	m_backVeil->SetWindowSize(width, height);
+	m_backVeil->SetColor(SimpleMath::Color(0.4f, 0.4f, 0.4f, 0.5f));
+	m_backVeil->SetScale(SimpleMath::Vector2((float)width, (float)height / 5.0f));
+	m_backVeil->SetPosition(SimpleMath::Vector2(0.0f, height / 2.5f));
 
 	// ステージ失敗成功時のアニメーション用変数
 	m_clearAnimation.max = 2.0f;
@@ -102,9 +114,14 @@ void MissionManager::Update(AlchemicalMachineManager* pAlchemicalManager, EnemyM
 	if (m_timeCondition.size() > 0)																		TimerMission();
 
 
-	// クリア、または失敗時にアニメーションを回す
-	if ((m_missionNum <= m_missionSituation) || (m_failureFlag || m_baseHP <= 0)) m_clearAnimation += 0.02f;
+	m_failureFlag = m_baseHP <= 0;
 
+	// クリア、または失敗時にアニメーションを回す
+	if ((m_missionNum <= m_missionSituation) || m_failureFlag)
+	{
+		m_backVeil->Update();
+		m_clearAnimation += 0.02f;
+	}
 }
 
 void MissionManager::Render()
@@ -122,22 +139,24 @@ void MissionManager::Render()
 	m_missionRender->Render_TimerMission	(m_timeCondition);
 	m_missionRender->LineReset();
 
-	if ((m_missionNum <= m_missionSituation) || (m_failureFlag || m_baseHP <= 0))
-	{
-		SpriteLoder& pSL = SpriteLoder::GetInstance();
-
-		int filed = (int)(m_failureFlag || m_baseHP <= 0);
-
-		RECT rect = SpriteCutter(320,48, filed,0);
-
-		pSD.GetSpriteBatch()->Draw(pSL.GetStageClearTextTexture().Get(),
-			SimpleMath::Vector2(1280 / 2 , 720 / 2 - (m_clearAnimation * 2.8f)), &rect,
-			SimpleMath::Color(1.0f,1.0f,1.0f,m_clearAnimation),
-			0.0f, SimpleMath::Vector2(320 / 2, 48 / 2),2.0f);
-	}
-
 	// 経過時間の描画
 	m_timeRender->TimerDraw();
+
+	if ((m_missionNum <= m_missionSituation) || m_failureFlag)
+	{
+		m_backVeil->Render();
+
+		SpriteLoder& pSL = SpriteLoder::GetInstance();
+
+		int filed = (int)m_failureFlag;
+
+		RECT rect = SpriteCutter(320, 48, filed, 0);
+
+		pSD.GetSpriteBatch()->Draw(pSL.GetStageClearTextTexture().Get(),
+			SimpleMath::Vector2(1280 / 2, 720 / 2 - (m_clearAnimation * 2.8f)), &rect,
+			SimpleMath::Color(1.0f, 1.0f, 1.0f, m_clearAnimation),
+			0.0f, SimpleMath::Vector2(320 / 2, 48 / 2), 2.0f);
+	}
 
 	pSD.GetSpriteBatch()->End();
 }
@@ -149,7 +168,7 @@ bool MissionManager::MissionComplete()
 
 bool MissionManager::MissionmFailure()
 {
-	return (m_failureFlag || m_baseHP <= 0) && m_clearAnimation.MaxCheck();
+	return m_failureFlag && m_clearAnimation.MaxCheck();
 }
 
 int MissionManager::GetStartTimer()

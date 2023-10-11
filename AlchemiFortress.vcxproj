@@ -208,6 +208,7 @@
     <ClInclude Include="NecromaLib\SceneObject\SceneObj.h" />
     <ClInclude Include="NecromaLib\Singleton\DeltaTime.h" />
     <ClInclude Include="NecromaLib\Singleton\InputSupport.h" />
+    <ClInclude Include="NecromaLib\Singleton\ModelShader.h" />
     <ClInclude Include="NecromaLib\Singleton\ShareData.h" />
     <ClInclude Include="NecromaLib\Singleton\ShareJsonData.h" />
     <ClInclude Include="NecromaLib\Singleton\SoundData.h" />
@@ -260,6 +261,7 @@
     <ClInclude Include="Scenes\PlayScene\Stage\MissionManager.h" />
     <ClInclude Include="Scenes\PlayScene\Tutorial\Explanation.h" />
     <ClInclude Include="Scenes\PlayScene\Tutorial\Tutorial.h" />
+    <ClInclude Include="Scenes\PlayScene\UI\BaseLv.h" />
     <ClInclude Include="Scenes\PlayScene\UI\DisplayMagicCircle.h" />
     <ClInclude Include="Scenes\PlayScene\UI\Gauge.h" />
     <ClInclude Include="Scenes\PlayScene\UI\MachineExplanation.h" />
@@ -307,6 +309,7 @@
     <ClCompile Include="NecromaLib\SceneObject\SceneObj.cpp" />
     <ClCompile Include="NecromaLib\Singleton\DeltaTime.cpp" />
     <ClCompile Include="NecromaLib\Singleton\InputSupport.cpp" />
+    <ClCompile Include="NecromaLib\Singleton\ModelShader.cpp" />
     <ClCompile Include="NecromaLib\Singleton\ShareData.cpp" />
     <ClCompile Include="NecromaLib\Singleton\ShareJsonData.cpp" />
     <ClCompile Include="NecromaLib\Singleton\SoundData.cpp" />
@@ -361,6 +364,7 @@
     <ClCompile Include="Scenes\PlayScene\Stage\MissionManager.cpp" />
     <ClCompile Include="Scenes\PlayScene\Tutorial\Explanation.cpp" />
     <ClCompile Include="Scenes\PlayScene\Tutorial\Tutorial.cpp" />
+    <ClCompile Include="Scenes\PlayScene\UI\BaseLv.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\DisplayMagicCircle.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\Gauge.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\MachineExplanation.cpp" />
@@ -409,10 +413,21 @@
     <None Include="Resources\Json\MachineData\MachineData_Recovery.json" />
     <None Include="Resources\Json\MachineData\MachineData_Upper.json" />
     <None Include="Resources\Json\StageData\StageData_1.json" />
+    <None Include="Resources\Json\StageData\StageData_10.json" />
+    <None Include="Resources\Json\StageData\StageData_11.json" />
+    <None Include="Resources\Json\StageData\StageData_2.json" />
+    <None Include="Resources\Json\StageData\StageData_3.json" />
+    <None Include="Resources\Json\StageData\StageData_4.json" />
+    <None Include="Resources\Json\StageData\StageData_5.json" />
+    <None Include="Resources\Json\StageData\StageData_6.json" />
+    <None Include="Resources\Json\StageData\StageData_7.json" />
+    <None Include="Resources\Json\StageData\StageData_8.json" />
+    <None Include="Resources\Json\StageData\StageData_9.json" />
+    <None Include="Resources\Shader\BaseLv.hlsli" />
     <None Include="Resources\Shader\Button.hlsli" />
     <None Include="Resources\Shader\CutTexture.hlsli" />
     <None Include="Resources\Shader\DisplayMagicCircle.hlsli" />
-    <None Include="Resources\Shader\Header.hlsli" />
+    <None Include="Resources\Shader\MyModelShader.hlsli" />
     <None Include="Resources\Shader\MagicCircle.hlsli" />
     <None Include="Resources\Shader\Shadow.hlsli" />
     <None Include="Resources\Shader\Transition.hlsli" />
@@ -420,6 +435,26 @@
     <None Include="Resources\Shader\Veil.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Resources\Shader\BaseLv_GS.hlsl">
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\BaseLv_PS.hlsl">
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\BaseLv_VS.hlsl">
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="Resources\Shader\Button_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -504,16 +539,6 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\GeometryShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
-    </FxCompile>
     <FxCompile Include="Resources\Shader\MagicCircle_GS.hlsl">
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
@@ -542,11 +567,12 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\PixelShader.hlsl">
+    <FxCompile Include="Resources\Shader\MyModelShader_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="Resources\Shader\Shadow_GS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
@@ -650,11 +676,12 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\VertexShader.hlsl">
+    <FxCompile Include="Resources\Shader\MyModelShader_VS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

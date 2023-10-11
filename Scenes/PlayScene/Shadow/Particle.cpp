@@ -198,7 +198,7 @@ void Particle::Render()
 	context->OMSetBlendState(blendstate, nullptr, 0xFFFFFFFF);
 
 	// 深度バッファに書き込み参照する
-	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
+	context->OMSetDepthStencilState(m_states->DepthRead(), 0);
 
 	// カリングは左周り
 	context->RSSetState(m_states->CullNone());
@@ -290,12 +290,12 @@ ParticleUtility Particle::CreateEffectParam(EFFECT_TYPE type, SimpleMath::Vector
 	float rand = static_cast<float>(dist(engine));
 
 	ParticleUtility pU(
-		1.0f,																					// 生存時間
+		1.0f,																			// 生存時間
 		SimpleMath::Vector3::Zero,														// 基準座標
 		SimpleMath::Vector3::Zero,														// 速度
 		SimpleMath::Vector3::Zero,														// 加速度
-		SimpleMath::Vector3(0.7f, 0.7f, 0.7f), SimpleMath::Vector3::Zero,		// 初期スケール、最終スケール
-		SimpleMath::Color(color), SimpleMath::Color(0.f, 0.f, 0.f, 0.f)		// 初期カラー、最終カラー
+		SimpleMath::Vector3(0.7f, 0.7f, 0.7f), SimpleMath::Vector3::Zero,				// 初期スケール、最終スケール
+		SimpleMath::Color(color), SimpleMath::Color(0.f, 0.f, 0.f, 0.f)					// 初期カラー、最終カラー
 	);
 
 	SimpleMath::Vector3 vectol = pU.GetPosition() - pos;
@@ -341,7 +341,47 @@ ParticleUtility Particle::CreateEffectParam(EFFECT_TYPE type, SimpleMath::Vector
 
 		m_particleNum = 10;
 		break;
+
 	case Particle::MACHINE_LVUP:
+
+		// 拡散するエフェクト
+
+		pU.SetLife(1.2f);
+
+		pU.SetPosition(SimpleMath::Vector3(
+			pos.x + range * cosf(rand),
+			pos.y + range * sinf(rand),
+			pos.z + range * cosf(rand)));
+
+		pU.SetVelocity(SimpleMath::Vector3(cosf(rand), sinf(rand), cosf(rand)));
+
+		pU.SetEndColor({ color.R(),color.G(),color.B(),0.0f });
+
+		m_particleNum = 5;
+
+		break;
+
+	case Particle::MACHINE_BREAK:
+
+		break;
+
+	case Particle::CLICK:
+
+		pU.SetLife(0.8f);
+
+		pU.SetPosition(SimpleMath::Vector3(
+			pos.x + range * cosf(rand),
+			pos.y + range * sinf(rand),
+			pos.z + range * cosf(rand)));
+
+		pU.SetVelocity(SimpleMath::Vector3(cosf(rand), sinf(rand), cosf(rand)));
+
+		pU.SetRad(SimpleMath::Vector3(0,90,90));
+
+		pU.SetStartColor({ color.R(),color.G(),color.B(),1.0f });
+		pU.SetEndColor({ color.R(),color.G(),color.B(),0.0f });
+
+		m_particleNum = 5;
 
 		break;
 	default:

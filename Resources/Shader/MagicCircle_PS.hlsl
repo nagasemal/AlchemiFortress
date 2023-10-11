@@ -18,7 +18,5 @@ float4 main(PS_INPUT input) : SV_TARGET
 	output.y *= step(output_2.y, diffuse.a);
 	output.z *= step(output_2.z, diffuse.a);
 
-
-
 	return output * input.Color;
 }

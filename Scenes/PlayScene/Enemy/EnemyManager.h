@@ -28,8 +28,9 @@ public:
 
 	EnemyObject GetRandomEnemy();
 
-
 	void HitAMObejct(AlchemicalMachineObject* alchemicalMachines);
+
+	int GetNockDownEnemyExp();
 
 public:
 
@@ -61,6 +62,9 @@ private:
 	// “|‚³‚ê‚½uŠÔ‚ğæ“¾‚·‚éƒtƒ‰ƒO(1F“à‚É•¡”‘Ì“|‚·‚Æ³í‚Èˆ—‚ğs‚¦‚È‚¢ˆ×AintŒ^‚ÅŠÇ—)
 	int m_knokDownFlag;
 	ENEMY_TYPE m_knokDownEnemyType;
+
+	// 1FŠÔ‚É‰Ò‚¢‚¾EXP‚Ì‘—Ê
+	int m_falmeTotalEnemyExp;
 
 	int m_enemyNums;
 

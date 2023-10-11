@@ -1,13 +1,23 @@
 #include "pch.h"
 #include "MousePointer.h"
-#include "NecromaLib/Singleton/ShareData.h"
 #include <WICTextureLoader.h> 
+#include "NecromaLib/GameData/BinaryFile.h"
+
+#include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/InputSupport.h"
+#include "NecromaLib/Singleton/SpriteLoder.h"
+#include "NecromaLib/Singleton/DeltaTime.h"
+#include "NecromaLib/Singleton/ModelShader.h"
+
+#include "Scenes/PlayScene/Shadow/Particle.h"
 
 #define POINTER_RAGE			SimpleMath::Vector3(0.5f, 0.5f, 0.5f)
 #define POINTER_RAGE_BIG		SimpleMath::Vector3(2.5f, 2.5f, 2.5f)
 
-MousePointer::MousePointer()
+#define PARTICLE_SHIFT			2.0f
+
+MousePointer::MousePointer():
+	m_time()
 {
 }
 
@@ -27,20 +37,40 @@ void MousePointer::Initialize()
 
 	m_mouseCursorModel = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/MouseCursor.cmo", *fx);
 
+	m_particle = std::make_unique<Particle>(Particle::EFFECT_TYPE::CLICK);
+	m_particle->Initialize();
+
 }
 
 void MousePointer::Update()
 {
+
 	InputSupport& pINP = InputSupport::GetInstance();
+	auto mouse = InputSupport::GetInstance().GetMouseState();
+
+	m_time += DeltaTime::GetInstance().GetDeltaTime();
+
+	if (m_time >= 1) m_time = 1.0f;
 
 	m_data.pos = pINP.GetMousePosWolrd();
 	m_data.pos.y = -1.0f;
 	m_data.rage = POINTER_RAGE;
 
+	// パーティクルの更新
+	m_particle->UpdateParticle();
+
+	if (mouse.leftButton == mouse.PRESSED)
+	{
+		//m_time = 0.0f;
+		m_particle->OnShot(SimpleMath::Vector3(m_data.pos.x, m_data.pos.y + PARTICLE_SHIFT, m_data.pos.z), true, SimpleMath::Color(0.8, 0.8, 0.8, 1.0f));
+	}
+
 }
 
 void MousePointer::Draw()
 {
+
+	m_particle->Render();
 	ModelDraw(m_mouseCursorModel.get());
 }
 
@@ -50,29 +80,26 @@ void MousePointer::ModelDraw(DirectX::Model* model)
 	// モデル情報(位置,大きさ)
 	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
 	modelData = SimpleMath::Matrix::CreateScale(POINTER_RAGE);
-	modelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos);
+
+	modelData *= SimpleMath::Matrix::CreateTranslation(SimpleMath::Vector3(m_data.pos.x, m_data.pos.y + 2.0f, m_data.pos.z));
 
 	ShareData& pSD = ShareData::GetInstance();
 
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false, [&]
 		{
-			//画像用サンプラーの登録
-			ID3D11SamplerState* sampler[1] = { pSD.GetCommonStates()->LinearWrap() };
-			pSD.GetContext()->PSSetSamplers(0, 1, sampler);
-			//半透明描画指定
-			ID3D11BlendState* blendstate = pSD.GetCommonStates()->NonPremultiplied();
-			// 透明判定処理
-			pSD.GetContext()->OMSetBlendState(blendstate, nullptr, 0xFFFFFFFF);
 
-			// 深度ステンシルステートの設定
-			pSD.GetContext()->OMSetDepthStencilState(pSD.GetCommonStates()->DepthNone(), 0);
+			//ModelShader::GetInstance().ToransparentShader();
 
-			// カリングは左周り
-			pSD.GetContext()->RSSetState(pSD.GetCommonStates()->CullNone());
 
-			// ピクセルシェーダーに適応
-			pSD.GetContext()->PSSetShader(pSD.GetModelTransparentShader().Get(), nullptr, 0);
+			ModelShader::GetInstance().ModelDrawShader(SimpleMath::Color(1.0f,1.0f,1.0f,1.0f),
+													   SimpleMath::Vector4(m_time,1.0f,1.0f,1.0f),
+													   SpriteLoder::GetInstance().GetRule());
+
 		});
+
+	//シェーダの登録を解除しておく
+	pSD.GetContext()->VSSetShader(nullptr, nullptr, 0);
+	pSD.GetContext()->PSSetShader(nullptr, nullptr, 0);
 
 }
 

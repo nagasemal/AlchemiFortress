@@ -52,7 +52,7 @@ public:
 	void SelectRenderUI_Common();
 
 	// 他のオブジェクト同士の当たり判定
-	void HitToObject(MousePointer* pMP);
+	void HitToMouse(MousePointer* pMP);
 
 	// 効果範囲内に3Dオブジェクトが入った
 	bool OnCollisionEnter_MagicCircle(GameObjct3D* object);
@@ -145,6 +145,11 @@ private:
 
 	// 半透明描画
 	void TransparentRender(DirectX::Model* model, SimpleMath::Matrix matrix);
+
+	// 出現時演出に使用するタイマー
+	float m_spawnTime;
+	// 色変え時演出に使用するタイマー
+	float m_changeTime;
 
 
 protected:

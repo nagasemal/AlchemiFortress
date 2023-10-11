@@ -2,6 +2,7 @@
 #include "PlayScene.h"
 
 #include "NecromaLib/Singleton/ShareJsonData.h"
+#include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/InputSupport.h"
 #include "NecromaLib/Singleton/SoundData.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
@@ -53,6 +54,8 @@ void PlayScene::Initialize()
 	// リソースを示すゲージクラスの生成
 	m_resourceGauge = std::make_unique<Gauge>();
 	m_resourceGauge	->Initialize();
+	// 拠点のLvを示すクラスの生成
+	m_baseLv = std::make_unique<BaseLv>();
 	// ミッションマネージャークラスの生成
 	m_missionManager = std::make_unique<MissionManager>();
 	m_missionManager->Initialize();
@@ -71,9 +74,9 @@ void PlayScene::Initialize()
 	ShareData& pSD = ShareData::GetInstance();
 	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
 	fx->SetDirectory(L"Resources/Models");
-
 	m_skySphere = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/SkySphere.cmo", *fx);
 
+	// 天球モデルのロード
 	m_skySphere->UpdateEffects([&](IEffect* effect)
 	{
 		// 今回はライトだけ欲しい
@@ -81,7 +84,6 @@ void PlayScene::Initialize()
 
 		// 光の当たり方変更
 		lights->SetAmbientLightColor(SimpleMath::Color(0.7f, 0.7f, 1.f, 0.8f));
-
 	});
 }
 
@@ -113,7 +115,7 @@ GAME_SCENE PlayScene::Update()
 
 	m_moveCamera		->Update(!m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven(), true);
 
-	m_fieldManager		->Update();
+	m_fieldManager		->Update(m_enemyManager.get());
 	m_mousePointer		->Update();
 
 	// ユニット(マシン)マネージャーのアップデート
@@ -128,6 +130,7 @@ GAME_SCENE PlayScene::Update()
 
 	m_missionManager	->Update(m_AM_Manager.get(),m_enemyManager.get(),m_fieldManager.get());
 
+	m_baseLv			->Update(m_fieldManager.get());
 
 	bool enemyActivs	= !m_enemyManager->GetEnemyData()->empty();
 
@@ -184,46 +187,54 @@ void PlayScene::Draw()
 	modelData = SimpleMath::Matrix::CreateScale({ 1.8f,1.8f,1.8f });
 	modelData = SimpleMath::Matrix::CreateTranslation({0.0f,70.0f,0.0f });
 
+	// 天球描画
 	m_skySphere->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection());
 
+	// フィールドオブジェクト描画
 	m_fieldManager      ->Draw();
-	m_mousePointer		->Draw();
 
-	m_mousePointer		->ModelDraw(m_AM_Manager->GetSelectModel());
-
-
-	//D3D11_DEPTH_STENCIL_DESC desc =
-	//{
-	//	TRUE, D3D11_DEPTH_WRITE_MASK_ALL, D3D11_COMPARISON_LESS,
-	//	FALSE, D3D11_DEFAULT_STENCIL_READ_MASK, D3D11_DEFAULT_STENCIL_WRITE_MASK,
-	//	D3D11_STENCIL_OP_ZERO, D3D11_STENCIL_OP_ZERO, D3D11_STENCIL_OP_ZERO, D3D11_COMPARISON_ALWAYS
-	//};
-	//ID3D11DepthStencilState* stencilState = nullptr;
-	//pSD.GetDevice()->CreateDepthStencilState(&desc, &stencilState);
-
-
+	// エネミー描画
 	m_enemyManager		->Render();
+
+	// マシンの描画
 	m_AM_Manager		->Render();
+
+	// マウスポインターモデルを出す
+	m_mousePointer->Draw();
+	m_mousePointer->ModelDraw(m_AM_Manager->GetSelectModel());
 
 	pSD.GetSpriteBatch()->End();
 }
 
 void PlayScene::DrawUI()
 {
-	m_tutorial->Render();
+
+	auto pSB = ShareData::GetInstance().GetSpriteBatch();
+	auto pSL = &SpriteLoder::GetInstance();
+
+	m_tutorial			->Render();
 
 	m_AM_Manager		->DrawUI();
 	m_resourceGauge		->Render();
+
+	m_baseLv			->Render();
+
 	m_missionManager	->Render();
 
-	m_tutorial->Render_Layer2();
+	m_tutorial			->Render_Layer2();
 
 	// 倍速ボタン
 	m_doubleSpeedButton->DrawUI(10 + m_doubleSpeedNum);
 
+	// 操作説明描画
 	m_explanation->Render(m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven(), m_AM_Manager->GetRotateStopFlag());
 
-	// 操作説明描画
+
+	//SimpleMath::Vector2 origin = SimpleMath::Vector2(1280, 1280);
+	//RECT rect = { 0,0,origin.x,origin.y };
+	//pSB->Begin();
+	//pSB->Draw(pSL->GetMagicCircleTexture(0).Get(), SimpleMath::Vector2(), &rect, Colors::White, 0.0f, origin / 2, 0.3f);
+	//pSB->End();
 
 }
 

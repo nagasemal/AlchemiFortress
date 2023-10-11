@@ -46,7 +46,6 @@ private:
 
 	void MovingMachine(int index);
 
-
 	std::unique_ptr<AlchemicalMachineFilter>				m_AMFilter;
 	std::vector<std::shared_ptr<AlchemicalMachineObject>>	m_AMobjects;
 

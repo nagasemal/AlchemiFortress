@@ -4,7 +4,7 @@
 
 class ShaderButton : public ShaderTemplate
 {
-public:
+private:
 	//データ受け渡し用コンスタントバッファ(送信側)
 	struct ConstBuffer
 	{
@@ -17,8 +17,8 @@ public:
 	ShaderButton();
 	~ShaderButton();
 
-	void Update() override;
-	void Render() override;
+	void Update();
+	void Render();
 
 private:
 

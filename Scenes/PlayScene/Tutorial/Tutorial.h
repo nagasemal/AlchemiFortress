@@ -53,7 +53,7 @@ public:
 	Tutorial();
 	~Tutorial();
 
-	void Initialize(int tutorialNumber);
+	void Initialize(std::vector<int> tutorialNumber);
 	void Update(AlchemicalMachineManager* machineManager,Gauge* gauge, MissionRender* missionRender,bool stopFlag = false);
 	void Render();
 	void Render_Layer2(); // •\¦‚ÌŠÖŒWã‚à‚¤ˆê‚ÂŠÖ”‚ª•K—v‚Å‚ ‚Á‚½‚½‚ß
@@ -95,6 +95,8 @@ private:
 
 	int m_selectNumber;
 	// 0 ‰½‚à‚È‚¢
-	int m_tutorialNumber;
+	std::vector<int> m_tutorialNumber;
+
+	int m_maxSelectVal;
 
 };

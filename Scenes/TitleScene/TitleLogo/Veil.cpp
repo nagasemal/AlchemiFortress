@@ -51,7 +51,7 @@ void Veil::Render()
 	ConstBuffer cbuff;
 	cbuff.windowSize = SimpleMath::Vector4(static_cast<float>(m_windowWidth), static_cast<float>(m_windowHeight), 1, 1);
 	cbuff.color = m_color;
-	cbuff.diff = SimpleMath::Vector4(m_animData[1], 0.0f, 0.0f,m_animData[0]);
+	cbuff.diff = SimpleMath::Vector4(m_animData[1], 1.5f, 1.5f,m_animData[0]);
 
 	//受け渡し用バッファの内容更新(ConstBufferからID3D11Bufferへの変換）
 	context->UpdateSubresource(m_cBuffer.Get(), 0, NULL, &cbuff, 0, 0);

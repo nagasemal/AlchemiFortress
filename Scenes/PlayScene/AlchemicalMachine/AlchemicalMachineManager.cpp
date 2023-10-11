@@ -224,7 +224,7 @@ void AlchemicalMachineManager::Update(
 
 		// アルケミカルマシンの更新処理
 		m_AMObject[i]->Update();
-		m_AMObject[i]->HitToObject(pMP);
+		m_AMObject[i]->HitToMouse(pMP);
 
 		if (m_AMObject[i]->GetDismantlingFlag())
 		{
@@ -284,6 +284,7 @@ void AlchemicalMachineManager::Update(
 
 void AlchemicalMachineManager::Render()
 {
+
 	for (int i = 0; i < m_AMObject.size(); i++)
 	{
 		// 存在しているかチェック
@@ -291,20 +292,21 @@ void AlchemicalMachineManager::Render()
 		{
 			// モデルの描画			オブジェクトに割り当てられたIDをもとにモデル配列からデータを取り出す
 			m_AMObject[i]->ModelRender(m_AMFilter->HandOverAMModel(m_AMObject[i]->GetModelID()),
-				m_AMFilter->GetRingModel(m_AMObject[i]->GetModelID()));
+									   m_AMFilter->GetRingModel(m_AMObject[i]->GetModelID()));
+
 			m_AMObject[i]->Draw();
 		}
 	}
-
-	// 丸影表示
-	m_dorpShadow->CreateWorld();
-	m_dorpShadow->Render();
 
 	if (m_selectNumber != -1)
 	{
 		m_magicCircle->CreateWorld();
 		m_magicCircle->Render(m_AMObject[m_selectNumber]->GetModelID());
 	}
+
+	// 丸影表示
+	m_dorpShadow->CreateWorld();
+	m_dorpShadow->Render();
 
 	// 球が当たった際のエフェクト処理
 	m_particle_hit->Render();
@@ -336,6 +338,8 @@ void AlchemicalMachineManager::DrawUI()
 
 	}
 
+	m_selectManager->RenderUI(m_AMnums);
+
 	// UIの表示 m_selectNumberが-1 = 選択されていない
 	if (m_selectNumber != -1)
 	{
@@ -345,8 +349,8 @@ void AlchemicalMachineManager::DrawUI()
 		/*===[ 確認用モデルの表示 ]===*/
 		m_machineExplanation->Draw();
 		m_machineExplanation->DisplayObject(m_AMFilter->HandOverAMModel(m_AMObject[m_selectNumber]->GetModelID()),
-			m_AMFilter->GetRingModel(m_AMObject[m_selectNumber]->GetModelID()),
-			m_AMObject[m_selectNumber].get());
+											m_AMFilter->GetRingModel(m_AMObject[m_selectNumber]->GetModelID()),
+											m_AMObject[m_selectNumber].get());
 
 		m_AMObject[m_selectNumber]->RenderUI(m_selectManager->GetTextuer());
 		m_AMObject[m_selectNumber]->SelectRenderUI_Common();
@@ -421,11 +425,12 @@ void AlchemicalMachineManager::Update_Attacker(int index, EnemyManager* enemys)
 		int upperMachineLine	= m_AMObject[j]->GetLine();
 		int attackerMachineLine = m_AMObject[index]->GetLine();
 
-		// 判定を取る条件
+		// 判定を取る条件(ラインが±1の属性が同じUpperで且つ生存している)
 		bool flag = (upperMachineLine + 1 >= attackerMachineLine ||
 					 upperMachineLine - 1 >= attackerMachineLine) &&
 					 m_AMObject[j]->GetModelID() == MACHINE_TYPE::UPPER &&
-					 m_AMObject[j]->GetElement() == m_AMObject[index]->GetElement();
+					 m_AMObject[j]->GetElement() == m_AMObject[index]->GetElement() &&
+					 m_AMObject[j]->GetHP() >= 0;
 
 		if(flag)	 attacker->AllAlchemicalMachine(m_AMObject[j].get());
 	}
@@ -554,9 +559,9 @@ void AlchemicalMachineManager::SpawnAMMachine(bool leftButtom)
 {
 
 	// 選択ボックスUIに触れていない
-// 対象オブジェクトに触れている
-// 説明UIに触れていない
-//　に左ボタンを離すとオブジェクトを入れ替える
+	// 対象オブジェクトに触れている
+	// 説明UIに触れていない
+	// 左ボタンを離すとオブジェクトを入れ替える
 	if (m_allHitObjectToMouse &&
 		!m_machineExplanation->OnMouse() &&
 		leftButtom)

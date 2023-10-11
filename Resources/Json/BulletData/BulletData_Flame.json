@@ -3,8 +3,8 @@
     "ELEMENT": "Flame",
     "STR": 25.0,
     "SPEED": 3.0,
-    "SPAN": 0.8,
+    "SPAN": 0.75,
     "LIFE": 3.5,
-    "LOSSMP": 15.0,
+    "LOSSMP": 15.0
   }
 }

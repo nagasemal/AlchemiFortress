@@ -80,6 +80,8 @@ void DrawMachine::MovingMachine(int number)
 
 	m_AMobjects[number]->SetColor(SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
 
+	m_AMobjects[number]->Update_Common();
+
 }
 
 void DrawMachine::SettingAMMachine_Title()

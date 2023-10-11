@@ -195,3 +195,34 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textu
 	pSB->End();
 }
 
+void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture, RECT rect, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsTexture, RECT pulsTexRect, SimpleMath::Color pulsTextureCol, SimpleMath::Color nomalColor, SimpleMath::Color onColor, SimpleMath::Color pressdColor)
+{
+
+	ShareData& pSD = ShareData::GetInstance();
+	auto pSB = pSD.GetSpriteBatch();
+
+	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
+	// ログの色
+	SimpleMath::Color colour	= nomalColor;
+
+	if (m_luminousFlag) colour	= nomalColor + m_boxColor;
+
+	if (m_hitMouseFlag) colour	= onColor;
+
+	if (HoldMouse()) colour		= pressdColor;
+
+	SimpleMath::Vector2 box_Pos = { m_data.pos.x,m_data.pos.y };
+
+	// 選択BOX
+	pSB->Draw(texture.Get(), box_Pos, &rect, colour, 0.0f, DirectX::XMFLOAT2(64 / 2, 64 / 2), m_data.rage);
+
+	// 中に表示するテクスチャがある場合
+	if (pulsTexture)
+	{
+		pSB->Draw(pulsTexture.Get(), box_Pos, &pulsTexRect, pulsTextureCol, 0.0f, DirectX::XMFLOAT2(64 / 2, 64 / 2), 0.8f);
+	}
+
+	pSB->End();
+
+}
+

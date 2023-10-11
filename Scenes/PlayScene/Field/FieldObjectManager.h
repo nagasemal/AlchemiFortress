@@ -17,6 +17,8 @@
 
 #include "Scenes/PlayScene/Shadow/MagicCircle.h"
 
+class EnemyManager;
+
 class FieldObjectManager
 {
 public:
@@ -24,7 +26,7 @@ public:
 	~FieldObjectManager();
 
 	void Initialize();
-	void Update();
+	void Update(EnemyManager* pEnemyManager);
 	void Draw();
 	void Finalize();
 

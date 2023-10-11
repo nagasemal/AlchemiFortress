@@ -53,17 +53,17 @@ void DataManager::Update()
 
 void DataManager::MPMAXRecalculation(int lv)
 {
-	m_nowMP_MAX = STANDARD_MP * lv;
+	m_nowMP_MAX = STANDARD_MP + (STANDARD_MP / 2 * lv);
 }
 
 void DataManager::CrystalMAXRecalculation(int lv)
 {
-	m_nowCrystal_MAX = STANDARD_CRYSTAL * lv;
+	m_nowCrystal_MAX = STANDARD_CRYSTAL + (STANDARD_CRYSTAL / 2 * lv);
 }
 
 void DataManager::BaseHPMAXRecalculation(int lv)
 {
-	m_nowBaseHp_MAX = STANDARD_BASEHP * lv;
+	m_nowBaseHp_MAX = STANDARD_BASEHP + (STANDARD_BASEHP / 2 * lv);
 
 	// ‘S‰ñ•œ
 	m_nowBaseHp = m_nowBaseHp_MAX;

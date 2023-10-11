@@ -173,6 +173,12 @@
     <Filter Include="Scene\ResultScene\Camera">
       <UniqueIdentifier>{c5bbdb0e-77d1-4a7d-91cd-8c4a30d45443}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\T">
+      <UniqueIdentifier>{430fa833-fbf3-4861-ae8b-25d1cf79916a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\BaseLv">
+      <UniqueIdentifier>{91ff32b1-cdf6-4e4e-85d4-c86d5d823c53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -475,6 +481,12 @@
     <ClInclude Include="Scenes\ResultScene\Camera\ResultCamera.h">
       <Filter>Scene\ResultScene\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="NecromaLib\Singleton\ModelShader.h">
+      <Filter>NecromaLib\DesinPattern\Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\UI\BaseLv.h">
+      <Filter>Scene\PlayScene\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -750,6 +762,12 @@
     <ClCompile Include="Scenes\ResultScene\Camera\ResultCamera.cpp">
       <Filter>Scene\ResultScene\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="NecromaLib\Singleton\ModelShader.cpp">
+      <Filter>NecromaLib\DesinPattern\Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\UI\BaseLv.cpp">
+      <Filter>Scene\PlayScene\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -836,11 +854,44 @@
     <None Include="Resources\Shader\Button.hlsli">
       <Filter>Shader\Button</Filter>
     </None>
-    <None Include="Resources\Shader\Header.hlsli">
+    <None Include="Resources\Shader\MyModelShader.hlsli">
       <Filter>Shader\Model</Filter>
     </None>
     <None Include="Resources\Json\EnemyData\EnemyData_Hop.json">
       <Filter>Json\EnemyData</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\StageData_2.json">
+      <Filter>Json\StageData</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\StageData_3.json">
+      <Filter>Json\StageData</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\StageData_4.json">
+      <Filter>Json\StageData</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\StageData_5.json">
+      <Filter>Json\StageData</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\StageData_6.json">
+      <Filter>Json\StageData</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\StageData_7.json">
+      <Filter>Json\StageData</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\StageData_8.json">
+      <Filter>Json\StageData</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\StageData_9.json">
+      <Filter>Json\StageData</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\StageData_10.json">
+      <Filter>Json\StageData</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\StageData_11.json">
+      <Filter>Json\StageData</Filter>
+    </None>
+    <None Include="Resources\Shader\BaseLv.hlsli">
+      <Filter>Shader\BaseLv</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -919,17 +970,23 @@
     <FxCompile Include="Resources\Shader\ModelShadow_PS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shader\MyModelShader_PS.hlsl">
+      <Filter>Shader\Model</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\MyModelShader_VS.hlsl">
+      <Filter>Shader\Model</Filter>
+    </FxCompile>
     <FxCompile Include="Resources\Shader\ModelTransparent_PS.hlsl">
-      <Filter>Shader</Filter>
+      <Filter>Shader\T</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\PixelShader.hlsl">
-      <Filter>Shader\Model</Filter>
+    <FxCompile Include="Resources\Shader\BaseLv_GS.hlsl">
+      <Filter>Shader\BaseLv</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\GeometryShader.hlsl">
-      <Filter>Shader\Model</Filter>
+    <FxCompile Include="Resources\Shader\BaseLv_PS.hlsl">
+      <Filter>Shader\BaseLv</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\VertexShader.hlsl">
-      <Filter>Shader\Model</Filter>
+    <FxCompile Include="Resources\Shader\BaseLv_VS.hlsl">
+      <Filter>Shader\BaseLv</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

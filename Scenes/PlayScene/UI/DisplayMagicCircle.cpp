@@ -54,12 +54,6 @@ void DisplayMagicCircle::TransparentUpdate(bool spawnFlag)
 
 	m_easing = Easing::EaseInCirc(0.0f, MAX_ALPHA, m_transparentTime);
 
-	//if (m_transparentDeltaTime >= 1.0f) m_transparentDeltaTime = 1.0f;
-	//if (m_transparentDeltaTime <= 0.0f) m_transparentDeltaTime = 0.0f;
-
-	//if (m_transparentTime >= MAX_ALPHA) m_transparentTime = MAX_ALPHA;
-	//if (m_transparentTime <= 0.0f) m_transparentTime = 0.0f;
-
 }
 
 void DisplayMagicCircle::Update()
@@ -86,7 +80,8 @@ void DisplayMagicCircle::SpritebatchRender()
 	SimpleMath::Vector2 box_Pos = { static_cast<float>(m_windowWidth) / 2,static_cast<float>(m_windowHeight) / 2 };
 
 	// ‘I‘ðBOX
-	pSB->Draw(SpriteLoder::GetInstance().GetMagicCircleTexture(0).Get(), box_Pos, &srcRect, m_color,m_rotateTime, DirectX::XMFLOAT2((float)m_textureWidth / 2, (float)m_textureHeight / 2), 1.5f);
+	pSB->Draw(SpriteLoder::GetInstance().GetMagicCircleTexture(0).Get(), box_Pos, &srcRect,
+			  m_color,m_rotateTime, DirectX::XMFLOAT2((float)m_textureWidth / 2, (float)m_textureHeight / 2), 1.5f);
 
 	pSB->End();
 }

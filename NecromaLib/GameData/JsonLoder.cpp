@@ -10,11 +10,11 @@
 #include "Scenes/PlayScene/AlchemicalMachine/AlchemicalMachineObject.h"
 #include "Scenes/PlayScene/Enemy/EnemyList/ICommand_Enemy.h"
 
-#define COLOR_WIGHT		{1.0f,1.0f,1.0f,1.0f}
-#define COLOR_RED		{1.0f,0.0f,0.0f,1.0f}
-#define COLOR_BLUE		{0.0f,0.0f,1.0f,1.0f}
-#define COLOR_GREEN		{0.0f,1.0f,0.0f,1.0f}
-#define COLOR_YELLOW	{0.8f,0.8f,0.0f,1.0f}
+#define COLOR_WIGHT		{0.75f,0.75f,0.75f,1.0f}
+#define COLOR_RED		{0.75f,0.0f,0.0f,1.0f}
+#define COLOR_BLUE		{0.0f,0.0f,0.75f,1.0f}
+#define COLOR_GREEN		{0.0f,0.75f,0.0f,1.0f}
+#define COLOR_YELLOW	{0.75f,0.75f,0.0f,1.0f}
 
 Bullet_Data Json::FileLoad_BulletData(const std::string filePath)
 {
@@ -160,15 +160,21 @@ Enemy_Data Json::FileLoad_EnemyData(const std::string filePath)
 	picojson::object status = val.get<picojson::object>()["Status"].get<picojson::object>();
 
 	//	読み込んだデータを構造体に代入
-	data.element = ChangeElement(status["ELEMENT"].get<std::string>());
-	data.type = ChangeEnemy(status["TYPE"].get<std::string>());
-	data.moveType = status["MOVETYPE"].get<std::string>();
-	data.hp = (int)status["HP"].get<double>();
-	data.exp = (int)status["EXP"].get<double>();
-	data.power = (float)status["STR"].get<double>();
+
+	// 属性
+	data.element	= ChangeElement(status["ELEMENT"].get<std::string>());
+	// エネミーの種類
+	data.type		= ChangeEnemy(status["TYPE"].get<std::string>());
+	// エネミーの動きの種類(順番or全部)
+	data.moveType	= status["MOVETYPE"].get<std::string>();
+	// HP
+	data.hp			= (int)status["HP"].get<double>();
+	// 拠点LVUPに使用されるEXP
+	data.exp		= (int)status["EXP"].get<double>();
+	// 攻撃力
+	data.power		= (float)status["STR"].get<double>();
 
 	picojson::array moves = status["MOVEING"].get<picojson::array>();
-
 	// 要素分回す
 	for (picojson::array::iterator it = moves.begin(); it != moves.end(); it++)
 	{
@@ -347,8 +353,17 @@ Stage_Data Json::FileLoad_StageData(const std::string filePath)
 
 	status.resource = stage_resource;
 
-	// チュートリアル番号
-	status.tutorial = (int)default_resource["TUTORIAL"].get<double>();
+	// チュートリアル番号取得
+	picojson::array& tutorial = val.get<picojson::object>()["TUTORIAL"].get<picojson::array>();
+
+	for (picojson::array::iterator it = tutorial.begin(); it != tutorial.end(); it++)
+	{
+		int number = 0;
+		number = (int)it->get<picojson::object>()["NUMBER"].get<double>();
+
+		status.tutorial.push_back(number);
+
+	}
 
 	// クリスタルの位置を決める
 	picojson::object& defaulet_crystal = val.get<picojson::object>()["CRYSTAL_SPAWN"].get<picojson::object>();
@@ -770,8 +785,17 @@ void Json::WritingJsonFile_StageData(int number, Stage_Data stageData)
 		default_Resource.insert(std::make_pair("DEFFENCER", picojson::value((double)stageData.resource.deffencer)));
 		default_Resource.insert(std::make_pair("MINING", picojson::value((double)stageData.resource.mining)));
 		default_Resource.insert(std::make_pair("RECOVERY", picojson::value((double)stageData.resource.recovery)));
-		// チュートリアルの取得
-		default_Resource.insert(std::make_pair("TUTORIAL", picojson::value((double)stageData.tutorial)));
+	}
+	// チュートリアルの取得
+	picojson::array& tutorial = val.get<picojson::object>()["TUTORIAL"].get<picojson::array>();
+	tutorial.clear();
+
+	for (int i = 0; i < tutorial.size(); i++)
+	{
+		picojson::object id;
+		id.insert(std::make_pair("NUMBER", picojson::value((double)stageData.tutorial[i])));
+
+		tutorial.emplace_back(id);
 	}
 
 	// クリスタルの初期位置情報

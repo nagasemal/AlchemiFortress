@@ -1,6 +1,6 @@
 {
   "Status": {
-    "ELEMENT":"Normal",
+    "ELEMENT":"Nomal",
     "TYPE":"Slime",
     "MOVETYPE":"ALL",
     "HP": 8.0,
@@ -8,7 +8,12 @@
     "EXP": 10.0,
 
     "MOVEING":[
-        {"TYPE":"Standard","TIME":0.0,"DELAY":0.0,"VALUE":1.5}
+      {
+        "TYPE": "Standard",
+        "TIME": 0.0,
+        "DELAY": 0.0,
+        "VALUE": 1.0
+      }
     ]
   }
 }

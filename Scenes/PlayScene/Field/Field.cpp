@@ -16,7 +16,7 @@ Field::~Field()
 
 void Field::Initialize()
 {
-	m_data.pos		= SimpleMath::Vector3(0,-3,0);
+	m_data.pos		= SimpleMath::Vector3(0,-1.5f,0);
 	m_data.rage		= SimpleMath::Vector3(RAGE,3,RAGE);
 }
 

@@ -20,7 +20,7 @@ public:
 		SimpleMath::Matrix		m_matWorld;
 		SimpleMath::Matrix		m_matView;
 		SimpleMath::Matrix		m_matProj;
-		SimpleMath::Vector4	m_diffuse;
+		SimpleMath::Vector4		m_diffuse;
 	};
 
 public:

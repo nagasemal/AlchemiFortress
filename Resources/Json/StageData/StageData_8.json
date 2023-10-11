@@ -15,15 +15,7 @@
     "MACHINE_SPAWN": [
       {
         "TYPE": "Attacker",
-        "VALUE": 1
-      },
-      {
-        "TYPE": "Upper",
-        "VALUE": 1
-      },
-      {
-        "TYPE": "Defenser",
-        "VALUE": 1
+        "VALUE": -1
       }
     ]
   },
@@ -92,14 +84,16 @@
     ]
   },
   "RESOURCE_DEFAULET": {
-    "ATTACKER": 0,
+    "ATTACKER": 1,
     "CRYSTAL": 215,
-    "DEFFENCER": 0,
-    "LV": 0,
-    "MINING": 0,
+    "DEFFENCER": 1,
+    "LV": 2,
+    "MINING":1,
     "MP": 400,
-    "RECOVERY": 0,
-    "TUTORIAL": 0,
-    "UPPER": 0
-  }
+    "RECOVERY": 1,
+    "UPPER": 1
+  },
+    "TUTORIAL":[
+  	{"NUMBER":14}
+  ]
 }

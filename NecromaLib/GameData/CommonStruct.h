@@ -27,8 +27,10 @@ enum ENEMY_TYPE : int
 {
 
 	ENMEY_NONE = 0,
-	SLIME = 1,
-	WORM = 2,
+
+	SLIME	= 1,
+	WORM	= 2,
+	HOP		= 3,
 
 	ENEMY_NUM
 };

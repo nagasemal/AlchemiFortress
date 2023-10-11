@@ -122,6 +122,8 @@ void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* se
 			auto lights = dynamic_cast<IEffectLights*>(effect);
 			// 色変更
 			lights->SetLightDiffuseColor(0, object->GetColor());
+			lights->SetLightDiffuseColor(1, object->GetColor());
+			lights->SetLightDiffuseColor(2, object->GetColor());
 		});
 
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
@@ -137,6 +139,8 @@ void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* se
 
 				// 色変更
 				lights->SetLightDiffuseColor(0, SimpleMath::Color((float)object->GetPowerUpFlag(),(float)object->GetPowerUpFlag(), 0.0f, 1.0f));
+				lights->SetLightDiffuseColor(1, SimpleMath::Color((float)object->GetPowerUpFlag(), (float)object->GetPowerUpFlag(), 0.0f, 1.0f));
+				lights->SetLightDiffuseColor(2, SimpleMath::Color((float)object->GetPowerUpFlag(), (float)object->GetPowerUpFlag(), 0.0f, 1.0f));
 			});
 
 		secondModel->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());

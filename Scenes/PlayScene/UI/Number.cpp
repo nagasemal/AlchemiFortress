@@ -21,6 +21,9 @@ Number::Number(SimpleMath::Vector2 position, SimpleMath::Vector2 rage)
 	m_num = 0;
 	m_position = position;
 	m_rage = rage;
+
+	m_position.x += 32 * m_rage.x;
+
 }
 
 Number::~Number()

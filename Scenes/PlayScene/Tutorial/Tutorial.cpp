@@ -60,7 +60,8 @@ Tutorial::Tutorial():
 	m_tutorialFlag(false),
 	m_cameraFlag(false),
 	m_selectNumber(1),
-	m_tutorialNumber(0)
+	m_tutorialNumber(0),
+	m_maxSelectVal()
 {
 
 }
@@ -69,11 +70,13 @@ Tutorial::~Tutorial()
 {
 }
 
-void Tutorial::Initialize(int tutorialNumber)
+void Tutorial::Initialize(std::vector<int> tutorialNumber)
 {
 
-	m_selectNumber = tutorialNumber;
-	m_tutorialFlag = (bool)m_selectNumber;
+	m_selectNumber = 0;
+	m_tutorialFlag = (bool)tutorialNumber[0];
+
+	m_tutorialNumber = tutorialNumber;
 
 	auto device = ShareData::GetInstance().GetDeviceResources();
 	int width = device->GetOutputSize().right;
@@ -88,7 +91,7 @@ void Tutorial::Initialize(int tutorialNumber)
 	m_tutorialExitButton = std::make_unique<SelectionBox>(TUTORIAL_EXIT_BUTTON, SimpleMath::Vector2(1.0f, 1.0f));
 
 	m_showBox = std::make_unique<DrawBox>(SimpleMath::Vector2(), LINE_RAGE, 5.0f);
-	m_showBox->SetColor(SimpleMath::Color(1.0f, 0.0f, 0.0f, 1.0f));
+	m_showBox->SetColor(SimpleMath::Color(1.0f, 1.0f, 0.0f, 1.0f));
 
 	// チュートリアル表示用 マシンUI
 	m_amMachine = std::make_unique<AM_Attacker>();
@@ -99,7 +102,7 @@ void Tutorial::Initialize(int tutorialNumber)
 
 	CreateInterfase();
 
-	m_textTexture->LoadTexture(FILENAME[m_selectNumber]);
+	m_textTexture->LoadTexture(FILENAME[m_tutorialNumber[0]]);
 }
 
 void Tutorial::Update(AlchemicalMachineManager* machineManager, Gauge* gauge, MissionRender* missionRender, bool stopFlag)
@@ -113,10 +116,13 @@ void Tutorial::Update(AlchemicalMachineManager* machineManager, Gauge* gauge, Mi
 
 	if(!m_cameraFlag) m_showBox->ResetAnimationData();
 
+	// 説明時モード
 	if (m_explanationFlag)
 	{
 		m_arrowL->HitMouse();
 		m_arrowR->HitMouse();
+
+		m_maxSelectVal = INSTRUCTION_TYPE::NUM;
 
 		// 左ボタンでm_selectNumber増加
 		if (m_arrowL->ClickMouse())
@@ -151,18 +157,55 @@ void Tutorial::Update(AlchemicalMachineManager* machineManager, Gauge* gauge, Mi
 
 	}
 
+	// チュートリアル時処理
 	if (m_tutorialFlag && m_cameraFlag)
 	{
-		// テクスチャ読み込み
+		m_arrowL->HitMouse();
+		m_arrowR->HitMouse();
 
-		// 線を引く位置を決める
-		LinePosSet(machineManager, gauge, missionRender, m_selectNumber);
+		// 選択可能範囲の最大値を取得
+		m_maxSelectVal = (const int)m_tutorialNumber.size() - 1;
 
-		m_tutorialExitButton->HitMouse();
-		if (m_tutorialExitButton->ClickMouse()) 			m_tutorialFlag = false;
+		// 左ボタンでm_selectNumber増加
+		if (m_arrowL->ClickMouse())
+		{
+			m_selectNumber++;
+			// 上限下限設定
+			m_selectNumber = std::min(std::max(m_selectNumber, 0), m_maxSelectVal);
+
+			// テクスチャを読み込む
+			m_textTexture->LoadTexture(FILENAME[m_tutorialNumber[m_selectNumber]]);
+
+			// アニメーション値を0に戻す
+			m_showBox->ResetAnimationData();
+		}
+
+		// 右ボタンでm_selectNumber増加
+		if (m_arrowR->ClickMouse())
+		{
+
+			m_selectNumber--;
+			// 上限下限設定
+			m_selectNumber = std::min(std::max(m_selectNumber, 0), m_maxSelectVal);
+
+			// テクスチャを読み込む
+			m_textTexture->LoadTexture(FILENAME[m_tutorialNumber[m_selectNumber]]);
+
+			// アニメーション値を0に戻す
+			m_showBox->ResetAnimationData();
+		}
+
+		// ラインを引く位置を決める
+		LinePosSet(machineManager, gauge, missionRender, m_tutorialNumber[m_selectNumber]);
+		if (m_selectNumber >= m_maxSelectVal)
+		{
+			m_tutorialExitButton->HitMouse();
+			if (m_tutorialExitButton->ClickMouse()) 			m_tutorialFlag = false;
+		}
 
 	}
 
+	// 説明モード移行ボタン
 	m_explanationButton->HitMouse();
 	if (m_explanationButton->ClickMouse())
 	{
@@ -171,7 +214,6 @@ void Tutorial::Update(AlchemicalMachineManager* machineManager, Gauge* gauge, Mi
 		// 線を引く位置を決める
 		LinePosSet(machineManager, gauge, missionRender,m_selectNumber);
 	}
-
 }
 
 void Tutorial::Render()
@@ -224,24 +266,20 @@ void Tutorial::Render_Layer2()
 		m_backFlame->Render();
 		m_textTexture->Render();
 
-		// 示す先の線と矢印UI描画
 		pSD.GetSpriteBatch()->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
-		//　対象を明確にする
+		// 示す先の線と矢印UI描画
+		// 対象を明確にする
 		m_showBox->Draw();
 
-		// チュートリアル時には描画しない
-		if ( !m_tutorialFlag )
-		{
-			// 選択移動矢印の描画　(上限下限に達したら描画を切る)
-			if (m_selectNumber < INSTRUCTION_TYPE::NUM)m_arrowL->Draw();
-			if (m_selectNumber > 0)					   m_arrowR->Draw();
-		}
+		// 選択移動矢印の描画　(上限下限に達したら描画を切る)
+		if (m_selectNumber < m_maxSelectVal)	m_arrowL->Draw();
+		if (m_selectNumber > 0)						m_arrowR->Draw();
 
 		pSD.GetSpriteBatch()->End();
 
 		// チュートリアル時に描画する
-		if ( m_tutorialFlag )
+		if ( m_tutorialFlag && m_selectNumber >= (const int)m_tutorialNumber.size() - 1)
 		{
 			m_tutorialExitButton->DrawUI(SpriteLoder::UIICON_TYPE::CANCEL);
 		}

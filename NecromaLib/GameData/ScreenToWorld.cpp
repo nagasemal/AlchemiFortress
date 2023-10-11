@@ -4,29 +4,35 @@
 SimpleMath::Vector3 CalcScreenToWorldN(int sX, int sY, float fZ, int screen_W, int screen_H, SimpleMath::Matrix view, SimpleMath::Matrix prj)
 {
 	// 各行列の逆行列を算出
-	DirectX::XMMATRIX invView, invPrj, vP, invViewport = DirectX::XMMATRIX::XMMATRIX();
+	XMMATRIX invView, invPrj, vP, invViewport = XMMATRIX();
 
-	invView = DirectX::XMMatrixInverse(nullptr, view);
-	invPrj = DirectX::XMMatrixInverse(nullptr, prj);
-	vP = DirectX::XMMatrixIdentity();
+	// ビュー行列の逆行列
+	invView = XMMatrixInverse(nullptr, view);
 
-	DirectX::XMFLOAT4X4 matrix = DirectX::XMFLOAT4X4::XMFLOAT4X4();
+	// プロジェクション行列の逆行列
+	invPrj	= XMMatrixInverse(nullptr, prj);
 
-	matrix._11 = screen_W / 2.f;
+	// ビューポート行列
+	vP		= XMMatrixIdentity();
+
+	XMFLOAT4X4 matrix = XMFLOAT4X4();
+
+	// 画面サイズからビューポート行列を算出する
+	matrix._11 =  screen_W / 2.f;
 	matrix._22 = -screen_H / 2.f;
-	matrix._41 = screen_W / 2.f;
-	matrix._42 = screen_H / 2.f;
+	matrix._41 =  screen_W / 2.f;
+	matrix._42 =  screen_H / 2.f;
 
+	// XMFLOAT4X4をXMMATRIXに変換してvPに入れる
 	vP += DirectX::XMLoadFloat4x4(&matrix);
+	// ビューポート行列の逆行列
+	invViewport = XMMatrixInverse(nullptr, vP);
 
-	invViewport = DirectX::XMMatrixInverse(nullptr, vP);
-
-	// 逆変換
+	// スクリーン座標をワールド空間座標に変換する行列　逆変換
 	SimpleMath::Matrix tmp = invViewport * invPrj * invView;
 
-	SimpleMath::Vector3 pOut = SimpleMath::Vector3::Zero;
-
-	pOut = DirectX::XMVector3TransformCoord(SimpleMath::Vector3((float)sX, (float)sY, (float)fZ), tmp);
+	// スクリーン座標(sX,sY)と最近,遠点(fZ)にtmpをかけてワールド空間座標を算出
+	SimpleMath::Vector3 pOut = XMVector3TransformCoord(SimpleMath::Vector3((float)sX, (float)sY, (float)fZ), tmp);
 
 	return pOut;
 }
@@ -41,6 +47,7 @@ SimpleMath::Vector3 CalcScreenToXZN(int sX, int sY, int screen_W, int screen_H, 
 	// 最遠点
 	farPos = CalcScreenToWorldN(sX, sY, 1.0f, screen_W, screen_H, view, prj);
 
+	// 距離を取得し、ノーマライズする
 	ray = farPos - nearPos;
 	ray.Normalize();
 
@@ -50,16 +57,15 @@ SimpleMath::Vector3 CalcScreenToXZN(int sX, int sY, int screen_W, int screen_H, 
 	if (ray.y <= 0)
 	{
 		// 床交点
-		SimpleMath::Vector3 lRay = DirectX::XMVector3Dot(ray, SimpleMath::Vector3(0, 1, 0));
-		SimpleMath::Vector3 lp0 = DirectX::XMVector3Dot(-nearPos, SimpleMath::Vector3(0, 1, 0));
+		SimpleMath::Vector3 lRay = XMVector3Dot(ray, SimpleMath::Vector3(0, 1, 0));
+		SimpleMath::Vector3 lp0  = XMVector3Dot(-nearPos, SimpleMath::Vector3(0, 1, 0));
 
 		pOut = nearPos + (lp0 / lRay) * ray;
 
 	}
-	else
-	{
-		pOut = farPos;
-	}
+	// 存在しない場合は最遠点とする
+	else 		pOut = farPos;
 
+	// マウスのワールド座標
 	return pOut;
 }

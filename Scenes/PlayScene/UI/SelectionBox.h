@@ -40,4 +40,13 @@ public:
 		SimpleMath::Color nomalColor	 = {1.0f,1.0f,1.0f,1.0f},
 		SimpleMath::Color onColor		 = {0.9f,0.9f,0.9f,1.0f},
 		SimpleMath::Color pressdColor	 = {0.7f,0.7f,0.7f,1.0f});
+
+	void DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture,
+		RECT rect							= { 0,0,64,64 },
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsTexture = nullptr,
+		RECT pulsTexRect					= { 0,0,64,64 },
+		SimpleMath::Color pulsTextureCol	= { 1.0f,1.0f,1.0f,1.0f },
+		SimpleMath::Color nomalColor		= { 1.0f,1.0f,1.0f,1.0f },
+		SimpleMath::Color onColor			= { 0.9f,0.9f,0.9f,1.0f },
+		SimpleMath::Color pressdColor		= { 0.7f,0.7f,0.7f,1.0f });
 };

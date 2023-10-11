@@ -7,6 +7,11 @@
 #include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
 
+#define SELECTBOX_RAGE		{ 2.0f,2.0f }
+#define ALCHEMI_RAGE		(0.5f,0.5f)
+
+#define ALCHEMI_POS_SHIFT	40
+
 #define IMAGE_WIGHT			64
 #define IMAGE_HEIGHT		64
 
@@ -30,22 +35,22 @@ MachineSelect::~MachineSelect()
 
 void MachineSelect::Initialize()
 {
-	m_data.rage = { 2.0f,2.0f };
+	m_data.rage = SELECTBOX_RAGE;
 
 	m_machineBox = std::make_unique<SelectionBox>(m_data.pos, m_data.rage);
 	m_machineBox->Initialize();
 
 	m_colorChangeTime = 0;
 
-	m_selectionAlchemi = std::make_unique<SelectionBox>(SimpleMath::Vector2(m_data.pos.x + 40, m_data.pos.y + 40),
-							 SimpleMath::Vector2(0.5f, 0.5f));
+	m_selectionAlchemi = std::make_unique<SelectionBox>(SimpleMath::Vector2(m_data.pos.x + ALCHEMI_POS_SHIFT, m_data.pos.y + ALCHEMI_POS_SHIFT),
+							 SimpleMath::Vector2(ALCHEMI_RAGE));
 
 	RECT rect = RECT();
 	rect.right = 120;
 	rect.bottom = 120;
 
 	m_selectionAlchemi->SetRect(rect);
-	m_selectionAlchemi->SetRage(SimpleMath::Vector2(0.5f, 0.5f));
+	m_selectionAlchemi->SetRage(SimpleMath::Vector2(ALCHEMI_RAGE));
 
 }
 
@@ -80,10 +85,6 @@ void MachineSelect::Draw()
 
 void MachineSelect::Finalize()
 {
-	//for (int i = 0; i < 3; i++)
-	//{
-	//	m_selectionBox[i]->Finalize();
-	//}
 }
 
 void MachineSelect::DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture,
@@ -106,8 +107,10 @@ void MachineSelect::DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceVie
 
 	if (m_changeColorFlag) colour = m_boxColor;
 	if(m_onMouseFlag) colour = SimpleMath::Color(0.9f, 0.95f, 0.8f, 0.9f);
-	if(m_hitMouseFlag) colour = SimpleMath::Color(0.95f, 0.95f, 0.95f, 0.98f);
-
+	if (m_hitMouseFlag)
+	{
+		colour = SimpleMath::Color(0.65f, 0.65f, 0.95f, 0.98f);
+	}
 	SimpleMath::Vector2 box_Pos = { m_data.pos.x,m_data.pos.y};
 
 	// 内部BOX (オブジェクトを配置する箇所)
@@ -154,6 +157,8 @@ void MachineSelect::DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceVie
 			auto lights = dynamic_cast<IEffectLights*>(effect);
 			// 色変更
 			lights->SetLightDiffuseColor(0, Colors::White);
+			lights->SetLightDiffuseColor(1, Colors::White);
+			lights->SetLightDiffuseColor(2, Colors::White);
 
 		});
 
@@ -169,6 +174,8 @@ void MachineSelect::DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceVie
 
 				// 色変更
 				lights->SetLightDiffuseColor(0, SimpleMath::Color(0.0f, 0.0f, 0.0f, 1.0f));
+				lights->SetLightDiffuseColor(1, SimpleMath::Color(0.0f, 0.0f, 0.0f, 1.0f));
+				lights->SetLightDiffuseColor(2, SimpleMath::Color(0.0f, 0.0f, 0.0f, 1.0f));
 			});
 
 		secondModel->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, view, proj);

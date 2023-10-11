@@ -20,7 +20,7 @@ public:
 		SimpleMath::Matrix		matWorld;
 		SimpleMath::Matrix		matView;
 		SimpleMath::Matrix		matProj;
-		SimpleMath::Vector4	Diffuse;
+		SimpleMath::Vector4		Diffuse;
 	};
 
 	enum EFFECT_TYPE : int
@@ -30,7 +30,7 @@ public:
 		DELETE_ENEMY	= 2,		// エネミーが倒れた
 		MACHINE_LVUP	= 3,		// マシンのレベルが上がった
 		MACHINE_BREAK	= 4,		// マシンが壊された
-
+		CLICK			
 	};
 
 	//関数

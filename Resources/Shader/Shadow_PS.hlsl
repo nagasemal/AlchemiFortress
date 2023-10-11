@@ -6,11 +6,8 @@ SamplerState samLinear : register(s0);
 
 float4 main(PS_INPUT input) : SV_TARGET
 {
-	//トムの画像表示
+	//画像表示
 	float4 output = tex.Sample(samLinear, input.Tex);
-
-	//真っ白な板ポリゴン
-	float4 outputw = float4(1, 1, 1, 1);
 
 	return output * input.Color;
 }

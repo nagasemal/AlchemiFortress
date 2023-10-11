@@ -191,9 +191,10 @@ void SceneManager::CreateScene()
 
 	// 作成したシーンを初期化
 	m_Scene->Initialize();
-
 	// 次へのシーン情報を初期化
 	m_NextScene = GAME_SCENE::NONE;
+
+	m_NextScene = m_Scene->Update();
 }
 
 /*--------------------------------------------------

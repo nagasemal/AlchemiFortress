@@ -63,19 +63,11 @@ public:
 	// Projection行列
 	SimpleMath::Matrix GetProjection()			{ return m_camera->GetProjectionMatrix(); }
 
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GetStencilBase()	{ return m_depthStencilState_Base;}
-	// オブジェクトの後ろにモデルが入ったら描画されるステンシル
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GetStencilShadow()	{ return m_depthStencilState_Shadow;}
 
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GetStencilNomal() { return m_depthStencilState_Nomal; }
 
-	// モデルのシルエット用
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> GetModelShadowShader()	{ return m_modelShadowShader;}
-	// モデルの半透明描画用
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> GetModelTransparentShader() { return m_modelTransparentShader; }
+	//void CreateStencilData();
 
-	void CreateStencilData();
-
+	//void MachineDrawSetting(SimpleMath::Color color, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> ruleTex);
 
 private:
 	ShareData();
@@ -93,11 +85,10 @@ private:
 
 	DirectX::EffectFactory*			m_effectFactory;
 
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_depthStencilState_Base;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_depthStencilState_Shadow;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_depthStencilState_Nomal;
 
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_modelShadowShader;
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_modelTransparentShader;
+
+private:
+
+
 
 };

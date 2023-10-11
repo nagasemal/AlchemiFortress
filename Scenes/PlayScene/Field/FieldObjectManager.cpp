@@ -3,6 +3,8 @@
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/ShareJsonData.h"
 
+#include "Scenes/PlayScene/Enemy/EnemyManager.h"
+
 #include <algorithm>
 #include <random>
 
@@ -67,7 +69,7 @@ void FieldObjectManager::Initialize()
 
 }
 
-void FieldObjectManager::Update()
+void FieldObjectManager::Update(EnemyManager* pEnemyManager)
 {
 	// 床の更新処理
 	m_field->Update();
@@ -76,6 +78,8 @@ void FieldObjectManager::Update()
 	m_playerBase->Update();
 
 	m_crystalTomouseFlag = false;
+
+	m_playerBase->SetExp(pEnemyManager->GetNockDownEnemyExp() + m_playerBase->GetExp());
 
 	// クリスタルの更新処理
 	for (std::list<Crystal>::iterator it = m_crystals->begin(); it != m_crystals->end(); it++)

@@ -49,7 +49,8 @@ void DorpShadow::Update()
 
 void DorpShadow::CreateShadow(SimpleMath::Vector3 pos)
 {
-	pos.y = -1.25f;
+	// ä€âeÇÃà íuÇí≤êÆÇ∑ÇÈ
+	pos.y = -1.0f;
 
 	m_vertices.push_back({pos,SimpleMath::Color(0.2f,0.2f,0.2f,0.2f),SimpleMath::Vector2(2.0f, 0.0f)});
 }
@@ -65,7 +66,6 @@ void DorpShadow::CreateWorld()
 {
 
 	m_world = SimpleMath::Matrix::Identity;
-
 	SimpleMath::Matrix rot = SimpleMath::Matrix::CreateRotationX(RAD_90);
 
 	m_world = rot * m_world;

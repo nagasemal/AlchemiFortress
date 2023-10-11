@@ -56,6 +56,7 @@ struct Enemy_Data
 	int hp = 1;
 	float power = 1.0f;
 	int exp = 1;
+	SimpleMath::Color color = SimpleMath::Color();
 
 	std::vector<Enemy_MoveData> moveData;
 };
@@ -113,7 +114,7 @@ struct Stage_Data
 
 	std::vector<SimpleMath::Vector2> crystalPos;			// クリスタルの番号
 
-	int tutorial = 0;											// チュートリアル番号
+	std::vector<int> tutorial;										// チュートリアル番号
 	
 };
 

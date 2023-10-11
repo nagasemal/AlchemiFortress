@@ -33,10 +33,6 @@ public:
 	void LoadShaderFile(const wchar_t* path);
 	void AdvanceRender(); // éñëOÇ…í∑Ç¢èàóùÇÕåƒÇÒÇ≈Ç®Ç≠
 
-	virtual void Update() = 0;
-	virtual void Render() = 0;
-
-
 	void SetWindowSize(const int& width, const int& height)			{ m_windowWidth = width; m_windowHeight = height; };
 	void SetScale(SimpleMath::Vector2 scale)				{ m_scale = scale;}
 	void SetPosition(SimpleMath::Vector2 position)			{ m_position = position;}

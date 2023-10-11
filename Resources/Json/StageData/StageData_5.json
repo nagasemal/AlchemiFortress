@@ -48,7 +48,7 @@
     "ENEMYS": [
         {
         "CONDITION":"",
-        "SPAWNTIME": 15,
+        "SPAWNTIME": 18,
         "SPAWN_X": 10,
         "SPAWN_Y": 1,
         "SPAWN_Z": 10,
@@ -65,12 +65,15 @@
     "ATTACKER": 0,
     "CRYSTAL": 0,
     "DEFFENCER": 0,
-    "LV": 0,
+    "LV": 1,
     "MINING": 4,
     "MP": 400,
     "RECOVERY": 0,
-    "TUTORIAL": 5,
     "UPPER": 0
-  }
+  },
+    "TUTORIAL":[
+    {"NUMBER":11},
+  	{"NUMBER":5}
+  ]
 }
 

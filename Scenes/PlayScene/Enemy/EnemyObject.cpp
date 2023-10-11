@@ -3,6 +3,8 @@
 #include "NecromaLib/Singleton/DeltaTime.h"
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/ShareJsonData.h"
+#include "NecromaLib/Singleton/ModelShader.h"
+
 #include "NecromaLib/GameData/Easing.h"
 
 // コマンド
@@ -24,7 +26,8 @@ EnemyObject::EnemyObject(ENEMY_TYPE type, SimpleMath::Vector3 startPos, int lv) 
 	m_rotation(),
 	m_moveVec(),
 	m_aliveTimer(),
-	m_targetPos()
+	m_targetPos(),
+	m_element(ELEMENT::NOMAL)
 {
 
 	m_data.pos = startPos;
@@ -98,12 +101,39 @@ void EnemyObject::Render(Model* model)
 		* SimpleMath::Matrix::CreateScale(m_data.rage * 5.0f)
 		* SimpleMath::Matrix::CreateTranslation(m_data.pos);
 
+	model->UpdateEffects([&](IEffect* effect)
+		{
+			// 今回はライトだけ欲しい
+			auto lights = dynamic_cast<IEffectLights*>(effect);
+			// 色変更
+			lights->SetLightDiffuseColor(0, m_color);
+			lights->SetLightDiffuseColor(1, m_color);
+			lights->SetLightDiffuseColor(2, m_color);
+
+		});
+
 	// 重なった際、影を描画
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelMatrix, pSD.GetView(), pSD.GetProjection(), false, [&]
 		{
-			// 深度ステンシルステートの設定
-			pSD.GetContext()->OMSetDepthStencilState(pSD.GetStencilShadow().Get(), 1);
-			pSD.GetContext()->PSSetShader(pSD.GetModelShadowShader().Get(), nullptr, 0);
+
+			ModelShader::GetInstance().SilhouetteShader();
+
+			////画像用サンプラーの登録
+			//ID3D11SamplerState* sampler[1] = { pSD.GetCommonStates()->LinearWrap() };
+			//pSD.GetContext()->PSSetSamplers(0, 1, sampler);
+			////半透明描画指定
+			//ID3D11BlendState* blendstate = pSD.GetCommonStates()->NonPremultiplied();
+			//// 透明判定処理
+			//pSD.GetContext()->OMSetBlendState(blendstate, nullptr, 0xFFFFFFFF);
+
+			//// 深度ステンシルステートの設定
+			//pSD.GetContext()->OMSetDepthStencilState(pSD.GetCommonStates()->DepthNone(), 1);
+
+			//// カリングは左周り
+			//pSD.GetContext()->RSSetState(pSD.GetCommonStates()->CullNone());
+
+			//// ピクセルシェーダーに適応
+			//pSD.GetContext()->PSSetShader(pSD.GetModelShadowShader().Get(), nullptr, 0);
 		});
 
 	pSD.GetContext()->PSSetShader(nullptr, nullptr, 0);
@@ -154,33 +184,49 @@ void EnemyObject::Bouns()
 
 void EnemyObject::SetEnemyData(Enemy_Data data)
 {
+	// lvに応じてパラメータが上昇する
 	m_hp		= data.hp		* m_lv;
 	m_exp		= data.exp		* m_lv;
 	m_power		= data.power	* m_lv;
 	m_enemyType = data.type;
 	m_moveType  = data.moveType;
 
+	m_element = data.element;
+	m_color = ShareJsonData::GetInstance().GetElementColor(m_element);
+
+	// コマンド内容を動かすクラス
 	m_commander = std::make_unique<EnemyCommander>();
 
 	for (auto& moveData : data.moveData)
 	{
-		// コマンドクラス取得
+		// 受け取りたい動きの入ったコマンドクラスを取得する
 		ICommand_Enemy* command = ChangeEnemyMoveCommand(moveData.moveName);
 		// 値取得
 		MoveParameter moveParam = MoveParameter();
 
+		// 動きのパラメータを受け取る
 		moveParam.delay = moveData.delay;
 		moveParam.time = moveData.time;
 		moveParam.value = moveData.value;
 
+		// コマンドクラスにパラメータを入れる
 		command->SetParam(moveParam);
 
+		// 要素分順番に入れる
 		m_moveCommands.push_back(command);
 	}
 
+	// コマンダークラスにコマンドを登録する
 	for (auto& command : m_moveCommands)
 	{
 		m_commander->AddCommand(command);
 	}
+
+}
+
+void EnemyObject::HitBullet()
+{
+
+
 
 }

@@ -21,7 +21,7 @@ void Enemy_StanderMove::Execute()
 {
 	m_time += DeltaTime::GetInstance().GetDeltaTime();
 
-	// ディレイ時間が来るまでは処理を行わない
+	// 待機時間が来るまでは処理を行わない
 	if (m_time <= m_param.delay || m_enemyPtr->GetStopFlag()) return;
 
 	// 速度の計算
@@ -32,7 +32,7 @@ void Enemy_StanderMove::Execute()
 
 	m_enemyPtr->SetLengthVec(lengthVec * m_param.value);
 
-	// 稼働完了
+	// 移動完了
 	m_completion = m_time >= m_param.time;
 }
 

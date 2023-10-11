@@ -10,7 +10,8 @@
 
 #pragma once
 #include "NecromaLib/GameData/GameObject3D.h"
-#include "NecromaLib/GameData/Animation.h"
+
+class Particle;
 
 class MousePointer : public GameObjct3D
 {
@@ -42,20 +43,15 @@ public:
 	// オブジェクトを離した際に動く処理
 	void ReleaseLeftButtom();
 
-// アクセサ
-public:
-
 private:
 
-	//// 入力レイアウト 
-	//Microsoft::WRL::ComPtr<ID3D11InputLayout>			m_InputLayout;
-
-	//// テクスチャハンドル 
-	//Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	m_Texture;
-
-	//// エフェクト 
-	//std::unique_ptr<DirectX::AlphaTestEffect>			m_BatchEffect;
-
 	std::unique_ptr<DirectX::Model>				m_mouseCursorModel;
+
+	// パーティクルクラス
+	std::unique_ptr<Particle> m_particle;
+
+	float m_time;
+
+
 
 };

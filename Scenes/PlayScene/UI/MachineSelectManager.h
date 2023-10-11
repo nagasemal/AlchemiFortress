@@ -34,6 +34,8 @@ public:
 
 	void Render();
 
+	void RenderUI(int machineNum[]);
+
 	/// <summary>
 	/// モデルを描画する
 	/// </summary>
@@ -89,6 +91,9 @@ private:
 	bool m_selectNoneFlag;
 
 	std::unique_ptr<Camera> m_camera;
+
+	// マシンの名前表示
+	std::unique_ptr<SelectionBox> m_machineName;
 
 	SimpleMath::Matrix m_dispView;
 	SimpleMath::Matrix m_dispProj;

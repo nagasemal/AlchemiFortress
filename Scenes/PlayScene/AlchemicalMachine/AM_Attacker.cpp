@@ -99,11 +99,11 @@ void AM_Attacker::AllAlchemicalMachine(AlchemicalMachineObject* object)
 			m_powerUPFlag = true;
 
 			//‹­‰»
-			m_bulletStatus.str		 = m_saveBulletStatus.str	  * 1.5f;
-			m_bulletStatus.life		 = m_saveBulletStatus.life	  * 1.5f;
-			m_bulletStatus.speed	 = m_saveBulletStatus.speed	  * 1.5f;
-			m_bulletStatus.span		 = m_saveBulletStatus.span	  * 0.8f;
-			m_bulletStatus.lossMp	 = (int)((float)m_saveBulletStatus.lossMp  * 0.35f);
+			m_bulletStatus.str		 = m_saveBulletStatus.str	  * 1.15f;
+			m_bulletStatus.life		 = m_saveBulletStatus.life	  * 1.15f;
+			m_bulletStatus.speed	 = m_saveBulletStatus.speed	  * 1.15f;
+			m_bulletStatus.span		 = m_saveBulletStatus.span	  * 0.95f;
+			m_bulletStatus.lossMp	 = (int)((float)m_saveBulletStatus.lossMp  * 0.15f);
 		}
 }
 

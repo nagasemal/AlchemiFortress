@@ -30,4 +30,7 @@ private:
 
 	float m_time;			// コマンドが開始してから経過した時間
 	bool m_completion;		// コマンドが終了したことを知らせるフラグ
+
+	float m_hoppingVal;
+
 };

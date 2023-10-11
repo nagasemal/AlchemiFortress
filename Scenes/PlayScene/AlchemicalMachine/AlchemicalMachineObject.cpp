@@ -1,19 +1,22 @@
 #include "pch.h"
 #include "AlchemicalMachineObject.h"
+
 #include "NecromaLib/Singleton/InputSupport.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
-#include "NecromaLib/GameData/Easing.h"
 #include "NecromaLib/Singleton/ShareJsonData.h"
-
 #include "NecromaLib/Singleton/SpriteLoder.h"
+#include "NecromaLib/Singleton/ModelShader.h"
+
+
 #include "NecromaLib/GameData/SpriteCutter.h"
+#include "NecromaLib/GameData/Easing.h"
 
 #define AM_RAGE SimpleMath::Vector3(1, 1, 1)
 
 // 修理にかかる魔力
 #define REPAIR_HP 30 * m_lv
 
-AlchemicalMachineObject::AlchemicalMachineObject():
+AlchemicalMachineObject::AlchemicalMachineObject() :
 	m_hp(1),
 	m_maxHp(1),
 	m_active(),
@@ -25,14 +28,15 @@ AlchemicalMachineObject::AlchemicalMachineObject():
 	m_lv(1),
 	m_machineEffectValue(),
 	m_span(),
-	m_color(1,1,1,1),
+	m_color(1, 1, 1, 1),
 	m_rotateAnimation(),
 	m_element(ELEMENT::NOMAL),
 	m_powerUPFlag(),
 	m_line(),
 	m_dismantlingFlag(),
 	m_invincibleTime(),
-	m_invincibleFlag()
+	m_invincibleFlag(),
+	m_spawnTime(1.0f)
 {
 	m_selectLvUpBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(170, 490),
 		SimpleMath::Vector2(1.0f, 1.0f));
@@ -42,7 +46,6 @@ AlchemicalMachineObject::AlchemicalMachineObject():
 
 	m_dismantlingBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(250, 650),
 		SimpleMath::Vector2(1.0f, 1.0f));
-
 }
 
 void AlchemicalMachineObject::Update_Common()
@@ -59,6 +62,9 @@ void AlchemicalMachineObject::Update_Common()
 			m_invincibleFlag = false;
 		}
 	}
+
+	// 出現時の演出に使うタイマー
+	m_spawnTime += DeltaTime::GetInstance().GetDeltaTime();
 }
 
 void AlchemicalMachineObject::SelectUpdate_Common()
@@ -118,7 +124,7 @@ void AlchemicalMachineObject::SelectRenderUI_Common()
 
 }
 
-void AlchemicalMachineObject::HitToObject(MousePointer* pMP)
+void AlchemicalMachineObject::HitToMouse(MousePointer* pMP)
 {
 
 	m_hitMouseFlag = false;
@@ -131,6 +137,7 @@ void AlchemicalMachineObject::HitToObject(MousePointer* pMP)
 	// オブジェクトとマウスポインターの当たり判定
 	if (CircleCollider(GetCircle(), mouseWolrdPos))
 	{
+		// マシンに当たったことを知らせる
 		pMP->HitMachine(m_data.pos);
 		m_hitMouseFlag = true;
 	}
@@ -163,14 +170,14 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 	modelData *= SimpleMath::Matrix::CreateRotationY(m_rotateAnimation);
 
 	// 常に縦に揺れる
-	modelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y + (sinf(m_rotateAnimation) * 0.5f), m_data.pos.z);
+	modelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y + (sinf(m_rotateAnimation) * 0.2f), m_data.pos.z);
 
 	SimpleMath::Matrix ringData = SimpleMath::Matrix::Identity;
 	ringData = SimpleMath::Matrix::CreateScale(m_data.rage);
 	ringData *= SimpleMath::Matrix::CreateRotationY(-m_rotateAnimation * 1.5f);
 	ringData *= SimpleMath::Matrix::CreateTranslation
 	(m_data.pos.x,
-		m_data.pos.y + (sinf(m_rotateAnimation) * 0.5f),
+		m_data.pos.y + (sinf(m_rotateAnimation) * 0.2f),
 		m_data.pos.z);
 
 	// 追加パーツが存在する場合
@@ -184,6 +191,9 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 				auto lights = dynamic_cast<IEffectLights*>(effect);
 				// 色変更
 				lights->SetLightDiffuseColor(0, SimpleMath::Color((float)m_powerUPFlag, (float)m_powerUPFlag, 0.0f, 1.0f));
+				lights->SetLightDiffuseColor(1, SimpleMath::Color((float)m_powerUPFlag, (float)m_powerUPFlag, 0.0f, 1.0f));
+				lights->SetLightDiffuseColor(2, SimpleMath::Color((float)m_powerUPFlag, (float)m_powerUPFlag, 0.0f, 1.0f));
+
 			});
 
 		//ring->Draw(pSD.GetContext(), *pSD.GetCommonStates(), ringData, pSD.GetView(), pSD.GetProjection(), false, [&]
@@ -219,8 +229,12 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 		{
 			// 今回はライトだけ欲しい
 			auto lights = dynamic_cast<IEffectLights*>(effect);
+
 			// 色変更
 			lights->SetLightDiffuseColor(0, GetColor());
+			lights->SetLightDiffuseColor(1, GetColor());
+			lights->SetLightDiffuseColor(2, GetColor());
+
 		});
 
 	//// 重なった際、影を描画
@@ -257,11 +271,13 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 
 }
 
+// 召喚時に呼ばれる関数
 void AlchemicalMachineObject::SummonAM(SimpleMath::Vector3 pos)
 {
 	m_data.rage = AM_RAGE;
 	m_data.pos = pos;
 	m_active = true;
+	m_spawnTime = 0.0f;
 }
 
 const int AlchemicalMachineObject::GetNextLvCrystal()
@@ -287,31 +303,15 @@ const int AlchemicalMachineObject::GetDismantlingCrystal()
 
 void AlchemicalMachineObject::SilhouetteRender(DirectX::Model* model, SimpleMath::Matrix matrix)
 {
+	// 出現時演出が終わるまで処理をしない
+	if (m_spawnTime <= 1.0f) return;
 
 	ShareData& pSD = ShareData::GetInstance();
 
 	// 重なった際、影を描画
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), matrix, pSD.GetView(), pSD.GetProjection(), false, [&]
 		{
-
-			//画像用サンプラーの登録
-			ID3D11SamplerState* sampler[1] = { pSD.GetCommonStates()->LinearWrap() };
-			pSD.GetContext()->PSSetSamplers(0, 1, sampler);
-			//半透明描画指定
-			ID3D11BlendState* blendstate = pSD.GetCommonStates()->NonPremultiplied();
-			// 透明判定処理
-			pSD.GetContext()->OMSetBlendState(blendstate, nullptr, 0xFFFFFFFF);
-
-			// 深度ステンシルステートの設定
-			pSD.GetContext()->OMSetDepthStencilState(pSD.GetCommonStates()->DepthReadReverseZ(), 1);
-
-			// カリングは左周り
-			pSD.GetContext()->RSSetState(pSD.GetCommonStates()->CullNone());
-
-			// ピクセルシェーダーに適応
-			pSD.GetContext()->PSSetShader(pSD.GetModelShadowShader().Get(), nullptr, 0);
-
-
+			ModelShader::GetInstance().SilhouetteShader();
 		});
 
 }
@@ -322,9 +322,15 @@ void AlchemicalMachineObject::NomalRender(DirectX::Model* model, SimpleMath::Mat
 
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), matrix, pSD.GetView(), pSD.GetProjection(), false, [&]
 		{
-			// 深度ステンシルステートの設定
-			pSD.GetContext()->OMSetDepthStencilState(nullptr, 3);
+
+			ModelShader::GetInstance().ModelDrawShader(m_color,SimpleMath::Vector4(m_spawnTime,1.0f,1.0f,1.0f), SpriteLoder::GetInstance().GetRule());
+
 		});
+
+	//シェーダの登録を解除しておく
+	pSD.GetContext()->VSSetShader(nullptr, nullptr, 0);
+	pSD.GetContext()->PSSetShader(nullptr, nullptr, 0);
+
 }
 
 void AlchemicalMachineObject::TransparentRender(DirectX::Model* model, SimpleMath::Matrix matrix)
@@ -336,22 +342,7 @@ void AlchemicalMachineObject::TransparentRender(DirectX::Model* model, SimpleMat
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), matrix, pSD.GetView(), pSD.GetProjection(), false, [&]
 		{
 
-			//画像用サンプラーの登録
-			ID3D11SamplerState* sampler[1] = { pSD.GetCommonStates()->LinearWrap() };
-			pSD.GetContext()->PSSetSamplers(0, 1, sampler);
-			//半透明描画指定
-			ID3D11BlendState* blendstate = pSD.GetCommonStates()->NonPremultiplied();
-			// 透明判定処理
-			pSD.GetContext()->OMSetBlendState(blendstate, nullptr, 0xFFFFFFFF);
-
-			// 深度ステンシルステートの設定
-			pSD.GetContext()->OMSetDepthStencilState(pSD.GetCommonStates()->DepthNone(), 1);
-
-			// カリングは左周り
-			pSD.GetContext()->RSSetState(pSD.GetCommonStates()->CullNone());
-
-			// ピクセルシェーダーに適応
-			pSD.GetContext()->PSSetShader(pSD.GetModelTransparentShader().Get(), nullptr, 0);
+			ModelShader::GetInstance().ToransparentShader();
 
 
 		});

@@ -87,7 +87,8 @@ GAME_SCENE ResultScene::Update()
 
 	m_uiKeyControl->Update();
 
-	//m_veil->Update();
+	// マシンのアップデート
+	m_drawMachine->Update();
 
 	//　次のステージに遷移
 	if (m_selectionBox_Next->ClickMouse() && pDataM.GetStageNum() <= pDataM.GetStageMax())
@@ -129,8 +130,8 @@ void ResultScene::Draw()
 	m_baseModel->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(),
 		false, [&]()
 		{
-			// 深度ステンシルステートの設定
-			pSD.GetContext()->OMSetDepthStencilState(pSD.GetStencilBase().Get(), 1);
+			//// 深度ステンシルステートの設定
+			//pSD.GetContext()->OMSetDepthStencilState(pSD.GetStencilBase().Get(), 1);
 		});
 
 	m_drawMachine->Render();

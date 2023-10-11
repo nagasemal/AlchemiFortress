@@ -1,36 +1,30 @@
 #include "Veil.hlsli"
 
 Texture2D tex : register(t0);
-Texture2D tex2 : register(t1);
-Texture2D tex3 : register(t2);
+Texture2D ruleTex : register(t1);
 SamplerState samLinear : register(s0);
 
 float4 main(PS_INPUT input) : SV_TARGET
 {
-	// 無地のテクスチャ
-	Texture2D none;
-	// タイトルロゴ
-	float4 output = none.Sample(samLinear,input.Tex);
-
-	// ルール画像
-	float4 output_Rule = tex2.Sample(samLinear, input.Tex);
-
-	float2 textTex = float2(input.Tex.x * 1.5f, input.Tex.y * 1.5f);
-	// 中に表示する画像
-	float4 output_Text = tex.Sample(samLinear, textTex);
-
 	// 設定した色を受けとる
-	output = Colors;
+	float4 output = Colors;
+	// ルール画像を受け取る
+	float4 rule = ruleTex.Sample(samLinear, input.Tex);
 
-	// ルールフェード
-	output.a *= step(output_Rule.x, diffuse.a);
-	// 濃い色を薄く剥がす
-	output.xyz *= step(output_Rule.x, diffuse.r);
+	// diffuse.g,bには縦横の値が入っている
+	float2 imageRage = float2(input.Tex.x * diffuse.g, input.Tex.y * diffuse.b);
+	// 中に表示する画像を受け取る
+	float4 imageTex = tex.Sample(samLinear, imageRage);
+
+	// ルール画像を用いたフェード処理 (diffuse.a 時間変数入り)
+	output.a *= step(rule.x, diffuse.a);
+	// 演出の為,色情報に同じフェード処理を行う　(diffuse.r 時間変数入り)
+	output.rgb *= step(rule.x, diffuse.r);
 	// 同じ処理を中に描画する文字画像にも行う
-	output_Text.a *= step(output_Rule.x, diffuse.r);
+	imageTex.a *= step(rule.x, diffuse.r);
 
-	// 幕に文字画像を描画する
-	output += output_Text.a;
+	// 幕にのみ画像を描画する
+	output += imageTex;
 
 	return output;
 }

@@ -50,8 +50,8 @@ void EditScene::Initialize()
     m_stageData.enemys_Spawn        .push_back(Enemys_Spawn());
     m_stageData.machine             .push_back(Stage_Machine());
     m_stageData.resource            = Stage_Resource();
-    m_stageData.tutorial            = 0;
-
+    m_stageData.tutorial            = std::vector<int>();
+    
     for (int i = 0; i < MACHINE_TYPE::NUM; i++)
     {
         m_machineMissions_puls[i]  = std::make_unique<DrawArrow>(SimpleMath::Vector2(550.0f, 150.0f + (i * 48)), SimpleMath::Vector2(0.6f, 0.6f),2);

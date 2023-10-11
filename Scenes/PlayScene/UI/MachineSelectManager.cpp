@@ -8,9 +8,14 @@
 #include "Scenes/PlayScene/UI/DisplayMagicCircle.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/ShareJsonData.h"
+#include "NecromaLib/Singleton/InputSupport.h"
+
+#include "NecromaLib/GameData/SpriteCutter.h"
 
 #define POS 		SimpleMath::Vector2(532, 64)
 #define DIRECTION	120.f
+
+#define MACHINE_NAME_POS_SHIFT SimpleMath::Vector2(20, 60)
 
 MachineSelectManager::MachineSelectManager() :
 	m_selectMachineType(MACHINE_TYPE::NONE),
@@ -40,8 +45,6 @@ void MachineSelectManager::Initialize()
 
 	m_camera = std::make_unique<Camera>();
 
-	//m_uiKeyControl = std::make_unique<UIKeyControl>();
-
 	// Noneを省くために1スタート
 	for (int i = 1; i < MACHINE_TYPE::NUM; i++)
 	{
@@ -52,16 +55,16 @@ void MachineSelectManager::Initialize()
 
 		m_machineSelect[i]->Initialize();
 
-		//// UIを登録　
-		//m_uiKeyControl->AddUI(m_machineSelect[i]->GetMachineBox(), i - 1,0);
-		//m_uiKeyControl->AddUI(m_machineSelect[i]->GetManufacturingBox(), 0,1);
-
 	}
 
 	m_selectBoxAll		= false;
 	m_manufacturingFlag = false;
 
 	m_displayMagicCircle = std::make_unique<DisplayMagicCircle>();
+
+	// マシンの名前描画
+	m_machineName = std::make_unique<SelectionBox>(SimpleMath::Vector2(), SimpleMath::Vector2(1.0f, 1.0f));
+	m_machineName->Initialize();
 }
 
 void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
@@ -72,10 +75,11 @@ void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
 
 	m_selectMachineType = MACHINE_TYPE::NONE;
 
-
 	auto datas = DataManager::GetInstance();
 	// jsonから読み取った値を使用する
 	auto pSJD = &ShareJsonData::GetInstance();
+
+	auto pINP = &InputSupport::GetInstance();
 
 	// Noneを省くために1スタート
 	for (int i = 1; i < MACHINE_TYPE::NUM; i++)
@@ -118,6 +122,9 @@ void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
 
 	m_displayMagicCircle->Update();
 	m_displayMagicCircle->TransparentUpdate(m_selectBoxAll);
+
+
+	m_machineName->SetPos(pINP->GetMousePosScreen() - MACHINE_NAME_POS_SHIFT);
 }
 
 void MachineSelectManager::Render()
@@ -126,6 +133,32 @@ void MachineSelectManager::Render()
 	{
 		m_machineSelect[i]->Draw();
 	}
+}
+
+void MachineSelectManager::RenderUI(int machineNum[])
+{
+
+	SpriteLoder& pSL = SpriteLoder::GetInstance();
+
+	for (int i = 1; i < MACHINE_TYPE::NUM; i++)
+	{
+		 // マウスが置かれているマシンの名前を描画する(設置可能なら灰色,不可能であれば赤色で描画)
+		if (m_machineSelect[i]->GetHitMouseFlag())
+		{
+
+			SimpleMath::Color name_color = SimpleMath::Color(0.9f, 0.9f, 0.9f, 0.95f);
+
+			if(machineNum[i] <= 0) name_color = SimpleMath::Color(1.0f, 0.0f, 0.0f, 0.95f);
+
+			m_machineName->DrawUI(pSL.GetMachineNameTexture().Get(),
+				SpriteCutter(768 / 6,28,i,0),
+				nullptr,
+				RECT(),
+				SimpleMath::Color(),
+				name_color);
+		}
+	}
+
 }
 
 // 呼び出し元で要素分回している

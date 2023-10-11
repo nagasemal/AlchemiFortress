@@ -15,6 +15,7 @@
 #include "Scenes/PlayScene/Stage/MissionManager.h"
 
 // UI関連
+#include "Scenes/PlayScene/UI/BaseLv.h"
 #include "Scenes/PlayScene/UI/Gauge.h"
 #include "Scenes/PlayScene/Tutorial/Tutorial.h"
 #include "Scenes/PlayScene/Tutorial/Explanation.h"
@@ -67,8 +68,10 @@ private:
 	// ミッションを管理
 	std::unique_ptr<MissionManager>				m_missionManager;
 
-	// HP,
+	// HP,MP,クリスタルのゲージ
 	std::unique_ptr<Gauge>						m_resourceGauge;
+
+	std::unique_ptr<BaseLv>						m_baseLv;
 
 	// チュートリアルクラス
 	std::unique_ptr<Tutorial>					m_tutorial;
@@ -78,7 +81,7 @@ private:
 	std::unique_ptr<DirectX::Model>				m_skySphere;
 
 	// 倍速ボタン
-	std::unique_ptr<SelectionBox> m_doubleSpeedButton; 
+	std::unique_ptr<SelectionBox>				m_doubleSpeedButton; 
 	// ステージ番号
 	int m_stageNumber;
 	// 倍速倍率

@@ -27,14 +27,20 @@ void Enemy_HoppingMove::Execute()
 	// ‘¬“x‚ÌŒvŽZ
 	SimpleMath::Vector3 lengthVec = SimpleMath::Vector3();
 
-	lengthVec.x = cosf(m_time) / m_param.value;//Map(cosf(m_time), -1.0f, 1.0f, 0.0f, 1.0f);
-	lengthVec.z = sinf(m_time) / m_param.value;//Map(sinf(m_time), -1.0f, 1.0f, 0.0f, 1.0f);
-	lengthVec.Normalize();
+	lengthVec.y = m_hoppingVal;
+	//lengthVec.Normalize();
 
-	m_enemyPtr->SetLengthVec(m_enemyPtr->GetLengthVec() + lengthVec * m_param.value);
+	m_hoppingVal -= m_time;
+
+	m_enemyPtr->SetLengthVec(lengthVec * m_param.value);
 
 	// ‰Ò“­Š®—¹
 	m_completion = m_time >= m_param.time;
+
+	if (m_hoppingVal <= 0)
+	{
+		m_hoppingVal = m_param.value;
+	}
 }
 
 MoveParameter Enemy_HoppingMove::GetParam()
@@ -58,6 +64,7 @@ void Enemy_HoppingMove::SetParam(MoveParameter param)
 	m_param.delay = param.delay;
 	m_param.time = param.time;
 	m_param.value = param.value;
+
 }
 
 void Enemy_HoppingMove::SetEnemyPtr(EnemyObject& object)
@@ -67,7 +74,7 @@ void Enemy_HoppingMove::SetEnemyPtr(EnemyObject& object)
 
 void Enemy_HoppingMove::Reset()
 {
-
+	m_hoppingVal = m_param.value;
 	m_time = 0.0f;
 
 }

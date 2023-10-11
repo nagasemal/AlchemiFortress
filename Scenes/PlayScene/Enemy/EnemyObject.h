@@ -66,6 +66,9 @@ public:
 	// ステータスを設定する
 	void SetEnemyData(Enemy_Data data);
 
+	// 弾に当たった際の処理
+	void HitBullet();
+
 	// レベル
 	const int GetLv()									{ return m_lv; }
 	// 体力
@@ -78,11 +81,11 @@ public:
 	// とまっているフラグ
 	const bool GetStopFlag()							{ return m_stopFlag; }
 
-	const SimpleMath::Vector3 GetTargetPos()	{ return m_targetPos;}
+	const SimpleMath::Vector3 GetTargetPos()			{ return m_targetPos;}
 	// 目的地までの距離
-	const SimpleMath::Vector3 GetLengthVec()	{ return m_lengthVec;}
+	const SimpleMath::Vector3 GetLengthVec()			{ return m_lengthVec;}
 	// 加速度
-	const SimpleMath::Vector3 GetAccele()		{ return m_accele;}
+	const SimpleMath::Vector3 GetAccele()				{ return m_accele;}
 	// 自身のエネミータイプ
 	const ENEMY_TYPE GetEnemyType()						{ return m_enemyType; }
 
@@ -102,10 +105,16 @@ private:
 	float m_aliveTimer;
 	// 移動を止める
 	bool m_stopFlag;
+	// 属性
+	ELEMENT m_element;
+
+
 	// 動きの種類　ALL 記述されている動きを全て同時に動かす　ONE 一つずつ動きを動かす
 	std::string m_moveType;
 	// 自身のタイプ
 	ENEMY_TYPE m_enemyType;
+
+	SimpleMath::Color m_color;
 
 	// 加速度
 	SimpleMath::Vector3 m_accele;

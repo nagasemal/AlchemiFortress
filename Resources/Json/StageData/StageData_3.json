@@ -57,18 +57,22 @@
   "MACHINE_DEFAULET": {
     "MACHINES": [
     {"LV":1,"TYPE":"Attacker","ELEMENT":"Nomal","NUMBER":0},
-    {"LV":1,"TYPE":"Attacker","ELEMENT":"Nomal","NUMBER":2}
+    {"LV":1,"TYPE":"None","ELEMENT":"Nomal","NUMBER":1},
+    {"LV":1,"TYPE":"Attacker","ELEMENT":"Nomal","NUMBER":2},
+    {"LV":1,"TYPE":"None","ELEMENT":"Nomal","NUMBER":3}
     ]
   },
   "RESOURCE_DEFAULET": {
     "ATTACKER": 0,
     "CRYSTAL": 0,
     "DEFFENCER": 0,
-    "LV": 0,
+    "LV": 1,
     "MINING": 0,
     "MP": 400,
     "RECOVERY": 0,
-    "TUTORIAL": 3,
     "UPPER": 4
-  }
+  },
+  "TUTORIAL":[
+  	{"NUMBER":3}
+  ]
 }

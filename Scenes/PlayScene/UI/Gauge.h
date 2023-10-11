@@ -64,7 +64,11 @@ private:
 	// HP
 	std::unique_ptr<UserInterface> m_gauge_Hp;
 	std::unique_ptr<UserInterface> m_base_Hp;
+	std::unique_ptr<UserInterface> m_back_Hp;
 
 	std::unique_ptr<SelectionBox> m_box_Hp;
+
+	// ‘OF‚ÌHPŠ„‡‚ğ•Û
+	float m_difRedioHp;
 
 };

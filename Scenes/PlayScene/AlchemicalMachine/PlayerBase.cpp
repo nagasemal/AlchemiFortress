@@ -2,14 +2,15 @@
 #include "PlayerBase.h"
 #include "NecromaLib/Singleton/InputSupport.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
-#include "Scenes/DataManager.h"
-
 #include "NecromaLib/Singleton/ShareJsonData.h"
+#include "NecromaLib/Singleton/ModelShader.h"
+
+#include "Scenes/DataManager.h"
 
 #define RAGE SimpleMath::Vector3(3, 3, 3)
 
 PlayerBase::PlayerBase() :
-	m_baseLv(),
+	m_baseLv(1),
 	m_hp(1),
 	m_exp(),
 	m_testBox(),
@@ -63,8 +64,7 @@ void PlayerBase::Update()
 
 	if (PointerToCircle(GetCircle(), mouseWolrdPos)) m_hitMouseFlag = true;
 
-	// 五の倍数毎にLvUP
-	if (enemyKillNum >= 5 * (m_baseLv * 2))
+	if (m_exp >= GetNextLvEXP())
 	{
 		m_baseLv++;
 		m_lvUpTiming = true;
@@ -75,6 +75,9 @@ void PlayerBase::Update()
 		DataManager::GetInstance()->BaseHPMAXRecalculation(m_baseLv);
 
 		m_hp = (float)DataManager::GetInstance()->GetNowBaseHP_MAX();
+
+		// 超過分は繰越す
+		m_exp = GetNextLvEXP() - m_exp;
 
 	}
 
@@ -110,8 +113,11 @@ void PlayerBase::Render(DirectX::Model* model)
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(),
 		false, [&]()
 		{
-			// 深度ステンシルステートの設定
-			pSD.GetContext()->OMSetDepthStencilState(pSD.GetStencilBase().Get(), 1);
+
+			//ModelShader::GetInstance().SilhouetteShader();
+
+			//// 深度ステンシルステートの設定
+			pSD.GetContext()->OMSetDepthStencilState(ModelShader::GetInstance().GetStencilBase().Get(), 0);
 		});
 
 }
