@@ -100,6 +100,13 @@ void AM_Mining::HitEnemy(std::list<EnemyObject>* enemy)
 	}
 }
 
+bool AM_Mining::GetCrystalFlag()
+{
+
+	return m_timer >= m_span;
+
+}
+
 void AM_Mining::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
 {
 	//SpriteLoder& pSL = SpriteLoder::GetInstance();

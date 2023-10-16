@@ -59,6 +59,7 @@ public:
 	void Render_Layer2(); // •\¦‚ÌŠÖŒWã‚à‚¤ˆê‚ÂŠÖ”‚ª•K—v‚Å‚ ‚Á‚½‚½‚ß
 	void Finalize();
 
+	void RelodeTutorial(std::vector<int> tutorialNumber);
 	void CreateInterfase();
 	
 	bool GetTutorialFlag() { return m_explanationFlag || (m_tutorialFlag && m_cameraFlag); }

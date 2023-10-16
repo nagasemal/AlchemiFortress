@@ -29,6 +29,9 @@ private:
 	SimpleMath::Vector2 m_lineRage_Beside;
 	float m_rotate;
 
+	// 動く演出用のポジション
+	SimpleMath::Vector2 m_boxPos;
+
 	SimpleMath::Color m_color;
 
 };

@@ -17,11 +17,11 @@
 struct Bullet_Data
 {
 	std::string element = "Nomal";	//  属性
-	float str = 0.0f;				//	攻撃力
-	float speed = 0.0f;				//	攻撃の速度
-	float span = 0.0f;				//　攻撃の間隔
-	float life = 0.0f;				//　弾の生存時間
-	int lossMp = 0;					//  減らす魔力
+	float str			= 0.0f;		//	攻撃力
+	float speed			= 0.0f;		//	攻撃の速度
+	float span			= 0.0f;		//　攻撃の間隔
+	float life			= 0.0f;		//　弾の生存時間
+	int lossMp			= 0;		//  減らす魔力
 };
 
 struct Machine_Data
@@ -42,21 +42,21 @@ struct Machine_Data
 
 struct Enemy_MoveData
 {
-	std::string moveName = "Standerd";
-	float delay = 0.0f;
-	float time = 0.0f;
-	float value = 0.0f;
+	std::string moveName		= "Standerd";
+	float delay					= 0.0f;
+	float time					= 0.0f;
+	float value					= 0.0f;
 };
 
 struct Enemy_Data
 {
-	ELEMENT element = ELEMENT::NOMAL;
-	ENEMY_TYPE type = ENEMY_TYPE::ENMEY_NONE;
-	std::string moveType = "ALL";
-	int hp = 1;
-	float power = 1.0f;
-	int exp = 1;
-	SimpleMath::Color color = SimpleMath::Color();
+	ELEMENT element				= ELEMENT::NOMAL;
+	ENEMY_TYPE type				= ENEMY_TYPE::ENMEY_NONE;
+	std::string moveType		= "ALL";
+	int hp						= 1;
+	float power					= 1.0f;
+	int exp						= 1;
+	SimpleMath::Color color		= SimpleMath::Color();
 
 	std::vector<Enemy_MoveData> moveData;
 };
@@ -64,65 +64,67 @@ struct Enemy_Data
 // ステージのクリア条件を格納
 struct Stage_Condition
 {
-	std::string condition = "None";
-	int value = 0;		//目標値
-	int progress = 0;	//進行度
+	std::string condition	= "None";
+	int value				= 0;		//目標値
+	int progress			= 0;		//進行度
 };
 
 struct Stage_Resource
 {
-	int mp  = 400;
-	int crystal = 215;
-	int lv = 1;
-	int attacker = 0;
-	int upper = 0;
-	int deffencer = 0;
-	int mining = 0;
-	int recovery = 0;
+	int mp			= 400;
+	int crystal		= 215;
+	int hp			= 50;
+	int lv			= 1;
+	int attacker	= 0;
+	int upper		= 0;
+	int deffencer	= 0;
+	int mining		= 0;
+	int recovery	= 0;
 };
 
 // ステージをクリアしたマシンの情報を格納
 struct Stage_Machine
 {
-	MACHINE_TYPE type = MACHINE_TYPE::NONE;
-	ELEMENT element = ELEMENT::NOMAL;
-	int lv = 1;
-	int number = 0;
+	MACHINE_TYPE type	= MACHINE_TYPE::NONE;
+	ELEMENT element		= ELEMENT::NOMAL;
+	int lv				= 1;
+	int number			= 0;
 };
 
 // エネミーを出現させる時間
 struct Enemys_Spawn
 { 
-	ENEMY_TYPE type = ENEMY_TYPE::ENMEY_NONE;
-	float spawnTime = 0.0f;		// 召喚するまでの時間
-	SimpleMath::Vector3 spawnPos;	// 召喚場所
-	bool condition = false;		// 召喚を開始するタイミング
+	ENEMY_TYPE type					= ENEMY_TYPE::ENMEY_NONE;	// エネミーのタイプ
+	float spawnTime					= 0.0f;						// 召喚するまでの時間
+	SimpleMath::Vector3 spawnPos	= SimpleMath::Vector3();	// 召喚場所
+	bool condition					= false;					// 召喚を開始するタイミング
 };
 
 struct Stage_Data
 {
-	std::vector<Stage_Condition> condition_Machine;			// ステージのクリア条件 (マシン配置条件)
-	std::vector<Stage_Condition> condition_Alchemi;			// ステージのクリア条件 (マシン錬金条件)
-	std::vector<Stage_Condition> condition_Enemy;			// ステージのクリア条件 (エネミー討伐)
-	std::vector<Stage_Condition> condition_BaseLv;			// ステージのクリア条件 (拠点のLV条件)
-	std::vector<Stage_Condition> condition_Time;			// ステージのクリア条件 (生存時間,規定時間)
+	std::vector<Stage_Condition>		condition_Machine;			// ステージのクリア条件 (マシン配置条件)
+	std::vector<Stage_Condition>		condition_Alchemi;			// ステージのクリア条件 (マシン錬金条件)
+	std::vector<Stage_Condition>		condition_Enemy;			// ステージのクリア条件 (エネミー討伐)
+	std::vector<Stage_Condition>		condition_BaseLv;			// ステージのクリア条件 (拠点のLV条件)
+	std::vector<Stage_Condition>		condition_Time;				// ステージのクリア条件 (生存時間,規定時間)
 
-	std::vector<Enemys_Spawn> enemys_Spawn;					// エネミーの出現情報
+	std::vector<Enemys_Spawn>			enemys_Spawn;				// エネミーの出現情報
 
-	Stage_Resource resource;								// 初めから所持しているリソース群
-	std::vector<Stage_Machine> machine;						// 初めから設置されているマシン群
+	Stage_Resource						resource;					// 初めから所持しているリソース群
+	std::vector<Stage_Machine>			machine;					// 初めから設置されているマシン群
 
-	std::vector<SimpleMath::Vector2> crystalPos;			// クリスタルの番号
+	std::vector<SimpleMath::Vector2>	crystalPos;					// クリスタルの番号
 
-	std::vector<int> tutorial;										// チュートリアル番号
+	std::vector<int>					tutorial;					// チュートリアル番号
+	bool								lastWave		= true;		// 次にステージが控えているか
 	
 };
 
 struct Stage_ClearData
 {
-	std::vector<Stage_Machine> machines;	// クリアしたマシン
-	int clearTime = 0;							// クリアまでにかかった時間
-	int num = 0;								// 挑戦回数
+	std::vector<Stage_Machine> machines;		// クリアしたマシン
+	int clearTime	= 0;						// クリアまでにかかった時間
+	int num			= 0;						// 挑戦回数
 };
 
 // 書き込み

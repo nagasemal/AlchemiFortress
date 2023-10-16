@@ -73,12 +73,12 @@ PSInput main(VSInput vin)
     PSInput vout;
 
     CommonVSOutput cout = ComputeCommonVSOutputWithLighting(vin.Position, vin.Normal, 3);
-    vout.PositionPS = cout.Pos_ps;
-    vout.Diffuse = cout.Diffuse;
-    vout.Specular = cout.Specular;
-    vout.LightViewPos = cout.LightViewPos;
-    vout.TexCoord = vin.TexCoord;
-    vout.Position = cout.Position;
+    vout.PositionPS     = cout.Pos_ps;
+    vout.Diffuse        = cout.Diffuse;
+    vout.Specular       = cout.Specular;
+    vout.LightViewPos   = cout.LightViewPos;
+    vout.TexCoord       = vin.TexCoord;
+    vout.Position       = cout.Position;
 
     return vout;
 }

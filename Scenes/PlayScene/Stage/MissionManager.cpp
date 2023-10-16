@@ -16,6 +16,8 @@
 #include "NecromaLib/Singleton/DeltaTime.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
 
+#include "NecromaLib/GameData/UserInterfase.h"
+#include "NecromaLib/GameData/JsonLoder.h"
 #include "NecromaLib/GameData/SpriteCutter.h"
 
 MissionManager::MissionManager():
@@ -27,7 +29,11 @@ MissionManager::MissionManager():
 	m_missionSituation(),
 	m_timer(),
 	m_failureFlag(),
-	m_baseHP()
+	m_baseHP(),
+	m_lastWave(),
+	m_wave(1),
+	m_waveAnimation(),
+	m_nextWaveFlag()
 {
 }
 
@@ -43,39 +49,13 @@ void MissionManager::Initialize()
 	int width	= device->GetOutputSize().right;
 	int height	= device->GetOutputSize().bottom;
 
-	auto pSJD = &ShareJsonData::GetInstance();
+	// ステージ情報の再度読み込み
+	ReloadWave();
 
-	// 取得した情報をコピーする
-	m_machineCondition = pSJD->GetStageData().condition_Machine;
-	m_alchemiCondition = pSJD->GetStageData().condition_Alchemi;
-	m_enemyCondition   = pSJD->GetStageData().condition_Enemy;
-	m_baseLvCondition  = pSJD->GetStageData().condition_BaseLv;
-	m_timeCondition    = pSJD->GetStageData().condition_Time;
+	m_timeRender = std::make_unique<DrawTimer>(SimpleMath::Vector2{ 140.0f,160.0f }, SimpleMath::Vector2{ 1.0f,1.0f });
+	m_missionRender = std::make_unique<MissionRender>(SimpleMath::Vector2{ 100.0f,260.0f }, SimpleMath::Vector2{ 1.0f,1.0f });
 
-	// それぞれの内容の合計値を得る
-	m_missionNum = (int)m_machineCondition.size() +
-				   (int)m_alchemiCondition.size() +
-				   (int)m_enemyCondition.size()   + 
-				   (int)m_baseLvCondition.size()  +
-				   (int)m_timeCondition.size();
-
-
-	// ミッションの達成度
-	m_missionSituation = 0;
-
-	// クリア出来ないものはミッション完了したことにする
-	if (m_alchemiCondition[0].value <= 0) m_missionSituation++;
-	if (m_baseLvCondition[0].value	<= 0) m_missionSituation++;
-	if (m_machineCondition[0].value <= 0) m_missionSituation++;
-	if (m_enemyCondition[0].value	<= 0) m_missionSituation++;
-	if (m_timeCondition[0].value	<= 0) m_missionSituation++;
-
-	m_allClearFlag = false;
-
-	m_timeRender = std::make_unique<DrawTimer>(SimpleMath::Vector2{220.0f,200.0f}, SimpleMath::Vector2{1.0f,1.0f});
-
-	m_missionRender = std::make_unique<MissionRender>(SimpleMath::Vector2{ 100.0f,300.0f }, SimpleMath::Vector2{ 1.0f,1.0f });
-
+	// クリア時演出の生成
 	m_backVeil = std::make_unique<Veil>(3);
 	m_backVeil->Create(L"Resources/Textures/Fade.png");
 	m_backVeil->LoadShaderFile(L"Veil");
@@ -83,6 +63,17 @@ void MissionManager::Initialize()
 	m_backVeil->SetColor(SimpleMath::Color(0.4f, 0.4f, 0.4f, 0.5f));
 	m_backVeil->SetScale(SimpleMath::Vector2((float)width, (float)height / 5.0f));
 	m_backVeil->SetPosition(SimpleMath::Vector2(0.0f, height / 2.5f));
+
+	// Waveクリア時選出の生成
+	m_nextWaveTexture = std::make_unique<UserInterface>();
+	m_nextWaveTexture->Create(device,
+							  L"Resources/Textures/NextWave.png",
+							  SimpleMath::Vector2(width / 1.3f,height / 1.1f),
+							  SimpleMath::Vector2(0.5f,0.5f),
+							  UserInterface::ANCHOR::MIDDLE_CENTER);
+	m_nextWaveTexture->SetWindowSize(width,height);
+	m_nextWaveTexture->SetColor(SimpleMath::Color(0.0f, 0.6f, 1.0f, 1.0f));
+
 
 	// ステージ失敗成功時のアニメーション用変数
 	m_clearAnimation.max = 2.0f;
@@ -92,10 +83,9 @@ void MissionManager::Initialize()
 void MissionManager::Update(AlchemicalMachineManager* pAlchemicalManager, EnemyManager* pEnemyManager, FieldObjectManager* pFieldManager)
 {
 	auto pDeltaT = &DeltaTime::GetInstance();
+	m_lastWave = ShareJsonData::GetInstance().GetStageData().lastWave;
 
-	m_timer += pDeltaT->GetDeltaTime();
-
-	m_timeRender->Update(m_timer);
+	//m_nextWaveFlag = false;
 
 	m_baseHP = (int)pFieldManager->GetPlayerBase()->GetHP();
 
@@ -113,15 +103,54 @@ void MissionManager::Update(AlchemicalMachineManager* pAlchemicalManager, EnemyM
 	// 時間制限の処理
 	if (m_timeCondition.size() > 0)																		TimerMission();
 
-
+	// 拠点のHPが0になったことを知らせるフラグ
 	m_failureFlag = m_baseHP <= 0;
 
 	// クリア、または失敗時にアニメーションを回す
 	if ((m_missionNum <= m_missionSituation) || m_failureFlag)
 	{
-		m_backVeil->Update();
-		m_clearAnimation += 0.02f;
+		// 最後のWaveか失敗ならばシーン遷移開始とする
+		if (m_lastWave || m_failureFlag)
+		{
+			m_backVeil->Update();
+			m_clearAnimation += 0.02f;
+		}
+		else
+		{
+			m_nextWaveFlag = true;
+		}
 	}
+
+	// WAVEクリア時に流す処理(最後のWaveの時は流さない)
+	if ( m_nextWaveFlag && !m_lastWave )
+	{
+
+		m_waveAnimation += pDeltaT->GetDeltaTime() * 0.5f;
+
+		if (m_waveAnimation.MaxCheck())
+		{
+			// waveを加算する
+			m_wave++;
+			// 次のWaveを読み込む
+			ShareJsonData::GetInstance().LoadingJsonFile_Stage(DataManager::GetInstance()->GetStageNum(), m_wave);
+		}
+
+	}
+	else
+	{
+		m_waveAnimation -= pDeltaT->GetDeltaTime() * 0.8f;
+	}
+
+	m_nextWaveTexture->SetRenderRatio(Easing::EaseInOutQuad(0.0f,1.0f,m_waveAnimation));
+
+}
+
+void MissionManager::TimerUpdate()
+{
+	auto pDeltaT = &DeltaTime::GetInstance();
+	m_timer += pDeltaT->GetDeltaTime();
+	m_timeRender->Update(m_timer);
+
 }
 
 void MissionManager::Render()
@@ -153,12 +182,53 @@ void MissionManager::Render()
 		RECT rect = SpriteCutter(320, 48, filed, 0);
 
 		pSD.GetSpriteBatch()->Draw(pSL.GetStageClearTextTexture().Get(),
-			SimpleMath::Vector2(1280 / 2, 720 / 2 - (m_clearAnimation * 2.8f)), &rect,
+			SimpleMath::Vector2(1280.0f / 2.0f, 720.0f / 2.0f - (m_clearAnimation * 2.8f)), &rect,
 			SimpleMath::Color(1.0f, 1.0f, 1.0f, m_clearAnimation),
-			0.0f, SimpleMath::Vector2(320 / 2, 48 / 2), 2.0f);
+			0.0f, SimpleMath::Vector2(320.0f / 2.0f, 48.0f / 2.0f), 2.0f);
+
 	}
 
 	pSD.GetSpriteBatch()->End();
+
+	m_nextWaveTexture->Render();
+
+}
+
+void MissionManager::ReloadWave()
+{
+
+	auto pSJD = &ShareJsonData::GetInstance();
+
+	// 取得した情報をコピーする
+	m_machineCondition = pSJD->GetStageData().condition_Machine;
+	m_alchemiCondition = pSJD->GetStageData().condition_Alchemi;
+	m_enemyCondition = pSJD->GetStageData().condition_Enemy;
+	m_baseLvCondition = pSJD->GetStageData().condition_BaseLv;
+	m_timeCondition = pSJD->GetStageData().condition_Time;
+
+	// それぞれの内容の合計値を得る
+	m_missionNum = (int)m_machineCondition.size() +
+		(int)m_alchemiCondition.size() +
+		(int)m_enemyCondition.size() +
+		(int)m_baseLvCondition.size() +
+		(int)m_timeCondition.size();
+
+
+	// ミッションの達成度
+	m_missionSituation = 0;
+
+	// クリア出来ないものはミッション完了したことにする
+	if (m_alchemiCondition[0].value <= 0)	m_missionSituation++;
+	if (m_baseLvCondition[0].value <= 0)	m_missionSituation++;
+	if (m_machineCondition[0].value <= 0)	m_missionSituation++;
+	if (m_enemyCondition[0].value <= 0)		m_missionSituation++;
+	if (m_timeCondition[0].value <= 0)		m_missionSituation++;
+
+	// ミッションを全てクリアしたフラグを元に戻す
+	m_allClearFlag = false;
+
+	// 
+	m_nextWaveFlag = false;
 }
 
 bool MissionManager::MissionComplete()

@@ -74,25 +74,25 @@ void PlayerBase::Update()
 		DataManager::GetInstance()->CrystalMAXRecalculation(m_baseLv);
 		DataManager::GetInstance()->BaseHPMAXRecalculation(m_baseLv);
 
-		m_hp = (float)DataManager::GetInstance()->GetNowBaseHP_MAX();
+		//m_hp = (float)DataManager::GetInstance()->GetNowBaseHP_MAX();
 
 		// 超過分は繰越す
 		m_exp = GetNextLvEXP() - m_exp;
 
 	}
 
-	DataManager::GetInstance()->SetNowBaseHP((int)m_hp);
+	//DataManager::GetInstance()->SetNowBaseHP((int)m_hp);
 }
 
 void PlayerBase::Draw()
 {
 	ShareData& pSD = ShareData::GetInstance();
 
-	/*===[ デバッグ文字描画 ]===*/
-	std::wostringstream oss;
-	oss << "Base-";
-	if (m_hitMouseFlag) oss << "Hit";
-	pSD.GetDebugFont()->AddString(oss.str().c_str(), SimpleMath::Vector2(0.f, 100.f));
+	///*===[ デバッグ文字描画 ]===*/
+	//std::wostringstream oss;
+	//oss << "Base-";
+	//if (m_hitMouseFlag) oss << "Hit";
+	//pSD.GetDebugFont()->AddString(oss.str().c_str(), SimpleMath::Vector2(0.f, 100.f));
 
 	SimpleMath::Matrix textBox = SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y + 3.0f, m_data.pos.z);
 
@@ -116,16 +116,20 @@ void PlayerBase::Render(DirectX::Model* model)
 
 			//ModelShader::GetInstance().SilhouetteShader();
 
-			//// 深度ステンシルステートの設定
-			pSD.GetContext()->OMSetDepthStencilState(ModelShader::GetInstance().GetStencilBase().Get(), 0);
+			// 深度ステンシルステートの設定
+			//pSD.GetContext()->OMSetDepthStencilState(ModelShader::GetInstance().GetStencilBase().Get(), 0);
+			pSD.GetContext()->OMSetDepthStencilState(pSD.GetCommonStates()->DepthDefault(), 0);
+
 		});
 
 }
 
 void PlayerBase::Finalize()
 {
+
 	m_baseModel.reset();
 	m_testBox.reset();
+
 }
 
 void PlayerBase::Damage(float damage)
@@ -133,7 +137,9 @@ void PlayerBase::Damage(float damage)
 	// 無敵時間が規定に達していればダメージを受ける
 	if (m_invincibleTime >= 1.0f)
 	{
+
 		m_invincibleTime = 0;
-		m_hp -= damage;
+		DataManager::GetInstance()->SetNowBaseHP(DataManager::GetInstance()->GetNowBaseHP() - damage);
+	
 	}
 }

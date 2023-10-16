@@ -62,15 +62,19 @@ void Particle::CreateBillboard()
 	m_billboard = rot * m_billboard;
 }
 
-void Particle::Initialize()
+void Particle::Initialize(const wchar_t* path)
 {
 	auto device = ShareData::GetInstance().GetDevice();
 
 	//シェーダーの作成
 	CreateShader();
 
+	std::wstring wFirstPath = L"Resources/Textures/";
+	wFirstPath += path;
+	wFirstPath += L".png";
+
 	//画像の読み込み
-	LoadTexture(L"Resources/Textures/Particle.png");
+	LoadTexture(wFirstPath.c_str());
 
 	// プリミティブバッチの作成
 	m_batch = std::make_unique <DirectX::PrimitiveBatch <DirectX::VertexPositionColorTexture>> (ShareData::GetInstance().GetContext());
@@ -79,9 +83,10 @@ void Particle::Initialize()
 
 }
 
-void Particle::Update(SimpleMath::Vector3 pos)
+void Particle::Update(SimpleMath::Vector3 pos, bool flag,SimpleMath::Color color)
 {
-	m_timer += DeltaTime::GetInstance().GetDeltaTime();
+	// flaseなら通さない
+	if (!flag) return ;
 
 	CreateBillboard();
 
@@ -90,11 +95,9 @@ void Particle::Update(SimpleMath::Vector3 pos)
 	{
 		for (int i = 0; i < m_particleNum; i++)
 		{
-			m_particleUtility.push_back(CreateEffectParam(m_effectType,pos));
+			m_particleUtility.push_back(CreateEffectParam(m_effectType,pos,color));
+			m_timer = 0.0f;
 		}
-
-		m_timer = 0.0f;
-
 	}
 }
 
@@ -117,6 +120,8 @@ bool Particle::OnShot(SimpleMath::Vector3 pos, bool flag, SimpleMath::Color colo
 
 void Particle::UpdateParticle()
 {
+	m_timer += DeltaTime::GetInstance().GetDeltaTime();
+
 	//Particleの粒の更新処理を行う
 	for (std::list<ParticleUtility>::iterator ite = m_particleUtility.begin(); ite != m_particleUtility.end(); ite++)
 	{
@@ -365,6 +370,27 @@ ParticleUtility Particle::CreateEffectParam(EFFECT_TYPE type, SimpleMath::Vector
 
 		break;
 
+	case Particle::MACHINE_SPAWN:
+
+		// 弾けるエフェクト
+		pU.SetLife(1.6f);
+
+		pU.SetPosition(SimpleMath::Vector3(pos.x + 0.75f * cosf(rand),
+			pos.y,
+			pos.z + 0.75f * sinf(rand)));
+
+		vectol = pU.GetPosition() - pos;
+
+		pU.SetStartScale(SimpleMath::Vector3(0.4f, 0.4f, 0.4f));
+		pU.SetVelocity(SimpleMath::Vector3(sinf(vectol.x), 6.0f, cosf(vectol.z)));
+		pU.SetAccele(SimpleMath::Vector3(0.0f, -7.0f, 0.0f));
+
+		pU.SetEndColor({ color.R(),color.G(),color.B(),0.0f });
+
+		m_particleNum = 10;
+
+		break;
+
 	case Particle::CLICK:
 
 		pU.SetLife(0.8f);
@@ -374,9 +400,11 @@ ParticleUtility Particle::CreateEffectParam(EFFECT_TYPE type, SimpleMath::Vector
 			pos.y + range * sinf(rand),
 			pos.z + range * cosf(rand)));
 
-		pU.SetVelocity(SimpleMath::Vector3(cosf(rand), sinf(rand), cosf(rand)));
 
-		pU.SetRad(SimpleMath::Vector3(0,90,90));
+
+		pU.SetVelocity(SimpleMath::Vector3(0.0f, sinf(rand), sinf(rand)));
+
+		pU.SetRad(SimpleMath::Vector3(0.0f,1.0f,0.0f));
 
 		pU.SetStartColor({ color.R(),color.G(),color.B(),1.0f });
 		pU.SetEndColor({ color.R(),color.G(),color.B(),0.0f });
@@ -384,6 +412,43 @@ ParticleUtility Particle::CreateEffectParam(EFFECT_TYPE type, SimpleMath::Vector
 		m_particleNum = 5;
 
 		break;
+
+	case Particle::MINING_EFFECT:
+		// 立ち上るエフェクト
+		pU.SetLife(0.7f);
+
+		pU.SetPosition(SimpleMath::Vector3( pos.x, pos.y + 2.0f , pos.z ));
+		pU.SetStartScale(SimpleMath::Vector3(0.8f, 0.8f, 0.8f));
+		pU.SetVelocity(SimpleMath::Vector3(0.0f, 6.0f, 0.0f));
+		pU.SetAccele(SimpleMath::Vector3(0.0f, -7.0f, 0.0f));
+
+		pU.SetEndColor({ color.R(),color.G(),color.B(),0.0f });
+
+		m_particleNum = 1;
+
+
+		break;
+
+	case Particle::RECOVERY_EFFECT:
+
+		// 登りながら伸縮する
+		pU.SetLife(1.6f);
+
+		pU.SetPosition(SimpleMath::Vector3(pos.x + 0.75f * cosf(rand),
+			pos.y,
+			pos.z + 0.75f * sinf(rand)));
+
+		pU.SetStartScale(SimpleMath::Vector3(0.6f, 0.6f, 0.6f));
+		pU.SetEndScale(SimpleMath::Vector3(0.0f, 0.0f, 0.0f));
+		pU.SetVelocity(SimpleMath::Vector3(0.0f, 6.0f, 0.0f));
+		pU.SetAccele(SimpleMath::Vector3(0.0f, -3.0f, 0.0f));
+
+		pU.SetEndColor({ color.R(),color.G(),color.B(),0.0f });
+
+		m_particleNum = 5;
+
+		break;
+
 	default:
 		break;
 	}

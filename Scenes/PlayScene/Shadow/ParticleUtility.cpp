@@ -49,7 +49,6 @@ bool ParticleUtility::Update()
 
 	// 姿勢に回転を加える
 	m_quaternion = q * m_quaternion;
-
 	// スケール
 	m_nowScale = SimpleMath::Vector3::Lerp(m_startScale, m_endScale, 1.0f - m_life / m_startLife);
 	// 色
@@ -58,6 +57,9 @@ bool ParticleUtility::Update()
 	m_velocity += m_accele * elapsedTime;
 	// 座標の計算
 	m_position += m_velocity * elapsedTime;
+	// 回転の加算
+	m_position += m_quaternion.ToEuler() * elapsedTime;
+
 	m_life -= elapsedTime;
 
 	// ライフが０で自身を消してもらう

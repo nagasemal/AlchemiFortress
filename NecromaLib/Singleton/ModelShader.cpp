@@ -66,17 +66,30 @@ void ModelShader::CreateModelShader()
 
 	// 型抜かれる側(シルエットが描画される側)
 	{
+		//desc.DepthEnable = TRUE;									// 深度テストを行う
+		//desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;			// 深度バッファを更新する
+		//desc.DepthFunc = D3D11_COMPARISON_ALWAYS;					// 深度値以下なら更新する
+
+		//desc.StencilEnable = TRUE;									// ステンシルテストを行う
+		//desc.StencilReadMask = 0xff;		// 0xff
+		//desc.StencilWriteMask = 0xff;	// 0xff
+
+		//// 表面
+		//desc.FrontFace.StencilFunc = D3D11_COMPARISON_GREATER_EQUAL;			// 等しければ成功
+		//desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_INCR_SAT;		// OK　ステンシルデータを参照値とする
+		//desc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;			// NG　何もしない
+		//desc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;		// NG　何もしない
+
 		desc.DepthEnable = TRUE;									// 深度テストを行う
 		desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;			// 深度バッファを更新する
-		desc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;				// 深度値以下なら更新する
+		desc.DepthFunc = D3D11_COMPARISON_ALWAYS;			// 深度値以下なら更新する
 
-		desc.StencilEnable = TRUE;									// ステンシルテストを行う
-		desc.StencilReadMask = 0x01;		// 0xff
-		desc.StencilWriteMask = 0x01;	// 0xff
+		desc.StencilEnable		= TRUE;								// ステンシルテストを行う
+		desc.StencilReadMask	= 0xff;
+		desc.StencilWriteMask	= D3D11_DEFAULT_STENCIL_WRITE_MASK;	// 0xff
 
-		// 表面
-		desc.FrontFace.StencilFunc = D3D11_COMPARISON_EQUAL;			// 等しければ成功
-		desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;		// OK　ステンシルデータを参照値とする
+		desc.FrontFace.StencilFunc = D3D11_COMPARISON_GREATER_EQUAL;
+		desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_INCR_SAT;		// OK　ステンシルデータを参照値とする
 		desc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;			// NG　何もしない
 		desc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;		// NG　何もしない
 
@@ -85,28 +98,28 @@ void ModelShader::CreateModelShader()
 	}
 	// 	通常描画
 	{
-		desc.DepthFunc = D3D11_COMPARISON_NEVER;			// 以下ならば成功する
+		desc.DepthFunc		= D3D11_COMPARISON_EQUAL;			// 以下ならば成功する
+		desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;		// 書き込まない
 
 		desc.StencilEnable = TRUE;
-		desc.StencilReadMask = 0x00;
+		desc.StencilReadMask = 0xff;
 		desc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;	// 0xff
 		// 表面
-		desc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;	// 必ず通す
-
-		desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;		// OK　何もしない
+		desc.FrontFace.StencilFunc = D3D11_COMPARISON_EQUAL;			// 等しければ成功
+		desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;		// OK　何もしない
 		desc.BackFace = desc.FrontFace;	// 裏面も同じ
 
 		pSD.GetDevice()->CreateDepthStencilState(&desc, m_depthStencilState_Nomal.ReleaseAndGetAddressOf());
 	}
 	// 影描画
 	{
-		desc.DepthFunc = D3D11_COMPARISON_ALWAYS;					// 常に更新
+		desc.DepthFunc = D3D11_COMPARISON_NOT_EQUAL;					// 常に更新
 		desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;			// 書き込まない
 
 		desc.StencilEnable = FALSE;
 		desc.FrontFace.StencilFunc = D3D11_COMPARISON_EQUAL;		// 同じならば通す
 
-		desc.StencilReadMask = 0x00;
+		desc.StencilReadMask = 0xff;
 		desc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;	// 0xff
 
 		desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;	// OK　何もしない
@@ -147,6 +160,8 @@ void ModelShader::ModelDrawShader(SimpleMath::Color color, SimpleMath::Vector4 t
 
 	// 深度ステンシルステートの設定
 	pSD.GetContext()->OMSetDepthStencilState(pSD.GetCommonStates()->DepthDefault(), 0);
+
+	//pSD.GetContext()->OMSetDepthStencilState(m_depthStencilState_Nomal.Get(), 0);
 
 	// カリングは左周り
 	pSD.GetContext()->RSSetState(pSD.GetCommonStates()->CullNone());

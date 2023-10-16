@@ -16,10 +16,10 @@
 class ShareJsonData
 {
 public:
-	~ShareJsonData() = default;
+	~ShareJsonData()								= default;
 
-	ShareJsonData(const ShareJsonData&) = delete;
-	ShareJsonData& operator=(const ShareJsonData&) = delete;
+	ShareJsonData(const ShareJsonData&)				= delete;
+	ShareJsonData& operator=(const ShareJsonData&)	= delete;
 
 	static void Create();
 	static void Destroy();
@@ -36,7 +36,7 @@ public:
 	void LoadingJsonFile_Enemy();
 
 	// ステージのjsonファイルを読み込む
-	void LoadingJsonFile_Stage(int number);
+	void LoadingJsonFile_Stage(int number, int wave);
 
 	// クリアデータのjsonファイルを読み込む
 	void LoadingJsonFile_ClearData(int number);

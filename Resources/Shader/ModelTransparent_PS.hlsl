@@ -10,7 +10,7 @@
 
 float4 main() : SV_TARGET
 {
-	float4 output = float4(0.8f, 0.8f, 0.8f, 0.8f);
+	float4 output = float4(0.8f, 0.8f, 0.8f, 0.5f);
 
 	return output;
 

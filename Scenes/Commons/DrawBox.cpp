@@ -15,7 +15,7 @@ DrawBox::DrawBox(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage, float lineRa
 	m_animationData_Second = AnimationData();
 	m_rotate_easing = 0.0f;
 
-	m_data.pos = pos;
+	m_boxPos = m_data.pos = pos;
 	m_data.rage = rage;
 
 	m_color = Colors::Black;
@@ -43,6 +43,11 @@ void DrawBox::Update()
 	// ü‚ð“®‚©‚·
 	m_lineRage_Vertical.y = Easing::EaseInOutCirc(0.0f	, m_data.rage.y * 2.0f, m_animationData_First);
 	m_lineRage_Beside.x	  = Easing::EaseInOutCirc(0.0f  , m_data.rage.x * 2.0f, m_animationData_First);
+
+	if (m_animationData_First) m_animationData_Second += deltaTime * 1.2f;
+	if (m_animationData_Second.MaxCheck()) m_animationData_Second = 0.0f;
+
+	m_color = SimpleMath::Color(1.0f, 1.0f, 1.0f - m_animationData_Second, 1.0f);
 
 	m_keySelectFlag = false;
 
@@ -102,5 +107,16 @@ void DrawBox::Draw()
 		0.0f,
 		SimpleMath::Vector2(0, 0),
 		m_lineRage_Beside);
+
+	//// ‰‰o—p‚ÌŽlŠpŒ`•`‰æ
+	//popPos = SimpleMath::Vector2(m_data.pos.x - m_data.rage.x - 5, m_data.pos.y + m_data.rage.y);
+	//rect = RECT{ 0,0,5,5 };
+	//pSB->Draw(pSL.GetMissionLabelTexture().Get(),
+	//	popPos + m_boxPos,
+	//	&rect,
+	//	m_color,
+	//	0.0f,
+	//	SimpleMath::Vector2(0, 0));
+
 
 }

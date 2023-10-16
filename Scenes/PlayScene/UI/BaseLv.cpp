@@ -28,7 +28,7 @@ BaseLv::BaseLv()
 	LoadShaderFile(L"BaseLv");
 	SetWindowSize(windowSize.right, windowSize.bottom);
 	SetColor(SimpleMath::Color(1.0f,1.0f,1.0f,1.0f));
-	SetPosition(SimpleMath::Vector2(50.0f, 50.0f));
+	SetPosition(SimpleMath::Vector2(70.0f, 70.0f));
 	SetScale(SimpleMath::Vector2(0.15f, 0.15f));
 
 	m_baseLvRender = std::make_unique<Number>(m_position,m_scale * 5.0f);

@@ -62,8 +62,9 @@
   "RESOURCE_DEFAULET": {
     "ATTACKER": 0,
     "CRYSTAL": 0,
-    "DEFFENCER": 4,
+    "DEFFENCER": 1,
     "LV": 1,
+    "HP":500,
     "MINING": 0,
     "MP": 400,
     "RECOVERY": 0,
@@ -71,6 +72,7 @@
   },
     "TUTORIAL":[
   	{"NUMBER":2}
-  ]
+  ],
+  "LastWave":false,
 }
 

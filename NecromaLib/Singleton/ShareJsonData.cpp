@@ -57,12 +57,13 @@ void ShareJsonData::LoadingJsonFile_Enemy()
 	m_enemyData[ENEMY_TYPE::WORM] = Json::FileLoad_EnemyData("Resources/Json/EnemyData/EnemyData_Worm.json");
 }
 
-void ShareJsonData::LoadingJsonFile_Stage(int number)
+void ShareJsonData::LoadingJsonFile_Stage(int number, int wave)
 {
 
 	// numberに応じたファイルパスを読み込む
 	std::ostringstream oss;
-	oss << number;
+	oss << number << "_" << wave;
+
 	std::string filePath = "Resources/Json/StageData/StageData_" + oss.str() + ".json";
 
 	m_stageData = Json::FileLoad_StageData(filePath);

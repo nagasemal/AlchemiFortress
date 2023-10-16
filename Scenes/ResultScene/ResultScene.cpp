@@ -96,7 +96,7 @@ GAME_SCENE ResultScene::Update()
 
 		pDataM.SetStageNum(pDataM.GetStageNum() + 1);
 		// 次のステージのデータを読みとる
-		ShareJsonData::GetInstance().LoadingJsonFile_Stage(pDataM.GetStageNum());
+		ShareJsonData::GetInstance().LoadingJsonFile_Stage(pDataM.GetStageNum(),1);
 
 		return GAME_SCENE::PLAY;
 	}
@@ -106,7 +106,7 @@ GAME_SCENE ResultScene::Update()
 	{
 
 		// 今のステージのデータを読みとる
-		ShareJsonData::GetInstance().LoadingJsonFile_Stage(DataManager::GetInstance()->GetStageNum());
+		ShareJsonData::GetInstance().LoadingJsonFile_Stage(DataManager::GetInstance()->GetStageNum(),1);
 
 		return GAME_SCENE::PLAY;
 	}

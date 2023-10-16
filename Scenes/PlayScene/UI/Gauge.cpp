@@ -9,9 +9,9 @@
 
 #include <math.h>
 
-#define HP_GAUGE_POS        { 345.0f,50.0f }
-#define MP_GAUGE_POS        { 300.0f,100.0f }
-#define CRYSTAL_GAUGE_POS   { 300.0f,130.0f}
+#define HP_GAUGE_POS        { 355.0f,50.0f }
+#define MP_GAUGE_POS        { 320.0f,90.0f }
+#define CRYSTAL_GAUGE_POS   { 320.0f,120.0f}
 
 #define REDUCE_HP 0.1f
 

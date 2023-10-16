@@ -350,6 +350,7 @@ Stage_Data Json::FileLoad_StageData(const std::string filePath)
 	stage_resource.mining		= (int)default_resource["MINING"].get<double>();
 	stage_resource.deffencer	= (int)default_resource["DEFFENCER"].get<double>();
 	stage_resource.recovery		= (int)default_resource["RECOVERY"].get<double>();
+	stage_resource.hp		= (int)default_resource["HP"].get<double>();
 
 	status.resource = stage_resource;
 
@@ -380,6 +381,11 @@ Stage_Data Json::FileLoad_StageData(const std::string filePath)
 		status.crystalPos.push_back(crystalPos);
 
 	}
+
+	// これがこのステージでの最後のウェーブである
+	bool lastWave = val.get<picojson::object>()["LastWave"].get<bool>();
+
+	status.lastWave = lastWave;
 
 	return status;
 

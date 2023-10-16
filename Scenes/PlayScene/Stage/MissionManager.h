@@ -11,6 +11,7 @@ class Number;
 class MissionRender;
 class DrawTimer;
 class Veil;
+class UserInterface;
 
 class MissionManager
 {
@@ -19,14 +20,22 @@ public:
 	~MissionManager();
 
 	void Initialize();
-	void Update(AlchemicalMachineManager* pAlchemicalManager,EnemyManager* pEnemyManager, FieldObjectManager* pFieldManager);
+	void Update(AlchemicalMachineManager* pAlchemicalManager, EnemyManager* pEnemyManager, FieldObjectManager* pFieldManager);
 
-	std::unique_ptr<MissionRender>* GetMissionRender() { return &m_missionRender;}
+	void TimerUpdate();
+
+	std::unique_ptr<MissionRender>* GetMissionRender() { return &m_missionRender; }
 
 	void Render();
 
+	// ステージ情報を再度読み込む
+	void ReloadWave();
+
 	bool MissionComplete();
 	bool MissionmFailure();
+
+	// 次のWAVEに進んだことを知らせるフラグ
+	bool NextWaveFlag() { return m_nextWaveFlag && m_waveAnimation.MaxCheck(); }
 
 	int GetStartTimer();
 
@@ -64,9 +73,16 @@ private:
 	// 半透明幕(クリア時)の描画
 	std::unique_ptr<Veil> m_backVeil;
 
+	// NextWaveの文字描画
+	std::unique_ptr<UserInterface> m_nextWaveTexture;
+
 	float m_timer;
 
+	// ステージクリアした際に流すアニメーション用変数
 	AnimationData m_clearAnimation;
+	// WAVEクリアした際に流すアニメーション用変数
+	AnimationData m_waveAnimation;
+
 
 	// 全ての条件を満たしたことを示すフラグ
 	bool m_allClearFlag;
@@ -82,5 +98,14 @@ private:
 
 	// 現在の拠点のHP
 	int m_baseHP;
+
+	// 現在が最後のステージであるか
+	bool m_lastWave;
+
+	//　現在のWave数の取得
+	int m_wave;
+
+	// 次のWaveに進んだことを知らせるフラグ
+	bool m_nextWaveFlag;
 
 };

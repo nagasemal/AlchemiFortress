@@ -15,7 +15,9 @@
 
 #define SPEED 0.0025f
 
-#define MPPLUSTIME 1.0f
+// 魔力を回復する間隔
+#define MPPLUSTIME 2.0f
+// 魔力の回復量
 #define MPPLUSNUM  1.0f
 
 // 円周の一番小さい場合におけるマシンの最大数
@@ -68,14 +70,28 @@ void AlchemicalMachineManager::Initialize()
 	m_particle_hit		= std::make_unique<Particle>(Particle::HIT_BULLET);
 	m_particle_hit		->Initialize();
 
+	m_particle_Put		= std::make_unique<Particle>(Particle::MACHINE_SPAWN);
+	m_particle_Put		->Initialize();
+
+	m_particle_Gurd		= std::make_unique<Particle>(Particle::SPAWN_ENEMY);
+	m_particle_Gurd		->Initialize();
+
+	m_particle_Mining	= std::make_unique<Particle>(Particle::MINING_EFFECT);
+	m_particle_Mining	->Initialize(L"Crystal");
+	m_particle_Mining	->SetParticleSpawnTime(1.0f);
+
+	m_particle_Recovery = std::make_unique<Particle>(Particle::RECOVERY_EFFECT);
+	m_particle_Recovery	->Initialize(L"MP");
+	m_particle_Recovery	->SetParticleSpawnTime(1.0f);
+
 	m_magicCircle		= std::make_unique<MagicCircle>();
 	m_magicCircle		->Initialize();
 
 	m_magicCircle_Field = std::make_unique<MagicCircle>();
 	m_magicCircle_Field	->Initialize();
 
-	m_machineNumRender = std::make_unique<Number>();
-	m_machineNumRender->SetRage({ 0.25f,0.25f });
+	m_machineNumRender	= std::make_unique<Number>();
+	m_machineNumRender	->SetRage({ 0.25f,0.25f });
 
 	CreateAMMachine();
 	LvToObjectActives(1);
@@ -128,6 +144,9 @@ void AlchemicalMachineManager::Update(
 
 	// セレクトマネージャーのアップデートを回す
 	m_selectManager->Update(fieldManager);
+
+	// パーティクルの更新
+	Update_Particle();
 
 	// 召喚マシンを選択中ならば選択ラインをホイールで決める
 	if(m_selectManager->GetHitMouseToSelectBoxEven())
@@ -203,11 +222,13 @@ void AlchemicalMachineManager::Update(
 		// オブジェクトにマウスが入っているかどうか
 		if (m_AMObject[i]->GetHitMouse())
 		{
+			// マシンに当たっている判定を是にする
 			m_allHitObjectToMouse = true;
 
 			// クリックで選択状態に移行
 			if (leftRelease && m_selectNumber != i)
 			{
+				// 選択されているマシンのインデックス番号を渡す
 				m_selectNumber = i;
 				m_machineExplanation->ResetMoveTime();
 			}
@@ -216,16 +237,19 @@ void AlchemicalMachineManager::Update(
 		//　存在していれば処理を続ける
 		if (!m_AMObject[i]->GetActive()) continue;
 
+		// 丸影の表示位置を定める
 		m_dorpShadow->CreateShadow(m_AMObject[i]->GetData().pos);
 
-		// 現状場に存在しているマシンの総数を調べる
+		// 現状場に存在しているマシンの総数を調べる (None)
 		if (m_AMObject[i]->GetModelID() == MACHINE_TYPE::NONE) amNum_Nomal++;
+		// 全体数
 		amNum++;
 
 		// アルケミカルマシンの更新処理
 		m_AMObject[i]->Update();
 		m_AMObject[i]->HitToMouse(pMP);
 
+		// 解体されたことを受け取る
 		if (m_AMObject[i]->GetDismantlingFlag())
 		{
 			Dismantling(i);
@@ -243,13 +267,15 @@ void AlchemicalMachineManager::Update(
 	{
 		m_mpPulsTimer = 0;
 		pDM.SetNowMP(pDM.GetNowMP() + ((int)MPPLUSNUM * (amNum - amNum_Nomal)));
+
+		// 処理順の影響でRecoveryのみここで処理をする
 		Update_Recovery(enemys);
 	}
 
 	// マシンを召喚する処理
 	SpawnAMMachine(leftRelease);
 
-	// 製造ボタンが押されたら所持数を増やす
+	// 錬金ボタンが押されたら所持数を増やす
 	if (m_selectManager->GetManufacturingFlag())
 	{
 		m_AMnums[m_selectManager->GetSelectMachineType()]++;
@@ -257,9 +283,6 @@ void AlchemicalMachineManager::Update(
 
 	// 離したのでマウスの当たり判定を元の大きさに戻す
 	if(leftRelease)  pMP->ReleaseLeftButtom();
-
-	// パーティクルの更新
-	m_particle_hit->UpdateParticle();
 
 	// バレットの更新処理
 	for (std::list<std::unique_ptr<Bullet>>::iterator it = m_bullets.begin(); it != m_bullets.end(); it++)
@@ -285,6 +308,9 @@ void AlchemicalMachineManager::Update(
 void AlchemicalMachineManager::Render()
 {
 
+	// 置いた際に出すパーティクル
+	m_particle_Put->Render();
+
 	for (int i = 0; i < m_AMObject.size(); i++)
 	{
 		// 存在しているかチェック
@@ -308,8 +334,10 @@ void AlchemicalMachineManager::Render()
 	m_dorpShadow->CreateWorld();
 	m_dorpShadow->Render();
 
-	// 球が当たった際のエフェクト処理
 	m_particle_hit->Render();
+	m_particle_Gurd->Render();
+	m_particle_Mining->Render();
+	m_particle_Recovery->Render();
 
 	// バレットの描画処理
 	for (std::list<std::unique_ptr<Bullet>>::iterator it = m_bullets.begin(); it != m_bullets.end(); it++)
@@ -392,6 +420,31 @@ Model* AlchemicalMachineManager::GetSelectModel()
 	return m_AMFilter->HandOverAMModel(m_selectManager->GetSelectMachineType());
 }
 
+void AlchemicalMachineManager::ReloadResource()
+{
+
+	auto pSJD = &ShareJsonData::GetInstance();
+
+	Stage_Resource resource = pSJD->GetStageData().resource;
+
+	m_AMnums[MACHINE_TYPE::ATTACKER]	+= resource.attacker;
+	m_AMnums[MACHINE_TYPE::DEFENSER]	+= resource.deffencer;
+	m_AMnums[MACHINE_TYPE::UPPER]		+= resource.upper;
+	m_AMnums[MACHINE_TYPE::RECOVERY]	+= resource.recovery;
+	m_AMnums[MACHINE_TYPE::MINING]		+= resource.mining;
+
+}
+
+void AlchemicalMachineManager::Update_Particle()
+{
+	// パーティクル群のアップデート処理
+	m_particle_hit			->UpdateParticle();
+	m_particle_Put			->UpdateParticle();
+	m_particle_Gurd			->UpdateParticle();
+	m_particle_Mining		->UpdateParticle();
+	m_particle_Recovery		->UpdateParticle();
+}
+
 void AlchemicalMachineManager::Update_None(int baseLv)
 {
 	InputSupport& pINP = InputSupport::GetInstance();
@@ -461,6 +514,9 @@ void AlchemicalMachineManager::Update_Mining(int index, FieldObjectManager* fiel
 
 	mining->AllFieldObject(fieldManager);
 	mining->HitEnemy(enemys->GetEnemyData());
+
+	m_particle_Mining->Update(mining->GetPos(), !mining->GetCrystalFlag(),mining->GetColor());
+
 }
 
 void AlchemicalMachineManager::Update_Recovery(EnemyManager* enemys)
@@ -470,15 +526,18 @@ void AlchemicalMachineManager::Update_Recovery(EnemyManager* enemys)
 	for (int i = 0; i < m_AMObject.size(); i++)
 	{
 
-		if (m_AMObject[i]->GetHP() <= 0) return;
-		if (m_AMObject[i]->GetModelID() != MACHINE_TYPE::RECOVERY) return;
+		if (m_AMObject[i]->GetHP() <= 0) continue;
+		if (m_AMObject[i]->GetModelID() != MACHINE_TYPE::RECOVERY) continue;
 
 		AM_Recovery* recovery = dynamic_cast<AM_Recovery*>(m_AMObject[i].get());
 
 		recovery->MPPuls(&pDM);
 		recovery->HitEnemy(enemys->GetEnemyData());
-	}
 
+		// 回収状態をパーティクルで示す
+		m_particle_Recovery->OnShot(recovery->GetPos(), true, recovery->GetColor());
+
+	}
 }
 
 void AlchemicalMachineManager::Update_Upper(int index,EnemyManager* enemyManager)
@@ -521,6 +580,7 @@ void AlchemicalMachineManager::CreateAMMachine()
 	{
 		for (int j = 0; j < CIRCLE_MAX_MIN * i; j++)
 		{
+
 			// Noneマシンを追加
 			m_AMObject.push_back(m_AMFilter->HandOverAMClass(MACHINE_TYPE::NONE));
 
@@ -532,7 +592,9 @@ void AlchemicalMachineManager::CreateAMMachine()
 			m_AMObject[counter]->SummonAM(SetVelocityCircle(j, CIRCLE_MAX_MIN * i, i * CIRCLE_LINE_DISTANCE));
 			m_AMObject[counter]->SetActive(false);
 			m_dorpShadow->CreateShadow(m_AMObject[counter]->GetData().pos);
+
 			counter++;
+
 		}
 	}
 
@@ -542,6 +604,7 @@ void AlchemicalMachineManager::LvToObjectActives(int lineNumber)
 {
 	for (int i = 0; i < m_AMObject.size(); i++)
 	{
+
 		if (m_AMObject[i]->GetModelID() != MACHINE_TYPE::NONE) continue;
 
 		if (m_AMObject[i]->GetLine() == lineNumber)
@@ -552,6 +615,7 @@ void AlchemicalMachineManager::LvToObjectActives(int lineNumber)
 		{
 			m_AMObject[i]->SetActive(false);
 		}
+
 	}
 }
 
@@ -594,6 +658,9 @@ void AlchemicalMachineManager::SpawnAMMachine(bool leftButtom)
 		m_AMnums[m_selectManager->GetSelectMachineType()]--;
 
 		m_spawnMachine = m_AMObject[m_selectNumber]->GetModelID();
+
+		m_particle_Put->OnShot(m_AMObject[m_selectNumber]->GetPos(),true, m_AMObject[m_selectNumber]->GetColor());
+
 	}
 
 }

@@ -38,6 +38,9 @@ public:
 
 	void HitEnemy(std::list<EnemyObject>* enemy);
 
+	// ƒNƒŠƒXƒ^ƒ‹‚ğ‰ñû‚µ‚½uŠÔ‚ğ“¾‚é
+	bool GetCrystalFlag();
+
 	void RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture) override;
 
 	void LvUp() override;

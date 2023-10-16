@@ -60,6 +60,9 @@ public:
 
 	Model* GetSelectModel();
 
+	// ステージデータからリソースを補填する
+	void ReloadResource();
+
 	// マシンが設置されたことを知らせるフラグ
 	const MACHINE_TYPE SpawnMachineNotification() const { return m_spawnMachine; }
 
@@ -70,6 +73,9 @@ public:
 	void SetSelectMachineNumber(int index) { m_selectNumber = index; }
 
 private:
+
+	// パーティクルのアップデート
+	void Update_Particle();
 
 	// 専用の更新処理を回す
 	void Update_None(int baseLv);
@@ -142,14 +148,23 @@ private:
 	// 丸影
 	std::unique_ptr<DorpShadow> m_dorpShadow;
 
-	// パーティクルクラス
-	std::unique_ptr<Particle> m_particle_hit;
-
 	// 魔法陣クラス(マシン)
 	std::unique_ptr<MagicCircle> m_magicCircle;
 
 	// 魔法陣クラス(フィールド)
 	std::unique_ptr<MagicCircle> m_magicCircle_Field;
+
+
+	// パーティクルクラス
+	std::unique_ptr<Particle> m_particle_hit;
+	// 設置時		パーティクル
+	std::unique_ptr<Particle> m_particle_Put;
+	// ガード時		パーティクル
+	std::unique_ptr<Particle> m_particle_Gurd;
+	// 魔力回収時	パーティクル
+	std::unique_ptr<Particle> m_particle_Recovery;
+	// 結晶回収時	パーティクル
+	std::unique_ptr<Particle> m_particle_Mining;
 
 
 	bool m_allHitObjectToMouse;

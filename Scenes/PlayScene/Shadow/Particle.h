@@ -30,8 +30,13 @@ public:
 		DELETE_ENEMY	= 2,		// エネミーが倒れた
 		MACHINE_LVUP	= 3,		// マシンのレベルが上がった
 		MACHINE_BREAK	= 4,		// マシンが壊された
-		CLICK			
+		MACHINE_SPAWN	= 5,		// マシンが設置さえた際に出るパーティクル
+		CLICK			= 6,		// クリックされた際に出るパーティクル
+		MINING_EFFECT	= 7,		// 結晶を回収した際に出るパーティクル
+		RECOVERY_EFFECT	= 8			// 魔力を回収した際に出るパーティクル
 	};
+
+private:
 
 	//関数
 public:
@@ -43,10 +48,10 @@ public:
 	void LoadTexture(const wchar_t* path);
 	void CreateBillboard();
 
-	void Initialize();
+	void Initialize(const wchar_t* path = L"Particle");
 
 	// 常時用
-	void Update(SimpleMath::Vector3 pos);
+	void Update(SimpleMath::Vector3 pos, bool flag = true,SimpleMath::Color color = { 1.0f,1.0f,1.0f,1.0f });
 	// 単発用
 	bool OnShot(SimpleMath::Vector3 pos, bool flag, SimpleMath::Color color = {1.0f,1.0f,1.0f,1.0f});
 
@@ -54,6 +59,9 @@ public:
 	void UpdateParticle();
 
 	void Render();
+
+	// スポーン間隔を設定する
+	void SetParticleSpawnTime(float time) { m_particleSpawnTime = time; }
 
 	//変数
 private:
@@ -68,20 +76,21 @@ private:
 	// プリミティブバッチ
 	std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColorTexture>> m_batch;
 	//コモンステート
-	std::unique_ptr<DirectX::CommonStates> m_states;
+	std::unique_ptr<DirectX::CommonStates>							m_states;
+
 	// テクスチャハンドル
-	std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> m_texture;
+	std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>	m_texture;
 
 	// 頂点配列
-	std::vector<DirectX::VertexPositionColorTexture> m_vertices;
+	std::vector<DirectX::VertexPositionColorTexture>				m_vertices;
 	// パーティクル配列
-	std::list<ParticleUtility> m_particleUtility;
+	std::list<ParticleUtility>										m_particleUtility;
 	// 頂点シェーダ
-	Microsoft::WRL::ComPtr<ID3D11VertexShader> m_vertexShader;
+	Microsoft::WRL::ComPtr<ID3D11VertexShader>						m_vertexShader;
 	// ピクセルシェーダ
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pixelShader;
+	Microsoft::WRL::ComPtr<ID3D11PixelShader>						m_pixelShader;
 	// ジオメトリシェーダ
-	Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_geometryShader;
+	Microsoft::WRL::ComPtr<ID3D11GeometryShader>					m_geometryShader;
 
 	SimpleMath::Matrix m_billboard;
 	SimpleMath::Matrix m_view;

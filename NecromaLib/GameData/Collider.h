@@ -24,6 +24,7 @@ struct Circle
 	Circle(SimpleMath::Vector3 ip = SimpleMath::Vector3(), float ir = 0.f) { p = ip, r = ir; }
 
 	Circle(float ix, float iy,float iz, float ir) { p = SimpleMath::Vector3(ix, iy,iz), r = ir; }
+
 };
 
 int AABB_XZ(SimpleMath::Vector3 box1APos, SimpleMath::Vector3 box1BPos, SimpleMath::Vector3 box2APos, SimpleMath::Vector3 box2BPos);

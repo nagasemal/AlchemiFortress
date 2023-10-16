@@ -59,6 +59,7 @@ void MousePointer::Update()
 	// パーティクルの更新
 	m_particle->UpdateParticle();
 
+	// 左クリックされたらパーティクルを出現させる
 	if (mouse.leftButton == mouse.PRESSED)
 	{
 		//m_time = 0.0f;
@@ -88,12 +89,11 @@ void MousePointer::ModelDraw(DirectX::Model* model)
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false, [&]
 		{
 
-			//ModelShader::GetInstance().ToransparentShader();
-
-
-			ModelShader::GetInstance().ModelDrawShader(SimpleMath::Color(1.0f,1.0f,1.0f,1.0f),
-													   SimpleMath::Vector4(m_time,1.0f,1.0f,1.0f),
+			ModelShader::GetInstance().ModelDrawShader(SimpleMath::Color(1.0f,1.0f,1.0f,0.5f),
+													   SimpleMath::Vector4(m_time,0.6f,0.0f,1.0f),
 													   SpriteLoder::GetInstance().GetRule());
+
+			ModelShader::GetInstance().ToransparentShader();
 
 		});
 

@@ -24,6 +24,9 @@ public:
 	void Render();
 	void Finalize();
 
+	// エネミーのデータを再度読み取る
+	void ReloadEnemyData();
+
 	EnemyObject GetEnemyStatus(ENEMY_TYPE type,int spawnNumber);
 
 	EnemyObject GetRandomEnemy();

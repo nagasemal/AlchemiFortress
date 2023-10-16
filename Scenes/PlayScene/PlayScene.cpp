@@ -19,7 +19,8 @@ PlayScene::PlayScene()
 
 	ShareJsonData::GetInstance().LoadingJsonFile_Bullet();
 	ShareJsonData::GetInstance().LoadingJsonFile_Machine();
-	ShareJsonData::GetInstance().LoadingJsonFile_Stage(m_stageNumber);
+	//　ステージナンバーのWave1を読み込む
+	ShareJsonData::GetInstance().LoadingJsonFile_Stage(m_stageNumber,1);
 
 	// 等倍速に設定
 	m_doubleSpeedNum = 1;
@@ -68,7 +69,7 @@ void PlayScene::Initialize()
 	m_explanation = std::make_unique<Explanation>();
 
 	// 倍速ボタンの生成
-	m_doubleSpeedButton = std::make_unique<SelectionBox>(SimpleMath::Vector2(width - 100.0f, height - 100.0f), SimpleMath::Vector2(1.0f, 1.0f));
+	m_doubleSpeedButton = std::make_unique<SelectionBox>(SimpleMath::Vector2(width / 1.04f, height / 1.1f), SimpleMath::Vector2(1.0f, 1.0f));
 
 	// 天球モデルのロード
 	ShareData& pSD = ShareData::GetInstance();
@@ -103,6 +104,27 @@ GAME_SCENE PlayScene::Update()
 
 	m_explanation->Update();
 
+	m_missionManager->Update(m_AM_Manager.get(), m_enemyManager.get(), m_fieldManager.get());
+
+	//　次のWaveに進んだことを知らせる
+	if (m_missionManager->NextWaveFlag())
+	{
+		DataManager* pDM = DataManager::GetInstance();
+		ShareJsonData& pSJD = ShareJsonData::GetInstance();
+		Stage_Data stageData = pSJD.GetStageData();
+
+		m_AM_Manager->ReloadResource();
+		m_enemyManager->ReloadEnemyData();
+		m_tutorial->RelodeTutorial(stageData.tutorial);
+		m_missionManager->ReloadWave();
+
+		// リソース群を追加する
+		pDM->SetNowBaseHP(pDM->GetNowBaseHP() + stageData.resource.hp);
+		pDM->SetNowCrystal(pDM->GetNowCrystal() + stageData.resource.crystal);
+		pDM->SetNowMP(pDM->GetNowMP() + stageData.resource.mp);
+
+	}
+
 	// チュートリアル中ならば以下の処理を通さない
 	if (tutorialFlag) 		return GAME_SCENE();
 
@@ -124,11 +146,11 @@ GAME_SCENE PlayScene::Update()
 						 m_enemyManager.get(),
 						 m_moveCamera.get());
 
+	m_missionManager	->TimerUpdate();
+
 	m_enemyManager		->Update(m_fieldManager->GetPlayerBase()->GetPos());
 
 	m_resourceGauge		->Update();
-
-	m_missionManager	->Update(m_AM_Manager.get(),m_enemyManager.get(),m_fieldManager.get());
 
 	m_baseLv			->Update(m_fieldManager.get());
 
@@ -159,6 +181,8 @@ GAME_SCENE PlayScene::Update()
 
 		return GAME_SCENE::RESULT;
 	}
+
+
 
 	InputSupport* pINP = &InputSupport::GetInstance();
 

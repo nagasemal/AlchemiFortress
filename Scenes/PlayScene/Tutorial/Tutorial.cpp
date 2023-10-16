@@ -73,10 +73,7 @@ Tutorial::~Tutorial()
 void Tutorial::Initialize(std::vector<int> tutorialNumber)
 {
 
-	m_selectNumber = 0;
-	m_tutorialFlag = (bool)tutorialNumber[0];
-
-	m_tutorialNumber = tutorialNumber;
+	RelodeTutorial(tutorialNumber);
 
 	auto device = ShareData::GetInstance().GetDeviceResources();
 	int width = device->GetOutputSize().right;
@@ -86,16 +83,15 @@ void Tutorial::Initialize(std::vector<int> tutorialNumber)
 	m_arrowL = std::make_unique<DrawArrow>(SimpleMath::Vector2((width / 2) + ARROW_POS_X + TUTORIAL_TEXT_POS.x, height / 2 + TUTORIAL_TEXT_POS.y), SimpleMath::Vector2(1.0f, 1.0f),2);
 	m_arrowR = std::make_unique<DrawArrow>(SimpleMath::Vector2((width / 2) - ARROW_POS_X + TUTORIAL_TEXT_POS.x, height / 2 + TUTORIAL_TEXT_POS.y), SimpleMath::Vector2(1.0f, 1.0f),4);
 
-	m_explanationButton = std::make_unique<SelectionBox>(EXPLANATION_BUTTON, SimpleMath::Vector2(1.0f, 1.0f));
-
+	m_explanationButton  = std::make_unique<SelectionBox>(EXPLANATION_BUTTON, SimpleMath::Vector2(1.0f, 1.0f));
 	m_tutorialExitButton = std::make_unique<SelectionBox>(TUTORIAL_EXIT_BUTTON, SimpleMath::Vector2(1.0f, 1.0f));
 
 	m_showBox = std::make_unique<DrawBox>(SimpleMath::Vector2(), LINE_RAGE, 5.0f);
-	m_showBox->SetColor(SimpleMath::Color(1.0f, 1.0f, 0.0f, 1.0f));
+	m_showBox -> SetColor(SimpleMath::Color(1.0f, 1.0f, 0.0f, 1.0f));
 
 	// チュートリアル表示用 マシンUI
 	m_amMachine = std::make_unique<AM_Attacker>();
-	m_amMachine->Initialize();
+	m_amMachine -> Initialize();
 
 	m_machineExplanation = std::make_unique<MachineExplanation>();
 	m_machineExplanation->Initialize();
@@ -103,6 +99,7 @@ void Tutorial::Initialize(std::vector<int> tutorialNumber)
 	CreateInterfase();
 
 	m_textTexture->LoadTexture(FILENAME[m_tutorialNumber[0]]);
+
 }
 
 void Tutorial::Update(AlchemicalMachineManager* machineManager, Gauge* gauge, MissionRender* missionRender, bool stopFlag)
@@ -214,6 +211,7 @@ void Tutorial::Update(AlchemicalMachineManager* machineManager, Gauge* gauge, Mi
 		// 線を引く位置を決める
 		LinePosSet(machineManager, gauge, missionRender,m_selectNumber);
 	}
+
 }
 
 void Tutorial::Render()
@@ -239,6 +237,15 @@ void Tutorial::Render()
 				  SimpleMath::Color(0.0f,0.0f,0.0f,0.3f),
 				  0.0f,
 				  DirectX::XMFLOAT2{800.0f / 2.0f,600.0f / 2.0f}, 2.0f);
+
+		rect = SpriteCutter(64, 64, SpriteLoder::UIICON_TYPE::STOP, 0);
+
+		// 背景を黒くする
+		pSB->Draw(pSL.GetUIIcons().Get(), SimpleMath::Vector2(width / 2.0f, height / 2.0f),
+			&rect,
+			SimpleMath::Color(0.0f, 0.0f, 0.0f, 0.8f),
+			0.0f,
+			DirectX::XMFLOAT2{ 64.0f / 2.0f,64.0f / 2.0f }, 10.0f);
 
 		pSD.GetSpriteBatch()->End();
 		
@@ -274,7 +281,7 @@ void Tutorial::Render_Layer2()
 
 		// 選択移動矢印の描画　(上限下限に達したら描画を切る)
 		if (m_selectNumber < m_maxSelectVal)	m_arrowL->Draw();
-		if (m_selectNumber > 0)						m_arrowR->Draw();
+		if (m_selectNumber > 0)					m_arrowR->Draw();
 
 		pSD.GetSpriteBatch()->End();
 
@@ -290,6 +297,20 @@ void Tutorial::Render_Layer2()
 
 void Tutorial::Finalize()
 {
+}
+
+void Tutorial::RelodeTutorial(std::vector<int> tutorialNumber)
+{
+	m_selectNumber = 0;
+	m_tutorialFlag = (bool)tutorialNumber[0];
+	m_tutorialNumber = tutorialNumber;
+
+	// 選択可能範囲の最大値を取得
+	m_maxSelectVal = (const int)m_tutorialNumber.size() - 1;
+
+	// UserInterFaceが生成されているならば再度画像を読み込む
+	if(m_textTexture) m_textTexture->LoadTexture(FILENAME[m_tutorialNumber[0]]);
+
 }
 
 void Tutorial::CreateInterfase()
@@ -323,7 +344,7 @@ void Tutorial::CreateInterfase()
 void Tutorial::LinePosSet(AlchemicalMachineManager* machineManager, Gauge* gauge, MissionRender* missionRender, int number)
 {
 
-	SimpleMath::Vector2 linePos = SimpleMath::Vector2();
+	SimpleMath::Vector2 linePos = SimpleMath::Vector2(-100,-100);
 	SimpleMath::Vector2 lineRage = LINE_RAGE;
 
 	MachineSelect* machineSelect = machineManager->GetMachineSelect()->get()->GetMachineSelect(MACHINE_TYPE::ATTACKER);
@@ -375,7 +396,7 @@ void Tutorial::LinePosSet(AlchemicalMachineManager* machineManager, Gauge* gauge
 	case INSTRUCTION_TYPE::GAUGE_HP:
 	{
 		linePos = gauge->GetHPGaugePos();
-		lineRage = SimpleMath::Vector2(280.0f, 19.0f);
+		lineRage = SimpleMath::Vector2(240.0f, 19.0f);
 
 		break;
 	}

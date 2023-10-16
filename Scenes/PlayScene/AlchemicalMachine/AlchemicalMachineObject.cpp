@@ -7,7 +7,6 @@
 #include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/ModelShader.h"
 
-
 #include "NecromaLib/GameData/SpriteCutter.h"
 #include "NecromaLib/GameData/Easing.h"
 
@@ -323,7 +322,7 @@ void AlchemicalMachineObject::NomalRender(DirectX::Model* model, SimpleMath::Mat
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), matrix, pSD.GetView(), pSD.GetProjection(), false, [&]
 		{
 
-			ModelShader::GetInstance().ModelDrawShader(m_color,SimpleMath::Vector4(m_spawnTime,1.0f,1.0f,1.0f), SpriteLoder::GetInstance().GetRule());
+			ModelShader::GetInstance().ModelDrawShader(m_color,SimpleMath::Vector4(m_spawnTime, m_span, m_invincibleTime,1.0f), SpriteLoder::GetInstance().GetRule());
 
 		});
 

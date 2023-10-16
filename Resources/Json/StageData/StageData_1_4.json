@@ -5,8 +5,8 @@
   "Conditions_Enemy": {
     "ENEMY_KNOCKDOWN": [
       {
-        "TYPE": "Slime",
-        "VALUE": 1
+        "TYPE": "All",
+        "VALUE": 2
       }
     ]
   },
@@ -46,31 +46,39 @@
     "ENEMYS": [
         {
         "CONDITION":"",
-        "SPAWNTIME": 18,
+        "SPAWNTIME": 10,
+        "SPAWN_X": -10,
+        "SPAWN_Y": 1,
+        "SPAWN_Z": 10,
+        "TYPE": "Worm"
+      },
+      {
+        "CONDITION":"",
+        "SPAWNTIME": 15,
         "SPAWN_X": 10,
         "SPAWN_Y": 1,
         "SPAWN_Z": 10,
-        "TYPE": "Slime"
+        "TYPE": "Worm"
       }
     ]
   },
   "MACHINE_DEFAULET": {
-    "MACHINES": [
-    {"LV":1,"TYPE":"Attacker","ELEMENT":"Nomal","NUMBER":0}
-    ]
+    "MACHINES": []
   },
   "RESOURCE_DEFAULET": {
     "ATTACKER": 0,
-    "CRYSTAL": 215,
+    "CRYSTAL": 0,
     "DEFFENCER": 0,
+    "HP": 500,
     "LV": 1,
     "MINING": 0,
-    "MP": 0,
-    "RECOVERY": 4,
+    "MP": -500,
+    "RECOVERY": 1,
     "UPPER": 0
   },
     "TUTORIAL":[
     {"NUMBER":10},
   	{"NUMBER":4}
-  ]
+  ],
+  "LastWave":false,
 }

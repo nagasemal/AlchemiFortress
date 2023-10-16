@@ -4,7 +4,7 @@
       {
         "ELEMENT": "Nomal",
         "LV": 1,
-        "NAME": "Attacker",
+        "NAME": "Defenser",
         "NUMBER": 0
       },
       {
@@ -16,13 +16,13 @@
       {
         "ELEMENT": "Nomal",
         "LV": 1,
-        "NAME": "Attacker",
+        "NAME": "Upper",
         "NUMBER": 2
       },
       {
         "ELEMENT": "Nomal",
         "LV": 1,
-        "NAME": "Attacker",
+        "NAME": "Recovery",
         "NUMBER": 3
       },
       {
@@ -34,7 +34,7 @@
       {
         "ELEMENT": "Nomal",
         "LV": 1,
-        "NAME": "None",
+        "NAME": "Mining",
         "NUMBER": 5
       },
       {

@@ -42,12 +42,12 @@ void DataManager::Initialize()
 
 void DataManager::Update()
 {
-	// Å‘å’l‚æ‚è‚àã‚És‚©‚È‚¢
-	if (m_nowMP >= m_nowMP_MAX) m_nowMP = m_nowMP_MAX;
+	// ãŒÀ‰ºŒÀÝ’è
+	m_nowMP = std::min(std::max(m_nowMP, 0), m_nowMP_MAX);
 
-	if (m_nowCrystal >= m_nowCrystal_MAX) m_nowCrystal = m_nowCrystal_MAX;
+	m_nowCrystal = std::min(std::max(m_nowCrystal, 0), m_nowCrystal_MAX);
 
-	if (m_nowBaseHp >= m_nowBaseHp_MAX) m_nowBaseHp = m_nowBaseHp_MAX;
+	m_nowBaseHp = std::min(std::max(m_nowBaseHp, 0), m_nowBaseHp_MAX);
 
 }
 

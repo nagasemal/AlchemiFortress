@@ -4,7 +4,7 @@
     "TYPE":"Worm",
     "MOVETYPE":"ALL",
     "HP": 4.0,
-    "STR": 3.5,
+    "STR": 2.5,
     "EXP": 15.0,
 
     "MOVEING":[

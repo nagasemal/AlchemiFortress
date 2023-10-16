@@ -1,19 +1,20 @@
 {
   "CRYSTAL_SPAWN": {
-    "CRYSTALS": []
+    "CRYSTALS": [
+    ]
   },
   "Conditions_Enemy": {
     "ENEMY_KNOCKDOWN": [
       {
-        "TYPE": "Slime",
-        "VALUE": 1
+        "TYPE": "All",
+        "VALUE": 2
       }
     ]
   },
   "Conditions_Machine": {
     "MACHINE_SPAWN": [
       {
-        "TYPE": "Attacker",
+        "TYPE": "Mining",
         "VALUE": 1
       }
     ]
@@ -46,31 +47,42 @@
     "ENEMYS": [
         {
         "CONDITION":"",
-        "SPAWNTIME": 5,
+        "SPAWNTIME": 13,
         "SPAWN_X": 10,
         "SPAWN_Y": 1,
         "SPAWN_Z": 10,
         "TYPE": "Slime"
+      },
+      {
+        "CONDITION":"",
+        "SPAWNTIME": 17,
+        "SPAWN_X": 12,
+        "SPAWN_Y": 1,
+        "SPAWN_Z": -8,
+        "TYPE": "Worm"
       }
     ]
   },
   "MACHINE_DEFAULET": {
-    "MACHINES": []
+    "MACHINES": [
+    ]
   },
   "RESOURCE_DEFAULET": {
-    "ATTACKER": 4,
+    "ATTACKER": 0,
     "CRYSTAL": 0,
     "DEFFENCER": 0,
     "LV": 1,
-    "MINING": 0,
-    "MP": 500,
+    "HP":500,
+    "MINING": 1,
+    "MP": 400,
     "RECOVERY": 0,
     "UPPER": 0
   },
     "TUTORIAL":[
-    {"NUMBER":9},
-  	{"NUMBER":6},
-  	{"NUMBER":1}
-  ]
+    {"NUMBER":11},
+  	{"NUMBER":5},
+  	{"NUMBER":14}
+  ],
+  "LastWave":true,
 }
 

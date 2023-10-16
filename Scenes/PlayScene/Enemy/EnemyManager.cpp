@@ -167,6 +167,12 @@ void EnemyManager::Finalize()
 	m_testBox.reset();
 }
 
+void EnemyManager::ReloadEnemyData()
+{
+	m_enemyNums = 0;
+	m_timer = 0;
+}
+
 //　Jsonファイルから読み取った情報を元にマシンを製造する
 EnemyObject EnemyManager::GetEnemyStatus(ENEMY_TYPE type,int spawnNumber)
 {

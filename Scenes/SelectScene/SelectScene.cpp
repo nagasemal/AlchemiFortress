@@ -38,7 +38,7 @@ void SelectScene::Initialize()
 	m_selectStageNumber = DataManager::GetInstance()->GetStageNum();
 
 	ShareJsonData::GetInstance().LoadingJsonFile_ClearData(m_selectStageNumber);
-	ShareJsonData::GetInstance().LoadingJsonFile_Stage(m_selectStageNumber);
+	ShareJsonData::GetInstance().LoadingJsonFile_Stage(m_selectStageNumber,1);
 
 	m_selectCamera = std::make_unique<SelectCamera>();
 	m_selectCamera->Initialize();
@@ -99,7 +99,7 @@ GAME_SCENE SelectScene::Update()
 	{
 		// “Ç‚Ýž‚Ý
 		ShareJsonData::GetInstance().LoadingJsonFile_ClearData(m_selectStageNumber);
-		ShareJsonData::GetInstance().LoadingJsonFile_Stage(m_selectStageNumber);
+		ShareJsonData::GetInstance().LoadingJsonFile_Stage(m_selectStageNumber,1);
 
 		m_machineDraw->Initialize(m_selectStageNumber);
 		m_stageNumber->SetNumber(m_selectStageNumber);

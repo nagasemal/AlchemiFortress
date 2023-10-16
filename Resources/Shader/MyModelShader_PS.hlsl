@@ -29,14 +29,17 @@ float4 main(PSInput input) : SV_TARGET0
 	// スペキュラーを設定する
 	AddSpecular(color, input.Specular);
 
-	// 下に行くほど黒くする
-	ApplyFog(color, ComputeFogFactor(input.Position));
+	//// 下に行くほど黒くする
+	//ApplyFog(color, ComputeFogFactor(input.Position));
 
-	// 時間経過で色を塗る
-	color.rgb *= PaintColor.rgb * step(texInput, Time.y);
+	// ダメージで色を塗る
+	color.rgb *= PaintColor.rgb * step(texInput, 1 - Time.z);
 
 	// 時間経過で出現させる
 	color.w *= step(texInput, Time.x);
+
+	// 網目模様をかける
+	//color.rgb *= float4(1.0f,1.0f,1.0f,1.0f) * frac(input.Position.y + Time.z);
 
 	// 時間経過で色を付ける
 	return float4(color.xyz /**lit*/, color.w);
