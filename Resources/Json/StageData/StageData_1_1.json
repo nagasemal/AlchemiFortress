@@ -1,7 +1,10 @@
 {
   "CRYSTAL_SPAWN": {
     "CRYSTALS": [
-    {"SPAWN_X":-8,"SPAWN_Z":8}
+      {
+        "SPAWN_X": -8,
+        "SPAWN_Z": 8
+      }
     ]
   },
   "Conditions_Enemy": {
@@ -20,7 +23,7 @@
       }
     ]
   },
-    "Conditions_Alchemi": {
+  "Conditions_Alchemi": {
     "MACHINE_ALCHEMI": [
       {
         "TYPE": "Attacker",
@@ -28,13 +31,13 @@
       }
     ]
   },
-  "Conditions_BaseLv":{
-  "BASE_LV":[
-  		{
-  		 "TYPE": "Standerd",
-         "VALUE":-1
-  		}
-  	]
+  "Conditions_BaseLv": {
+    "BASE_LV": [
+      {
+        "TYPE": "Standerd",
+        "VALUE": -1
+      }
+    ]
   },
   "Conditions_Time": {
     "TIME": [
@@ -46,9 +49,9 @@
   },
   "ENEMY_SPAWNTIME": {
     "ENEMYS": [
-        {
-        "CONDITION":"",
-        "SPAWNTIME": 5,
+      {
+        "CONDITION": "",
+        "SPAWNTIME": 8,
         "SPAWN_X": 10,
         "SPAWN_Y": 1,
         "SPAWN_Z": 10,
@@ -64,17 +67,22 @@
     "CRYSTAL": 0,
     "DEFFENCER": 0,
     "LV": 1,
-    "HP":500,
+    "HP": 500,
     "MINING": 0,
     "MP": 500,
     "RECOVERY": 0,
     "UPPER": 0
   },
-    "TUTORIAL":[
-    {"NUMBER":9},
-  	{"NUMBER":6},
-  	{"NUMBER":1}
+  "TUTORIAL": [
+    { "NUMBER": 1 },
+    { "NUMBER": 99}
   ],
-  "LastWave":false,
+  "LastWave": false
 }
+
+
+    //{ "NUMBER": 9 },
+    //{ "NUMBER": 6 },
+    //{ "NUMBER": 12 },
+    //{ "NUMBER": 16 },
 

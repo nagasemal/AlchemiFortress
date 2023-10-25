@@ -8,7 +8,7 @@
 #define CIRCLE_MAX_MIN  4
 
 // ‰~Žü‚ÌÅ‘åƒ‰ƒCƒ“
-#define CIRCLE_MAX_LINE 6
+#define CIRCLE_MAX_LINE 9
 
 // ƒ‰ƒCƒ““¯Žm‚ÌŠÔŠu
 #define CIRCLE_LINE_DISTANCE 5.5f
@@ -78,7 +78,7 @@ void DrawMachine::MovingMachine(int number)
 	// ‰ñ“]Œã‚ÌÀ•W‚ð‘ã“ü
   	m_AMobjects[number]->SetPos(SimpleMath::Vector3::Transform(m_AMobjects[number]->GetPos(), matrix));
 
-	m_AMobjects[number]->SetColor(SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
+	//m_AMobjects[number]->SetColor(SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
 
 	m_AMobjects[number]->Update_Common();
 
@@ -87,8 +87,9 @@ void DrawMachine::MovingMachine(int number)
 void DrawMachine::SettingAMMachine_Title()
 {
 	int counter = 0;
+	int max = ShareJsonData::GetInstance().GetGameParameter().baseLV_MAX;
 
-	for (int i = 1; i < CIRCLE_MAX_LINE; i++)
+	for (int i = 1; i < max; i++)
 	{
 		for (int j = 0; j < CIRCLE_MAX_MIN * i; j++)
 		{
@@ -102,7 +103,7 @@ void DrawMachine::SettingAMMachine_Title()
 			m_AMobjects[counter]->SetLine(i);
 			m_AMobjects[counter]->SummonAM(SetVelocityCircle(j, CIRCLE_MAX_MIN * i, i * CIRCLE_LINE_DISTANCE));
 
-			m_AMobjects[counter]->SetColor(SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
+			//m_AMobjects[counter]->SetColor(SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
 			counter++;
 		}
 	}
@@ -116,9 +117,11 @@ void DrawMachine::SettingAMMachine_Select(int number)
 
 	int counter = 0;
 
+	int max = ShareJsonData::GetInstance().GetGameParameter().baseLV_MAX;
+
 	m_AMobjects.clear();
 
-	for (int i = 0; i < CIRCLE_MAX_LINE; i++)
+	for (int i = 0; i < max; i++)
 	{
 		for (int j = 0; j < CIRCLE_MAX_MIN * i; j++)
 		{
@@ -133,7 +136,7 @@ void DrawMachine::SettingAMMachine_Select(int number)
 			m_AMobjects[counter]->SetLine(i);
 			m_AMobjects[counter]->SummonAM(SetVelocityCircle(j, CIRCLE_MAX_MIN * i, i * CIRCLE_LINE_DISTANCE));
 
-			m_AMobjects[counter]->SetColor(SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
+			//m_AMobjects[counter]->SetColor(SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
 
 			counter++;
 		}

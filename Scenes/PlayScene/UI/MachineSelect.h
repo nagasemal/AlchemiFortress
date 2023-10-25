@@ -79,4 +79,6 @@ private:
 	// F‚ğ•Ï‰»‚³‚¹‚éŠÔ•Ï”
 	float m_colorChangeTime;
 
+	std::unique_ptr<AlchemicalMachineObject> m_machineObject;
+
 };

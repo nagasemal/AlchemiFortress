@@ -20,6 +20,8 @@ class DrawArrow;
 class Number;
 class DrawSlider;
 class TitleLogo;
+class AM_Attacker;
+class MoveCamera;
 
 class EditScene : public SceneObj
 {
@@ -81,5 +83,13 @@ private:
 	std::unique_ptr<SelectionBox> m_decisionButton;
 
 	std::unique_ptr<TitleLogo>			m_titleLogo;
+
+
+	std::unique_ptr<DirectX::Model> m_model;
+	std::unique_ptr<AM_Attacker> m_machine;
+
+	std::unique_ptr<MoveCamera> m_camera;
+
+	bool m_shaderFlag;
 
 };

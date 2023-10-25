@@ -88,9 +88,11 @@ void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
 		m_machineSelect[i]->Update();
 
 		// 要素から製造ボタンが押された判定を受け取る リソースが足りない場合は弾く
-		if (m_machineSelect[i]->GetManufacturingFlag() &&
-			datas->GetNowMP()		 - pSJD->GetMachineData((MACHINE_TYPE)i).alchemi_mp >= 0 &&
-			datas->GetNowCrystal()	 - pSJD->GetMachineData((MACHINE_TYPE)i).alchemi_crystal >= 0)
+		m_machineSelect[i]->GetManufacturingBox()->SetActiveFlag(
+			datas->GetNowMP() - pSJD->GetMachineData((MACHINE_TYPE)i).alchemi_mp >= 0 &&
+			datas->GetNowCrystal() - pSJD->GetMachineData((MACHINE_TYPE)i).alchemi_crystal >= 0);
+
+		if (m_machineSelect[i]->GetManufacturingFlag())
 		{
 			m_manufacturingFlag = true;
 			m_selectMachineType = m_machineSelect[i]->GetMachineType();
@@ -98,7 +100,7 @@ void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
 		}
 
 		// 何かマシンが選択された
-		if (m_machineSelect[i]->GetHitMouseFlag())
+		if (m_machineSelect[i]->GetHitMouseFlag() || m_machineSelect[i]->GetManufacturingFlag())
 		{
 			m_selectBoxAll = true;
 			m_selectMachineType = m_machineSelect[i]->GetMachineType();

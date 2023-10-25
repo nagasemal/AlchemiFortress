@@ -87,7 +87,7 @@ void MissionManager::Update(AlchemicalMachineManager* pAlchemicalManager, EnemyM
 
 	//m_nextWaveFlag = false;
 
-	m_baseHP = (int)pFieldManager->GetPlayerBase()->GetHP();
+	m_baseHP = (int)DataManager::GetInstance()->GetNowBaseHP();
 
 	// None以外ならば通す マシンが設置された際の処理
 	if (pAlchemicalManager->SpawnMachineNotification() != MACHINE_TYPE::NONE) 							MachineMission(pAlchemicalManager);

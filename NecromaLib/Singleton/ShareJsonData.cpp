@@ -57,6 +57,13 @@ void ShareJsonData::LoadingJsonFile_Enemy()
 	m_enemyData[ENEMY_TYPE::WORM] = Json::FileLoad_EnemyData("Resources/Json/EnemyData/EnemyData_Worm.json");
 }
 
+void ShareJsonData::LoadingJsonFile_GameParameter()
+{
+
+	m_gameParam = Json::FileLoad_GameParameter("Resources/Json/GameParameter/GameParameter.json");
+
+}
+
 void ShareJsonData::LoadingJsonFile_Stage(int number, int wave)
 {
 
@@ -105,6 +112,11 @@ const Stage_Data ShareJsonData::GetStageData()
 const Stage_ClearData ShareJsonData::GetClearData()
 {
 	return m_clearData;
+}
+
+const Game_Parameter ShareJsonData::GetGameParameter()
+{
+	return m_gameParam;
 }
 
 void ShareJsonData::StageDataCleanUP()

@@ -25,6 +25,12 @@ public:
 
 	void Update();
 
+	void SetLayer(int layer);
+	bool GetLayer() { return m_nowLayer; }
+
+	void HitUI() { m_hitUIFlag = true; }
+	void ExitUI() { m_hitUIFlag = false; }
+
 	//===[ キーボード ]===//
 	void SetKeybordState(DirectX::Keyboard::KeyboardStateTracker tracker)	{m_keyboardTracker = tracker; }
 	DirectX::Keyboard::KeyboardStateTracker GetKeybordState()				{ return m_keyboardTracker; }
@@ -38,5 +44,10 @@ public:
 
 	//===[ マウス座標(スクリーン空間) ]===//
 	SimpleMath::Vector2 GetMousePosScreen();
+
+	// UIに触れると、設定されているレイヤーの番号が入る
+	int m_nowLayer;
+
+	bool m_hitUIFlag;
 
 };

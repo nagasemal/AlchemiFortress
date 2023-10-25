@@ -28,6 +28,7 @@ AlchemicalMachineObject::AlchemicalMachineObject() :
 	m_machineEffectValue(),
 	m_span(),
 	m_color(1, 1, 1, 1),
+	m_subColor(1, 1, 1, 1),
 	m_rotateAnimation(),
 	m_element(ELEMENT::NOMAL),
 	m_powerUPFlag(),
@@ -45,6 +46,9 @@ AlchemicalMachineObject::AlchemicalMachineObject() :
 
 	m_dismantlingBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(250, 650),
 		SimpleMath::Vector2(1.0f, 1.0f));
+
+	m_color = Json::ChangeColor(m_element);
+
 }
 
 void AlchemicalMachineObject::Update_Common()
@@ -64,6 +68,8 @@ void AlchemicalMachineObject::Update_Common()
 
 	// 出現時の演出に使うタイマー
 	m_spawnTime += DeltaTime::GetInstance().GetDeltaTime();
+	// 回転に使用する値
+	m_rotateAnimation += DeltaTime::GetInstance().GetDeltaTime();
 }
 
 void AlchemicalMachineObject::SelectUpdate_Common()
@@ -147,11 +153,11 @@ bool AlchemicalMachineObject::OnCollisionEnter_MagicCircle(GameObjct3D* object)
 	return CircleCollider(m_magicCircle, object->GetCircle());
 }
 
-void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model* ring)
+void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model* ring, bool silhouette)
 {
 	ShareData& pSD = ShareData::GetInstance();
 
-	m_rotateAnimation += DeltaTime::GetInstance().GetDeltaTime();
+
 
 	// モデル情報(位置,大きさ)
 	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
@@ -180,8 +186,9 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 		m_data.pos.z);
 
 	// 追加パーツが存在する場合
-	if (ring != nullptr)
+	if (m_machineID == ATTACKER)
 	{
+		m_subColor = SimpleMath::Color((float)m_powerUPFlag, (float)m_powerUPFlag, 0.0f, 1.0f);
 
 		// エフェクトの設定
 		ring->UpdateEffects([&](IEffect* effect)
@@ -189,37 +196,11 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 				// 今回はライトだけ欲しい
 				auto lights = dynamic_cast<IEffectLights*>(effect);
 				// 色変更
-				lights->SetLightDiffuseColor(0, SimpleMath::Color((float)m_powerUPFlag, (float)m_powerUPFlag, 0.0f, 1.0f));
-				lights->SetLightDiffuseColor(1, SimpleMath::Color((float)m_powerUPFlag, (float)m_powerUPFlag, 0.0f, 1.0f));
-				lights->SetLightDiffuseColor(2, SimpleMath::Color((float)m_powerUPFlag, (float)m_powerUPFlag, 0.0f, 1.0f));
+				lights->SetLightDiffuseColor(0,m_subColor);
+				lights->SetLightDiffuseColor(1,m_subColor);
+				lights->SetLightDiffuseColor(2,m_subColor);
 
 			});
-
-		//ring->Draw(pSD.GetContext(), *pSD.GetCommonStates(), ringData, pSD.GetView(), pSD.GetProjection(), false, [&]
-		//	{
-		//		//画像用サンプラーの登録
-		//		ID3D11SamplerState* sampler[1] = { pSD.GetCommonStates()->LinearWrap() };
-		//		pSD.GetContext()->PSSetSamplers(0, 1, sampler);
-		//		//半透明描画指定
-		//		ID3D11BlendState* blendstate = pSD.GetCommonStates()->NonPremultiplied();
-		//		// 透明判定処理
-		//		pSD.GetContext()->OMSetBlendState(blendstate, nullptr, 0xFFFFFFFF);
-		//		//// 深度バッファに書き込み参照する
-		//		//pSD.GetContext()->OMSetDepthStencilState(pSD.GetCommonStates()->DepthDefault(), 0);
-		//		// 
-		//		// 深度ステンシルステートの設定
-		//		pSD.GetContext()->OMSetDepthStencilState(pSD.GetStencilShadow().Get(), 1);
-		//		// カングは左周り
-		//		pSD.GetContext()->RSSetState(pSD.GetCommonStates()->CullNone());
-		//		pSD.GetContext()->PSSetShader(pSD.GetModelShadowShader().Get(), nullptr, 0);
-		//	});
-		//pSD.GetContext()->PSSetShader(nullptr, nullptr, 0);
-		//pSD.GetContext()->OMSetDepthStencilState(nullptr, 0);
-		//ring->Draw(pSD.GetContext(), *pSD.GetCommonStates(), ringData, pSD.GetView(), pSD.GetProjection(), false, [&]
-		//	{
-		//		// 深度ステンシルステートの設定
-		//		pSD.GetContext()->OMSetDepthStencilState(nullptr, 3);
-		//	});
 
 	}
 
@@ -256,17 +237,29 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 	//		pSD.GetContext()->PSSetShader(pSD.GetModelShadowShader().Get(), nullptr, 0);
 	//	});
 
-	// シェーダーの適応
-	if (ring != nullptr) 		SilhouetteRender(ring, ringData);
-	SilhouetteRender(model,modelData);
+
+
+	// シルエット描画
+	if (silhouette)
+	{
+		SilhouetteRender(model, modelData);
+		// シェーダーの適応
+		if (ring != nullptr) 		SilhouetteRender(ring, ringData);
+
+	}
+	// 通常描画
+	else
+	{
+
+		NomalRender(model, modelData, m_color);
+		// 通常描画
+		if (ring != nullptr) 		NomalRender(ring, ringData, m_subColor);
+
+	}
 
 	// シェーダーの解除
 	pSD.GetContext()->PSSetShader(nullptr, nullptr, 0);
 	pSD.GetContext()->OMSetDepthStencilState(nullptr, 0);
-
-	// 通常描画
-	if (ring != nullptr) 		NomalRender(ring, ringData);
-	NomalRender(model, modelData);
 
 }
 
@@ -315,14 +308,18 @@ void AlchemicalMachineObject::SilhouetteRender(DirectX::Model* model, SimpleMath
 
 }
 
-void AlchemicalMachineObject::NomalRender(DirectX::Model* model, SimpleMath::Matrix matrix)
+void AlchemicalMachineObject::NomalRender(DirectX::Model* model, SimpleMath::Matrix matrix, SimpleMath::Color color)
 {
 	ShareData& pSD = ShareData::GetInstance();
 
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), matrix, pSD.GetView(), pSD.GetProjection(), false, [&]
 		{
 
-			ModelShader::GetInstance().ModelDrawShader(m_color,SimpleMath::Vector4(m_spawnTime, m_span, m_invincibleTime,1.0f), SpriteLoder::GetInstance().GetRule());
+			ModelShader::GetInstance().ModelDrawShader(color,SimpleMath::Vector4(m_spawnTime, m_span, m_invincibleTime,1.0f), SpriteLoder::GetInstance().GetRule());
+
+			pSD.GetContext()->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetMachineTextuer(m_element).GetAddressOf());
+			pSD.GetContext()->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetNormalMap(m_element).GetAddressOf());
+
 
 		});
 
@@ -346,4 +343,19 @@ void AlchemicalMachineObject::TransparentRender(DirectX::Model* model, SimpleMat
 
 		});
 
+}
+
+void AlchemicalMachineObject::NotShaderRender(DirectX::Model* model, SimpleMath::Matrix matrix)
+{
+	ShareData& pSD = ShareData::GetInstance();
+
+	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), matrix, pSD.GetView(), pSD.GetProjection(), false, [&]
+		{
+
+			//半透明描画指定
+			ID3D11BlendState* blendstate = pSD.GetCommonStates()->NonPremultiplied();
+			// 透明判定処理
+			pSD.GetContext()->OMSetBlendState(blendstate, nullptr, 0xFFFFFFFF);
+
+		});
 }

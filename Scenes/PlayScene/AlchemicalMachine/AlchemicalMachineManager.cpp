@@ -73,7 +73,7 @@ void AlchemicalMachineManager::Initialize()
 	m_particle_Put		= std::make_unique<Particle>(Particle::MACHINE_SPAWN);
 	m_particle_Put		->Initialize();
 
-	m_particle_Gurd		= std::make_unique<Particle>(Particle::SPAWN_ENEMY);
+	m_particle_Gurd		= std::make_unique<Particle>(Particle::DEFENSE_EFFECT);
 	m_particle_Gurd		->Initialize();
 
 	m_particle_Mining	= std::make_unique<Particle>(Particle::MINING_EFFECT);
@@ -83,6 +83,9 @@ void AlchemicalMachineManager::Initialize()
 	m_particle_Recovery = std::make_unique<Particle>(Particle::RECOVERY_EFFECT);
 	m_particle_Recovery	->Initialize(L"MP");
 	m_particle_Recovery	->SetParticleSpawnTime(1.0f);
+
+	m_particle_Bullet	= std::make_unique<Particle>(Particle::BULLET_LINE);
+	m_particle_Bullet	->Initialize();
 
 	m_magicCircle		= std::make_unique<MagicCircle>();
 	m_magicCircle		->Initialize();
@@ -288,6 +291,8 @@ void AlchemicalMachineManager::Update(
 	for (std::list<std::unique_ptr<Bullet>>::iterator it = m_bullets.begin(); it != m_bullets.end(); it++)
 	{
 		it->get()->Update();
+		m_particle_Bullet->Update(it->get()->GetPos(),true,it->get()->GetColor());
+
 		// 子クラスからfalseで消す
 		if ((it)->get()->deleteRequest())
 		{
@@ -311,6 +316,7 @@ void AlchemicalMachineManager::Render()
 	// 置いた際に出すパーティクル
 	m_particle_Put->Render();
 
+	// シルエット描画用ドローコール
 	for (int i = 0; i < m_AMObject.size(); i++)
 	{
 		// 存在しているかチェック
@@ -318,11 +324,24 @@ void AlchemicalMachineManager::Render()
 		{
 			// モデルの描画			オブジェクトに割り当てられたIDをもとにモデル配列からデータを取り出す
 			m_AMObject[i]->ModelRender(m_AMFilter->HandOverAMModel(m_AMObject[i]->GetModelID()),
-									   m_AMFilter->GetRingModel(m_AMObject[i]->GetModelID()));
-
+									   m_AMFilter->GetRingModel(m_AMObject[i]->GetModelID()),true);
 			m_AMObject[i]->Draw();
 		}
 	}
+
+	// 通常描画用ドローコール
+	for (int i = 0; i < m_AMObject.size(); i++)
+	{
+		// 存在しているかチェック
+		if (m_AMObject[i]->GetActive())
+		{
+			// モデルの描画			オブジェクトに割り当てられたIDをもとにモデル配列からデータを取り出す
+			m_AMObject[i]->ModelRender(m_AMFilter->HandOverAMModel(m_AMObject[i]->GetModelID()),
+				m_AMFilter->GetRingModel(m_AMObject[i]->GetModelID()), false);
+		}
+	}
+
+
 
 	if (m_selectNumber != -1)
 	{
@@ -338,6 +357,7 @@ void AlchemicalMachineManager::Render()
 	m_particle_Gurd->Render();
 	m_particle_Mining->Render();
 	m_particle_Recovery->Render();
+	m_particle_Bullet->Render();
 
 	// バレットの描画処理
 	for (std::list<std::unique_ptr<Bullet>>::iterator it = m_bullets.begin(); it != m_bullets.end(); it++)
@@ -443,6 +463,7 @@ void AlchemicalMachineManager::Update_Particle()
 	m_particle_Gurd			->UpdateParticle();
 	m_particle_Mining		->UpdateParticle();
 	m_particle_Recovery		->UpdateParticle();
+	m_particle_Bullet		->UpdateParticle();
 }
 
 void AlchemicalMachineManager::Update_None(int baseLv)
@@ -503,6 +524,9 @@ void AlchemicalMachineManager::Update_Defenser(int index, EnemyManager* enemys)
 	AM_Defenser* defenser = dynamic_cast<AM_Defenser*>(m_AMObject[index].get());
 
 	defenser->EnemyHit(enemys->GetEnemyData());
+
+	m_particle_Gurd->Update(defenser->GetPos(), defenser->CounterAttack(), defenser->GetColor());
+
 }
 
 void AlchemicalMachineManager::Update_Mining(int index, FieldObjectManager* fieldManager, EnemyManager* enemys)
@@ -576,7 +600,9 @@ void AlchemicalMachineManager::CreateAMMachine()
 
 	m_dorpShadow->DeleteShadow();
 
-	for (int i = 1; i < CIRCLE_MAX_LINE; i++)
+	int circle_max_line = ShareJsonData::GetInstance().GetGameParameter().baseLV_MAX;
+
+	for (int i = 1; i < circle_max_line; i++)
 	{
 		for (int j = 0; j < CIRCLE_MAX_MIN * i; j++)
 		{

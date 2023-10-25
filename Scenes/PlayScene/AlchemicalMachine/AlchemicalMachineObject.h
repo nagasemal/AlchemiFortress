@@ -62,7 +62,7 @@ public:
 	/// </summary>
 	/// <param name="model">　　　 ベースのモデル　</param>
 	/// <param name="ring">　　　　追加パーツ</param>
-	void ModelRender(DirectX::Model* model,DirectX::Model* ring = nullptr);
+	void ModelRender(DirectX::Model* model,DirectX::Model* ring = nullptr,bool silhouette = false);
 
 	// 召喚
 	void SummonAM(SimpleMath::Vector3 pos);
@@ -135,16 +135,20 @@ public:
 	void SetElement(ELEMENT element)					{ m_element = element; }
 	void SetColor(SimpleMath::Color color)				{ m_color = color;}
 
-private:
-
+public:
 	// シルエット描画
-	void SilhouetteRender(DirectX::Model* model,SimpleMath::Matrix matrix);
+	void SilhouetteRender(DirectX::Model* model, SimpleMath::Matrix matrix);
 
 	// 通常描画
-	void NomalRender(DirectX::Model* model, SimpleMath::Matrix matrix);
+	void NomalRender(DirectX::Model* model, SimpleMath::Matrix matrix,SimpleMath::Color color = SimpleMath::Color());
 
 	// 半透明描画
 	void TransparentRender(DirectX::Model* model, SimpleMath::Matrix matrix);
+
+	// シェーダー無し描画
+	void NotShaderRender(DirectX::Model* model, SimpleMath::Matrix matrix);
+
+private:
 
 	// 出現時演出に使用するタイマー
 	float m_spawnTime;
@@ -207,6 +211,9 @@ protected:
 
 	// オブジェクトの色
 	SimpleMath::Color m_color;
+
+	// サブオブジェクトの色
+	SimpleMath::Color m_subColor;
 
 	// オブジェクトの属性
 	ELEMENT m_element;

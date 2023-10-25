@@ -17,7 +17,7 @@ public:
 	void Finalize()				override;
 
 	// マウスが触れた処理
-	bool HitMouse();
+	bool HitMouse(bool layerCheck = false);
 	// 左クリックされた処理
 	bool ClickMouse();
 	// 左クリックされて選択されている状態の処理
@@ -46,6 +46,8 @@ public:
 
 	void SetRect(RECT rect) { m_rect = rect; }
 
+	void SetLayer(int layer) { m_layer = layer; }
+
 protected:
 
 	bool m_hitMouseFlag;
@@ -58,4 +60,7 @@ protected:
 	bool m_activeFlag; //現在触れる状態か
 
 	RECT m_rect;
+
+	int m_layer;
+
 };

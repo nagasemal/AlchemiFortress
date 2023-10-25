@@ -165,7 +165,8 @@ private:
 	std::unique_ptr<Particle> m_particle_Recovery;
 	// 結晶回収時	パーティクル
 	std::unique_ptr<Particle> m_particle_Mining;
-
+	// 弾の軌道		パーティクル
+	std::unique_ptr<Particle> m_particle_Bullet;
 
 	bool m_allHitObjectToMouse;
 

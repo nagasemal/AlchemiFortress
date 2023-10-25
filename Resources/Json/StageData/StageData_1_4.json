@@ -78,7 +78,8 @@
   },
     "TUTORIAL":[
     {"NUMBER":10},
-  	{"NUMBER":4}
-  ],
-  "LastWave":false,
+    { "NUMBER": 4 },
+    { "NUMBER": 99 }
+    ],
+  "LastWave":false
 }

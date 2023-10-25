@@ -179,6 +179,21 @@
     <Filter Include="Shader\BaseLv">
       <UniqueIdentifier>{91ff32b1-cdf6-4e4e-85d4-c86d5d823c53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Json\StageData\Stage1">
+      <UniqueIdentifier>{406d9bb5-ef69-4ca8-89f7-59f0f2617dfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Json\StageData\Stage2">
+      <UniqueIdentifier>{20a5088d-11f7-4893-92d4-cece5b68d8fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Json\GameParameterData">
+      <UniqueIdentifier>{74b14967-07a6-4fb7-8ff2-28fe4a891020}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene\Tutorial\State">
+      <UniqueIdentifier>{f8458fb5-47b9-454c-a217-d5232e5bb5b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene\Tutorial\command">
+      <UniqueIdentifier>{47fa9a36-0762-46d1-a79b-04c512b7b1d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -486,6 +501,9 @@
     </ClInclude>
     <ClInclude Include="Scenes\PlayScene\UI\BaseLv.h">
       <Filter>Scene\PlayScene\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\ITutorialState.h">
+      <Filter>Scene\PlayScene\Tutorial\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -836,9 +854,6 @@
     <None Include="Resources\Json\EnemyData\EnemyData_Slime.json">
       <Filter>Json\EnemyData</Filter>
     </None>
-    <None Include="Resources\Json\StageData\StageData_1.json">
-      <Filter>Json\StageData</Filter>
-    </None>
     <None Include="Resources\Json\EnemyData\EnemyData_None.json">
       <Filter>Json\EnemyData</Filter>
     </None>
@@ -860,38 +875,35 @@
     <None Include="Resources\Json\EnemyData\EnemyData_Hop.json">
       <Filter>Json\EnemyData</Filter>
     </None>
-    <None Include="Resources\Json\StageData\StageData_2.json">
-      <Filter>Json\StageData</Filter>
-    </None>
-    <None Include="Resources\Json\StageData\StageData_3.json">
-      <Filter>Json\StageData</Filter>
-    </None>
-    <None Include="Resources\Json\StageData\StageData_4.json">
-      <Filter>Json\StageData</Filter>
-    </None>
-    <None Include="Resources\Json\StageData\StageData_5.json">
-      <Filter>Json\StageData</Filter>
-    </None>
-    <None Include="Resources\Json\StageData\StageData_6.json">
-      <Filter>Json\StageData</Filter>
-    </None>
-    <None Include="Resources\Json\StageData\StageData_7.json">
-      <Filter>Json\StageData</Filter>
-    </None>
-    <None Include="Resources\Json\StageData\StageData_8.json">
-      <Filter>Json\StageData</Filter>
-    </None>
-    <None Include="Resources\Json\StageData\StageData_9.json">
-      <Filter>Json\StageData</Filter>
-    </None>
-    <None Include="Resources\Json\StageData\StageData_10.json">
-      <Filter>Json\StageData</Filter>
-    </None>
-    <None Include="Resources\Json\StageData\StageData_11.json">
-      <Filter>Json\StageData</Filter>
-    </None>
     <None Include="Resources\Shader\BaseLv.hlsli">
       <Filter>Shader\BaseLv</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\StageData_1_1.json">
+      <Filter>Json\StageData\Stage1</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\StageData_1_2.json">
+      <Filter>Json\StageData\Stage1</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\StageData_1_3.json">
+      <Filter>Json\StageData\Stage1</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\StageData_1_4.json">
+      <Filter>Json\StageData\Stage1</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\StageData_1_5.json">
+      <Filter>Json\StageData\Stage1</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\StageData_2_1.json">
+      <Filter>Json\StageData\Stage2</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\StageData_1_6.json">
+      <Filter>Json\StageData\Stage1</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\GameParameter.json">
+      <Filter>Json\GameParameterData</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\StageData_2_2.json">
+      <Filter>Json\StageData\Stage2</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -987,6 +999,12 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\BaseLv_VS.hlsl">
       <Filter>Shader\BaseLv</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\IceModel_PS.hlsl">
+      <Filter>Shader\Model</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\MagicEffectShader_PS.hlsl">
+      <Filter>Shader\Model</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

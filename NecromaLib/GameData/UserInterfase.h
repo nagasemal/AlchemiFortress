@@ -89,6 +89,7 @@ public:
 	~UserInterface();
 
 	void LoadTexture(const wchar_t* path);
+	void LoadTexture(std::wstring path);
 	void LoadTexture(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture);
 
 	void Create(DX::DeviceResources* pDR

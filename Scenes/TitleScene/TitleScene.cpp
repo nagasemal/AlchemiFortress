@@ -21,6 +21,7 @@ TitleScene::TitleScene():
 	m_rotateYSpeed()
 {
 	ShareJsonData::GetInstance().LoadingJsonFile_Machine();
+	ShareJsonData::GetInstance().LoadingJsonFile_GameParameter();
 }
 
 TitleScene::~TitleScene()
@@ -29,9 +30,6 @@ TitleScene::~TitleScene()
 
 void TitleScene::Initialize()
 {
-	m_titleCall = std::make_unique<DrawMachine>();
-	m_titleCall->Initialize();
-
 	m_titleCamera = std::make_unique<TitleCamera>();
 	m_titleCamera->Initialize();
 
@@ -91,6 +89,10 @@ void TitleScene::Initialize()
 
 	m_animationData = AnimationData();
 	m_rotateNowFlag = false;
+
+	m_titleCall = std::make_unique<DrawMachine>();
+	m_titleCall->Initialize();
+
 }
 
 GAME_SCENE TitleScene::Update()
@@ -153,7 +155,6 @@ GAME_SCENE TitleScene::Update()
 
 	// 現在選択されている項目がオプションでなければ処理を通す
 	if (m_nextType != ButtonType::Option)
-	if (m_nextType != ButtonType::Option)
 	{
 		// 各項目(はじめから,つづきから,オプション,ゲーム終了)の更新処理
 		for (int i = 0; i < ButtonType::Num; i++)
@@ -162,7 +163,10 @@ GAME_SCENE TitleScene::Update()
 		}
 	}
 	// オプション項目のアップデートを回す
-	else m_renderOption->Update();
+	else
+	{
+		m_renderOption->Update();
+	}
 
 	// 早期リターン
 	if (m_rotateNowFlag) 	return GAME_SCENE();
@@ -188,6 +192,7 @@ void TitleScene::Draw()
 	ShareData& pSD = ShareData::GetInstance();
 	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
 	modelData = SimpleMath::Matrix::CreateTranslation({ 0.0f,70.0f,0.0f });
+	modelData *= SimpleMath::Matrix::CreateScale(2.0f, 2.0f, 2.0f);
 	modelData *= SimpleMath::Matrix::CreateFromYawPitchRoll(8.0f, 7.0f, 90.0f);
 
 	m_skySphere->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection());

@@ -19,6 +19,20 @@ void SpriteLoder::Loading()
 	// マウステクスチャの取得
 	LoadingPngFile(L"Resources/Textures/Mouse.png", m_mouseTexture);
 
+	LoadingPngFile(L"Resources/Textures/NormalMap.png", m_machineNormalMap[0]);
+	LoadingPngFile(L"Resources/Textures/ModelTexture/Fire_NormalMap.png", m_machineNormalMap[1]);
+	LoadingPngFile(L"Resources/Textures/ModelTexture/Ice_NormalMap.png", m_machineNormalMap[2]);
+	LoadingPngFile(L"Resources/Textures/ModelTexture/Wind_NormalMap.png", m_machineNormalMap[3]);
+	LoadingPngFile(L"Resources/Textures/ModelTexture/Earth_NormalMap.png", m_machineNormalMap[4]);
+
+	LoadingPngFile(L"Resources/Textures/NormalMap.png", m_machineTexture[0]);
+	LoadingPngFile(L"Resources/Textures/ModelTexture/Fire_Texture.png", m_machineTexture[1]);
+	LoadingPngFile(L"Resources/Textures/ModelTexture/Ice_Texture.png", m_machineTexture[2]);
+	LoadingPngFile(L"Resources/Textures/ModelTexture/Wind_Texture.png", m_machineTexture[3]);
+	LoadingPngFile(L"Resources/Textures/ModelTexture/Earth_Texture.png", m_machineTexture[4]);
+
+	LoadingPngFile(L"Resources/Textures/Effect/Aura.png", m_auraBaseTexture);
+	LoadingPngFile(L"Resources/Textures/Effect/Flare.png", m_auraMaskTexture);
 
 	// テクスチャ
 	DirectX::CreateWICTextureFromFile(

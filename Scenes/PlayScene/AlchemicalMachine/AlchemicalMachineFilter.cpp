@@ -28,13 +28,28 @@ AlchemicalMachineFilter::AlchemicalMachineFilter():
 
 	m_model[MACHINE_TYPE::RECOVERY] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Excavator.cmo", *fx);
 
-	m_model[MACHINE_TYPE::UPPER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Upper.cmo", *fx);
+	m_model[MACHINE_TYPE::UPPER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_UpperCore.cmo", *fx);
 
 
 	// サブモデル
 	m_subModel[MACHINE_TYPE::ATTACKER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Ring.cmo", *fx);
 
-	m_subModel[MACHINE_TYPE::DEFENSER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Ring.cmo", *fx);
+	m_subModel[MACHINE_TYPE::UPPER] = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Upper.cmo", *fx);
+
+	// エフェクトの設定
+	m_subModel[MACHINE_TYPE::UPPER]->UpdateEffects([&](IEffect* effect)
+		{
+			// 今回はライトだけ欲しい
+			auto lights = dynamic_cast<IEffectLights*>(effect);
+			// 色変更
+			lights->SetLightDiffuseColor(0, SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
+			lights->SetLightDiffuseColor(1, SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
+			lights->SetLightDiffuseColor(2, SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
+
+		});
+
+
+
 }
 
 AlchemicalMachineFilter::~AlchemicalMachineFilter()
@@ -83,7 +98,7 @@ std::unique_ptr<AlchemicalMachineObject> AlchemicalMachineFilter::HandOverAMClas
 Model* AlchemicalMachineFilter::GetRingModel(MACHINE_TYPE type)
 {
 
-	if (type != MACHINE_TYPE::ATTACKER) return nullptr;
+	//if (type != MACHINE_TYPE::ATTACKER) return nullptr;
 
 	return m_subModel[type].get();
 }

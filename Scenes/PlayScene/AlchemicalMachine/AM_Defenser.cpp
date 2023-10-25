@@ -8,7 +8,8 @@
 #include "NecromaLib/Singleton/DeltaTime.h"
 
 AM_Defenser::AM_Defenser():
-	m_isBreak()
+	m_isBreak(),
+	m_counterFlag()
 {
 }
 
@@ -92,6 +93,9 @@ void AM_Defenser::LvUp()
 
 void AM_Defenser::EnemyHit(std::list<EnemyObject>* enemys)
 {
+
+	m_counterFlag = false;
+
 	//　現存存在するエネミー分回す
 	//	効果範囲toエネミー
 	for (std::list<EnemyObject>::iterator it = enemys->begin(); it != enemys->end(); it++)
@@ -107,15 +111,21 @@ void AM_Defenser::EnemyHit(std::list<EnemyObject>* enemys)
 			it->Bouns();
 
 
-			if (!m_invincibleFlag)
-			{
+			if (m_invincibleFlag) continue;
+
 				// 体力減少
 				m_hp -= (int)it->GetPower();
 				// 自身のHPの3倍の攻撃を与える
 				it->SetHp(it->GetHp() - m_lv);
 
 				m_invincibleFlag = true;
-			}
+
+				m_counterFlag = true;
 		}
 	}
+}
+
+bool AM_Defenser::CounterAttack()
+{
+	return m_counterFlag;
 }

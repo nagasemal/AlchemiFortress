@@ -12,7 +12,7 @@
 
 #define COLOR_WIGHT		{0.75f,0.75f,0.75f,1.0f}
 #define COLOR_RED		{0.75f,0.0f,0.0f,1.0f}
-#define COLOR_BLUE		{0.0f,0.0f,0.75f,1.0f}
+#define COLOR_BLUE		{0.5f,0.5f,0.85f,1.0f}
 #define COLOR_GREEN		{0.0f,0.75f,0.0f,1.0f}
 #define COLOR_YELLOW	{0.75f,0.75f,0.0f,1.0f}
 
@@ -874,4 +874,39 @@ void Json::InitializationClearStageData()
 		ofs << picojson::value(val).serialize(true) << std::endl;
 
 	}
+}
+
+Game_Parameter Json::FileLoad_GameParameter(const std::string filePath)
+{
+	//	読み込み用変数
+	std::ifstream ifs;
+
+	//	ファイル読み込み
+	ifs.open(filePath, std::ios::binary);
+
+	//	読み込みチェック
+	//	ifs変数にデータがなければエラー
+	assert(ifs);
+
+	//	Picojsonへ読み込む
+	picojson::value val;
+	ifs >> val;
+
+	//	ifs変数はもう使わないので閉じる
+	ifs.close();
+
+	Game_Parameter data;
+
+	picojson::object status = val.get<picojson::object>()["GAME_PARAMETER"].get<picojson::object>();
+
+	data.rotateSpeed		= (float)status["ROTATE_SPEED"].get<double>();
+	data.stage_Max			= (int)status["MAX_STAGE"].get<double>();
+	data.baseLV_MAX			= (int)status["MAX_LV"].get<double>();
+	data.baseHp_Max			= (int)status["MAX_BASEHP"].get<double>();
+	data.crystal_Max		= (int)status["MAX_MP"].get<double>();
+	data.mp_Max				= (int)status["MAX_CRYSTAL"].get<double>();
+	data.needExp			= (int)status["NEED_EXP"].get<double>();
+	data.needExp_Growthrate = (int)status["GROWTHRATE_EXP"].get<double>();
+
+	return data;
 }

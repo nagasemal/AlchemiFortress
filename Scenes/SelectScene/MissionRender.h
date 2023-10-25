@@ -9,9 +9,9 @@
 #pragma once
 #include "Scenes/PlayScene/UI/Number.h"
 
-class Stage_Condition;
 class SpriteLoder;
 struct Stage_Data;
+class Stage_Condition;
 
 class MissionRender
 {

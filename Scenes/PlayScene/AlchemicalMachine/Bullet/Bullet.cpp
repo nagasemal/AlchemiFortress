@@ -2,6 +2,8 @@
 #include "Bullet.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
 #include "NecromaLib/GameData/Easing.h"
+#include "NecromaLib/Singleton/SpriteLoder.h"
+#include "NecromaLib/Singleton/ModelShader.h"
 
 Bullet::Bullet(float speed, float damage, float life,SimpleMath::Color color, SimpleMath::Vector3 pos, SimpleMath::Vector3 targetVector)
 {
@@ -50,6 +52,8 @@ void Bullet::Update()
 
 	m_bulletData.life -= deltaTime;
 
+	m_time += deltaTime * 2.0f;
+
 	SimpleMath::Vector3 vec = m_targetVectol - m_startPos;
 
 	vec.y = m_data.pos.y;
@@ -80,7 +84,14 @@ void Bullet::Render(GeometricPrimitive* geo)
 
 	SimpleMath::Matrix textBox = SimpleMath::Matrix::CreateTranslation(m_data.pos.x, 1 , m_data.pos.z);
 
-	geo->Draw(textBox, pSD.GetView(), pSD.GetProjection(), m_color);
+	geo->Draw(textBox, pSD.GetView(), pSD.GetProjection(), m_color, nullptr, false, [&] 
+		{
+		
+			ModelShader::GetInstance().ModelDrawShader(m_color, SimpleMath::Vector4(m_time, 0.0f, 0.0f, 1.0f), SpriteLoder::GetInstance().GetRule());
+
+			pSD.GetContext()->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetNormalMap(0).GetAddressOf());
+		
+		});
 
 }
 

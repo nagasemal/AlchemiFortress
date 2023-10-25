@@ -127,6 +127,24 @@ struct Stage_ClearData
 	int num			= 0;						// 挑戦回数
 };
 
+struct Game_Parameter
+{
+	float rotateSpeed;			// マシンが拠点を回るスピード
+
+	int stage_Max;			// ステージの最大数
+
+	int baseLV_MAX = 9;			// 最大LV
+
+	int baseHp_Max;			// 拠点HPの最大LVの値
+
+	int mp_Max;				// MPリソースの最大LVの値
+
+	int crystal_Max;			// クリスタルリソースの最大LVの値
+
+	int needExp;				// 必要な経験値の量
+	int needExp_Growthrate;	// 必要な経験値の量の上がり幅
+};
+
 // 書き込み
 class AlchemicalMachineObject;
 class ICommand_Enemy;
@@ -143,6 +161,8 @@ namespace Json
 	Stage_Data FileLoad_StageData(const std::string filePath);
 	// 読み込み：ステージクリア情報
 	Stage_ClearData FileLoad_StageClearData(const std::string filePath);
+	// 読み込み：ゲーム内パラメータ情報
+	Game_Parameter FileLoad_GameParameter(const std::string filePath);
 
 	//  属性変換
 	ELEMENT ChangeElement(const std::string element);

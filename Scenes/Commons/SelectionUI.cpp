@@ -12,6 +12,7 @@ SelectionUI::SelectionUI() :
 	m_hitMouseFlag(),
 	m_luminousFlag(),
 	m_keySelectFlag(),
+	m_layer(),
 	m_activeFlag(true),
 	m_rect{ 0,0,64,64 }
 {
@@ -29,14 +30,26 @@ void SelectionUI::Finalize()
 {
 }
 
-bool SelectionUI::HitMouse()
+bool SelectionUI::HitMouse(bool layerCheck)
 {
-	// active状態でなければ処理を飛ばす
-	if (!m_activeFlag)return false;
+	//// active状態でなければ処理を飛ばす
+	//if (!m_activeFlag)return false;
 
 	InputSupport& pIS = InputSupport::GetInstance();
 
 	m_hitMouseFlag = HitObject_RageSet(pIS.GetMousePosScreen(), static_cast<float>(m_rect.right), static_cast<float>(m_rect.bottom), m_data.rage);
+
+	if (m_hitMouseFlag) pIS.HitUI();
+
+	// 触れている間はワールド空間座標に影響を及ぼさないようにする
+	// layerチェック状態ならば追加でチェックを行う
+	if (m_hitMouseFlag && layerCheck)
+	{
+		// 自身の方が大きければレイヤー数を更新する そうでなければ処理を通さない
+		if (m_layer >= pIS.GetLayer())	pIS.SetLayer(m_layer);
+		else return m_hitMouseFlag = false;
+
+	}
 
 	return m_hitMouseFlag;
 }
@@ -48,9 +61,17 @@ bool SelectionUI::ClickMouse()
 
 	if ((m_hitMouseFlag && leftFlag) || m_keySelectFlag)
 	{
-		SoundData::GetInstance().PlaySystemSE_Auto(XACT_WAVEBANK_SYSTEMSE_BUTTOMPUSH);
-
-		return true;
+		// アクティブ時
+		if (m_activeFlag)
+		{
+			SoundData::GetInstance().PlaySystemSE_Auto(XACT_WAVEBANK_SYSTEMSE_BUTTOMPUSH);
+			return true;
+		}
+		else
+		{
+			SoundData::GetInstance().PlaySystemSE_Auto(XACT_WAVEBANK_SYSTEMSE_POPTEXT);
+			return false;
+		}
 	}
 
 	return false;

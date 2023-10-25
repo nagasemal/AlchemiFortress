@@ -55,5 +55,6 @@ private:
 	SimpleMath::Vector3 m_startPos;
 	SimpleMath::Vector3 m_targetVectol;
 
+	float m_time;
 	bool m_enemyHit;
 };

@@ -1,0 +1,14 @@
+{
+
+  "GAME_PARAMETER": {
+    "ROTATE_SPEED": 1.2,
+    "MAX_STAGE": 2,
+    "MAX_LV": 9,
+    "MAX_BASEHP": 420,
+    "MAX_MP": 1200,
+    "MAX_CRYSTAL": 1000,
+    "NEED_EXP": 25,
+    "GROWTHRATE_EXP": 50
+  }
+
+}

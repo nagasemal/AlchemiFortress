@@ -78,19 +78,21 @@ void AM_Recovery::LvUp()
 
 void AM_Recovery::HitEnemy(std::list<EnemyObject>* enemy)
 {
+
+	// TRUEならば早急に弾く
+	if (m_invincibleFlag) return;
+
 	//　現存存在するエネミー分回す
-//	効果範囲toエネミー
+	//	効果範囲toエネミー
 	for (std::list<EnemyObject>::iterator it = enemy->begin(); it != enemy->end(); it++)
 	{
 
 		if (CircleCollider(it->GetCircle(), GetCircle()))
 		{
-			if (!m_invincibleFlag)
-			{
-				// 体力減少
-				m_hp -= (int)it->GetPower();
-				m_invincibleFlag = true;
-			}
+			// 体力減少
+			m_hp -= (int)it->GetPower();
+			m_invincibleFlag = true;
+
 		}
 	}
 }

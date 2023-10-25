@@ -2,6 +2,10 @@
 #include "MachineExplanation.h"
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
+#include "NecromaLib/Singleton/SpriteLoder.h"
+#include "NecromaLib/Singleton/ModelShader.h"
+
+
 #include "NecromaLib/GameData/Easing.h"
 #include "NecromaLib/GameData/ScreenToWorld.h"
 #include "NecromaLib/GameData/Camera.h"
@@ -126,22 +130,29 @@ void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* se
 			lights->SetLightDiffuseColor(2, object->GetColor());
 		});
 
-	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
+	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix(), false,[&]
+		{
+
+			ModelShader::GetInstance().ModelDrawShader(SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f), SpriteLoder::GetInstance().GetRule());
+
+			pSD.GetContext()->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetMachineTextuer(0).GetAddressOf());
+			pSD.GetContext()->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetNormalMap(0).GetAddressOf());
+		});
 
 	// セカンドモデルが存在するならば実行
 	if (secondModel != nullptr)
 	{
 
-		secondModel->UpdateEffects([&](IEffect* effect)
-			{
-				// 今回はライトだけ欲しい
-				auto lights = dynamic_cast<IEffectLights*>(effect);
+		//secondModel->UpdateEffects([&](IEffect* effect)
+		//	{
+		//		// 今回はライトだけ欲しい
+		//		auto lights = dynamic_cast<IEffectLights*>(effect);
 
-				// 色変更
-				lights->SetLightDiffuseColor(0, SimpleMath::Color((float)object->GetPowerUpFlag(),(float)object->GetPowerUpFlag(), 0.0f, 1.0f));
-				lights->SetLightDiffuseColor(1, SimpleMath::Color((float)object->GetPowerUpFlag(), (float)object->GetPowerUpFlag(), 0.0f, 1.0f));
-				lights->SetLightDiffuseColor(2, SimpleMath::Color((float)object->GetPowerUpFlag(), (float)object->GetPowerUpFlag(), 0.0f, 1.0f));
-			});
+		//		// 色変更
+		//		lights->SetLightDiffuseColor(0, SimpleMath::Color((float)object->GetPowerUpFlag(),(float)object->GetPowerUpFlag(), 0.0f, 1.0f));
+		//		lights->SetLightDiffuseColor(1, SimpleMath::Color((float)object->GetPowerUpFlag(), (float)object->GetPowerUpFlag(), 0.0f, 1.0f));
+		//		lights->SetLightDiffuseColor(2, SimpleMath::Color((float)object->GetPowerUpFlag(), (float)object->GetPowerUpFlag(), 0.0f, 1.0f));
+		//	});
 
 		secondModel->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
 	}

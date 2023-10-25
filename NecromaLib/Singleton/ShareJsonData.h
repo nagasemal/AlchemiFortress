@@ -35,6 +35,9 @@ public:
 	// エネミーのjsonファイルを読み込む
 	void LoadingJsonFile_Enemy();
 
+	// ゲームに関する固定の変数(リソースの最大値など)を読み込む
+	void LoadingJsonFile_GameParameter();
+
 	// ステージのjsonファイルを読み込む
 	void LoadingJsonFile_Stage(int number, int wave);
 
@@ -57,6 +60,9 @@ public:
 
 	// ステージのクリアデータを渡す
 	const Stage_ClearData GetClearData();
+
+	// ゲーム内のパラメータを渡す
+	const Game_Parameter GetGameParameter();
 
 	// ステージデータの中身を全て消す(メモリ領域の圧迫を防ぐため)
 	void StageDataCleanUP();
@@ -83,5 +89,8 @@ private:
 
 	// 読み込んだステージのクリア時データ
 	Stage_ClearData m_clearData;
+
+	// ゲーム内パラメータ
+	Game_Parameter m_gameParam;
 
 };

@@ -6,6 +6,7 @@
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
+#include "NecromaLib/Singleton/ModelShader.h"
 
 #define RAD_90 1.5708f
 
@@ -21,7 +22,8 @@ const std::vector<D3D11_INPUT_ELEMENT_DESC> MagicCircle::INPUT_LAYOUT =
 
 MagicCircle::MagicCircle() :
 	m_proj(),
-	m_world(),
+	m_world_MagicCircle(),
+	m_world_Effect(),
 	m_view(),
 	m_animationTime()
 {
@@ -54,6 +56,11 @@ void MagicCircle::CreateMagicCircle(SimpleMath::Vector3 pos,float r, SimpleMath:
 
 	color.A(0.55f);
 	m_vertices.push_back({ pos,color,SimpleMath::Vector2(r * 2.5f,0.0f) });
+
+	// 魔法陣エフェクト用
+	m_world_Effect = SimpleMath::Matrix::CreateScale(r, 1.0f, r);
+	m_world_Effect *= SimpleMath::Matrix::CreateTranslation(pos.x,pos.y - r,pos.z);
+
 }
 
 void MagicCircle::DeleteMagicCircle()
@@ -66,7 +73,7 @@ void MagicCircle::DeleteMagicCircle()
 void MagicCircle::CreateWorld()
 {
 
-	m_world = SimpleMath::Matrix::Identity;
+	m_world_MagicCircle = SimpleMath::Matrix::Identity;
 
 	SimpleMath::Matrix rot = SimpleMath::Matrix::CreateRotationX(RAD_90);
 	
@@ -75,7 +82,11 @@ void MagicCircle::CreateWorld()
 
 	m_animationTime += DeltaTime::GetInstance().GetDeltaTime();
 
-	m_world *= rot * m_world;
+	m_world_MagicCircle *= rot * m_world_MagicCircle;
+
+
+	m_world_Effect = SimpleMath::Matrix::CreateRotationY(0.25f * m_animationTime) * m_world_Effect;
+
 
 }
 
@@ -83,6 +94,7 @@ void MagicCircle::CreateWorld()
 void MagicCircle::Render(int magicCircleNumber)
 {
 	auto context = ShareData::GetInstance().GetContext();
+	auto common = ShareData::GetInstance().GetCommonStates();
 	auto view = ShareData::GetInstance().GetView();
 	auto proj = ShareData::GetInstance().GetProjection();
 
@@ -90,7 +102,7 @@ void MagicCircle::Render(int magicCircleNumber)
 	ConstBuffer cbuff;
 	cbuff.m_matView = view.Transpose();
 	cbuff.m_matProj = proj.Transpose();
-	cbuff.m_matWorld = m_world.Transpose();
+	cbuff.m_matWorld = m_world_MagicCircle.Transpose();
 	cbuff.m_diffuse = SimpleMath::Vector4(1, 1, 1, m_animationTime);
 
 	//受け渡し用バッファの内容更新(ConstBufferからID3D11Bufferへの変換）
@@ -108,7 +120,6 @@ void MagicCircle::Render(int magicCircleNumber)
 
 	//半透明描画指定
 	ID3D11BlendState* blendstate = m_states->NonPremultiplied();
-
 	// 透明判定処理
 	context->OMSetBlendState(blendstate, nullptr, 0xFFFFFFFF);
 
@@ -145,6 +156,19 @@ void MagicCircle::Render(int magicCircleNumber)
 	context->VSSetShader(nullptr, nullptr, 0);
 	context->GSSetShader(nullptr, nullptr, 0);
 	context->PSSetShader(nullptr, nullptr, 0);
+
+	// カリングは左周り
+	//ModelShader::GetInstance().GetMagicTrauabgukarPyram()->Draw(context, *common, m_world_Effect, view,proj, false, [&]
+	//	{
+	//		// カリングは左周り
+	//		context->RSSetState(m_states->CullNone());
+	//		ModelShader::GetInstance().ModelEffectShader(
+	//			SimpleMath::Color(1.0f,1.0f,1.0f,1.0f),
+	//			SimpleMath::Vector4(1, 1, 1, m_animationTime),
+	//			SpriteLoder::GetInstance().GetAuraBase().Get());
+	//		context->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetAuraMask().GetAddressOf());
+	//	});
+
 }
 
 void MagicCircle::Finalize()

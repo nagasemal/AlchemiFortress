@@ -133,10 +133,21 @@ public:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetRule() { return m_rule; }
 	const wchar_t* GetRulePath() { return L"Resources/Textures/MagicRule.png"; }
 
+	// マシンに使うノーマルマップの画像を渡します
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetNormalMap(int element) { return m_machineNormalMap[element]; }
+	const wchar_t* GetNormalMapPath() { return L"Resources/Textures/NormalMap.png"; }
+
+	// マシンに使うテクスチャの画像を渡します
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetMachineTextuer(int element) { return m_machineTexture[element]; }
+
 	// 0~3
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetMagicRule(int index) { return m_transition[index]; }
 
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetPleaseMouseButton() { return m_pleaseMouseButtonText; }
+
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetAuraBase() { return m_auraBaseTexture; }
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetAuraMask() { return m_auraMaskTexture; }
+
 
 	//// 説明用画像を渡す
 	//Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetExplanationTexture(int type) { return m_explanationTexture[type]; }
@@ -205,5 +216,17 @@ private:
 
 	// PleaseMouseButtonのテキスト画像
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_pleaseMouseButtonText;
+
+	// ノーマルマップ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_machineNormalMap[5];
+	// マシンテクスチャ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_machineTexture[5];
+
+
+	// エフェクト用のテクスチャ(オーラ表現)
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_auraBaseTexture;
+	// エフェクト用のテクスチャ(オーラ表現)
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_auraMaskTexture;
+
 
 };

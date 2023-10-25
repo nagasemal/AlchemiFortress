@@ -28,7 +28,7 @@ void PlayerBase::Initialize()
 {
 	m_baseLv = ShareJsonData::GetInstance().GetStageData().resource.lv;
 	m_exp = 0;
-	m_hp = 50;
+	m_hp = DataManager::GetInstance()->GetNowBaseHP();
 
 	m_data.pos  = SimpleMath::Vector3(0,0,0);
 	m_data.rage = RAGE;
@@ -64,7 +64,7 @@ void PlayerBase::Update()
 
 	if (PointerToCircle(GetCircle(), mouseWolrdPos)) m_hitMouseFlag = true;
 
-	if (m_exp >= GetNextLvEXP())
+	if (m_exp >= GetNextLvEXP() && m_baseLv < ShareJsonData::GetInstance().GetGameParameter().baseLV_MAX)
 	{
 		m_baseLv++;
 		m_lvUpTiming = true;
@@ -130,6 +130,13 @@ void PlayerBase::Finalize()
 	m_baseModel.reset();
 	m_testBox.reset();
 
+}
+
+float PlayerBase::GetNextLvEXP()
+{
+	auto gameParam = ShareJsonData::GetInstance().GetGameParameter();
+
+	return gameParam.needExp + (gameParam.needExp_Growthrate * m_baseLv);
 }
 
 void PlayerBase::Damage(float damage)

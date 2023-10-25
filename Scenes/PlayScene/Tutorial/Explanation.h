@@ -27,6 +27,10 @@ public:
 
 	void Render(bool selectNowFlag,bool rotateStopFlag);
 
+	SimpleMath::Vector2 RightExplanationPos();
+	SimpleMath::Vector2 MiddleExplanationPos();
+	SimpleMath::Vector2 LeftExplanationPos();
+
 private:
 
 	void ExplanationRender(SimpleMath::Vector2 pos, int type);

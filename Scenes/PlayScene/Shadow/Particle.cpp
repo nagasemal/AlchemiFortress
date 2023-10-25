@@ -111,7 +111,7 @@ bool Particle::OnShot(SimpleMath::Vector3 pos, bool flag, SimpleMath::Color colo
 	// ŒÂ”•ª¶¬‚ğ‚·‚é
 	for (int i = 0; i < m_particleNum; i++)
 	{
-		m_particleUtility.push_back(CreateEffectParam(m_effectType,pos, color));
+		m_particleUtility.push_back(CreateEffectParam(m_effectType, pos, color));
 	}
 
 	return false;
@@ -161,11 +161,11 @@ void Particle::Render()
 			continue;
 		}
 
-		DirectX::VertexPositionColorTexture vPCT;
+		VertexPositionColorTexture vPCT = VertexPositionColorTexture();
 
-		vPCT.position = DirectX::XMFLOAT3(li.GetPosition());
-		vPCT.color = DirectX::XMFLOAT4(li.GetNowColor());
-		vPCT.textureCoordinate = DirectX::XMFLOAT2(li.GetNowScale().x, 0.0f);
+		vPCT.position = XMFLOAT3(li.GetPosition());
+		vPCT.color = XMFLOAT4(li.GetNowColor());
+		vPCT.textureCoordinate = XMFLOAT2(li.GetNowScale().x, 0.0f);
 
 		m_vertices.push_back(vPCT);
 	}
@@ -446,6 +446,41 @@ ParticleUtility Particle::CreateEffectParam(EFFECT_TYPE type, SimpleMath::Vector
 		pU.SetEndColor({ color.R(),color.G(),color.B(),0.0f });
 
 		m_particleNum = 5;
+
+		break;
+
+	case Particle::DEFENSE_EFFECT:
+
+
+		pU.SetLife(1.2f);
+
+		pU.SetPosition(SimpleMath::Vector3(pos.x,
+			pos.y + range * sinf(rand),
+			pos.z));
+
+		vectol = pU.GetPosition().Cross(pos);
+
+		pU.SetStartScale(SimpleMath::Vector3(0.6f, 0.6f, 0.6f));
+		pU.SetEndScale(SimpleMath::Vector3(0.0f, 0.0f, 0.0f));
+		pU.SetVelocity(SimpleMath::Vector3(vectol.x + sinf(vectol.x), 0.0f, vectol.z + cosf(vectol.z)));
+		pU.SetAccele(SimpleMath::Vector3(2.0f, 0.0f, 0.0f));
+
+		pU.SetEndColor({ color.R(),color.G(),color.B(),0.0f });
+
+		m_particleNum = 10;
+
+
+		break;
+
+	case Particle::BULLET_LINE:
+
+		pU.SetLife(1.2f);
+		pU.SetPosition(SimpleMath::Vector3(pos.x,pos.y + 1.0f,pos.z));
+		pU.SetStartScale(SimpleMath::Vector3(0.6f, 0.6f, 0.6f));
+		pU.SetEndScale(SimpleMath::Vector3(0.0f, 0.0f, 0.0f));
+		pU.SetEndColor({ color.R(),color.G(),color.B(),0.0f });
+
+		m_particleNum = 1;
 
 		break;
 

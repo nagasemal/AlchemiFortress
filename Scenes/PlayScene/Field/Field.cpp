@@ -3,6 +3,7 @@
 
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/InputSupport.h"
+#include "NecromaLib/Singleton/ModelShader.h"
 #define RAGE 60.f
 
 Field::Field():
@@ -56,7 +57,9 @@ void Field::Render(DirectX::Model* model)
 	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
 	modelData = SimpleMath::Matrix::CreateScale(m_data.rage);
 	modelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y, m_data.pos.z);
-	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false,[&](){});
+	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false,[&]()
+		{
+		});
 }
 
 void Field::Finalize()

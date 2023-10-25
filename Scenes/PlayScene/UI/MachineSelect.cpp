@@ -5,9 +5,10 @@
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/InputSupport.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
+#include "NecromaLib/Singleton/ModelShader.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
 
-#define SELECTBOX_RAGE		{ 2.0f,2.0f }
+#define SELECTBOX_RAGE		{ 1.0f,1.0f }
 #define ALCHEMI_RAGE		(0.5f,0.5f)
 
 #define ALCHEMI_POS_SHIFT	40
@@ -51,6 +52,7 @@ void MachineSelect::Initialize()
 
 	m_selectionAlchemi->SetRect(rect);
 	m_selectionAlchemi->SetRage(SimpleMath::Vector2(ALCHEMI_RAGE));
+	m_selectionAlchemi->SetLayer(1);
 
 }
 
@@ -58,18 +60,29 @@ void MachineSelect::Update()
 {
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
 
+	m_manufacturingFlag = false;
+
 	// 色を変える
 	m_colorChangeTime += deltaTime * 5.0f;
 	m_boxColor.G(0.5f + cosf(m_colorChangeTime) / 2);
 
-	// リストの中から選ばれた
-	m_onMouseFlag = m_machineBox->HitMouse();
-	m_hitMouseFlag = m_machineBox->SelectionMouse();
 
 	// 錬金ボタンが押された
-	m_selectionAlchemi->HitMouse();
+	m_selectionAlchemi->HitMouse(true);
 
-	m_manufacturingFlag = m_selectionAlchemi->ClickMouse();
+	// リストの中から選ばれた
+	m_onMouseFlag = m_machineBox->HitMouse(true);
+	m_hitMouseFlag = m_machineBox->SelectionMouse();
+
+	if (m_selectionAlchemi->ClickMouse())
+	{
+		m_manufacturingFlag = true;
+
+		// 選択状態でなければ選択状態にする
+		if (!m_hitMouseFlag) m_machineBox->SetSelectFlag(true);
+
+	}
+
 
 	// 選択されているならば、全体の速度を落とす
 	if (m_hitMouseFlag)
@@ -156,28 +169,38 @@ void MachineSelect::DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceVie
 			// ライト
 			auto lights = dynamic_cast<IEffectLights*>(effect);
 			// 色変更
-			lights->SetLightDiffuseColor(0, Colors::White);
-			lights->SetLightDiffuseColor(1, Colors::White);
-			lights->SetLightDiffuseColor(2, Colors::White);
+			lights->SetLightDiffuseColor(0, { 0.75f,0.75f,0.75f,1.0f });
+			lights->SetLightDiffuseColor(1, { 0.75f,0.75f,0.75f,1.0f });
+			lights->SetLightDiffuseColor(2, { 0.75f,0.75f,0.75f,1.0f });
+		});
+	
+	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, view, proj, false, [&] {
+
+
+		ModelShader::GetInstance().ModelDrawShader(SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f), SimpleMath::Vector4(1.0f,0.0f, 0.0f, 1.0f), SpriteLoder::GetInstance().GetRule());
+
+		pSD.GetContext()->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetMachineTextuer(0).GetAddressOf());
+		pSD.GetContext()->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetNormalMap(0).GetAddressOf());
 
 		});
-
-	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, view, proj);
 
 	// セカンドモデルが存在するのならば実行
 	if (secondModel != nullptr)
 	{
-		secondModel->UpdateEffects([&](IEffect* effect)
-			{
-				// 今回はライトだけ欲しい
-				auto lights = dynamic_cast<IEffectLights*>(effect);
-
-				// 色変更
-				lights->SetLightDiffuseColor(0, SimpleMath::Color(0.0f, 0.0f, 0.0f, 1.0f));
-				lights->SetLightDiffuseColor(1, SimpleMath::Color(0.0f, 0.0f, 0.0f, 1.0f));
-				lights->SetLightDiffuseColor(2, SimpleMath::Color(0.0f, 0.0f, 0.0f, 1.0f));
-			});
-
+		// アタッカーの場合
+		if (m_selectMachineType == ATTACKER)
+		{
+			secondModel->UpdateEffects([&](IEffect* effect)
+				{
+					// 今回はライトだけ欲しい
+					auto lights = dynamic_cast<IEffectLights*>(effect);
+					// 色変更
+					lights->SetLightDiffuseColor(0, SimpleMath::Color(0.0f, 0.0f, 0.0f, 1.0f));
+					lights->SetLightDiffuseColor(1, SimpleMath::Color(0.0f, 0.0f, 0.0f, 1.0f));
+					lights->SetLightDiffuseColor(2, SimpleMath::Color(0.0f, 0.0f, 0.0f, 1.0f));
+				});
+		}
+	
 		secondModel->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, view, proj);
 	}
 }

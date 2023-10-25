@@ -2,10 +2,6 @@
 #include "DataManager.h"
 #include "NecromaLib/Singleton/ShareJsonData.h"
 
-#define STANDARD_MP			400
-#define STANDARD_CRYSTAL	215
-#define STANDARD_BASEHP		50
-
 DataManager* DataManager::instance = nullptr;
 
 DataManager::DataManager() :
@@ -27,14 +23,14 @@ void DataManager::Initialize()
 {
 	auto resource = ShareJsonData::GetInstance().GetStageData().resource;
 
-	m_nowMP_MAX			= STANDARD_MP;
+	MPMAXRecalculation(resource.lv);
 	m_nowMP				= resource.mp;
 
-	m_nowCrystal_MAX	= STANDARD_CRYSTAL;
+	CrystalMAXRecalculation(resource.lv);
 	m_nowCrystal		= resource.crystal;
 
-	m_nowBaseHp_MAX		= STANDARD_BASEHP;
-	m_nowBaseHp			= STANDARD_BASEHP;
+	BaseHPMAXRecalculation(resource.lv);
+	m_nowBaseHp			= resource.hp;
 
 	m_nowEnemyKill = 0;
 	m_round = 1;
@@ -53,17 +49,23 @@ void DataManager::Update()
 
 void DataManager::MPMAXRecalculation(int lv)
 {
-	m_nowMP_MAX = STANDARD_MP + (STANDARD_MP / 2 * lv);
+	auto gameParam = ShareJsonData::GetInstance().GetGameParameter();
+
+	m_nowMP_MAX = gameParam.mp_Max * lv / gameParam.baseLV_MAX;
 }
 
 void DataManager::CrystalMAXRecalculation(int lv)
 {
-	m_nowCrystal_MAX = STANDARD_CRYSTAL + (STANDARD_CRYSTAL / 2 * lv);
+	auto gameParam = ShareJsonData::GetInstance().GetGameParameter();
+
+	m_nowCrystal_MAX = gameParam.crystal_Max * lv / gameParam.baseLV_MAX;
 }
 
 void DataManager::BaseHPMAXRecalculation(int lv)
 {
-	m_nowBaseHp_MAX = STANDARD_BASEHP + (STANDARD_BASEHP / 2 * lv);
+	auto gameParam = ShareJsonData::GetInstance().GetGameParameter();
+
+	m_nowBaseHp_MAX = gameParam.baseHp_Max * lv / gameParam.baseLV_MAX;
 
 	// ‘S‰ñ•œ
 	m_nowBaseHp = m_nowBaseHp_MAX;

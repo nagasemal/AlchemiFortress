@@ -79,6 +79,7 @@ PSInput main(VSInput vin)
     vout.LightViewPos   = cout.LightViewPos;
     vout.TexCoord       = vin.TexCoord;
     vout.Position       = cout.Position;
+    vout.Normal         = vin.Normal;
 
     return vout;
 }

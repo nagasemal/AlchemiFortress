@@ -9,6 +9,11 @@
 
 #include "Scenes/PlayScene/AlchemicalMachine/AlchemicalMachineManager.h"
 
+#define LETTER_ADJUSTMENT_POS_X 80
+
+#define LETTER_POS_Y 630
+#define LETTER_ADJUSTMENT_POS_Y 40
+
 Explanation::Explanation():
 	m_mouseSelectButton(),
 	m_prvMouseValue()
@@ -21,7 +26,6 @@ Explanation::~Explanation()
 
 void Explanation::Update()
 {
-
 
 	auto mouse = InputSupport::GetInstance().GetMouseState();
 		
@@ -55,12 +59,39 @@ void Explanation::Render(bool selectNowFlag, bool rotateStopFlag)
 			0.0f, SimpleMath::Vector2(296 / 2, 458 / 2), 0.25f);
 	}
 
-	ExplanationRender(SimpleMath::Vector2(1280 / 2 - 80,630), MACHINE_SELECT   + selectNowFlag);
-	ExplanationRender(SimpleMath::Vector2(1280 / 2, 590), ZOOM			  + selectNowFlag);
-	ExplanationRender(SimpleMath::Vector2(1280 / 2 + 80, 630), ROTATE_STOP	  + rotateStopFlag);
+	ExplanationRender(RightExplanationPos(), MACHINE_SELECT + selectNowFlag);
+	ExplanationRender(MiddleExplanationPos(), ZOOM + selectNowFlag);
+	ExplanationRender(LeftExplanationPos(), ROTATE_STOP + rotateStopFlag);
 
 	pSB->End();
 
+}
+
+SimpleMath::Vector2 Explanation::RightExplanationPos()
+{
+	auto device = ShareData::GetInstance().GetDeviceResources();
+	float width = static_cast<float>(device->GetOutputSize().right);
+	float height = static_cast<float>(device->GetOutputSize().bottom);
+
+	return SimpleMath::Vector2(width / 2 - LETTER_ADJUSTMENT_POS_X, LETTER_POS_Y);
+}
+
+SimpleMath::Vector2 Explanation::MiddleExplanationPos()
+{
+	auto device = ShareData::GetInstance().GetDeviceResources();
+	float width = static_cast<float>(device->GetOutputSize().right);
+	float height = static_cast<float>(device->GetOutputSize().bottom);
+
+	return SimpleMath::Vector2(width / 2, LETTER_POS_Y - LETTER_ADJUSTMENT_POS_Y);
+}
+
+SimpleMath::Vector2 Explanation::LeftExplanationPos()
+{
+	auto device = ShareData::GetInstance().GetDeviceResources();
+	float width = static_cast<float>(device->GetOutputSize().right);
+	float height = static_cast<float>(device->GetOutputSize().bottom);
+
+	return SimpleMath::Vector2(width / 2 + LETTER_ADJUSTMENT_POS_X, LETTER_POS_Y);
 }
 
 void Explanation::ExplanationRender(SimpleMath::Vector2 pos, int type)

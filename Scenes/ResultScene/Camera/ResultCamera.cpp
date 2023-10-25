@@ -58,7 +58,7 @@ void ResultCamera::Update()
 {
 	// 開始時アニメーション
 	m_animationTimer_Start += 0.5f * DeltaTime::GetInstance().GetDeltaTime();
-	m_move.z = Easing::EaseInOutExpo(1.0f, 3.0f, m_animationTimer_Start);
+	m_move.z = Easing::EaseInOutExpo(1.0f, 1.5f, m_animationTimer_Start);
 	m_angleY = Easing::EaseInOutExpo(1.0f, 2.0f, m_animationTimer_Start);
 
 	m_animationTimer_Select += DeltaTime::GetInstance().GetDeltaTime();

@@ -59,6 +59,20 @@ void UserInterface::LoadTexture(const wchar_t* path)
 
 }
 
+void UserInterface::LoadTexture(std::wstring path)
+{
+	DirectX::CreateWICTextureFromFile(m_pDR->GetD3DDevice(), path.c_str(), m_res.ReleaseAndGetAddressOf(), m_texture.ReleaseAndGetAddressOf());
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> tex;
+	DX::ThrowIfFailed(m_res.As(&tex));
+
+	D3D11_TEXTURE2D_DESC desc;
+	tex->GetDesc(&desc);
+
+	m_textureWidth = desc.Width;
+	m_textureHeight = desc.Height;
+
+}
+
 void UserInterface::LoadTexture(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
 {
 

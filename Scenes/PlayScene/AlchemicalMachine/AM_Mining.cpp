@@ -83,6 +83,9 @@ void AM_Mining::AllFieldObject(FieldObjectManager* fieldManager)
 
 void AM_Mining::HitEnemy(std::list<EnemyObject>* enemy)
 {
+
+	if (m_invincibleFlag) return;
+
 	//　現存存在するエネミー分回す
 //	効果範囲toエネミー
 	for (std::list<EnemyObject>::iterator it = enemy->begin(); it != enemy->end(); it++)
@@ -90,12 +93,10 @@ void AM_Mining::HitEnemy(std::list<EnemyObject>* enemy)
 
 		if (CircleCollider(it->GetCircle(), GetCircle()))
 		{
-			if (!m_invincibleFlag)
-			{
 				// 体力減少
 				m_hp -= (int)it->GetPower();
 				m_invincibleFlag = true;
-			}
+
 		}
 	}
 }

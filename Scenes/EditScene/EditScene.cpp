@@ -14,6 +14,9 @@
 #include "Scenes/PlayScene/UI/Number.h"
 #include "Scenes/TitleScene/TitleLogo/TitleLogo.h"
 
+#include "Scenes/PlayScene/AlchemicalMachine/AM_Attacker.h"
+#include "Scenes/PlayScene/Camera/MoveCamera.h"
+
 #include "Scenes/DataManager.h"
 
 #define SLIDER_POS_X 250
@@ -22,7 +25,8 @@
 
 EditScene::EditScene():
     m_stageData(),
-    m_stageNum()
+    m_stageNum(),
+    m_shaderFlag()
 {
 }
 
@@ -85,10 +89,40 @@ void EditScene::Initialize()
     m_titleLogo->SetColor(SimpleMath::Color(0.4f, 0.4f, 0.6f, 1.0f));
     m_titleLogo->SetPosition(SimpleMath::Vector2(width / 1.3f, height / 1.8f));
 
+    m_machine = std::make_unique<AM_Attacker>();
+    m_machine->Initialize();
+    m_machine->SummonAM(SimpleMath::Vector3());
+
+    ShareData& pSD = ShareData::GetInstance();
+
+    std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
+    fx->SetDirectory(L"Resources/Models");
+    m_model = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Attacker.cmo", *fx);
+
+    m_camera = std::make_unique<MoveCamera>();
+    m_camera->Initialize();
+
 }
 
 GAME_SCENE EditScene::Update()
 {
+    ShareData& pSD = ShareData::GetInstance();
+    // カメラを動かす
+    m_camera->Update(true , true);
+    m_camera->SetTargetProsition(m_machine->GetPos());
+
+    if (InputSupport::GetInstance().GetMouseState().leftButton == Mouse::ButtonStateTracker::PRESSED)
+    {
+        m_shaderFlag = !m_shaderFlag;
+    }
+
+    pSD.GetCamera()->SetViewMatrix(m_camera->GetViewMatrix());
+    pSD.GetCamera()->SetTargetPosition(m_camera->GetTargetPosition());
+    pSD.GetCamera()->SetEyePosition(m_camera->GetEyePosition());
+
+    m_machine->Update_Common();
+    m_machine->Update();
+
     for (int i = 1; i < MACHINE_TYPE::NUM;i++)
     {
         m_machineMissions_puls[i]->HitMouse();
@@ -141,50 +175,56 @@ void EditScene::Draw()
 
     device;
 
-    pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
+    //pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
-    // ミッション内容の描画(マシンのみ)
-    m_missionRender->Render(m_stageData);
+    //// ミッション内容の描画(マシンのみ)
+    //m_missionRender->Render(m_stageData);
 
-    // マシンミッションの加減矢印の描画
-    for (int i = 1; i < MACHINE_TYPE::NUM; i++)
-    {
-        m_machineMissions_puls[i]->Draw();
-        m_machineMissions_minus[i]->Draw();
-    }
+    //// マシンミッションの加減矢印の描画
+    //for (int i = 1; i < MACHINE_TYPE::NUM; i++)
+    //{
+    //    m_machineMissions_puls[i]->Draw();
+    //    m_machineMissions_minus[i]->Draw();
+    //}
 
-    // ステージ指定の矢印描画
-    m_stageNum_puls     ->Draw();
-    m_stageNum_minus    ->Draw();
+    //// ステージ指定の矢印描画
+    //m_stageNum_puls     ->Draw();
+    //m_stageNum_minus    ->Draw();
 
-    pSB->End();
+    //pSB->End();
 
-    // リソース描画
-    m_resource_MP       ->Render();
-    m_resource_Crystal  ->Render();
+    //// リソース描画
+    //m_resource_MP       ->Render();
+    //m_resource_Crystal  ->Render();
+
+
+    m_machine->SetPos(SimpleMath::Vector3(0, 0, 7));
+    m_machine->ModelRender(m_model.get(),nullptr, m_shaderFlag);
+
+    //m_machine->Draw();
 
 }
 
 void EditScene::DrawUI()
 {
 
-    m_decisionButton->Draw();
+    //m_decisionButton->Draw();
 
-    // ステージ番号を決める
-    m_ui_StageNumber->Render();
+    //// ステージ番号を決める
+    //m_ui_StageNumber->Render();
 
-    for (auto& missionEnemy : m_enemyMissions)
-    {
-        missionEnemy->Draw();
-    }
+    //for (auto& missionEnemy : m_enemyMissions)
+    //{
+    //    missionEnemy->Draw();
+    //}
 
-    for (auto& missionTime : m_timeMissions)
-    {
-        missionTime->Draw();
-    }
+    //for (auto& missionTime : m_timeMissions)
+    //{
+    //    missionTime->Draw();
+    //}
 
 
-    m_titleLogo->Render();
+    //m_titleLogo->Render();
 }
 
 void EditScene::Finalize()

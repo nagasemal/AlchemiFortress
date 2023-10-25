@@ -99,6 +99,9 @@ void AM_Upper::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture
 
 void AM_Upper::HitEnemy(std::list<EnemyObject>* enemy)
 {
+
+	if (m_invincibleFlag) return;
+
 	//　現存存在するエネミー分回す
 //	効果範囲toエネミー
 	for (std::list<EnemyObject>::iterator it = enemy->begin(); it != enemy->end(); it++)
@@ -106,12 +109,9 @@ void AM_Upper::HitEnemy(std::list<EnemyObject>* enemy)
 
 		if (CircleCollider(it->GetCircle(), GetCircle()))
 		{
-			if (!m_invincibleFlag)
-			{
-				// 体力減少
-				m_hp -= (int)it->GetPower();
-				m_invincibleFlag = true;
-			}
+			// 体力減少
+			m_hp -= (int)it->GetPower();
+			m_invincibleFlag = true;
 		}
 	}
 }

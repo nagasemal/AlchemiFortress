@@ -40,6 +40,8 @@ cbuffer TimeUpdate : register(b2)
 {
     float4 Time;
     float4 PaintColor;
+    float4 LimLightColor;
+    float4 Eyes;    // 注視点
 }
 
 struct PSInput
@@ -50,6 +52,7 @@ struct PSInput
     float2 TexCoord     : TEXCOORD0;
     float4 LightViewPos : TEXCOORD1;
     float4 Position     : Position;
+    float3 Normal       : NORMAL;
 };
 
 // 頂点シェーダーの入力

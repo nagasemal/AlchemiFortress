@@ -42,9 +42,13 @@ public:
 	// エネミーとの当たり判定
 	void EnemyHit(std::list<EnemyObject>* enemy);
 
+	// 反射攻撃を行ったか否か
+	bool CounterAttack();
+
 private:
 
 	// 壊れているかどうか
 	bool m_isBreak;
+	bool m_counterFlag;
 
 };

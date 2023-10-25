@@ -4,6 +4,8 @@
 #include "NecromaLib/GameData/BinaryFile.h"
 #include "ShareData.h"
 
+#include "NecromaLib/Singleton/SpriteLoder.h"
+
 ModelShader* ModelShader::instance = nullptr;
 
 ModelShader::ModelShader():
@@ -34,15 +36,23 @@ void ModelShader::CreateModelShader()
 
 	ShareData& pSD = ShareData::GetInstance();
 
+	// シルエット描画用のピクセルシェーダー
 	BinaryFile PSData_Shadow = BinaryFile::LoadFile(L"Resources/Shader/ModelShadow_PS.cso");
-	// ピクセルシェーダ作成
 	pSD.GetDevice()->CreatePixelShader(PSData_Shadow.GetData(), PSData_Shadow.GetSize(), NULL, m_modelShadowShader.ReleaseAndGetAddressOf());
-
+	
+	// 半透明描画用のピクセルシェーダー
 	BinaryFile PSData_Transparent = BinaryFile::LoadFile(L"Resources/Shader/ModelTransparent_PS.cso");
 	pSD.GetDevice()->CreatePixelShader(PSData_Transparent.GetData(), PSData_Transparent.GetSize(), NULL, m_modelTransparentShader.ReleaseAndGetAddressOf());
 
+	// 通常モデル描画用のピクセルシェーダー
 	BinaryFile PSData_MyModel = BinaryFile::LoadFile(L"Resources/Shader/MyModelShader_PS.cso");
 	pSD.GetDevice()->CreatePixelShader(PSData_MyModel.GetData(), PSData_MyModel.GetSize(), NULL, m_modelMyShader_PS.ReleaseAndGetAddressOf());
+	
+	// モデルを用いたエフェクト用のシェーダー
+	BinaryFile PSData_EffectModel = BinaryFile::LoadFile(L"Resources/Shader/MagicEffectShader_PS.cso");
+	pSD.GetDevice()->CreatePixelShader(PSData_EffectModel.GetData(), PSData_EffectModel.GetSize(), NULL, m_modelEffect_PS.ReleaseAndGetAddressOf());
+
+	// 頂点情報受け渡し用のバーテックスシェーダー
 	BinaryFile VSData_MyModel = BinaryFile::LoadFile(L"Resources/Shader/MyModelShader_VS.cso");
 	pSD.GetDevice()->CreateVertexShader(VSData_MyModel.GetData(), VSData_MyModel.GetSize(), NULL, m_modelMyShader_VS.ReleaseAndGetAddressOf());
 
@@ -131,6 +141,20 @@ void ModelShader::CreateModelShader()
 
 }
 
+void ModelShader::CreateEffectModel()
+{
+
+	// モデル取得
+	ShareData& pSD = ShareData::GetInstance();
+
+	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
+	fx->SetDirectory(L"Resources/Models");
+
+	// 台形型のモデル
+	m_magicTrauabgukarPyram = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/MagicTrauabgukarPyram.cmo", *fx);
+
+}
+
 void ModelShader::ModelDrawShader(SimpleMath::Color color, SimpleMath::Vector4 time, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
 {
 	ShareData& pSD = ShareData::GetInstance();
@@ -139,6 +163,8 @@ void ModelShader::ModelDrawShader(SimpleMath::Color color, SimpleMath::Vector4 t
 	ConstBuffer cbuff;
 	cbuff.Time = time;
 	cbuff.PaintColor = color;
+	cbuff.eyes = SimpleMath::Vector4(pSD.GetCamera()->GetTargetPosition());
+	cbuff.LimLightColor = SimpleMath::Color(1.0f, 0.95f, 0.6f, 0.25f);
 
 	//受け渡し用バッファの内容更新(ConstBufferからID3D11Bufferへの変換）
 	pSD.GetContext()->UpdateSubresource(m_cbuffer.Get(), 0, NULL, &cbuff, 0, 0);
@@ -170,6 +196,51 @@ void ModelShader::ModelDrawShader(SimpleMath::Color color, SimpleMath::Vector4 t
 	pSD.GetContext()->VSSetShader(GetModelMyShader_VS().Get(), nullptr, 0);
 	// ピクセルシェーダーに適応
 	pSD.GetContext()->PSSetShader(GetModelMyShader_PS().Get(), nullptr, 0);
+
+	pSD.GetContext()->PSSetShaderResources(0, 1, texture.GetAddressOf());
+
+}
+
+void ModelShader::ModelEffectShader(SimpleMath::Color color, SimpleMath::Vector4 time, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
+{
+
+	ShareData& pSD = ShareData::GetInstance();
+
+	//シェーダーに渡す追加のバッファを作成する。(ConstBuffer）
+	ConstBuffer cbuff;
+	cbuff.Time = time;
+	cbuff.PaintColor = color;
+	cbuff.eyes = SimpleMath::Vector4(pSD.GetCamera()->GetTargetPosition());
+	cbuff.LimLightColor = SimpleMath::Color(1.0f, 0.95f, 0.6f, 0.25f);
+
+	//受け渡し用バッファの内容更新(ConstBufferからID3D11Bufferへの変換）
+	pSD.GetContext()->UpdateSubresource(m_cbuffer.Get(), 0, NULL, &cbuff, 0, 0);
+	//シェーダーにバッファを渡す
+	ID3D11Buffer* cb[1] = { m_cbuffer.Get() };
+	pSD.GetContext()->PSSetConstantBuffers(2, 1, cb);
+
+	//インプットレイアウトの登録
+	pSD.GetContext()->IASetInputLayout(m_inputLayout.Get());
+
+	//画像用サンプラーの登録
+	ID3D11SamplerState* sampler[1] = { pSD.GetCommonStates()->LinearWrap() };
+	pSD.GetContext()->PSSetSamplers(0, 1, sampler);
+
+	//半透明描画指定
+	ID3D11BlendState* blendstate = pSD.GetCommonStates()->NonPremultiplied();
+	// 透明判定処理
+	pSD.GetContext()->OMSetBlendState(blendstate, nullptr, 0xFFFFFFFF);
+
+	// 深度ステンシルステートの設定
+	pSD.GetContext()->OMSetDepthStencilState(pSD.GetCommonStates()->DepthRead(), 0);
+
+	// カリングは左周り
+	pSD.GetContext()->RSSetState(pSD.GetCommonStates()->CullNone());
+
+	// ヴァーテックスシェーダーに適応
+	pSD.GetContext()->VSSetShader(GetModelMyShader_VS().Get(), nullptr, 0);
+	// ピクセルシェーダーに適応
+	pSD.GetContext()->PSSetShader(m_modelEffect_PS.Get(), nullptr, 0);
 
 	pSD.GetContext()->PSSetShaderResources(0, 1, texture.GetAddressOf());
 

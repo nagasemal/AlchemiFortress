@@ -33,7 +33,9 @@ public:
 		MACHINE_SPAWN	= 5,		// マシンが設置さえた際に出るパーティクル
 		CLICK			= 6,		// クリックされた際に出るパーティクル
 		MINING_EFFECT	= 7,		// 結晶を回収した際に出るパーティクル
-		RECOVERY_EFFECT	= 8			// 魔力を回収した際に出るパーティクル
+		RECOVERY_EFFECT	= 8,		// 魔力を回収した際に出るパーティクル
+		DEFENSE_EFFECT	= 9,		// 反射攻撃を行った際に出るパーティクル
+		BULLET_LINE		= 10		// バレットの後ろに追従するパーティクル
 	};
 
 private:

@@ -6,6 +6,7 @@
 #include "NecromaLib/Singleton/InputSupport.h"
 #include "NecromaLib/Singleton/SoundData.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
+#include "NecromaLib/Singleton/ModelShader.h"
 
 #include "NecromaLib/GameData/JsonLoder.h"
 
@@ -61,10 +62,6 @@ void PlayScene::Initialize()
 	m_missionManager = std::make_unique<MissionManager>();
 	m_missionManager->Initialize();
 
-	// チュートリアルクラスの生成
-	m_tutorial = std::make_unique<Tutorial>();
-	m_tutorial->Initialize(ShareJsonData::GetInstance().GetStageData().tutorial);
-
 	// 操作方法クラスの生成
 	m_explanation = std::make_unique<Explanation>();
 
@@ -86,6 +83,10 @@ void PlayScene::Initialize()
 		// 光の当たり方変更
 		lights->SetAmbientLightColor(SimpleMath::Color(0.7f, 0.7f, 1.f, 0.8f));
 	});
+
+	// チュートリアルクラスの生成
+	m_tutorial = std::make_unique<Tutorial>();
+	m_tutorial->Initialize(ShareJsonData::GetInstance().GetStageData().tutorial, this);
 }
 
 GAME_SCENE PlayScene::Update()
@@ -93,14 +94,11 @@ GAME_SCENE PlayScene::Update()
 	ShareData& pSD = ShareData::GetInstance();
 	SoundData& pSound = SoundData::GetInstance();
 	DeltaTime& pDelta = DeltaTime::GetInstance();
-	bool tutorialFlag = m_tutorial->GetTutorialFlag();
+	bool tutorialFlag = m_tutorial->GetExplanationFlag();
 
 	pSound.PlayBGM(XACT_WAVEBANK_BGMS_BGM_PLAY, false);
 
-	m_tutorial			->Update(m_AM_Manager.get(),
-								 m_resourceGauge.get(),
-								 m_missionManager->GetMissionRender()->get(),
-								 m_moveCamera->GetStopCameraFlag());
+	m_tutorial			->Update(this,m_moveCamera->GetStopCameraFlag());
 
 	m_explanation->Update();
 
@@ -115,7 +113,7 @@ GAME_SCENE PlayScene::Update()
 
 		m_AM_Manager->ReloadResource();
 		m_enemyManager->ReloadEnemyData();
-		m_tutorial->RelodeTutorial(stageData.tutorial);
+		m_tutorial->RelodeTutorial(stageData.tutorial, this);
 		m_missionManager->ReloadWave();
 
 		// リソース群を追加する
@@ -125,7 +123,7 @@ GAME_SCENE PlayScene::Update()
 
 	}
 
-	// チュートリアル中ならば以下の処理を通さない
+	//// チュートリアル中ならば以下の処理を通さない
 	if (tutorialFlag) 		return GAME_SCENE();
 
 	// 倍速ボタンのアップデート
@@ -182,13 +180,12 @@ GAME_SCENE PlayScene::Update()
 		return GAME_SCENE::RESULT;
 	}
 
-
-
 	InputSupport* pINP = &InputSupport::GetInstance();
 
 	// マシンのデータ再読み込み
 	if (pINP->GetKeybordState().IsKeyReleased(Keyboard::M))
 	{
+		ModelShader::GetInstance().CreateModelShader();
 		ShareJsonData::GetInstance().LoadingJsonFile_Machine();
 	}
 
@@ -221,7 +218,7 @@ void PlayScene::Draw()
 	m_enemyManager		->Render();
 
 	// マシンの描画
-	m_AM_Manager		->Render();
+	m_AM_Manager->Render();
 
 	// マウスポインターモデルを出す
 	m_mousePointer->Draw();
@@ -232,9 +229,6 @@ void PlayScene::Draw()
 
 void PlayScene::DrawUI()
 {
-
-	auto pSB = ShareData::GetInstance().GetSpriteBatch();
-	auto pSL = &SpriteLoder::GetInstance();
 
 	m_tutorial			->Render();
 
@@ -252,7 +246,6 @@ void PlayScene::DrawUI()
 
 	// 操作説明描画
 	m_explanation->Render(m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven(), m_AM_Manager->GetRotateStopFlag());
-
 
 	//SimpleMath::Vector2 origin = SimpleMath::Vector2(1280, 1280);
 	//RECT rect = { 0,0,origin.x,origin.y };

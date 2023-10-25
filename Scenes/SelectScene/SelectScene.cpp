@@ -79,7 +79,8 @@ GAME_SCENE SelectScene::Update()
  
 	// 右側の矢印更新処理
 	m_arrowDraw[0]->HitMouse();
-	if (m_arrowDraw[0]->ClickMouse() && m_selectStageNumber > 1)
+	m_arrowDraw[0]->SetActiveFlag(m_selectStageNumber > 1);
+	if (m_arrowDraw[0]->ClickMouse())
 	{
 		m_selectStageNumber--;
 		m_changeMachine = false;
@@ -88,7 +89,9 @@ GAME_SCENE SelectScene::Update()
 
 	// 左側の矢印更新処理
 	m_arrowDraw[1]->HitMouse();
-	if (m_arrowDraw[1]->ClickMouse() && m_selectStageNumber < DataManager::GetInstance()->GetStageMax())
+	m_arrowDraw[1]->SetActiveFlag(m_selectStageNumber < ShareJsonData::GetInstance().GetGameParameter().stage_Max);
+
+	if (m_arrowDraw[1]->ClickMouse())
 	{
 		m_selectStageNumber++;
 		m_changeMachine = false;

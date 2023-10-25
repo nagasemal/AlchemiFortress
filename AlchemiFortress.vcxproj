@@ -260,6 +260,7 @@
     <ClInclude Include="Scenes\PlayScene\Shadow\ParticleUtility.h" />
     <ClInclude Include="Scenes\PlayScene\Stage\MissionManager.h" />
     <ClInclude Include="Scenes\PlayScene\Tutorial\Explanation.h" />
+    <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\ITutorialState.h" />
     <ClInclude Include="Scenes\PlayScene\Tutorial\Tutorial.h" />
     <ClInclude Include="Scenes\PlayScene\UI\BaseLv.h" />
     <ClInclude Include="Scenes\PlayScene\UI\DisplayMagicCircle.h" />
@@ -406,23 +407,21 @@
     <None Include="Resources\Json\EnemyData\EnemyData_None.json" />
     <None Include="Resources\Json\EnemyData\EnemyData_Slime.json" />
     <None Include="Resources\Json\EnemyData\EnemyData_Worm.json" />
+    <None Include="Resources\Json\GameParameter\GameParameter.json" />
     <None Include="Resources\Json\MachineData\MachineData_Attacker.json" />
     <None Include="Resources\Json\MachineData\MachineData_Defenser.json" />
     <None Include="Resources\Json\MachineData\MachineData_Mining.json" />
     <None Include="Resources\Json\MachineData\MachineData_None.json" />
     <None Include="Resources\Json\MachineData\MachineData_Recovery.json" />
     <None Include="Resources\Json\MachineData\MachineData_Upper.json" />
-    <None Include="Resources\Json\StageData\StageData_1.json" />
-    <None Include="Resources\Json\StageData\StageData_10.json" />
-    <None Include="Resources\Json\StageData\StageData_11.json" />
-    <None Include="Resources\Json\StageData\StageData_2.json" />
-    <None Include="Resources\Json\StageData\StageData_3.json" />
-    <None Include="Resources\Json\StageData\StageData_4.json" />
-    <None Include="Resources\Json\StageData\StageData_5.json" />
-    <None Include="Resources\Json\StageData\StageData_6.json" />
-    <None Include="Resources\Json\StageData\StageData_7.json" />
-    <None Include="Resources\Json\StageData\StageData_8.json" />
-    <None Include="Resources\Json\StageData\StageData_9.json" />
+    <None Include="Resources\Json\StageData\StageData_1_1.json" />
+    <None Include="Resources\Json\StageData\StageData_1_2.json" />
+    <None Include="Resources\Json\StageData\StageData_1_3.json" />
+    <None Include="Resources\Json\StageData\StageData_1_4.json" />
+    <None Include="Resources\Json\StageData\StageData_1_5.json" />
+    <None Include="Resources\Json\StageData\StageData_1_6.json" />
+    <None Include="Resources\Json\StageData\StageData_2_1.json" />
+    <None Include="Resources\Json\StageData\StageData_2_2.json" />
     <None Include="Resources\Shader\BaseLv.hlsli" />
     <None Include="Resources\Shader\Button.hlsli" />
     <None Include="Resources\Shader\CutTexture.hlsli" />
@@ -530,6 +529,22 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\IceModel_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\MagicEffectShader_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="Resources\Shader\ModelTransparent_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

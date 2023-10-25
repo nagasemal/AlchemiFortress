@@ -48,6 +48,28 @@ public:
 	void EnemyToPlayerBase();
 	void EnemyToBullet();
 
+public:
+
+	// フィールドマネージャークラス
+	FieldObjectManager*		GetFieldManager()				const { return m_fieldManager.get(); }
+	//ウスポインタークラス
+	MousePointer*				GetMousePointer()				const { return m_mousePointer.get(); }
+	//シンマネージャークラス
+	AlchemicalMachineManager* GetAlchemicalMachineManager()	const { return m_AM_Manager.get(); }
+	//ネミーマネージャークラス
+	EnemyManager*				GetEnemyManager()				const { return m_enemyManager.get();}
+	//ッションマネージャークラス
+	MissionManager*			GetMissionManager()				const { return m_missionManager.get();}
+	//ージクラス
+	Gauge*					GetGauge()						const { return m_resourceGauge.get(); }
+	//点Lvクラス
+	BaseLv*					GetBaseLv()						const { return m_baseLv.get(); }
+	//明クラス
+	Explanation*				GetExplanation()				const { return m_explanation.get(); }
+	//速ボタンクラス
+	SelectionBox*				GetSpeedUpButton()				const { return m_doubleSpeedButton.get(); }
+
+
 private:
 
 	// フィールドに存在するオブジェクトを管理

@@ -71,7 +71,8 @@ private:
 	// ジオメトリシェーダ
 	Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_geometryShader;
 
-	SimpleMath::Matrix m_world;
+	SimpleMath::Matrix m_world_MagicCircle;
+	SimpleMath::Matrix m_world_Effect;
 	SimpleMath::Matrix m_view;
 	SimpleMath::Matrix m_proj;
 

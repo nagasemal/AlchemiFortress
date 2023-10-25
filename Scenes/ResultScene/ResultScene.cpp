@@ -91,7 +91,7 @@ GAME_SCENE ResultScene::Update()
 	m_drawMachine->Update();
 
 	//　次のステージに遷移
-	if (m_selectionBox_Next->ClickMouse() && pDataM.GetStageNum() <= pDataM.GetStageMax())
+	if (m_selectionBox_Next->ClickMouse() && pDataM.GetStageNum() < ShareJsonData::GetInstance().GetGameParameter().stage_Max)
 	{
 
 		pDataM.SetStageNum(pDataM.GetStageNum() + 1);

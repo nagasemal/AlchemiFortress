@@ -74,15 +74,16 @@
     "LV": 1,
     "HP":500,
     "MINING": 1,
-    "MP": 400,
+    "MP": 500,
     "RECOVERY": 0,
     "UPPER": 0
   },
     "TUTORIAL":[
     {"NUMBER":11},
   	{"NUMBER":5},
-  	{"NUMBER":14}
-  ],
-  "LastWave":true,
+    { "NUMBER": 14 },
+    { "NUMBER": 99 }
+    ],
+  "LastWave":false
 }
 

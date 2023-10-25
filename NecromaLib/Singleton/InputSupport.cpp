@@ -5,8 +5,10 @@
 
 InputSupport* InputSupport::instance = nullptr;
 
-InputSupport::InputSupport():
-	m_WorldScreenMouse()
+InputSupport::InputSupport() :
+	m_WorldScreenMouse(),
+	m_nowLayer(),
+	m_hitUIFlag()
 {
 }
 
@@ -32,12 +34,32 @@ void InputSupport::Update()
 	ShareData& pSD = ShareData::GetInstance();
 	DX::DeviceResources* pDR = pSD.GetDeviceResources();
 
-	// ïœä∑ÇµÇƒìnÇ∑
-	m_WorldScreenMouse = CalcScreenToXZN(m_mouseTracker.GetLastState().x,
-										 m_mouseTracker.GetLastState().y,
-										 pDR->GetOutputSize().right,
-										 pDR->GetOutputSize().bottom,
-										 pSD.GetView(), pSD.GetProjection());
+	if (m_hitUIFlag)
+	{
+		// å©Ç¶Ç»Ç¢à íuÇ‹Ç≈éùÇ¡ÇƒÇ¢Ç≠
+		m_WorldScreenMouse = SimpleMath::Vector3(1000000,0.0f,0.0f);
+	}
+	else
+	{
+
+		// ïœä∑ÇµÇƒìnÇ∑
+		m_WorldScreenMouse = CalcScreenToXZN(m_mouseTracker.GetLastState().x,
+			m_mouseTracker.GetLastState().y,
+			pDR->GetOutputSize().right,
+			pDR->GetOutputSize().bottom,
+			pSD.GetView(), pSD.GetProjection());
+	}
+
+	// êGÇÍÇÁÇÍÇÈèÛë‘Ç…ñﬂÇ∑
+	m_hitUIFlag = false;
+	// å≥Ç…ñﬂÇ∑
+	m_nowLayer = 0;
+
+}
+
+void InputSupport::SetLayer(int layer)
+{
+	m_nowLayer = layer;
 }
 
 SimpleMath::Vector3 InputSupport::GetMousePosWolrd()
