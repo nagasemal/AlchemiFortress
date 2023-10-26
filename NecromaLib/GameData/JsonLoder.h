@@ -97,6 +97,7 @@ struct Enemys_Spawn
 	ENEMY_TYPE type					= ENEMY_TYPE::ENMEY_NONE;	// エネミーのタイプ
 	float spawnTime					= 0.0f;						// 召喚するまでの時間
 	SimpleMath::Vector3 spawnPos	= SimpleMath::Vector3();	// 召喚場所
+	int					lv			= 1;						// 出現するエネミーのレベル　	マイナス数値の場合"メタAI"に調整を任せる
 	bool condition					= false;					// 召喚を開始するタイミング
 };
 
@@ -108,7 +109,7 @@ struct Stage_Data
 	std::vector<Stage_Condition>		condition_BaseLv;			// ステージのクリア条件 (拠点のLV条件)
 	std::vector<Stage_Condition>		condition_Time;				// ステージのクリア条件 (生存時間,規定時間)
 
-	std::vector<Enemys_Spawn>			enemys_Spawn;				// エネミーの出現情報
+	std::vector<Enemys_Spawn>			enemys_Spawn;				// エネミーの出現情報			名前がRandomの場合"メタAI"に出現を任せる
 
 	Stage_Resource						resource;					// 初めから所持しているリソース群
 	std::vector<Stage_Machine>			machine;					// 初めから設置されているマシン群
@@ -116,8 +117,7 @@ struct Stage_Data
 	std::vector<SimpleMath::Vector2>	crystalPos;					// クリスタルの番号
 
 	std::vector<int>					tutorial;					// チュートリアル番号
-	bool								lastWave		= true;		// 次にステージが控えているか
-	
+	bool								lastWave		= true;		// 次にステージが控えているか	
 };
 
 struct Stage_ClearData
@@ -129,20 +129,20 @@ struct Stage_ClearData
 
 struct Game_Parameter
 {
-	float rotateSpeed;			// マシンが拠点を回るスピード
+	float rotateSpeed = 0.5f;			// マシンが拠点を回るスピード
 
-	int stage_Max;			// ステージの最大数
+	int stage_Max = 1;			// ステージの最大数
 
 	int baseLV_MAX = 9;			// 最大LV
 
-	int baseHp_Max;			// 拠点HPの最大LVの値
+	int baseHp_Max = 0;			// 拠点HPの最大LVの値
 
-	int mp_Max;				// MPリソースの最大LVの値
+	int mp_Max = 0;				// MPリソースの最大LVの値
 
-	int crystal_Max;			// クリスタルリソースの最大LVの値
+	int crystal_Max = 0;			// クリスタルリソースの最大LVの値
 
-	int needExp;				// 必要な経験値の量
-	int needExp_Growthrate;	// 必要な経験値の量の上がり幅
+	int needExp = 0;				// 必要な経験値の量
+	int needExp_Growthrate  = 0;	// 必要な経験値の量の上がり幅
 };
 
 // 書き込み

@@ -50,7 +50,7 @@ void PlayerBase::Update()
 
 	// ‰¼’u‚«
 	auto mouse = pINP.GetMouseState();
-	bool rightRelease = mouse.rightButton == mouse.RELEASED;
+	bool rightRelease = pINP.RightButton_Release();
 	rightRelease;
 
 	m_hitMouseFlag = false;
@@ -66,6 +66,8 @@ void PlayerBase::Update()
 
 	if (m_exp >= GetNextLvEXP() && m_baseLv < ShareJsonData::GetInstance().GetGameParameter().baseLV_MAX)
 	{
+		// ’´‰ß•ª‚ÍŒJ‰z‚·
+		float saveEXP = GetNextLvEXP() - m_exp;
 		m_baseLv++;
 		m_lvUpTiming = true;
 
@@ -74,10 +76,10 @@ void PlayerBase::Update()
 		DataManager::GetInstance()->CrystalMAXRecalculation(m_baseLv);
 		DataManager::GetInstance()->BaseHPMAXRecalculation(m_baseLv);
 
-		//m_hp = (float)DataManager::GetInstance()->GetNowBaseHP_MAX();
+		//m_hp = (float)DataManager::GetInstance()->GetNowBaseHP_MAX()
 
-		// ’´‰ß•ª‚ÍŒJ‰z‚·
-		m_exp = GetNextLvEXP() - m_exp;
+		// ’´‰ß•ª‚ð“ü‚ê‚é
+		m_exp = saveEXP;
 
 	}
 

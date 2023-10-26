@@ -35,18 +35,18 @@ bool SelectionUI::HitMouse(bool layerCheck)
 	//// active状態でなければ処理を飛ばす
 	//if (!m_activeFlag)return false;
 
-	InputSupport& pIS = InputSupport::GetInstance();
+	InputSupport& pINP = InputSupport::GetInstance();
 
-	m_hitMouseFlag = HitObject_RageSet(pIS.GetMousePosScreen(), static_cast<float>(m_rect.right), static_cast<float>(m_rect.bottom), m_data.rage);
+	m_hitMouseFlag = HitObject_RageSet(pINP.GetMousePosScreen(), static_cast<float>(m_rect.right), static_cast<float>(m_rect.bottom), m_data.rage);
 
-	if (m_hitMouseFlag) pIS.HitUI();
+	if (m_hitMouseFlag) pINP.HitUI();
 
 	// 触れている間はワールド空間座標に影響を及ぼさないようにする
 	// layerチェック状態ならば追加でチェックを行う
 	if (m_hitMouseFlag && layerCheck)
 	{
 		// 自身の方が大きければレイヤー数を更新する そうでなければ処理を通さない
-		if (m_layer >= pIS.GetLayer())	pIS.SetLayer(m_layer);
+		if (m_layer >= pINP.GetLayer())	pINP.SetLayer(m_layer);
 		else return m_hitMouseFlag = false;
 
 	}
@@ -56,10 +56,9 @@ bool SelectionUI::HitMouse(bool layerCheck)
 
 bool SelectionUI::ClickMouse()
 {
-	InputSupport& pIS = InputSupport::GetInstance();
-	bool leftFlag = pIS.GetMouseState().leftButton == Mouse::ButtonStateTracker::PRESSED;
+	InputSupport& pINP = InputSupport::GetInstance();
 
-	if ((m_hitMouseFlag && leftFlag) || m_keySelectFlag)
+	if ((m_hitMouseFlag && pINP.LeftButton_Press()) || m_keySelectFlag)
 	{
 		// アクティブ時
 		if (m_activeFlag)
@@ -95,20 +94,20 @@ bool SelectionUI::SelectionMouse()
 
 bool SelectionUI::HoldMouse()
 {
-	InputSupport& pIS = InputSupport::GetInstance();
-	bool leftFlag = pIS.GetMouseState().leftButton;
+	InputSupport& pINP = InputSupport::GetInstance();
+	bool leftFlag = pINP.GetMouseState().leftButton;
 
 	return m_hitMouseFlag && leftFlag;
 }
 
 bool SelectionUI::ExitMouse()
 {
-	InputSupport& pIS = InputSupport::GetInstance();
+	InputSupport& pINP = InputSupport::GetInstance();
 	bool exitFlag = false;
 
 	if (m_hitMouseFlag)
 	{
-		exitFlag = !HitObject_RageSet(pIS.GetMousePosScreen(), 64, 64, m_data.rage);
+		exitFlag = !HitObject_RageSet(pINP.GetMousePosScreen(), 64, 64, m_data.rage);
 	}
 
 	return exitFlag;

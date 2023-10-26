@@ -11,7 +11,7 @@ public:
     virtual ~ITutorialState() {}
 
     // チュートリアルコンテキストをセットする
-    void Set_Context(TutorialStateContext* context) {this->m_tutorialContext = context; }
+    void Set_Context(TutorialStateContext* context) { this->m_tutorialContext = context; }
 
     virtual void Update() = 0;
 };

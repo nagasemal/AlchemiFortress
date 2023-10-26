@@ -29,11 +29,11 @@ void Explanation::Update()
 
 	auto mouse = InputSupport::GetInstance().GetMouseState();
 		
-	m_mouseSelectButton[0] = mouse.leftButton == mouse.HELD;
-	m_mouseSelectButton[2] = mouse.rightButton == mouse.HELD;
+	m_mouseSelectButton[0] = InputSupport::GetInstance().LeftButton_Held();
+	m_mouseSelectButton[2] = InputSupport::GetInstance().RightButton_Held();
 
 	m_mouseSelectButton[1] = m_prvMouseValue != mouse.GetLastState().scrollWheelValue || 
-							 mouse.middleButton == mouse.HELD;
+							 InputSupport::GetInstance().MiddleButton_Held();
 
 	m_prvMouseValue = mouse.GetLastState().scrollWheelValue;
 }

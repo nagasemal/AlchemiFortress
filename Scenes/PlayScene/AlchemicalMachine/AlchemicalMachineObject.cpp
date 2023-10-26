@@ -146,6 +146,7 @@ void AlchemicalMachineObject::HitToMouse(MousePointer* pMP)
 		pMP->HitMachine(m_data.pos);
 		m_hitMouseFlag = true;
 	}
+
 }
 
 bool AlchemicalMachineObject::OnCollisionEnter_MagicCircle(GameObjct3D* object)
@@ -156,8 +157,6 @@ bool AlchemicalMachineObject::OnCollisionEnter_MagicCircle(GameObjct3D* object)
 void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model* ring, bool silhouette)
 {
 	ShareData& pSD = ShareData::GetInstance();
-
-
 
 	// ƒ‚ƒfƒ‹î•ñ(ˆÊ’u,‘å‚«‚³)
 	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;

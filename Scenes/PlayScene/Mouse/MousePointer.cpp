@@ -60,7 +60,7 @@ void MousePointer::Update()
 	m_particle->UpdateParticle();
 
 	// 左クリックされたらパーティクルを出現させる
-	if (mouse.leftButton == mouse.PRESSED)
+	if (pINP.LeftButton_Press())
 	{
 		//m_time = 0.0f;
 		m_particle->OnShot(SimpleMath::Vector3(m_data.pos.x, m_data.pos.y + PARTICLE_SHIFT, m_data.pos.z), true, SimpleMath::Color(0.8, 0.8, 0.8, 1.0f));

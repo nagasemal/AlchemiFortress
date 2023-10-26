@@ -62,13 +62,12 @@ public:
 	MissionManager*			GetMissionManager()				const { return m_missionManager.get();}
 	//ージクラス
 	Gauge*					GetGauge()						const { return m_resourceGauge.get(); }
-	//点Lvクラス
+	//Lvクラス
 	BaseLv*					GetBaseLv()						const { return m_baseLv.get(); }
-	//明クラス
+	//説明クラス
 	Explanation*				GetExplanation()				const { return m_explanation.get(); }
 	//速ボタンクラス
 	SelectionBox*				GetSpeedUpButton()				const { return m_doubleSpeedButton.get(); }
-
 
 private:
 

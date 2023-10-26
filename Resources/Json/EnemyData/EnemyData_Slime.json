@@ -5,7 +5,7 @@
     "MOVETYPE":"ALL",
     "HP": 8.0,
     "STR": 1.5,
-    "EXP": 10.0,
+    "EXP": 20.0,
 
     "MOVEING":[
       {

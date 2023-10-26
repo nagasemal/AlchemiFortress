@@ -25,12 +25,9 @@ void Enemy_StanderMove::Execute()
 	if (m_time <= m_param.delay || m_enemyPtr->GetStopFlag()) return;
 
 	// ‘¬“x‚ÌŒvŽZ
-	SimpleMath::Vector3 lengthVec;
+	SimpleMath::Vector3 accele = SimpleMath::Vector3(m_param.value,0.0f, m_param.value);
 
-	lengthVec = Easing::Moveing(m_enemyPtr->GetTargetPos(), m_enemyPtr->GetData().pos);
-	lengthVec.Normalize();
-
-	m_enemyPtr->SetLengthVec(lengthVec * m_param.value);
+	m_enemyPtr->SetAccele(m_enemyPtr->GetAccele() + accele);
 
 	// ˆÚ“®Š®—¹
 	m_completion = m_time >= m_param.time;

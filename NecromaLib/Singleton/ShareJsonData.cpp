@@ -55,6 +55,8 @@ void ShareJsonData::LoadingJsonFile_Enemy()
 	m_enemyData[ENEMY_TYPE::ENMEY_NONE] = Json::FileLoad_EnemyData("Resources/Json/EnemyData/EnemyData_None.json");
 	m_enemyData[ENEMY_TYPE::SLIME] = Json::FileLoad_EnemyData("Resources/Json/EnemyData/EnemyData_Slime.json");
 	m_enemyData[ENEMY_TYPE::WORM] = Json::FileLoad_EnemyData("Resources/Json/EnemyData/EnemyData_Worm.json");
+	m_enemyData[ENEMY_TYPE::HOP] = Json::FileLoad_EnemyData("Resources/Json/EnemyData/EnemyData_Hop.json");
+	m_enemyData[ENEMY_TYPE::RETREAT] = Json::FileLoad_EnemyData("Resources/Json/EnemyData/EnemyData_Retreat.json");
 }
 
 void ShareJsonData::LoadingJsonFile_GameParameter()

@@ -34,6 +34,7 @@ void InputSupport::Update()
 	ShareData& pSD = ShareData::GetInstance();
 	DX::DeviceResources* pDR = pSD.GetDeviceResources();
 
+	// UIに触れている
 	if (m_hitUIFlag)
 	{
 		// 見えない位置まで持っていく
@@ -42,7 +43,7 @@ void InputSupport::Update()
 	else
 	{
 
-		// 変換して渡す
+		// ワールド空間座標に変換
 		m_WorldScreenMouse = CalcScreenToXZN(m_mouseTracker.GetLastState().x,
 			m_mouseTracker.GetLastState().y,
 			pDR->GetOutputSize().right,
@@ -52,7 +53,7 @@ void InputSupport::Update()
 
 	// 触れられる状態に戻す
 	m_hitUIFlag = false;
-	// 元に戻す
+	// レイヤー番号を元に戻す
 	m_nowLayer = 0;
 
 }
@@ -60,6 +61,51 @@ void InputSupport::Update()
 void InputSupport::SetLayer(int layer)
 {
 	m_nowLayer = layer;
+}
+
+bool InputSupport::LeftButton_Press()
+{
+	return m_mouseTracker.leftButton == Mouse::ButtonStateTracker::PRESSED;
+}
+
+bool InputSupport::LeftButton_Release()
+{
+	return m_mouseTracker.leftButton == Mouse::ButtonStateTracker::RELEASED;
+}
+
+bool InputSupport::LeftButton_Held()
+{
+	return m_mouseTracker.leftButton == Mouse::ButtonStateTracker::HELD;
+}
+
+bool InputSupport::RightButton_Press()
+{
+	return m_mouseTracker.rightButton == Mouse::ButtonStateTracker::PRESSED;
+}
+
+bool InputSupport::RightButton_Release()
+{
+	return m_mouseTracker.leftButton == Mouse::ButtonStateTracker::RELEASED;
+}
+
+bool InputSupport::RightButton_Held()
+{
+	return m_mouseTracker.leftButton == Mouse::ButtonStateTracker::HELD;
+}
+
+bool InputSupport::MiddleButton_Press()
+{
+	return m_mouseTracker.middleButton == Mouse::ButtonStateTracker::PRESSED;
+}
+
+bool InputSupport::MiddleButton_Release()
+{
+	return m_mouseTracker.middleButton == Mouse::ButtonStateTracker::RELEASED;
+}
+
+bool InputSupport::MiddleButton_Held()
+{
+	return m_mouseTracker.middleButton == Mouse::ButtonStateTracker::HELD;
 }
 
 SimpleMath::Vector3 InputSupport::GetMousePosWolrd()

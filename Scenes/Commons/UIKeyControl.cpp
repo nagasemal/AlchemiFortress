@@ -71,18 +71,18 @@ UIKeyControl::~UIKeyControl()
 
 void UIKeyControl::Update(SimpleMath::Vector2 moveNum)
 {
-	InputSupport& pIS = InputSupport::GetInstance();
-	m_nowUIPos.y -= pIS.GetKeybordState().IsKeyPressed(DirectX::Keyboard::Up)		* moveNum.y;
-	m_nowUIPos.y += pIS.GetKeybordState().IsKeyPressed(DirectX::Keyboard::Down)		* moveNum.y;
+	InputSupport& pINP = InputSupport::GetInstance();
+	m_nowUIPos.y -= pINP.GetKeybordState().IsKeyPressed(DirectX::Keyboard::Up)		* moveNum.y;
+	m_nowUIPos.y += pINP.GetKeybordState().IsKeyPressed(DirectX::Keyboard::Down)		* moveNum.y;
 
-	m_nowUIPos.x -= pIS.GetKeybordState().IsKeyPressed(DirectX::Keyboard::Left)		* moveNum.x;
-	m_nowUIPos.x += pIS.GetKeybordState().IsKeyPressed(DirectX::Keyboard::Right)	* moveNum.x;
+	m_nowUIPos.x -= pINP.GetKeybordState().IsKeyPressed(DirectX::Keyboard::Left)		* moveNum.x;
+	m_nowUIPos.x += pINP.GetKeybordState().IsKeyPressed(DirectX::Keyboard::Right)	* moveNum.x;
 
 	// マウスを動かしていなければキーボード処理にする
-	if (m_prevMousePos != pIS.GetMousePosScreen()) m_keyContorlFlag = false;
+	if (m_prevMousePos != pINP.GetMousePosScreen()) m_keyContorlFlag = false;
 
 	// 前フレームのマウス位置を保存する
-	m_prevMousePos = pIS.GetMousePosScreen();
+	m_prevMousePos = pINP.GetMousePosScreen();
 
 	// 十字キーが押されたらキーボード操作モードとなる
 	ArrowKeyPush();
@@ -108,7 +108,7 @@ void UIKeyControl::Update(SimpleMath::Vector2 moveNum)
 	m_nowUIPos = m_selectionUIs[m_prevIndex]->GetPos();
 	m_selectionUIs[m_prevIndex]->SetHitMouseFlag(true);
 
-	if (pIS.GetKeybordState().IsKeyPressed(DirectX::Keyboard::Enter))
+	if (pINP.GetKeybordState().IsKeyPressed(DirectX::Keyboard::Enter))
 	{
 		m_selectionUIs[m_prevIndex]->SetKeySelectFlag(true);
 	}
@@ -153,11 +153,11 @@ bool UIKeyControl::ArrowKeyPush()
 {
 	if (!m_keyContorlFlag)
 	{
-		InputSupport& pIS = InputSupport::GetInstance();
-		m_keyContorlFlag = pIS.GetKeybordState().IsKeyPressed(DirectX::Keyboard::Up)
-						|| pIS.GetKeybordState().IsKeyPressed(DirectX::Keyboard::Down)
-						|| pIS.GetKeybordState().IsKeyPressed(DirectX::Keyboard::Left)
-						|| pIS.GetKeybordState().IsKeyPressed(DirectX::Keyboard::Right);
+		InputSupport& pINP = InputSupport::GetInstance();
+		m_keyContorlFlag = pINP.GetKeybordState().IsKeyPressed(DirectX::Keyboard::Up)
+						|| pINP.GetKeybordState().IsKeyPressed(DirectX::Keyboard::Down)
+						|| pINP.GetKeybordState().IsKeyPressed(DirectX::Keyboard::Left)
+						|| pINP.GetKeybordState().IsKeyPressed(DirectX::Keyboard::Right);
 	}
 	return m_keyContorlFlag;
 }

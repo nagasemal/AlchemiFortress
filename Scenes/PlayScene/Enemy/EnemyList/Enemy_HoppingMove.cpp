@@ -9,7 +9,8 @@ Enemy_HoppingMove::Enemy_HoppingMove() :
 	m_completion(),
 	m_time(),
 	m_enemyPtr(nullptr),
-	m_param()
+	m_param(),
+	m_hoppingVal()
 {
 }
 
@@ -25,19 +26,18 @@ void Enemy_HoppingMove::Execute()
 	if (m_time <= m_param.delay || m_enemyPtr->GetStopFlag()) return;
 
 	// 速度の計算
-	SimpleMath::Vector3 lengthVec = SimpleMath::Vector3();
+	SimpleMath::Vector3 accele = SimpleMath::Vector3(0.0f, m_hoppingVal, 0.0f);
 
-	lengthVec.y = m_hoppingVal;
-	//lengthVec.Normalize();
+	// 飛ぶ力
+	m_hoppingVal -= DeltaTime::GetInstance().GetDeltaTime();
 
-	m_hoppingVal -= m_time;
-
-	m_enemyPtr->SetLengthVec(lengthVec * m_param.value);
+	m_enemyPtr->SetAccele(m_enemyPtr->GetAccele() + SimpleMath::Vector3(0.0f, m_hoppingVal, 0.0f));
 
 	// 稼働完了
 	m_completion = m_time >= m_param.time;
 
-	if (m_hoppingVal <= 0)
+	// 地面に付いたらもう一度飛ぶ
+	if (m_hoppingVal <= -m_param.value || m_enemyPtr->GetPos().y <= 0.0f)
 	{
 		m_hoppingVal = m_param.value;
 	}
@@ -63,7 +63,7 @@ void Enemy_HoppingMove::SetParam(MoveParameter param)
 {
 	m_param.delay = param.delay;
 	m_param.time = param.time;
-	m_param.value = param.value;
+	m_hoppingVal = m_param.value = param.value;
 
 }
 

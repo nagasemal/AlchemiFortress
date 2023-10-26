@@ -7,8 +7,8 @@
     "MAX_BASEHP": 420,
     "MAX_MP": 1200,
     "MAX_CRYSTAL": 1000,
-    "NEED_EXP": 25,
-    "GROWTHRATE_EXP": 50
+    "NEED_EXP": 20,
+    "GROWTHRATE_EXP": 100
   }
 
 }

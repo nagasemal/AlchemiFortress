@@ -5,7 +5,7 @@
   "Conditions_Enemy": {
     "ENEMY_KNOCKDOWN": [
       {
-        "TYPE": "Slime",
+        "TYPE": "All",
         "VALUE": 1
       }
     ]
@@ -50,6 +50,7 @@
         "SPAWN_X": 10,
         "SPAWN_Y": 1,
         "SPAWN_Z": 10,
+        "LV": 1,
         "TYPE": "Slime"
       }
     ]
@@ -79,7 +80,8 @@
     { "NUMBER": 2 },
     { "NUMBER": 99 }
   ],
-  "LastWave": false
+  "LastWave": false,
+  "EnemyLv": 1
 }
 
    // { "NUMBER": 13 },

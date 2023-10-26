@@ -3,7 +3,7 @@
     "MACHINES": [
       {
         "ELEMENT": "Nomal",
-        "LV": 1,
+        "LV": 2,
         "NAME": "Attacker",
         "NUMBER": 0
       },

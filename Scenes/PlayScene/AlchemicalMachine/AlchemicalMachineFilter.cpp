@@ -97,14 +97,12 @@ std::unique_ptr<AlchemicalMachineObject> AlchemicalMachineFilter::HandOverAMClas
 
 Model* AlchemicalMachineFilter::GetRingModel(MACHINE_TYPE type)
 {
-
-	//if (type != MACHINE_TYPE::ATTACKER) return nullptr;
-
 	return m_subModel[type].get();
 }
 
 void AlchemicalMachineFilter::Finalize()
 {
+	// ÉäÉ\Å[ÉXÇÃâï˙
 	m_model[MACHINE_TYPE::NONE].reset();
 
 	m_model[MACHINE_TYPE::ATTACKER].reset();

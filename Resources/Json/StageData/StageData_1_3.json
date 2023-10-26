@@ -50,6 +50,7 @@
         "SPAWN_X": 10,
         "SPAWN_Y": 1,
         "SPAWN_Z": 10,
+        "LV": 1,
         "TYPE": "Slime"
       },
       {
@@ -58,6 +59,7 @@
         "SPAWN_X": 12,
         "SPAWN_Y": 1,
         "SPAWN_Z": -8,
+        "LV": 1,
         "TYPE": "Worm"
       }
     ]
@@ -80,6 +82,7 @@
     { "NUMBER": 3 },
     { "NUMBER": 99 }
   ],
-  "LastWave": false
+  "LastWave": false,
+  "EnemyLv": 1
 }
 //    { "NUMBER": 8 },

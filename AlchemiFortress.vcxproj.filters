@@ -194,6 +194,12 @@
     <Filter Include="Scene\PlayScene\Tutorial\command">
       <UniqueIdentifier>{47fa9a36-0762-46d1-a79b-04c512b7b1d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene\PlayScene\AlchemicalMachine\Object\State">
+      <UniqueIdentifier>{5a1a30e3-8549-455c-a370-2285634dd013}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene\AlchemicalMachine\Object\Composite">
+      <UniqueIdentifier>{722ec977-1240-4164-8388-78b07ffa686a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -504,6 +510,12 @@
     </ClInclude>
     <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\ITutorialState.h">
       <Filter>Scene\PlayScene\Tutorial\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\StatePattern\IAM_MachineState.h">
+      <Filter>Scene\PlayScene\AlchemicalMachine\Object\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Enemy\EnemyMetaAI.h">
+      <Filter>Scene\PlayScene\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -904,6 +916,9 @@
     </None>
     <None Include="Resources\Json\StageData\StageData_2_2.json">
       <Filter>Json\StageData\Stage2</Filter>
+    </None>
+    <None Include="Resources\Json\EnemyData\EnemyData_Retreat.json">
+      <Filter>Json\EnemyData</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

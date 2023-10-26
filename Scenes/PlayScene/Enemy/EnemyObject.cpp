@@ -12,7 +12,7 @@
 
 #include "Scenes/PlayScene/Enemy/EnemyCommand_Identifier.h"
 
-#define GRAVITY 0.2f
+#define GRAVITY 0.8f
 
 EnemyObject::EnemyObject(ENEMY_TYPE type, SimpleMath::Vector3 startPos, int lv) :
 	m_power(1),
@@ -27,7 +27,8 @@ EnemyObject::EnemyObject(ENEMY_TYPE type, SimpleMath::Vector3 startPos, int lv) 
 	m_moveVec(),
 	m_aliveTimer(),
 	m_targetPos(),
-	m_element(ELEMENT::NOMAL)
+	m_element(ELEMENT::NOMAL),
+	m_gravityScale()
 {
 
 	m_data.pos = startPos;
@@ -53,9 +54,14 @@ void EnemyObject::Update()
 	m_data.rage.x = Easing::EaseInCirc(0.25f, 0.30f, cosf(m_aliveTimer));
 	m_data.rage.z = Easing::EaseInCirc(0.25f, 0.30f, cosf(m_aliveTimer));
 
-	// 重力計算
-	m_data.pos.y -= GRAVITY;
-	if (m_data.pos.y <= 0.0f)	m_data.pos.y = 0.0f;
+	// 距離を取得し正規化する
+	m_lengthVec = Easing::Moveing(GetTargetPos(),GetData().pos);
+	m_lengthVec.Normalize();
+
+	// 加速度に重力を適応する
+	m_gravityScale += GRAVITY * deltaTime;
+
+
 
 	// ターゲットに視線を向ける処理
 	SimpleMath::Vector3 targetDiff = m_targetPos - m_data.pos;
@@ -63,27 +69,35 @@ void EnemyObject::Update()
 	targetDiff.Normalize();
 	m_rotation = SimpleMath::Quaternion::FromToRotation(SimpleMath::Vector3::UnitX, targetDiff);
 
-	// 移動を止める処理
-	if (!m_stopFlag)
+	// ポインターをコマンドに渡す
+	for (auto& command : m_moveCommands)
 	{
-		// ポインターをコマンドに渡す
-		for (auto& command : m_moveCommands)
-		{
-			command->SetEnemyPtr(*this);
-		}
+		command->SetEnemyPtr(*this);
+	}
 
-		// コマンド再生種類の切り替え
-		if (m_moveType == "ALL")m_commander->Execute_ALL();
-		if (m_moveType == "ONE")m_commander->Execute_One();
+	// コマンド再生種類の切り替え
+	if (m_moveType == "ALL")m_commander->Execute_ALL();
+	if (m_moveType == "ONE")m_commander->Execute_One();
 
-		// 座標の計算
-		m_data.pos += m_lengthVec * deltaTime;
+	// 座標の計算
+	m_data.pos += (m_lengthVec * m_accele) * deltaTime;
+
+	m_data.pos.y -= m_gravityScale * deltaTime;
+	m_data.pos.y += m_accele.y * deltaTime;
+
+	if (m_data.pos.y <= 0.0f)
+	{
+		m_data.pos.y = 0.0f;
+		m_gravityScale = 0.0f;
 	}
 
 	m_stopFlag = false;
 
+
+
 	// 初期化
 	m_lengthVec = SimpleMath::Vector3();
+	m_accele = SimpleMath::Vector3();
 }
 
 void EnemyObject::Draw()
@@ -178,7 +192,7 @@ void EnemyObject::Bouns()
 {
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
 
-	m_data.pos -= m_lengthVec * deltaTime;
+	m_data.pos -= (m_lengthVec * m_accele) * deltaTime;
 
 }
 

@@ -30,13 +30,15 @@ void Enemy_MeanderingMove::Execute()
 	if (m_time <= m_param.delay || m_enemyPtr->GetStopFlag()) return;
 
 	// ‘¬“x‚ÌŒvŽZ
-	SimpleMath::Vector3 lengthVec = SimpleMath::Vector3();
+	SimpleMath::Vector3 accele = SimpleMath::Vector3();
 
-	lengthVec.x = cosf(m_time) / m_param.value;//Map(cosf(m_time), -1.0f, 1.0f, 0.0f, 1.0f);
-	lengthVec.z = sinf(m_time) / m_param.value;//Map(sinf(m_time), -1.0f, 1.0f, 0.0f, 1.0f);
-	lengthVec.Normalize();
+	accele.x = cosf(m_time) * m_param.value;//Map(cosf(m_time), -1.0f, 1.0f, 0.0f, 1.0f);
+	accele.z = sinf(m_time) * m_param.value;//Map(sinf(m_time), -1.0f, 1.0f, 0.0f, 1.0f);
 
-	m_enemyPtr->SetLengthVec(m_enemyPtr->GetLengthVec() + lengthVec * m_param.value);
+	//accele.Normalize();
+	//m_enemyPtr->SetLengthVec(m_enemyPtr->GetLengthVec() + lengthVec * m_param.value);
+
+	m_enemyPtr->SetAccele(m_enemyPtr->GetAccele() + accele);
 
 	// ‰Ò“­Š®—¹
 	m_completion = m_time >= m_param.time;

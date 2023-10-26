@@ -104,7 +104,7 @@ void Game::Tick()
 void Game::Update(DX::StepTimer const& timer)
 {
     DeltaTime* pDeltaT = &DeltaTime::GetInstance();
-    InputSupport* pIS = &InputSupport::GetInstance();
+    InputSupport* pINP = &InputSupport::GetInstance();
 
     float elapsedTime = float(timer.GetElapsedSeconds());
     pDeltaT->SetDeltaTime(elapsedTime);
@@ -113,14 +113,14 @@ void Game::Update(DX::StepTimer const& timer)
         //->　キーボード
     auto keyboardState = Keyboard::Get().GetState();
     m_keyboardTracker.Update(keyboardState);
-    pIS->SetKeybordState(m_keyboardTracker);
+    pINP->SetKeybordState(m_keyboardTracker);
 
         //->　マウス
     auto mouseState = Mouse::Get().GetState();
     m_mouseTracker.Update(mouseState);
-    pIS->SetMouseState(m_mouseTracker);
+    pINP->SetMouseState(m_mouseTracker);
     // スクリーン座標からワールド空間座標への返還を常に行う
-    pIS->Update();
+    pINP->Update();
 
     // オーディオエンジンの更新
     if (!m_audioEngine->Update())

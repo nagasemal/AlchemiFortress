@@ -63,6 +63,8 @@ public:
 	// 止まる処理
 	void SetStopFlag(bool flag)							{ m_stopFlag = flag;}
 
+	void SetAccele(SimpleMath::Vector3 accele) { m_accele = accele; }
+
 	// ステータスを設定する
 	void SetEnemyData(Enemy_Data data);
 
@@ -118,6 +120,8 @@ private:
 
 	// 加速度
 	SimpleMath::Vector3 m_accele;
+
+	float m_gravityScale;
 
 	SimpleMath::Vector3 m_moveVec;
 

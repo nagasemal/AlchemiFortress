@@ -131,7 +131,7 @@ GAME_SCENE TitleScene::Update()
 	m_magicCircle->CreateMagicCircle(SimpleMath::Vector3{ 0,0,0 }, MAGIC_CIRCLE_RAGE);
 
 	// 右クリックをした
-	if (pINP->GetMouseState().leftButton == Mouse::ButtonStateTracker::PRESSED && !m_rotateNowFlag)
+	if (pINP->LeftButton_Press() && !m_rotateNowFlag)
 	{
 		m_animationData = 0.0f;
 		m_rotateNowFlag = true;

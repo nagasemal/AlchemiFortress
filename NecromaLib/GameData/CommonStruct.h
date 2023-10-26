@@ -31,6 +31,7 @@ enum ENEMY_TYPE : int
 	SLIME	= 1,
 	WORM	= 2,
 	HOP		= 3,
+	RETREAT = 4,
 
 	ENEMY_NUM
 };

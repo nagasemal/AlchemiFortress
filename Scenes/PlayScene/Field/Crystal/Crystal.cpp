@@ -60,7 +60,7 @@ bool Crystal::GetHitMouse()
 
 	InputSupport& pINP = InputSupport::GetInstance();
 	auto mouse = pINP.GetMouseState();
-	bool leftRelease = mouse.leftButton == mouse.RELEASED;
+	bool leftRelease = pINP.LeftButton_Release();
 	bool hitFlag = CircleCollider(GetCircle(), mouseCircle);
 
 	if (leftRelease)

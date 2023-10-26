@@ -181,7 +181,7 @@ EnemyObject EnemyManager::GetEnemyStatus(ENEMY_TYPE type,int spawnNumber)
 	Enemys_Spawn enemySpawn = pSJD.GetStageData().enemys_Spawn[spawnNumber];
 
 	// エネミーオブジェクトを生成
-	EnemyObject enemy(type, enemySpawn.spawnPos, 1);
+	EnemyObject enemy(type, enemySpawn.spawnPos, enemySpawn.lv);
 
 	// エネミーのパラメータを生成
 	Enemy_Data enemyData = pSJD.GetEnemyData(pSJD.GetStageData().enemys_Spawn[spawnNumber].type);
@@ -199,14 +199,15 @@ EnemyObject EnemyManager::GetRandomEnemy()
 {
 	ShareJsonData& pSJD = ShareJsonData::GetInstance();
 
-	std::uniform_int_distribution<> dist_enemyType(1, 2);
+	std::uniform_int_distribution<> dist_enemyType(1,ENEMY_NUM - 1);
 	std::random_device rd;
 	int enemyType_rand = static_cast<int>(dist_enemyType(rd));
 
 	std::random_device seed;
 	std::default_random_engine engine(seed());
+	// 円周上のどこに設置するかを決める
 	std::uniform_real_distribution<> dist(0, XM_2PI);
-	
+	// 拠点からの距離を取得
 	std::uniform_int_distribution<> dist2(20,40);
 	std::mt19937 gen(rd());
 	float rand = static_cast<float>(dist(engine));

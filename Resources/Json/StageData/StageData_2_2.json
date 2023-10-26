@@ -7,7 +7,7 @@
     "ENEMY_KNOCKDOWN": [
       {
         "TYPE": "All",
-        "VALUE": 20
+        "VALUE": 8
       }
     ]
   },
@@ -46,13 +46,81 @@
   "ENEMY_SPAWNTIME": {
     "ENEMYS": [
       {
-        "CONDITION": "ALL",
-        "SPAWNTIME": 5,
-        "SPAWN_X": 0,
+        "CONDITION": "",
+        "SPAWNTIME": 6,
+        "SPAWN_X": 10,
         "SPAWN_Y": 0,
-        "SPAWN_Z": 0,
-        "TYPE": "Random"
+        "SPAWN_Z": 10,
+        "LV": 2,
+        "TYPE": "Slime"
+      },
+      {
+        "CONDITION": "",
+        "SPAWNTIME": 6,
+        "SPAWN_X": 10,
+        "SPAWN_Y": 0,
+        "SPAWN_Z": -10,
+        "LV": 2,
+        "TYPE": "Hop"
+      },
+
+      {
+        "CONDITION": "",
+        "SPAWNTIME": 18,
+        "SPAWN_X": 10,
+        "SPAWN_Y": 0,
+        "SPAWN_Z": 10,
+        "LV": 2,
+        "TYPE": "Slime"
+      },
+      {
+        "CONDITION": "",
+        "SPAWNTIME": 18,
+        "SPAWN_X": -10,
+        "SPAWN_Y": 0,
+        "SPAWN_Z": 10,
+        "LV": 2,
+        "TYPE": "Hop"
+      },
+
+      {
+        "CONDITION": "",
+        "SPAWNTIME": 30,
+        "SPAWN_X": -10,
+        "SPAWN_Y": 0,
+        "SPAWN_Z": 10,
+        "LV": 2,
+        "TYPE": "Slime"
+      },
+      {
+        "CONDITION": "",
+        "SPAWNTIME": 30,
+        "SPAWN_X": -10,
+        "SPAWN_Y": 0,
+        "SPAWN_Z": -10,
+        "LV": 2,
+        "TYPE": "Hop"
+      },
+
+      {
+        "CONDITION": "",
+        "SPAWNTIME": 42,
+        "SPAWN_X": 10,
+        "SPAWN_Y": 0,
+        "SPAWN_Z": -10,
+        "LV": 2,
+        "TYPE": "Slime"
+      },
+      {
+        "CONDITION": "",
+        "SPAWNTIME": 42,
+        "SPAWN_X": -10,
+        "SPAWN_Y": 0,
+        "SPAWN_Z": -10,
+        "LV": 2,
+        "TYPE": "Hop"
       }
+
     ]
   },
   "MACHINE_DEFAULET": {
@@ -73,6 +141,7 @@
   "TUTORIAL": [
     { "NUMBER": 0 }
   ],
-  "LastWave":true
+  "LastWave": true,
+  "EnemyLv": 2
 }
 

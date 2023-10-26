@@ -53,12 +53,12 @@ void MachineExplanation::Initialize()
 
 void MachineExplanation::Update()
 {
-	InputSupport& pIS = InputSupport::GetInstance();
+	InputSupport& pINP = InputSupport::GetInstance();
 	DeltaTime& deltaTime = DeltaTime::GetInstance();
 
 	m_moveTime += deltaTime.GetDeltaTime();
 
-	m_hitFlag = HitObject_RageSet(pIS.GetMousePosScreen(),64,64, BIG_BOX_RAGEPERCENT);
+	m_hitFlag = HitObject_RageSet(pINP.GetMousePosScreen(),64,64, BIG_BOX_RAGEPERCENT);
 
 }
 

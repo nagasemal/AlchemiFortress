@@ -12,6 +12,11 @@ private:
 	//ワールド空間座標上のマウス
 	SimpleMath::Vector3 m_WorldScreenMouse;
 
+	// UIに触れると、設定されているレイヤーの番号が入る
+	int m_nowLayer;
+
+	bool m_hitUIFlag;
+
 public:
 	~InputSupport() = default;
 
@@ -39,15 +44,34 @@ public:
 	void SetMouseState(DirectX::Mouse::ButtonStateTracker tracker) { m_mouseTracker = tracker; }
 	DirectX::Mouse::ButtonStateTracker GetMouseState() { return m_mouseTracker; }
 
+	// ファサードパターン
+public:
+
+	// マウス左が押された瞬間
+	bool LeftButton_Press();
+	// マウス左が離された瞬間
+	bool LeftButton_Release();
+	// マウス左が押され続けている
+	bool LeftButton_Held();
+
+	// マウス右が押された瞬間
+	bool RightButton_Press();
+	// マウス右が離された瞬間
+	bool RightButton_Release();
+	// マウス右が押され続けている
+	bool RightButton_Held();
+
+	// マウスホイールが押された瞬間
+	bool MiddleButton_Press();
+	// マウスホイールが離された瞬間
+	bool MiddleButton_Release();
+	// マウスホイールが押され続けている
+	bool MiddleButton_Held();
+
 	//===[ マウス座標(ワールド空間) ]===//
 	SimpleMath::Vector3 GetMousePosWolrd();
 
 	//===[ マウス座標(スクリーン空間) ]===//
 	SimpleMath::Vector2 GetMousePosScreen();
-
-	// UIに触れると、設定されているレイヤーの番号が入る
-	int m_nowLayer;
-
-	bool m_hitUIFlag;
 
 };

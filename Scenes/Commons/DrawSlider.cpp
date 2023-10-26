@@ -44,7 +44,7 @@ void DrawSlider::Update()
     //    SoundData::GetInstance().PlaySystemSE_Auto(XACT_WAVEBANK_SYSTEMSE_BUTTOMPUSH);
     //}
 
-    if (hitSliderToMouse && pINP.GetMouseState().leftButton == Mouse::ButtonStateTracker::HELD)
+    if (hitSliderToMouse && pINP.LeftButton_Held())
     {
         m_button->SetHitMouseFlag(true);
         m_button->SetPos(SimpleMath::Vector2(mousePos.x, m_button->GetPos().y));

@@ -21,15 +21,6 @@ class AlchemicalMachineObject : public GameObjct3D
 {
 public:
 
-	// オブジェクトの現在状況の取得
-	enum STATE_NAME : int
-	{
-		BRING = 0,		// 運ばれている
-		IDEL  = 1,		// 止まっている
-		Play  = 2		// 駆動モード
-
-	};
-
 	AlchemicalMachineObject();
 	virtual ~AlchemicalMachineObject() {};
 
@@ -220,10 +211,8 @@ protected:
 
 	// LvUp用の選択ボックス
 	std::unique_ptr<SelectionBox> m_selectLvUpBox;
-
 	// 修理用の選択ボックス
 	std::unique_ptr<SelectionBox> m_repairBox;
-
 	// 解体用の選択ボックス
 	std::unique_ptr<SelectionBox> m_dismantlingBox;
 

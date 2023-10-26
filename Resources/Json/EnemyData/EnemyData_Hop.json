@@ -1,15 +1,27 @@
 {
   "Status": {
-    "ELEMENT":"Flame",
-    "TYPE":"Hop",
-    "MOVETYPE":"ALL",
-    "HP": 4.0,
-    "STR": 4.5,
-    "EXP": 15.0,
+    "ELEMENT": "Flame",
+    "TYPE": "Hop",
+    "MOVETYPE": "ALL",
+    "HP": 3.0,
+    "STR": 3.0,
+    "EXP": 20.0,
 
-    "MOVEING":[
-        {"TYPE":"Standard","TIME":0.0,"DELAY":0.0,"VALUE":1.5},
-        {"TYPE":"Hopping","TIME":0.0,"DELAY":0.0,"VALUE":1.5}
+    "MOVEING": [
+      {
+        "TYPE": "Hopping",
+        "TIME": 0.0,
+        "DELAY": 0.0,
+        "VALUE": 2.5
+      },
+      {
+        "TYPE": "Standard",
+        "TIME": 0.0,
+        "DELAY": 0.0,
+        "VALUE": 0.8
+      }
     ]
   }
 }
+
+       // {"TYPE":"Standard","TIME":0.0,"DELAY":0.0,"VALUE":1.5},

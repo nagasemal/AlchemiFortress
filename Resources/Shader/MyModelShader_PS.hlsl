@@ -68,6 +68,25 @@ void Asobi(inout float4 color,float2 uv)
 
 }
 
+// ノーマルマップの設定
+void ApplyNomalMap()
+{
+	//float3 normalMap = (texture2D(texture, vTextureCoord) * 2.0 - 1.0).rgb;
+}
+
+// グレースケール化
+float ChangeGray(float4 col)
+{
+	return col.r * 0.3f + col.g * 0.6f + col.b * 0.1f;
+}
+
+// セピア化
+float4 ChangeSepia(float4 col)
+{
+	float g = ChangeGray(col);
+	return float4(g * 1.44f, g * 0.99f, g * 0.57f, col.a);
+}
+
 float4 main(PSInput input) : SV_TARGET0
 {
 
@@ -118,5 +137,5 @@ float4 main(PSInput input) : SV_TARGET0
 	color.w *= DiffuseColor.w;
 
 	// 時間経過で色を付ける
-	return color.w;
+	return float4(color.xyz, color.w);
 }

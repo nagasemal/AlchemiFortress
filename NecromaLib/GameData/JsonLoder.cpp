@@ -310,6 +310,7 @@ Stage_Data Json::FileLoad_StageData(const std::string filePath)
 		enemySpawn.spawnPos.x = (float)	it->get<picojson::object>()["SPAWN_X"].get<double>();
 		enemySpawn.spawnPos.y = (float)	it->get<picojson::object>()["SPAWN_Y"].get<double>();
 		enemySpawn.spawnPos.z =	(float)	it->get<picojson::object>()["SPAWN_Z"].get<double>();
+		enemySpawn.lv		  = (int)it->get<picojson::object>()["LV"].get<double>();
 
 		// 説明モード時のフラグ
 		if (it->get<picojson::object>()["CONDITION"].get<std::string>() == "Explanation")
@@ -384,6 +385,9 @@ Stage_Data Json::FileLoad_StageData(const std::string filePath)
 
 	// これがこのステージでの最後のウェーブである
 	bool lastWave = val.get<picojson::object>()["LastWave"].get<bool>();
+
+	// このWAVEで出現する敵のLV
+	int enemyLv = (int)val.get<picojson::object>()["EnemyLv"].get<double>();
 
 	status.lastWave = lastWave;
 
@@ -515,6 +519,8 @@ ENEMY_TYPE Json::ChangeEnemy(const std::string enemy_Name)
 	if (enemy_Name == "None")			type = ENEMY_TYPE::ENMEY_NONE;
 	else if (enemy_Name == "Slime")	type = ENEMY_TYPE::SLIME;
 	else if (enemy_Name == "Worm")		type = ENEMY_TYPE::WORM;
+	else if (enemy_Name == "Hop")		type = ENEMY_TYPE::HOP;
+	else if (enemy_Name == "Retreat")		type = ENEMY_TYPE::RETREAT;
 
 	return type;
 }
@@ -530,6 +536,10 @@ std::string Json::ChangeEnemyString(const ENEMY_TYPE enemy_Type)
 		return "Slime";
 	case WORM:
 		return "Worm";
+	case HOP:
+		return "Hop";
+	case RETREAT:
+		return "Retreat";
 	default:
 		break;
 	}
