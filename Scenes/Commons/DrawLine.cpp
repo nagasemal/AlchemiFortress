@@ -10,8 +10,8 @@ DrawLine::DrawLine(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage, float line
 {
 	m_animationData = AnimationData();
 
-	m_data.pos  = pos;
-	m_data.rage = rage;
+	m_saveData.pos = m_data.pos  = pos;
+	m_saveData.rage = m_data.rage = rage;
 	//m_maxRage = maxRage * 2;
 	m_lineRage = SimpleMath::Vector2();
 
@@ -56,7 +56,7 @@ void DrawLine::Draw()
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
 	auto pSB = pSD.GetSpriteBatch();
 
-	// –‚–@w•`‰æ
+	// ü‚ð•`‰æ
 	pSB->Draw(pSL.GetMissionLabelTexture().Get(),
 		m_popPos,
 		&m_rect,

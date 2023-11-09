@@ -1,6 +1,6 @@
 #include <pch.h>
 #include "Collider.h"
-
+#include "GameObject3D.h"
 
 //AABB当たり判定集
 int AABB_XZ(SimpleMath::Vector3 box1APos, SimpleMath::Vector3 box1BPos, SimpleMath::Vector3 box2APos, SimpleMath::Vector3 box2BPos)
@@ -183,6 +183,25 @@ bool CircleCollider(Circle circle1, Circle circle2)
 
 	//半径の和
 	float sumRadius = circle1.r + circle2.r;
+
+	//二つの円の中心点の差が半径の和より小さい
+	if (centerDifference <= sumRadius)		return true;
+
+	return false;
+}
+
+bool CircleCollider(GameObjct3D* gameObjectA, GameObjct3D* gameObjectB)
+{
+
+	// 両者のコライダーアクティブがTrueでなければならない
+	if (!gameObjectA->GetColliderActive() || !gameObjectB->GetColliderActive()) return false;
+
+	//中心点の差
+	SimpleMath::Vector3 lengthVec = gameObjectA->GetCircle().p - gameObjectB->GetCircle().p;
+	float centerDifference = sqrtf(lengthVec.x * lengthVec.x + lengthVec.y * lengthVec.y + lengthVec.z * lengthVec.z);
+
+	//半径の和
+	float sumRadius = gameObjectA->GetCircle().r + gameObjectB->GetCircle().r;
 
 	//二つの円の中心点の差が半径の和より小さい
 	if (centerDifference <= sumRadius)		return true;

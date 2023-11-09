@@ -90,15 +90,28 @@ float4 ChangeSepia(float4 col)
 float4 main(PSInput input) : SV_TARGET0
 {
 
+
+		//// 光源の方向
+		//float3 lightDirection = input.Position.xyz - LightPosition.xyz;
+
+		//// 光源までの距離
+		//float lightDistance = length(lightDirection);
+
+		//// 光源からの距離の影響
+		//float atten = saturate(1.0f / (lightDistance * lightDistance));
+
 	float texInput = Texture.Sample(Sampler, input.TexCoord);
 
 	// テクスチャ取得
 	float3 modelTexture = MachineTexture.Sample(Sampler, input.TexCoord);
 
+		// ライトの計算
+    input.Normal = normalize(input.Normal);
+	
 	// ノーマルマップ取得
 	float3 nomalTex = NomalTexture.Sample(Sampler, input.TexCoord);
 
-	float4 diff = pow(dot(nomalTex, input.Diffuse),0.5f);
+    float4 diff = pow(dot(nomalTex, input.Diffuse.rgb), 0.5f) + ApplyLimLight(input.Normal);
 
 	float4 color = diff;
 
@@ -108,13 +121,11 @@ float4 main(PSInput input) : SV_TARGET0
 	// スペキュラーを設定する
 	AddSpecular(color, pow(clamp(dot(input.Specular, nomalTex), 0.0f, 1.0f), 2.0f));
 
-	//深度
-	//float depth = length(LightPosition.xyz - input.Position.xyz) / MaxDepth;
+	//// リムライトを設定する
+	//color.rgb += ApplyLimLight(input.Normal);
 
-	// ライトの計算
-	input.Normal = normalize(input.Normal);
-	// リムライトを設定する
-	color.rgb += ApplyLimLight(input.Normal);
+	//// ポイントライト
+	//color.rgb += float3(0.7, 0.7, 0.4) * atten;
 
 	// 徐々に色を塗るルール画像)
 	color.rgb *= (/*modelTexture.rgb * */PaintColor.rgb) * step(texInput, 1 - Time.z);

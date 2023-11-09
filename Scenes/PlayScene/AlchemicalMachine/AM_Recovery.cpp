@@ -47,12 +47,8 @@ void AM_Recovery::Finalize()
 {
 }
 
-void AM_Recovery::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
+void AM_Recovery::RenderUI()
 {
-	//SpriteLoder& pSL = SpriteLoder::GetInstance();
-	//RECT rect_lv = SpriteCutter(64, 64,m_lv, 0);
-	//m_selectLvUpBox->DrawUI(texture, pSL.GetNumberTexture(), rect_lv);
-	//m_dismantlingBox->DrawUI(texture);
 }
 
 void AM_Recovery::LvUp()
@@ -72,6 +68,7 @@ void AM_Recovery::LvUp()
 
 	// HP強化
 	m_maxHp = (int)(pSJD.GetMachineData(m_machineID).hp * (pSJD.GetMachineData(m_machineID).multiplier_hp * m_lv));
+
 	// HP回復
 	m_hp = m_maxHp;
 }
@@ -86,8 +83,10 @@ void AM_Recovery::HitEnemy(std::list<EnemyObject>* enemy)
 	//	効果範囲toエネミー
 	for (std::list<EnemyObject>::iterator it = enemy->begin(); it != enemy->end(); it++)
 	{
+		// ダウンキャストを行い、GameObject3D型に変換し判定の処理を得る
+		bool hitMachine = CircleCollider(GetObject3D(), it->GetObject3D());
 
-		if (CircleCollider(it->GetCircle(), GetCircle()))
+		if (hitMachine)
 		{
 			// 体力減少
 			m_hp -= (int)it->GetPower();
@@ -99,7 +98,7 @@ void AM_Recovery::HitEnemy(std::list<EnemyObject>* enemy)
 
 void AM_Recovery::MPPuls(DataManager* pDM)
 {
-
+	// MPを増やす
 	pDM->SetNowMP(pDM->GetNowMP() + (int)(m_lv * m_machineEffectValue));
 
 }

@@ -2,9 +2,9 @@
   "Status": {
     "ELEMENT": "Earth",
     "STR": 30.0,
-    "SPEED": 2.5,
-    "SPAN": 0.7,
-    "LIFE": 4.0,
-    "LOSSMP": 12.0,
+    "SPEED": 3.5,
+    "SPAN": 13.0,
+    "LIFE": 10.0,
+    "LOSSMP": 18.0
   }
 }

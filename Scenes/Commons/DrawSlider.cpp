@@ -47,7 +47,7 @@ void DrawSlider::Update()
     if (hitSliderToMouse && pINP.LeftButton_Held())
     {
         m_button->SetHitMouseFlag(true);
-        m_button->SetPos(SimpleMath::Vector2(mousePos.x, m_button->GetPos().y));
+        m_button->SetSavePos(SimpleMath::Vector2(mousePos.x, m_button->GetPos().y));
 
         // マウスの位置から割合を求める
         m_value = (mousePos.x - m_minPos.x) / (m_maxPos.x - m_minPos.x);

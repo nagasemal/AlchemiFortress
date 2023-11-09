@@ -44,7 +44,6 @@ public:
 	void SetMouseState(DirectX::Mouse::ButtonStateTracker tracker) { m_mouseTracker = tracker; }
 	DirectX::Mouse::ButtonStateTracker GetMouseState() { return m_mouseTracker; }
 
-	// ファサードパターン
 public:
 
 	// マウス左が押された瞬間

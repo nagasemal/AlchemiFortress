@@ -94,7 +94,6 @@ void MagicCircle::CreateWorld()
 void MagicCircle::Render(int magicCircleNumber)
 {
 	auto context = ShareData::GetInstance().GetContext();
-	auto common = ShareData::GetInstance().GetCommonStates();
 	auto view = ShareData::GetInstance().GetView();
 	auto proj = ShareData::GetInstance().GetProjection();
 
@@ -103,7 +102,7 @@ void MagicCircle::Render(int magicCircleNumber)
 	cbuff.m_matView = view.Transpose();
 	cbuff.m_matProj = proj.Transpose();
 	cbuff.m_matWorld = m_world_MagicCircle.Transpose();
-	cbuff.m_diffuse = SimpleMath::Vector4(1, 1, 1, m_animationTime);
+	cbuff.m_diffuse = SimpleMath::Vector4(m_animationTime, 1, 1, m_animationTime);
 
 	//受け渡し用バッファの内容更新(ConstBufferからID3D11Bufferへの変換）
 	context->UpdateSubresource(m_cBuffer.Get(), 0, NULL, &cbuff, 0, 0);
@@ -137,6 +136,7 @@ void MagicCircle::Render(int magicCircleNumber)
 	//ピクセルシェーダにテクスチャを登録する。
 	context->PSSetShaderResources(0, 1, SpriteLoder::GetInstance().GetMagicCircleTexture(magicCircleNumber).GetAddressOf());
 	context->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetRule().GetAddressOf());
+	context->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetAuraBase().GetAddressOf());
 
 	//インプットレイアウトの登録
 	context->IASetInputLayout(m_inputLayout.Get());

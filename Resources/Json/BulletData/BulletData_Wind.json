@@ -2,9 +2,9 @@
   "Status": {
     "ELEMENT": "Wind",
     "STR": 6.0,
-    "SPEED": 3.7,
-    "SPAN": 0.6,
+    "SPEED": 9.0,
+    "SPAN": 6.0,
     "LIFE": 4.25,
-    "LOSSMP": 7.0,
+    "LOSSMP": 9.0
   }
 }

@@ -18,6 +18,7 @@
 class FieldObjectManager;
 class DisplayMagicCircle;
 class UIKeyControl;
+class Number;
 
 class MachineSelectManager
 {
@@ -39,23 +40,25 @@ public:
 	/// <summary>
 	/// モデルを描画する
 	/// </summary>
-	/// <param name="model">ベースとなるモデル</param>
 	/// <param name="index">インデックス番号(マシンタイプID)</param>
-	/// <param name="secondModel">第二のモデル</param>
-	void ModelRender(DirectX::Model* model,int index,DirectX::Model* secondModel = nullptr);
+	void ModelRender(int index);
 
 	void MagicCircleRender();
 
 	void Finalize();
 
-	void SetSelectNoneFlag(bool flag)								{ m_selectNoneFlag = flag; }
+	// マシンアイコンを回す
+	void RotationMachineList();
 
 public:
 
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetTextuer()	{ return m_boxTextuer;}
+	void SetSelectNoneFlag(bool flag) { m_selectNoneFlag = flag; }
 
 	// 選択中のマシンのタイプを返す
 	MACHINE_TYPE GetSelectMachineType()	{ return m_selectMachineType; }
+
+
+	int GetMachineUISelectNumber() { return m_selectNumber; }
 
 	// 選択ボックスが押されているかをTypeに応じて返す
 	bool GetHitMouseToSelectBox(int index)							{ return m_machineSelect[index]->GetHitMouseFlag();}
@@ -75,12 +78,12 @@ private:
 
 private:
 
-	// モデルを入れる箱のテクスチャ
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_boxTextuer;
-
 	std::unique_ptr<MachineSelect> m_machineSelect[MACHINE_TYPE::NUM];
 
 	std::unique_ptr<UIKeyControl> m_uiKeyControl;
+
+	// 所持数を示す
+	std::unique_ptr<Number> m_machineNumRender;
 
 	MACHINE_TYPE m_selectMachineType;
 
@@ -90,15 +93,31 @@ private:
 	// フィールド上のNoneを選択した際に、全てのMachineSelectの選択Boxの色を変更する
 	bool m_selectNoneFlag;
 
-	std::unique_ptr<Camera> m_camera;
-
 	// マシンの名前表示
 	std::unique_ptr<SelectionBox> m_machineName;
 
-	SimpleMath::Matrix m_dispView;
-	SimpleMath::Matrix m_dispProj;
+	// 選択ボックス(錬金ボタン用)
+	std::unique_ptr<SelectionBox> m_selectionAlchemi;
+
+	// 選択ボックス(UI選択用)
+	std::unique_ptr<SelectionBox> m_selectionLeft,m_selectionRight;
 
 	//画面に大きく出現させる魔法陣
 	std::unique_ptr<DisplayMagicCircle>			m_displayMagicCircle;
+
+	// アイコンの回転を行う時間変数
+	float m_rotateTime;
+
+	// 選択しているマシンの番号
+	int m_selectNumber;
+
+	// 前Frameのマシンの番号
+	int m_prevSelectNumber;
+
+	// カーソルにあっているマシンの番号
+	int m_cursorMachineNumber;
+
+	// UI回転が順転か否か
+	bool m_forwardOrderFlag;
 
 };

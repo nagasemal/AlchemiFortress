@@ -35,7 +35,22 @@ int AABB_3D(SimpleMath::Vector3 box1APos, SimpleMath::Vector3 box1BPos, SimpleMa
 
 bool PointerToBox(SimpleMath::Vector2 screenPos,SimpleMath::Vector2 box1, SimpleMath::Vector2 box2);
 
+/// <summary>
+/// 円形状の当たり判定をCircleを用いて判定します。
+/// </summary>
+/// <param name="gameObjectA"></param>
+/// <param name="gameObjectB"></param>
+/// <returns></returns>
 bool CircleCollider(Circle circle1, Circle circle2);
+
+class GameObjct3D;
+/// <summary>
+/// 円形状の当たり判定をGameObject3Dを用いて判定します。
+/// </summary>
+/// <param name="gameObjectA"></param>
+/// <param name="gameObjectB"></param>
+/// <returns></returns>
+bool CircleCollider(GameObjct3D* gameObjectA, GameObjct3D* gameObjectB);
 
 bool PointerToCircle(Circle circle, SimpleMath::Vector3 point);
 

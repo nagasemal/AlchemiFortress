@@ -48,6 +48,9 @@ public:
 
 	void SetLayer(int layer) { m_layer = layer; }
 
+	// ‰ŠúˆÊ’uî•ñ‚Æˆê‚ÉˆÊ’u‚ğã‘‚«‚µ‚Ü‚·
+	void SetSavePos(SimpleMath::Vector2 pos) { m_saveData.pos = m_data.pos = pos; }
+
 protected:
 
 	bool m_hitMouseFlag;
@@ -59,8 +62,13 @@ protected:
 
 	bool m_activeFlag; //Œ»İG‚ê‚éó‘Ô‚©
 
+	// ‰Šúî•ñ
+	ObjectData2D m_saveData;
+
 	RECT m_rect;
 
 	int m_layer;
+
+	float m_vibrationTime;
 
 };

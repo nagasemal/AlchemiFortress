@@ -2,10 +2,13 @@
 #include "SelectionUI.h"
 
 #include "NecromaLib/GameData/UserInterfase.h"
+#include "NecromaLib/Singleton/DeltaTime.h"
 
 #include "NecromaLib/Singleton/InputSupport.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/SoundData.h"
+
+#include <random>
 
 SelectionUI::SelectionUI() :
 	m_selectFlag(),
@@ -14,7 +17,8 @@ SelectionUI::SelectionUI() :
 	m_keySelectFlag(),
 	m_layer(),
 	m_activeFlag(true),
-	m_rect{ 0,0,64,64 }
+	m_rect{ 0,0,64,64 },
+	m_vibrationTime()
 {
 }
 
@@ -41,12 +45,31 @@ bool SelectionUI::HitMouse(bool layerCheck)
 
 	if (m_hitMouseFlag) pINP.HitUI();
 
+	// 震わせる
+	if (m_vibrationTime > 0.0f)
+	{
+		std::uniform_real_distribution<> dist_enemyType(-m_vibrationTime, m_vibrationTime);
+		std::random_device rd;
+		float vibrationRand = static_cast<float>(dist_enemyType(rd)) * 2.0f;
+
+		m_vibrationTime -= DeltaTime::GetInstance().GetNomalDeltaTime();
+
+		m_data.pos = SimpleMath::Vector2(m_saveData.pos.x + sinf(vibrationRand) , m_saveData.pos.y + cosf(vibrationRand));
+
+	}
+	else
+	{
+		m_vibrationTime = 0.0f;
+		m_data.pos = m_saveData.pos;
+	}
+
+
 	// 触れている間はワールド空間座標に影響を及ぼさないようにする
 	// layerチェック状態ならば追加でチェックを行う
 	if (m_hitMouseFlag && layerCheck)
 	{
 		// 自身の方が大きければレイヤー数を更新する そうでなければ処理を通さない
-		if (m_layer >= pINP.GetLayer())	pINP.SetLayer(m_layer);
+		if (m_layer >= (int)pINP.GetLayer())	pINP.SetLayer(m_layer);
 		else return m_hitMouseFlag = false;
 
 	}
@@ -69,6 +92,9 @@ bool SelectionUI::ClickMouse()
 		else
 		{
 			SoundData::GetInstance().PlaySystemSE_Auto(XACT_WAVEBANK_SYSTEMSE_POPTEXT);
+
+			m_vibrationTime = 1.0f;
+
 			return false;
 		}
 	}

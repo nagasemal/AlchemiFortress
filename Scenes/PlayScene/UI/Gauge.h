@@ -43,7 +43,6 @@ public:
 	SimpleMath::Vector2 GetMPGaugePos();
 	SimpleMath::Vector2 GetCrystalGaugePos();
 
-
 private:
 
 	// MP
@@ -51,12 +50,16 @@ private:
 	std::unique_ptr<UserInterface> m_gauge_Mp;
 	// 背景用
 	std::unique_ptr<UserInterface> m_base_Mp;
+	// 減る際の遷移用
+	std::unique_ptr<UserInterface> m_back_Mp;
+
 	// Mpの画像表示
 	std::unique_ptr<SelectionBox> m_box_mp;
 
 	// クリスタル
 	std::unique_ptr<UserInterface> m_gauge_Crystal;
 	std::unique_ptr<UserInterface> m_base_Crystal;
+	std::unique_ptr<UserInterface> m_back_Crystal;
 
 	std::unique_ptr<SelectionBox> m_box_Crystal;
 
@@ -70,5 +73,11 @@ private:
 
 	// 前FのHP割合を保持
 	float m_difRedioHp;
+
+	// 前FのMP割合を保持
+	float m_difRedioMp;
+
+	// 前Fのクリスタル割合を保持
+	float m_difRedioCrystal;
 
 };

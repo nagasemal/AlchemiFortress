@@ -63,6 +63,21 @@ ResultScene::~ResultScene()
 
 void ResultScene::Initialize()
 {
+	ShareData& pSD = ShareData::GetInstance();
+	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
+	fx->SetDirectory(L"Resources/Models");
+
+	m_skySphere = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/SkySphere.cmo", *fx);
+
+	m_skySphere->UpdateEffects([&](IEffect* effect)
+		{
+			// 今回はライトだけ欲しい
+			auto lights = dynamic_cast<IEffectLights*>(effect);
+
+			// 光の当たり方変更
+			lights->SetAmbientLightColor(SimpleMath::Color(0.2f, 0.2f, 0.4f, 0.8f));
+
+		});
 
 }
 
@@ -121,8 +136,15 @@ void ResultScene::Draw()
 {
 	ShareData& pSD = ShareData::GetInstance();
 
-	// モデル情報(位置,大きさ)
 	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
+	modelData = SimpleMath::Matrix::CreateTranslation({ 0.0f,30.0f,0.0f });
+	modelData *= SimpleMath::Matrix::CreateScale(1.5f, 1.5f, 1.5f);
+	modelData *= SimpleMath::Matrix::CreateFromYawPitchRoll(8.0f, 7.0f, 90.0f);
+
+	m_skySphere->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection());
+
+	// モデル情報(位置,大きさ)
+	modelData = SimpleMath::Matrix::Identity;
 	modelData = SimpleMath::Matrix::CreateScale(SimpleMath::Vector3(3.0f,3.0f,3.0f));
 	modelData *= SimpleMath::Matrix::CreateRotationY(XMConvertToRadians(180));
 	modelData *= SimpleMath::Matrix::CreateTranslation(SimpleMath::Vector3(0.0f, 1.0f, 0.0f));

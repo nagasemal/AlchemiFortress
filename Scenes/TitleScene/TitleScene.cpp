@@ -105,7 +105,9 @@ GAME_SCENE TitleScene::Update()
 	pSound.PlayBGM(XACT_WAVEBANK_BGMS_BGM_TITLE, false);
 
 	m_titleCall->Update();
+
 	m_titleCamera->Update();
+	
 	m_magicCircle->Update();
 	if (m_titleCamera->GetAnimTime() >= 0.75f)
 	{

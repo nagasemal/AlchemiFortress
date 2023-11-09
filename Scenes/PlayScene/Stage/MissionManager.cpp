@@ -5,6 +5,7 @@
 #include "Scenes/PlayScene/Enemy/EnemyManager.h"
 #include "Scenes/PlayScene/Field/FieldObjectManager.h"
 #include "Scenes/PlayScene/UI/Number.h"
+#include "Scenes/Commons/DrawArrow.h"
 
 #include "Scenes/SelectScene/MissionRender.h"
 
@@ -19,8 +20,12 @@
 #include "NecromaLib/GameData/UserInterfase.h"
 #include "NecromaLib/GameData/JsonLoder.h"
 #include "NecromaLib/GameData/SpriteCutter.h"
+#include "NecromaLib/GameData/Easing.h"
 
-MissionManager::MissionManager():
+#define MISSION_RENDERPOS SimpleMath::Vector2(100.0f,260.0f)
+#define MISSION_CLOSEBUTTON SimpleMath::Vector2(260.0f,10.0f)
+
+MissionManager::MissionManager() :
 	m_machineCondition(),
 	m_enemyCondition(),
 	m_timeCondition(),
@@ -33,7 +38,10 @@ MissionManager::MissionManager():
 	m_lastWave(),
 	m_wave(1),
 	m_waveAnimation(),
-	m_nextWaveFlag()
+	m_nextWaveFlag(),
+	m_closeAnimation(),
+	m_closeMission(false),
+	m_closeButton()
 {
 }
 
@@ -52,8 +60,9 @@ void MissionManager::Initialize()
 	// ステージ情報の再度読み込み
 	ReloadWave();
 
-	m_timeRender = std::make_unique<DrawTimer>(SimpleMath::Vector2{ 140.0f,160.0f }, SimpleMath::Vector2{ 1.0f,1.0f });
-	m_missionRender = std::make_unique<MissionRender>(SimpleMath::Vector2{ 100.0f,260.0f }, SimpleMath::Vector2{ 1.0f,1.0f });
+	m_timeRender = std::make_unique<DrawTimer>(SimpleMath::Vector2{ 140.0f,160.0f }, SimpleMath::Vector2{ 0.6f,0.6f });
+
+	m_missionRender = std::make_unique<MissionRender>(MISSION_RENDERPOS, SimpleMath::Vector2{ 1.0f,1.0f });
 
 	// クリア時演出の生成
 	m_backVeil = std::make_unique<Veil>(3);
@@ -78,6 +87,8 @@ void MissionManager::Initialize()
 	// ステージ失敗成功時のアニメーション用変数
 	m_clearAnimation.max = 2.0f;
 
+	m_closeButton = std::make_unique<DrawArrow>(MISSION_RENDERPOS + MISSION_CLOSEBUTTON,SimpleMath::Vector2(1.0f,1.0),2);
+	m_closeButton->Initialize();
 }
 
 void MissionManager::Update(AlchemicalMachineManager* pAlchemicalManager, EnemyManager* pEnemyManager, FieldObjectManager* pFieldManager)
@@ -85,15 +96,43 @@ void MissionManager::Update(AlchemicalMachineManager* pAlchemicalManager, EnemyM
 	auto pDeltaT = &DeltaTime::GetInstance();
 	m_lastWave = ShareJsonData::GetInstance().GetStageData().lastWave;
 
-	//m_nextWaveFlag = false;
-
+	// 拠点のHPを取得する
 	m_baseHP = (int)DataManager::GetInstance()->GetNowBaseHP();
+
+	// 位置を決定する
+	SimpleMath::Vector2 missionPos = SimpleMath::Vector2(MISSION_RENDERPOS.x - Easing::EaseInCubic(0, MISSION_CLOSEBUTTON.x, m_closeAnimation), MISSION_RENDERPOS.y);
+
+	m_missionRender->SetPos(missionPos);
+	m_closeButton->SetSavePos(missionPos + (MISSION_CLOSEBUTTON * 1.2f));
+	m_closeButton->HitMouse();
+
+	if (m_closeButton->SelectionMouse())
+	{
+		m_closeAnimation -= pDeltaT->GetNomalDeltaTime();
+		m_closeButton->SetDirection(4);
+	}
+	else
+	{
+		m_closeButton->SetDirection(2);
+		m_closeAnimation += pDeltaT->GetNomalDeltaTime();
+	}
+
 
 	// None以外ならば通す マシンが設置された際の処理
 	if (pAlchemicalManager->SpawnMachineNotification() != MACHINE_TYPE::NONE) 							MachineMission(pAlchemicalManager);
 
 	// 錬金時に通す
 	if (pAlchemicalManager->GetMachineSelect()->get()->GetManufacturingFlag() != MACHINE_TYPE::NONE)	AlchemiMission(pAlchemicalManager);
+
+	// マシンが解体されたときに通す
+	if (pAlchemicalManager->DestroyMachineNotification() != MACHINE_TYPE::NONE)							DestroyMission(pAlchemicalManager);
+
+	// マシンが修繕されたときに通す
+	if (pAlchemicalManager->RepairBoxMachineNotification() != MACHINE_TYPE::NONE)						RecoveryMission(pAlchemicalManager);
+
+	// マシンがLvUpされたときに通す
+	if (pAlchemicalManager->LvUpMachineNotification() != MACHINE_TYPE::NONE)							LvUPMission(pAlchemicalManager);
+
 	// Enemyが倒された際に通す
 	if (pEnemyManager->GetKnokDownEnemyType() != ENEMY_TYPE::ENMEY_NONE) 								EnemyMission(pEnemyManager);
 
@@ -102,6 +141,12 @@ void MissionManager::Update(AlchemicalMachineManager* pAlchemicalManager, EnemyM
 
 	// 時間制限の処理
 	if (m_timeCondition.size() > 0)																		TimerMission();
+
+	// リソースに変化があった際に通す
+	if (pAlchemicalManager->GetPulsMpVal() > 0.0f);
+
+	// クリスタルリソースに変化があった際に通す
+	if (pAlchemicalManager->GetPulsCrystalVal() > 0.0f);
 
 	// 拠点のHPが0になったことを知らせるフラグ
 	m_failureFlag = m_baseHP <= 0;
@@ -163,10 +208,16 @@ void MissionManager::Render()
 	// ミッション内容の描画
 	m_missionRender->Render_MachineMission	(m_machineCondition);
 	m_missionRender->Render_AlchemiMission	(m_alchemiCondition);
+	m_missionRender->Render_DestroyMission	(m_destroyCondition);
+	m_missionRender->Render_RepairMission	(m_recoveryCondition);
+	m_missionRender->Render_LvUpMission		(m_lvUpCondition);
 	m_missionRender->Render_EnemyMission	(m_enemyCondition);
 	m_missionRender->Render_BaseLvMission	(m_baseLvCondition);
 	m_missionRender->Render_TimerMission	(m_timeCondition);
+	m_missionRender->Render_ResourceMission (m_resourceCondition);
 	m_missionRender->LineReset();
+
+	m_closeButton->Draw();
 
 	// 経過時間の描画
 	m_timeRender->TimerDraw();
@@ -200,29 +251,42 @@ void MissionManager::ReloadWave()
 	auto pSJD = &ShareJsonData::GetInstance();
 
 	// 取得した情報をコピーする
-	m_machineCondition = pSJD->GetStageData().condition_Machine;
-	m_alchemiCondition = pSJD->GetStageData().condition_Alchemi;
-	m_enemyCondition = pSJD->GetStageData().condition_Enemy;
-	m_baseLvCondition = pSJD->GetStageData().condition_BaseLv;
-	m_timeCondition = pSJD->GetStageData().condition_Time;
+	m_machineCondition	= pSJD->GetStageData().condition_Machine;
+	m_alchemiCondition	= pSJD->GetStageData().condition_Alchemi;
+	m_destroyCondition	= pSJD->GetStageData().condition_Destroy;
+	m_recoveryCondition = pSJD->GetStageData().condition_Recovery;
+	m_lvUpCondition		= pSJD->GetStageData().condition_LvUP;
+	m_enemyCondition	= pSJD->GetStageData().condition_Enemy;
+	m_baseLvCondition	= pSJD->GetStageData().condition_BaseLv;
+	m_timeCondition		= pSJD->GetStageData().condition_Time;
+	m_resourceCondition = pSJD->GetStageData().condition_Resource;
 
 	// それぞれの内容の合計値を得る
 	m_missionNum = (int)m_machineCondition.size() +
-		(int)m_alchemiCondition.size() +
-		(int)m_enemyCondition.size() +
-		(int)m_baseLvCondition.size() +
-		(int)m_timeCondition.size();
+		(int)m_alchemiCondition.size()	+
+		(int)m_enemyCondition.size()	+
+		(int)m_baseLvCondition.size()	+
+		(int)m_timeCondition.size()		+
+		(int)m_destroyCondition.size()	+
+		(int)m_recoveryCondition.size() +
+		(int)m_lvUpCondition.size()		+
+		(int)m_resourceCondition.size();
 
 
 	// ミッションの達成度
 	m_missionSituation = 0;
 
 	// クリア出来ないものはミッション完了したことにする
-	if (m_alchemiCondition[0].value <= 0)	m_missionSituation++;
-	if (m_baseLvCondition[0].value <= 0)	m_missionSituation++;
-	if (m_machineCondition[0].value <= 0)	m_missionSituation++;
-	if (m_enemyCondition[0].value <= 0)		m_missionSituation++;
-	if (m_timeCondition[0].value <= 0)		m_missionSituation++;
+	if (m_alchemiCondition	[0].value <= 0)		m_missionSituation++;
+	if (m_baseLvCondition	[0].value <= 0)		m_missionSituation++;
+	if (m_machineCondition	[0].value <= 0)		m_missionSituation++;
+	if (m_enemyCondition	[0].value <= 0)		m_missionSituation++;
+	if (m_timeCondition		[0].value <= 0)		m_missionSituation++;
+	if (m_destroyCondition	[0].value <= 0)		m_missionSituation++;
+	if (m_recoveryCondition	[0].value <= 0)		m_missionSituation++;
+	if (m_lvUpCondition		[0].value <= 0)		m_missionSituation++;
+	if (m_resourceCondition	[0].value <= 0)		m_missionSituation++;
+
 
 	// ミッションを全てクリアしたフラグを元に戻す
 	m_allClearFlag = false;
@@ -290,6 +354,75 @@ void MissionManager::AlchemiMission(AlchemicalMachineManager* alchemicalManager)
 	}
 
 
+}
+
+void MissionManager::DestroyMission(AlchemicalMachineManager* alchemicalManager)
+{
+
+	// 対応する条件をTrueにする：破壊条件
+	for (int i = 0; i < m_destroyCondition.size(); i++)
+	{
+		// ミッションの内容と同じならば処理を通す 既にミッションが済んでいる場合は飛ばす
+		if (Json::ChangeMachine(m_destroyCondition[i].condition) ==
+			alchemicalManager->DestroyMachineNotification() &&
+			m_destroyCondition[i].progress < m_destroyCondition[i].value)
+		{
+			m_destroyCondition[i].progress++;
+
+			// 攻略完了
+			if (m_destroyCondition[i].progress >= m_destroyCondition[i].value)
+			{
+				m_missionSituation++;
+			}
+		}
+	}
+
+}
+
+void MissionManager::RecoveryMission(AlchemicalMachineManager* alchemicalManager)
+{
+	// 対応する条件をTrueにする：修繕条件
+	for (int i = 0; i < m_recoveryCondition.size(); i++)
+	{
+		// ミッションの内容と同じならば処理を通す 既にミッションが済んでいる場合は飛ばす
+		if (Json::ChangeMachine(m_recoveryCondition[i].condition) ==
+			alchemicalManager->RepairBoxMachineNotification() &&
+			m_recoveryCondition[i].progress < m_recoveryCondition[i].value)
+		{
+			m_recoveryCondition[i].progress++;
+
+			// 攻略完了
+			if (m_recoveryCondition[i].progress >= m_recoveryCondition[i].value)
+			{
+				m_missionSituation++;
+			}
+		}
+	}
+}
+
+void MissionManager::LvUPMission(AlchemicalMachineManager* alchemicalManager)
+{
+	// 対応する条件をTrueにする：修繕条件
+	for (int i = 0; i < m_lvUpCondition.size(); i++)
+	{
+		// ミッションの内容と同じならば処理を通す 既にミッションが済んでいる場合は飛ばす
+		if (Json::ChangeMachine(m_lvUpCondition[i].condition) ==
+			alchemicalManager->LvUpMachineNotification() &&
+			m_lvUpCondition[i].progress < m_lvUpCondition[i].value)
+		{
+			m_lvUpCondition[i].progress++;
+
+			// 攻略完了
+			if (m_lvUpCondition[i].progress >= m_lvUpCondition[i].value)
+			{
+				m_missionSituation++;
+			}
+		}
+	}
+}
+
+void MissionManager::ResourceMission()
+{
 }
 
 void MissionManager::EnemyMission(EnemyManager* enemyManager)

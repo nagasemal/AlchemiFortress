@@ -71,9 +71,9 @@ void ShareJsonData::LoadingJsonFile_Stage(int number, int wave)
 
 	// numberに応じたファイルパスを読み込む
 	std::ostringstream oss;
-	oss << number << "_" << wave;
+	oss << "Stage_" << number << "/StageData_" << number << "_" << wave;
 
-	std::string filePath = "Resources/Json/StageData/StageData_" + oss.str() + ".json";
+	std::string filePath = "Resources/Json/StageData/" + oss.str() + ".json";
 
 	m_stageData = Json::FileLoad_StageData(filePath);
 

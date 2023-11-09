@@ -36,7 +36,7 @@ public:
 	// I—¹ˆ—
 	void Finalize()						override;
 
-	void RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture) override;
+	void RenderUI() override;
 
 	//  ===LvUpŒø‰Ê===
 	// UŒ‚—Í@@

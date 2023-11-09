@@ -71,6 +71,8 @@ private:
 		SimpleMath::Color PaintColor;		// 追加の色情報
 		SimpleMath::Color LimLightColor;	// リムライトのカラー
 		SimpleMath::Vector4 eyes;			// 注視点(4の倍数しか受け取れない為、Vector4とする)
+
+		SimpleMath::Vector4 mousePos;		// ポイントライトの位置
 	};
 
 	// マシンモデルに使用するシェーダー

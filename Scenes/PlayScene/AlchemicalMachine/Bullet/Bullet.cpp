@@ -21,6 +21,8 @@ Bullet::Bullet(float speed, float damage, float life,SimpleMath::Color color, Si
 
 	m_enemyHit = false;
 
+	m_time = 0.0f;
+
 }
 
 Bullet::Bullet(BulletData data, SimpleMath::Color color, SimpleMath::Vector3 pos, SimpleMath::Vector3 targetVector)
@@ -34,6 +36,10 @@ Bullet::Bullet(BulletData data, SimpleMath::Color color, SimpleMath::Vector3 pos
 	m_data.rage = SimpleMath::Vector3(1, 1, 1);
 
 	m_targetVectol = targetVector;
+
+	m_enemyHit = false;
+
+	m_time = 0.0f;
 }
 
 Bullet::~Bullet()
@@ -52,18 +58,16 @@ void Bullet::Update()
 
 	m_bulletData.life -= deltaTime;
 
-	m_time += deltaTime * 2.0f;
+	m_time += deltaTime;
 
 	SimpleMath::Vector3 vec = m_targetVectol - m_startPos;
 
 	vec.y = m_data.pos.y;
 
-	SimpleMath::Vector3 nomalizeVec = vec * deltaTime;
-
 	// ê≥ãKâª
-	nomalizeVec.Normalize();
+	vec.Normalize();
 
-	m_data.pos += (nomalizeVec / 10) * m_bulletData.speed;
+	m_data.pos += vec * (deltaTime * m_bulletData.speed);
 
 }
 

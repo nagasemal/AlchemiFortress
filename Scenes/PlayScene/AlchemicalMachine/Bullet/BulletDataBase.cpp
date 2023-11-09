@@ -18,7 +18,7 @@ Bullet_Data RecalculationStatus(ELEMENT element, int lv)
 	// Á”ï–‚—Í
 	status.lossMp	= status.lossMp  * lv / MaxLv;
 	// ”­ËŠÔŠu
-	status.span		= status.span / lv;
+	status.span		= status.span * lv / MaxLv;
 
     return status;
 }

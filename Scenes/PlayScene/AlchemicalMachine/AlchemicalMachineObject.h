@@ -28,7 +28,7 @@ public:
 	virtual void SelectUpdate() = 0;
 
 	// 選択時、マウス選択可能なUIの表示に使用
-	virtual void RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture) = 0;
+	virtual void RenderUI() = 0;
 
 	// LvUp専用処理
 	virtual void LvUp() = 0;
@@ -70,14 +70,20 @@ public:
 	// 解体された瞬間を返すフラグ
 	const bool GetDismantlingFlag()							const { return m_dismantlingFlag; }
 
+	// 修繕された瞬間を返すフラグ
+	bool GetRepairFlag();
+
+	// LvUPされた瞬間を返すフラグ
+	bool GetLvUpFlag();
+
 	// オブジェクトの名前
 	const std::string GetObjectName()						const { return m_objectName; }
 
 	// オブジェクトのタイプ
 	const MACHINE_TYPE GetModelID()							const { return m_machineID;}
 
-	// 現在未使用
-	const float GetMachineEffectNum()						const { return m_machineEffectValue; }
+	// 効力を返してくれます
+	const float GetMachineEffectValue()						const { return m_machineEffectValue; }
 
 	// 効果発動までの時間
 	const float GetSpan()									const { return m_span;}

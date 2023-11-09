@@ -7,24 +7,20 @@ float4 main(PSInput input) : SV_TARGET0
 {
 
 
-	float2 texCoord = float2(input.TexCoord.x,input.TexCoord.y - (Time.w * 0.2f));
+	float2 texCoord = float2(input.TexCoord.x,input.TexCoord.y - Time.w);
 
-	float4 auraTex = AuraTexture.Sample(Sampler, input.TexCoord);
+	float4 auraTex = AuraTexture.Sample(Sampler, texCoord);
 
-	float4 output = float4(0.3f,0.7f,1.0f,1.0f);
+	float4 maskTex = MaskTexture.Sample(Sampler, input.TexCoord);
 
-	//auraTex.rgb *= auraTex.rgb;
+	float color = auraTex * maskTex/*smoothstep(maskTex,auraTex,0.0)*/;
 
+	float4 col = color * PaintColor;
 
-	//float4 maskTex = MaskTexture.Sample(Sampler, texCoord);
+	col.w *= 0.9f;
 
-	//float color = smoothstep(maskTex,auraTex,0.0);
+	// ã•”•ª‚ğØ‚é
+	col.w *= lerp(0.0f, 1.0f, step(input.TexCoord.y, 0.2f));
 
-	////color.w *= 1.0f;
-
-	//float4 col = color * PaintColor;
-	//col.w *= 0.9f;
-
-	//col.w *= lerp(0.0f, 1.0f, step(0.5f, input.TexCoord.y));
-	return auraTex;
+	return col;
 }

@@ -83,13 +83,20 @@ void AlchemicalMachineObject::SelectUpdate_Common()
 	// LvUp用の選択ボックスの設定
 	m_selectLvUpBox->HitMouse();
 
+	// クリスタルを減らす
+	DataManager& pDM = *DataManager::GetInstance();
+
+	// Lvが上限または変更後のクリスタルが0以下
+	m_selectLvUpBox->SetActiveFlag(m_lv <= MAX_LV && pDM.GetNowCrystal() - GetNextLvCrystal() >= 0);
+
 	if (m_selectLvUpBox->ClickMouse()) 		LvUp();
 
 	// 修繕用の選択ボックスの設定
 	m_repairBox->HitMouse();
+	m_repairBox->SetActiveFlag(pDataM.GetNowCrystal() - GetRepairCrystal() >= 0 && m_hp < m_maxHp);
 
 	// 修繕選択ボックスを押す　現在のCrystal量から修繕に掛かるCrystal量が0以上ならば実行
-	if (m_repairBox->ClickMouse() && pDataM.GetNowCrystal() - GetRepairCrystal() >= 0)
+	if (m_repairBox->ClickMouse())
 	{
 		m_hp = m_maxHp;
 		pDataM.SetNowMP(pDataM.GetNowCrystal() - GetRepairCrystal());
@@ -165,9 +172,13 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 	// ディフェンサー型は常に拠点の方向を向く
 	if (m_machineID == DEFENSER)
 	{
+		// 拠点との距離
+		SimpleMath::Vector3 basepos = SimpleMath::Vector3() - m_data.pos;
+
 		m_rotateAnimation = 0.0f;
-		modelData *= SimpleMath::Matrix::CreateRotationZ(DirectX::XMConvertToRadians(180.0f));
-		modelData *= SimpleMath::Matrix::CreateFromQuaternion(LookAt({ 0.0f,m_data.pos.y,0.0f }));
+		modelData *= SimpleMath::Matrix::CreateRotationY(DirectX::XMConvertToRadians(90.0f));
+		modelData *= SimpleMath::Matrix::CreateFromQuaternion(
+			SimpleMath::Quaternion::FromToRotation(SimpleMath::Vector3::UnitX, basepos));
 	}
 
 	// 常に右回りに回転
@@ -236,8 +247,6 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 	//		pSD.GetContext()->PSSetShader(pSD.GetModelShadowShader().Get(), nullptr, 0);
 	//	});
 
-
-
 	// シルエット描画
 	if (silhouette)
 	{
@@ -249,11 +258,9 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 	// 通常描画
 	else
 	{
-
 		NomalRender(model, modelData, m_color);
 		// 通常描画
 		if (ring != nullptr) 		NomalRender(ring, ringData, m_subColor);
-
 	}
 
 	// シェーダーの解除
@@ -269,6 +276,16 @@ void AlchemicalMachineObject::SummonAM(SimpleMath::Vector3 pos)
 	m_data.pos = pos;
 	m_active = true;
 	m_spawnTime = 0.0f;
+}
+
+bool AlchemicalMachineObject::GetRepairFlag()
+{
+	return m_repairBox->ClickMouse();
+}
+
+bool AlchemicalMachineObject::GetLvUpFlag()
+{
+	return m_selectLvUpBox->ClickMouse();
 }
 
 const int AlchemicalMachineObject::GetNextLvCrystal()
@@ -318,7 +335,6 @@ void AlchemicalMachineObject::NomalRender(DirectX::Model* model, SimpleMath::Mat
 
 			pSD.GetContext()->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetMachineTextuer(m_element).GetAddressOf());
 			pSD.GetContext()->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetNormalMap(m_element).GetAddressOf());
-
 
 		});
 

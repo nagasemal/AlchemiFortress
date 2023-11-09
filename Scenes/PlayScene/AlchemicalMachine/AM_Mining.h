@@ -34,14 +34,14 @@ public:
 	// 終了処理
 	void Finalize()						override;
 
-	void AllFieldObject(FieldObjectManager* fieldManager);
+	int AllFieldObject(FieldObjectManager* fieldManager);
 
 	void HitEnemy(std::list<EnemyObject>* enemy);
 
 	// クリスタルを回収した瞬間を得る
 	bool GetCrystalFlag();
 
-	void RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture) override;
+	void RenderUI() override;
 
 	void LvUp() override;
 

@@ -94,5 +94,7 @@ namespace DX
 #include "GeometricPrimitive.h"
 #include "Model.h"
 #include "Audio.h"
+#include "PostProcess.h"
+#include "RenderTexture.h"
 
 using namespace DirectX;

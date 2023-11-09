@@ -91,7 +91,7 @@ void Particle::Update(SimpleMath::Vector3 pos, bool flag,SimpleMath::Color color
 	CreateBillboard();
 
 	// ŽžŠÔ‚ª—ˆ‚½‚ç¶¬‚ðs‚¤
-	if (m_timer >= m_particleSpawnTime)
+	if (m_timer > m_particleSpawnTime)
 	{
 		for (int i = 0; i < m_particleNum; i++)
 		{
@@ -114,7 +114,7 @@ bool Particle::OnShot(SimpleMath::Vector3 pos, bool flag, SimpleMath::Color colo
 		m_particleUtility.push_back(CreateEffectParam(m_effectType, pos, color));
 	}
 
-	return false;
+	return true;
 
 }
 
@@ -335,11 +335,12 @@ ParticleUtility Particle::CreateEffectParam(EFFECT_TYPE type, SimpleMath::Vector
 
 		m_particleNum = 10;
 		break;
+
 	case Particle::DELETE_ENEMY:
 
 		pU.SetPosition(SimpleMath::Vector3(pos.x + range * cosf(rand),
-													pos.y,
-													pos.z + range * sinf(rand)));
+										   pos.y + range * rand,
+										   pos.z + range * sinf(rand)));
 
 		pU.SetVelocity(SimpleMath::Vector3(0.0f, 0.8f, 0.0f));
 		pU.SetAccele(SimpleMath::Vector3(0.0f, -0.025f, 0.0f));
@@ -380,6 +381,7 @@ ParticleUtility Particle::CreateEffectParam(EFFECT_TYPE type, SimpleMath::Vector
 			pos.z + 0.75f * sinf(rand)));
 
 		vectol = pU.GetPosition() - pos;
+		vectol.Normalize();
 
 		pU.SetStartScale(SimpleMath::Vector3(0.4f, 0.4f, 0.4f));
 		pU.SetVelocity(SimpleMath::Vector3(sinf(vectol.x), 6.0f, cosf(vectol.z)));
@@ -459,6 +461,7 @@ ParticleUtility Particle::CreateEffectParam(EFFECT_TYPE type, SimpleMath::Vector
 			pos.z));
 
 		vectol = pU.GetPosition().Cross(pos);
+		vectol.Normalize();
 
 		pU.SetStartScale(SimpleMath::Vector3(0.6f, 0.6f, 0.6f));
 		pU.SetEndScale(SimpleMath::Vector3(0.0f, 0.0f, 0.0f));

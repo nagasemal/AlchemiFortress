@@ -5,6 +5,7 @@
 #include "ShareData.h"
 
 #include "NecromaLib/Singleton/SpriteLoder.h"
+#include "NecromaLib/Singleton/InputSupport.h"
 
 ModelShader* ModelShader::instance = nullptr;
 
@@ -166,6 +167,10 @@ void ModelShader::ModelDrawShader(SimpleMath::Color color, SimpleMath::Vector4 t
 	cbuff.eyes = SimpleMath::Vector4(pSD.GetCamera()->GetTargetPosition());
 	cbuff.LimLightColor = SimpleMath::Color(1.0f, 0.95f, 0.6f, 0.25f);
 
+	SimpleMath::Vector3 mousePos = InputSupport::GetInstance().GetMousePosWolrd();
+
+	cbuff.mousePos = SimpleMath::Vector4(mousePos.x, mousePos.y, mousePos.z,0.0f);
+
 	//受け渡し用バッファの内容更新(ConstBufferからID3D11Bufferへの変換）
 	pSD.GetContext()->UpdateSubresource(m_cbuffer.Get(), 0, NULL, &cbuff, 0, 0);
 	//シェーダーにバッファを渡す
@@ -186,8 +191,6 @@ void ModelShader::ModelDrawShader(SimpleMath::Color color, SimpleMath::Vector4 t
 
 	// 深度ステンシルステートの設定
 	pSD.GetContext()->OMSetDepthStencilState(pSD.GetCommonStates()->DepthDefault(), 0);
-
-	//pSD.GetContext()->OMSetDepthStencilState(m_depthStencilState_Nomal.Get(), 0);
 
 	// カリングは左周り
 	pSD.GetContext()->RSSetState(pSD.GetCommonStates()->CullNone());

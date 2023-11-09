@@ -200,6 +200,9 @@
     <Filter Include="Scene\PlayScene\AlchemicalMachine\Object\Composite">
       <UniqueIdentifier>{722ec977-1240-4164-8388-78b07ffa686a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene\PlayScene\Enemy\EnemyState">
+      <UniqueIdentifier>{8299e4ba-c5c3-49bf-a818-bd4bc91831f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -517,6 +520,27 @@
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyMetaAI.h">
       <Filter>Scene\PlayScene\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_UISelectState.h">
+      <Filter>Scene\PlayScene\Tutorial\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_ModelSelectState.h">
+      <Filter>Scene\PlayScene\Tutorial\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_NoneState.h">
+      <Filter>Scene\PlayScene\Tutorial\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Enemy\State\IEnemyState.h">
+      <Filter>Scene\PlayScene\Enemy\EnemyState</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Enemy\State\EnemyState.h">
+      <Filter>Scene\PlayScene\Enemy\EnemyState</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Commons\DrawVariableNum.h">
+      <Filter>Scene\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTexture.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -798,6 +822,24 @@
     <ClCompile Include="Scenes\PlayScene\UI\BaseLv.cpp">
       <Filter>Scene\PlayScene\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_UISelectState.cpp">
+      <Filter>Scene\PlayScene\Tutorial\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_ModelSelectState.cpp">
+      <Filter>Scene\PlayScene\Tutorial\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_NoneState.cpp">
+      <Filter>Scene\PlayScene\Tutorial\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Enemy\State\EnemyState.cpp">
+      <Filter>Scene\PlayScene\Enemy\EnemyState</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\Commons\DrawVariableNum.cpp">
+      <Filter>Scene\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTexture.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -890,26 +932,8 @@
     <None Include="Resources\Shader\BaseLv.hlsli">
       <Filter>Shader\BaseLv</Filter>
     </None>
-    <None Include="Resources\Json\StageData\StageData_1_1.json">
-      <Filter>Json\StageData\Stage1</Filter>
-    </None>
-    <None Include="Resources\Json\StageData\StageData_1_2.json">
-      <Filter>Json\StageData\Stage1</Filter>
-    </None>
-    <None Include="Resources\Json\StageData\StageData_1_3.json">
-      <Filter>Json\StageData\Stage1</Filter>
-    </None>
-    <None Include="Resources\Json\StageData\StageData_1_4.json">
-      <Filter>Json\StageData\Stage1</Filter>
-    </None>
-    <None Include="Resources\Json\StageData\StageData_1_5.json">
-      <Filter>Json\StageData\Stage1</Filter>
-    </None>
     <None Include="Resources\Json\StageData\StageData_2_1.json">
       <Filter>Json\StageData\Stage2</Filter>
-    </None>
-    <None Include="Resources\Json\StageData\StageData_1_6.json">
-      <Filter>Json\StageData\Stage1</Filter>
     </None>
     <None Include="Resources\Json\GameParameter\GameParameter.json">
       <Filter>Json\GameParameterData</Filter>
@@ -919,6 +943,33 @@
     </None>
     <None Include="Resources\Json\EnemyData\EnemyData_Retreat.json">
       <Filter>Json\EnemyData</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\StageData_2_3.json">
+      <Filter>Json\StageData\Stage2</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout.json">
+      <Filter>Json\GameParameterData</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_1.json">
+      <Filter>Json\StageData\Stage1</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_7.json">
+      <Filter>Json\StageData\Stage1</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_2.json">
+      <Filter>Json\StageData\Stage1</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_3.json">
+      <Filter>Json\StageData\Stage1</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_4.json">
+      <Filter>Json\StageData\Stage1</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_5.json">
+      <Filter>Json\StageData\Stage1</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_6.json">
+      <Filter>Json\StageData\Stage1</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

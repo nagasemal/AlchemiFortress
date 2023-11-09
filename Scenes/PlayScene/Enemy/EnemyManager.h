@@ -40,7 +40,6 @@ public:
 
 	const int GetKnokDownEnemyFlag() const { return m_knokDownFlag; }
 	const ENEMY_TYPE GetKnokDownEnemyType() const { return m_knokDownEnemyType; }
-
 	std::list<EnemyObject>* GetEnemyData() { return m_enemyObject.get(); }
 
 private:

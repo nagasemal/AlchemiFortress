@@ -47,6 +47,8 @@ void MoveCamera::Initialize()
 
 void MoveCamera::Update(bool scroll, bool move)
 {
+	scroll;
+
 	auto state = InputSupport::GetInstance().GetMouseState().GetLastState();
 	auto keyboard = InputSupport::GetInstance().GetKeybordState().GetLastState();
 
@@ -61,11 +63,12 @@ void MoveCamera::Update(bool scroll, bool move)
 	// カメラ移動をするか否か
 	if (move)
 	{
-		// マウスの右クリック＆ドラッグでカメラ座標を更新する
-		if (state.rightButton && keyboard.LeftShift)
+		// ホイール長押しでカメラを移動させる
+		if (InputSupport::GetInstance().MiddleButton_Held())
 		{
 			DraggedDistance(state.x, state.y);
 		}
+
 	// マウスの座標を前回の値として保存
 	m_prevX = state.x;
 	m_prevY = state.y;
@@ -73,8 +76,8 @@ void MoveCamera::Update(bool scroll, bool move)
 	}
 
 	// スクロールをするか否か
-	if (scroll)
-	{
+	//if (scroll)
+	//{
 		int value = state.scrollWheelValue - m_prevWheelValue;
 		int newValue = m_scrollWheelValue + value;
 
@@ -105,7 +108,7 @@ void MoveCamera::Update(bool scroll, bool move)
 			m_scrollWheelValue = 0;
 			DirectX::Mouse::Get().ResetScrollWheelValue();
 		}
-	}
+	//}
 
 	// 前回の値を保存
 	m_prevWheelValue = state.scrollWheelValue;

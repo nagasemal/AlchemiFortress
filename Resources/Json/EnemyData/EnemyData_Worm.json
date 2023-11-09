@@ -8,8 +8,20 @@
     "EXP": 20.0,
 
     "MOVEING":[
-        {"TYPE":"Standard","TIME":0.0,"DELAY":0.0,"VALUE":1.00},
-        {"TYPE":"Meandering","TIME":0.0,"DELAY":0.0,"VALUE":1.5}
+      {
+        "TYPE": "Standard",
+        "TIME": 0.0,
+        "DELAY": 0.0,
+        "VALUE": 1.00
+
+        },
+      {
+        "TYPE": "Meandering",
+        "TIME": 0.0,
+        "DELAY": 0.0,
+        "VALUE": 1.5
+
+        }
     ]
   }
 }

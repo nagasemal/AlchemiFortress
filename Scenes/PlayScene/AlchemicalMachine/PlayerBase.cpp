@@ -28,7 +28,7 @@ void PlayerBase::Initialize()
 {
 	m_baseLv = ShareJsonData::GetInstance().GetStageData().resource.lv;
 	m_exp = 0;
-	m_hp = DataManager::GetInstance()->GetNowBaseHP();
+	m_hp = (float)DataManager::GetInstance()->GetNowBaseHP();
 
 	m_data.pos  = SimpleMath::Vector3(0,0,0);
 	m_data.rage = RAGE;
@@ -46,7 +46,9 @@ void PlayerBase::Initialize()
 void PlayerBase::Update()
 {
 	InputSupport& pINP = InputSupport::GetInstance();
-	int enemyKillNum = DataManager::GetInstance()->GetNowEnemyKill();
+	int enemyKillNum = 0;
+		
+	enemyKillNum = DataManager::GetInstance()->GetNowEnemyKill();
 
 	// ‰¼’u‚«
 	auto mouse = pINP.GetMouseState();
@@ -134,7 +136,7 @@ void PlayerBase::Finalize()
 
 }
 
-float PlayerBase::GetNextLvEXP()
+int PlayerBase::GetNextLvEXP()
 {
 	auto gameParam = ShareJsonData::GetInstance().GetGameParameter();
 
@@ -147,7 +149,7 @@ void PlayerBase::Damage(float damage)
 	if (m_invincibleTime >= 1.0f)
 	{
 
-		m_invincibleTime = 0;
+		m_invincibleTime = 0.0f;
 		DataManager::GetInstance()->SetNowBaseHP(DataManager::GetInstance()->GetNowBaseHP() - damage);
 	
 	}

@@ -71,7 +71,6 @@ SimpleMath::Vector2 Explanation::RightExplanationPos()
 {
 	auto device = ShareData::GetInstance().GetDeviceResources();
 	float width = static_cast<float>(device->GetOutputSize().right);
-	float height = static_cast<float>(device->GetOutputSize().bottom);
 
 	return SimpleMath::Vector2(width / 2 - LETTER_ADJUSTMENT_POS_X, LETTER_POS_Y);
 }
@@ -80,7 +79,6 @@ SimpleMath::Vector2 Explanation::MiddleExplanationPos()
 {
 	auto device = ShareData::GetInstance().GetDeviceResources();
 	float width = static_cast<float>(device->GetOutputSize().right);
-	float height = static_cast<float>(device->GetOutputSize().bottom);
 
 	return SimpleMath::Vector2(width / 2, LETTER_POS_Y - LETTER_ADJUSTMENT_POS_Y);
 }
@@ -89,7 +87,6 @@ SimpleMath::Vector2 Explanation::LeftExplanationPos()
 {
 	auto device = ShareData::GetInstance().GetDeviceResources();
 	float width = static_cast<float>(device->GetOutputSize().right);
-	float height = static_cast<float>(device->GetOutputSize().bottom);
 
 	return SimpleMath::Vector2(width / 2 + LETTER_ADJUSTMENT_POS_X, LETTER_POS_Y);
 }

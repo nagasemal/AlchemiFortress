@@ -56,15 +56,8 @@ void AM_Defenser::Finalize()
 {
 }
 
-void AM_Defenser::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
+void AM_Defenser::RenderUI()
 {
-
-	//SpriteLoder& pSL = SpriteLoder::GetInstance();
-	//RECT rect_lv = SpriteCutter(64, 64, m_lv, 0);
-	//m_selectLvUpBox->DrawUI(texture, pSL.GetNumberTexture(), rect_lv);
-
-	//m_repairBox->DrawUI(texture);
-	//m_dismantlingBox->DrawUI(texture);
 
 }
 
@@ -100,27 +93,21 @@ void AM_Defenser::EnemyHit(std::list<EnemyObject>* enemys)
 	//	効果範囲toエネミー
 	for (std::list<EnemyObject>::iterator it = enemys->begin(); it != enemys->end(); it++)
 	{
-
-		bool hitMachine = false;
-
-		hitMachine = (CircleCollider(it->GetCircle(), m_magicCircle));
+		// ダウンキャストを行い、GameObject3D型に変換し判定の処理を得る
+		bool hitMachine = CircleCollider(GetObject3D(),it->GetObject3D());
 
 		if (hitMachine)
 		{
 			it->HitMachine(hitMachine);
 			it->Bouns();
 
-
 			if (m_invincibleFlag) continue;
 
-				// 体力減少
-				m_hp -= (int)it->GetPower();
-				// 自身のHPの3倍の攻撃を与える
-				it->SetHp(it->GetHp() - m_lv);
-
-				m_invincibleFlag = true;
-
-				m_counterFlag = true;
+			// 体力減少
+			m_hp -= (int)it->GetPower();
+			it->HitBullet(it->GetPos() - m_data.pos, m_lv);
+			m_invincibleFlag = true;
+			m_counterFlag = true;
 		}
 	}
 }

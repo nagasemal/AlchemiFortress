@@ -18,9 +18,6 @@ class UserInterface;
 class DrawLine;
 class DrawBox;
 
-class Gauge;
-class AlchemicalMachineManager;
-class MissionRender;
 class AlchemicalMachineObject;
 class MachineExplanation;
 class Particle;
@@ -78,9 +75,11 @@ public:
 
 	// 現在の選択状況からどこにラインを引くか決めます
 	void LinePosSet(PlayScene* pPlayScene,int number);
+	
+	void NextTutorial(PlayScene* pPlayScene);
 
-	// チュートリアル　何処を指しているか
-	void TutorialCursorPos(PlayScene* pPlayScene, int number);
+	SelectionBox* GetTitleSceneButton() { return m_titleSceneBox.get(); }
+	SelectionBox* GetSelectSceneButton() { return m_selectSceneBox.get(); }
 
 private:
 
@@ -97,9 +96,15 @@ private:
 	std::unique_ptr<SelectionBox> m_explanationButton;
 	// チュートリアルモードを解除するボタン
 	std::unique_ptr<SelectionBox> m_tutorialExitButton;
-
-	std::unique_ptr<DrawLine> m_showLine;	// 何を指しているのか分かるようにする
+	// 何処を指しているのかを明確にする選択ボックス
 	std::unique_ptr<DrawBox>  m_showBox;
+
+	// タイトルに戻る選択ボックス
+	std::unique_ptr<SelectionBox>  m_titleSceneBox;
+	// セレクトシーンに戻る選択ボックス
+	std::unique_ptr<SelectionBox>  m_selectSceneBox;
+	// あきらめてリザルトシーンに移行する選択ボックス
+	std::unique_ptr<SelectionBox>  m_resultSceneBox;
 
 	std::unique_ptr<UserInterface> m_backFlame;
 	std::unique_ptr<UserInterface> m_textTexture;
@@ -118,10 +123,16 @@ private:
 	AnimationData m_tutorialTime;
 
 	int m_selectNumber;
-	// 0 何もない
+	// 0 何もない ウェーブのチュートリアル番号が格納されている
 	std::vector<int> m_tutorialNumber;
 
 	int m_maxSelectVal;
 
+	// particleの出現を制御する変数
+	float m_particleTime;
+
 	std::unique_ptr<Particle> m_particle_Select;
+
+	//std::unique_ptr<TutorialStateContext> m_tutorialState;
+
 };

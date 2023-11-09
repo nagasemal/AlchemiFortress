@@ -18,6 +18,10 @@ public:
 	void ResetAnimationData() { m_animationData_Second.time = m_animationData_First.time = 0.0f; }
 	void SetColor(SimpleMath::Color color) { m_color = color; }
 
+	void SetAnimationFlag(bool flag) { m_animationFlag = flag; }
+
+	void SetPosRage(SimpleMath::Vector2 pos,SimpleMath::Vector2 rage);
+
 private:
 
 	AnimationData m_animationData_First;
@@ -33,5 +37,8 @@ private:
 	SimpleMath::Vector2 m_boxPos;
 
 	SimpleMath::Color m_color;
+
+	// 触れている判定を無視して強制的にアニメーションをさせるフラグ
+	bool m_animationFlag;
 
 };

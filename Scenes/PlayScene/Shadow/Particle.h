@@ -85,6 +85,7 @@ private:
 
 	// 頂点配列
 	std::vector<DirectX::VertexPositionColorTexture>				m_vertices;
+
 	// パーティクル配列
 	std::list<ParticleUtility>										m_particleUtility;
 	// 頂点シェーダ

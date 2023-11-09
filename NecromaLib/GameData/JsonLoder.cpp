@@ -211,98 +211,163 @@ Stage_Data Json::FileLoad_StageData(const std::string filePath)
 	ifs.close();
 	Stage_Data status;
 
+
+	// ウェーブのクリア条件を生成する
+	auto createCondition = [&](std::string objectName,std::string arrayName,std::vector<Stage_Condition>& push_condition) {
+
+		picojson::object& stageData = val.get<picojson::object>()[objectName].get<picojson::object>();
+		picojson::array& stageConditions = stageData[arrayName].get<picojson::array>();
+
+		// 要素分回す
+		for (picojson::array::iterator it = stageConditions.begin(); it != stageConditions.end(); it++) {
+
+			Stage_Condition condition;
+			condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
+			condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
+
+			push_condition.push_back(condition);
+		
+		}
+
+	};
+
+
+	// マシン設置
+	createCondition("Conditions_Machine", "MACHINE_SPAWN",status.condition_Machine);
+
+	// マシン錬金
+	createCondition("Conditions_Alchemi", "MACHINE_ALCHEMI", status.condition_Alchemi);
+
+	// マシン破壊
+	createCondition("Conditions_Destroy", "MACHINE_DESTROY", status.condition_Destroy);
+
+	// マシン修繕
+	createCondition("Conditions_Recovery", "MACHINE_RECOVERY", status.condition_Recovery);
+
+	// マシン強化
+	createCondition("Conditions_LvUp", "MACHINE_LVUP", status.condition_LvUP);
+
+	// 拠点LV
+	createCondition("Conditions_BaseLv", "BASE_LV", status.condition_BaseLv);
+
+	// エネミー討伐
+	createCondition("Conditions_Enemy", "ENEMY_KNOCKDOWN", status.condition_Enemy);
+
+	// 指定時間
+	createCondition("Conditions_Time", "TIME", status.condition_Time);
+
+	// リソース獲得
+	createCondition("Conditions_Resource", "RESOURCE", status.condition_Resource);
+
 	//	読み込んだデータを構造体に代入
 	// クリア条件
 	// stageDataからMACHINE_SPAWNの配列の中身を得る
-	picojson::object& stageData_Machine = val.get<picojson::object>()["Conditions_Machine"].get<picojson::object>();
-	picojson::array& stageCondition_Machine = stageData_Machine["MACHINE_SPAWN"].get<picojson::array>();
+	//picojson::object& stageData_Machine = val.get<picojson::object>()["Conditions_Machine"].get<picojson::object>();
+	//picojson::array& stageCondition_Machine = stageData_Machine["MACHINE_SPAWN"].get<picojson::array>();
+	//
+	//// 要素分回す
+	//for (picojson::array::iterator it = stageCondition_Machine.begin(); it != stageCondition_Machine.end(); it++) {
+	//
+	//	Stage_Condition condition;
+	//	condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
+	//	condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
+	//
+	//	if (condition.condition != "False")
+	//	{
+	//		status.condition_Machine.push_back(condition);
+	//	}
+	//}
+	//
+	//// 錬金条件を得る
+	//picojson::object& stageData_Alchemi = val.get<picojson::object>()["Conditions_Alchemi"].get<picojson::object>();
+	//picojson::array& stageCondition_Alchemi = stageData_Alchemi["MACHINE_ALCHEMI"].get<picojson::array>();
+	//
+	//// 要素分回す
+	//for (picojson::array::iterator it = stageCondition_Alchemi.begin(); it != stageCondition_Alchemi.end(); it++) {
+	//
+	//	Stage_Condition condition;
+	//	condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
+	//	condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
+	//
+	//	if (condition.condition != "False")
+	//	{
+	//		status.condition_Alchemi.push_back(condition);
+	//	}
+	//}
+	//
+	//// 拠点のLVの達成条件を得る
+	//picojson::object& stageData_Lv = val.get<picojson::object>()["Conditions_BaseLv"].get<picojson::object>();
+	//picojson::array& stageCondition_Lv = stageData_Lv["BASE_LV"].get<picojson::array>();
+	//
+	//// 要素分回す
+	//for (picojson::array::iterator it = stageCondition_Lv.begin(); it != stageCondition_Lv.end(); it++) {
+	//
+	//	Stage_Condition condition;
+	//	condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
+	//	condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
+	//
+	//	if (condition.condition != "False")
+	//	{
+	//		status.condition_BaseLv.push_back(condition);
+	//	}
+	//}
+	//
+	//// stageDataからENEMY_KNOCKDOWNの配列の中身を得る
+	//picojson::object& stageData_Enemy = val.get<picojson::object>()["Conditions_Enemy"].get<picojson::object>();
+	//picojson::array& stageCondition_Enemy = stageData_Enemy["ENEMY_KNOCKDOWN"].get<picojson::array>();
+	//
+	//for (picojson::array::iterator it = stageCondition_Enemy.begin(); it != stageCondition_Enemy.end(); it++) {
+	//
+	//	Stage_Condition condition;
+	//	condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
+	//	condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
+	//
+	//	if (condition.condition != "False")
+	//	{
+	//		status.condition_Enemy.push_back(condition);
+	//	}
+	//
+	//}
+	//
+	//// stageDataからTimeの配列の中身を得る
+	//picojson::object& stageData_Time = val.get<picojson::object>()["Conditions_Time"].get<picojson::object>();
+	//picojson::array& stageCondition_Time = stageData_Time["TIME"].get<picojson::array>();
+	//
+	//for (picojson::array::iterator it = stageCondition_Time.begin(); it != stageCondition_Time.end(); it++) {
+	//
+	//	Stage_Condition condition;
+	//	condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
+	//	condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
+	//
+	//	if (condition.condition != "False")
+	//	{
+	//		status.condition_Time.push_back(condition);
+	//	}
+	//}
+//
+	//// stageDataからクリアまでのリソースの中身を得る
+	//picojson::object& stageData_Resource = val.get<picojson::object>()["Conditions_Resource"].get<picojson::object>();
+	//picojson::array& stageCondition_Resource = stageData_Resource["RESOURCE"].get<picojson::array>();
+	//
+	//for (picojson::array::iterator it = stageCondition_Resource.begin(); it != stageCondition_Resource.end(); it++)
+	//{
+	//	Stage_Condition condition;
+	//	condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
+	//	condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
+	//
+	//	if (condition.condition != "False")
+	//	{
+	//		status.condition_Resource.push_back(condition);
+	//	}
+	//}
 
-	// 要素分回す
-	for (picojson::array::iterator it = stageCondition_Machine.begin(); it != stageCondition_Machine.end(); it++) {
-
-		Stage_Condition condition;
-		condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
-		condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
-
-		if (condition.condition != "False")
-		{
-			status.condition_Machine.push_back(condition);
-		}
-	}
-
-	// 錬金条件を得る
-	picojson::object& stageData_Alchemi = val.get<picojson::object>()["Conditions_Alchemi"].get<picojson::object>();
-	picojson::array& stageCondition_Alchemi = stageData_Alchemi["MACHINE_ALCHEMI"].get<picojson::array>();
-
-	// 要素分回す
-	for (picojson::array::iterator it = stageCondition_Alchemi.begin(); it != stageCondition_Alchemi.end(); it++) {
-
-		Stage_Condition condition;
-		condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
-		condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
-
-		if (condition.condition != "False")
-		{
-			status.condition_Alchemi.push_back(condition);
-		}
-	}
-
-	// 拠点のLVの達成条件を得る
-	picojson::object& stageData_Lv = val.get<picojson::object>()["Conditions_BaseLv"].get<picojson::object>();
-	picojson::array& stageCondition_Lv = stageData_Lv["BASE_LV"].get<picojson::array>();
-
-	// 要素分回す
-	for (picojson::array::iterator it = stageCondition_Lv.begin(); it != stageCondition_Lv.end(); it++) {
-
-		Stage_Condition condition;
-		condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
-		condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
-
-		if (condition.condition != "False")
-		{
-			status.condition_BaseLv.push_back(condition);
-		}
-	}
-
-
-	// stageDataからENEMY_KNOCKDOWNの配列の中身を得る
-	picojson::object& stageData_Enemy = val.get<picojson::object>()["Conditions_Enemy"].get<picojson::object>();
-	picojson::array& stageCondition_Enemy = stageData_Enemy["ENEMY_KNOCKDOWN"].get<picojson::array>();
-
-	for (picojson::array::iterator it = stageCondition_Enemy.begin(); it != stageCondition_Enemy.end(); it++) {
-
-		Stage_Condition condition;
-		condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
-		condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
-
-		if (condition.condition != "False")
-		{
-			status.condition_Enemy.push_back(condition);
-		}
-
-	}
-
-	// stageDataからTimeの配列の中身を得る
-	picojson::object& stageData_Time = val.get<picojson::object>()["Conditions_Time"].get<picojson::object>();
-	picojson::array& stageCondition_Time = stageData_Time["TIME"].get<picojson::array>();
-
-	for (picojson::array::iterator it = stageCondition_Time.begin(); it != stageCondition_Time.end(); it++) {
-
-		Stage_Condition condition;
-		condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
-		condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
-
-		if (condition.condition != "False")
-		{
-			status.condition_Time.push_back(condition);
-		}
-	}
 
 	// エネミーのスポーンタイミングと種類、場所を得る
 	picojson::object& enemy_span = val.get<picojson::object>()["ENEMY_SPAWNTIME"].get<picojson::object>();
 	picojson::array& enemys = enemy_span["ENEMYS"].get<picojson::array>();
 
-	for (picojson::array::iterator it = enemys.begin(); it != enemys.end(); it++) {
+	for (picojson::array::iterator it = enemys.begin(); it != enemys.end(); it++) 
+	{
 
 		Enemys_Spawn enemySpawn;
 		enemySpawn.type = ChangeEnemy(it->get<picojson::object>()["TYPE"].get<std::string>());
@@ -387,7 +452,8 @@ Stage_Data Json::FileLoad_StageData(const std::string filePath)
 	bool lastWave = val.get<picojson::object>()["LastWave"].get<bool>();
 
 	// このWAVEで出現する敵のLV
-	int enemyLv = (int)val.get<picojson::object>()["EnemyLv"].get<double>();
+	int enemyLv = 0;
+	enemyLv = (int)val.get<picojson::object>()["EnemyLv"].get<double>();
 
 	status.lastWave = lastWave;
 

@@ -4,6 +4,9 @@
 #include "NecromaLib/Singleton/ShareJsonData.h"
 #include "NecromaLib/Singleton/InputSupport.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
+#include "NecromaLib/Singleton/SoundData.h"
+
+#include "Scenes/Commons/DrawVariableNum.h"
 
 #include "Scenes/PlayScene/Camera/MoveCamera.h"
 #include "AM_None.h"
@@ -32,16 +35,21 @@
 // 魔法陣出現の高さ(大)
 #define MAGICCIRCLE_HEIGHT	0.3f 
 
-AlchemicalMachineManager::AlchemicalMachineManager():
+AlchemicalMachineManager::AlchemicalMachineManager() :
 	m_allHitObjectToMouse(),
 	m_selectNumber(-1),
-	m_prevSelectMachinePos(0,0,0),
+	m_prevSelectMachinePos(0, 0, 0),
 	m_mpPulsTimer(),
-	m_AMnums{0,0,0,0,0,0},
+	m_AMnums{ 0,0,0,0,0,0 },
 	m_saveWheelValue(0),
 	m_scrollValue(),
 	m_rotationStop(),
-	m_spawnMachine(MACHINE_TYPE::NONE)
+	m_crystalPulsVal(),
+	m_mpPulsVal(),
+	m_spawnMachine		(MACHINE_TYPE::NONE),
+	m_destroyMachine	(MACHINE_TYPE::NONE),
+	m_recoveryMachine	(MACHINE_TYPE::NONE),
+	m_lvUpMachine		(MACHINE_TYPE::NONE)
 {
 }
 
@@ -93,8 +101,7 @@ void AlchemicalMachineManager::Initialize()
 	m_magicCircle_Field = std::make_unique<MagicCircle>();
 	m_magicCircle_Field	->Initialize();
 
-	m_machineNumRender	= std::make_unique<Number>();
-	m_machineNumRender	->SetRage({ 0.25f,0.25f });
+	m_lineVariable = std::make_unique<DrawVariableNum>(SimpleMath::Vector2(1280 / 1.38f,720 / 1.05f),SimpleMath::Vector2(1.0f,1.0f));
 
 	CreateAMMachine();
 	LvToObjectActives(1);
@@ -116,13 +123,10 @@ void AlchemicalMachineManager::Update(
 	auto mouse		= pINP.GetMouseState();
 	auto keyboard	= pINP.GetKeybordState();
 
-	bool leftRelease	= mouse.leftButton == mouse.RELEASED;
-	bool leftDrag		= mouse.leftButton == mouse.HELD;
-
-	leftDrag;
+	bool leftRelease	= pINP.LeftButton_Release();
 
 	// 回転を止めるフラグ
-	if (mouse.rightButton == mouse.PRESSED && !keyboard.GetLastState().LeftShift)
+	if (pINP.RightButton_Press())
 	{
 		m_rotationStop = !m_rotationStop;
 	}
@@ -130,11 +134,25 @@ void AlchemicalMachineManager::Update(
 	// プレイヤー拠点
 	auto pPlayerBase = fieldManager->GetPlayerBase();
 
+	// 選択ラインを変更する
+	m_lineVariable->Update(1,pPlayerBase->GetBaseLv());
+	LvToObjectActives(m_lineVariable->GetNumber());
+
 	// 現在出ているアルケミカルマシンの数
 	int amNum = 0;
 
 	// Noneの出ている数
 	int amNum_Nomal = 0;
+
+	// MPが回復した量をリセットする
+	m_mpPulsVal = 0;
+
+	// クリスタルが回復した量をリセットする
+	m_crystalPulsVal = 0;
+
+	// セレクトマネージャーのアップデートを回す
+	m_selectManager->Update(fieldManager);
+ 
 
 	// Mp追加までの時間計測
 	m_mpPulsTimer += DeltaTime::GetInstance().GetDeltaTime();
@@ -142,20 +160,11 @@ void AlchemicalMachineManager::Update(
 	// 全てのアルケミカルマシンToマウスを判定する
 	m_allHitObjectToMouse = false;
 
-	// 設置されていないならばNoneを返す
-	m_spawnMachine = MACHINE_TYPE::NONE;
-
-	// セレクトマネージャーのアップデートを回す
-	m_selectManager->Update(fieldManager);
+	// 通知系変数は全てNoneを返す
+	m_spawnMachine = m_destroyMachine = m_recoveryMachine = m_lvUpMachine = MACHINE_TYPE::NONE;
 
 	// パーティクルの更新
 	Update_Particle();
-
-	// 召喚マシンを選択中ならば選択ラインをホイールで決める
-	if(m_selectManager->GetHitMouseToSelectBoxEven())
-	{
-		Update_None(pPlayerBase->GetBaseLv());
-	}
 
 	// 何もないところで左クリックをすると選択状態が解除される
 	if (leftRelease && !m_machineExplanation->OnMouse())
@@ -204,6 +213,7 @@ void AlchemicalMachineManager::Update(
 	}
 	else
 	{
+
 		m_machineExplanation->ResetMoveTime();
 		m_magicCircle->DeleteMagicCircle();
 
@@ -258,25 +268,46 @@ void AlchemicalMachineManager::Update(
 			Dismantling(i);
 		}
 
+		// 修繕されたことを受け取る
+		if (m_AMObject[i]->GetRepairFlag())
+		{
+			m_recoveryMachine	= m_AMObject[i]->GetModelID();
+		}
+
+		// LvUpされたことを受け取る
+		if (m_AMObject[i]->GetLvUpFlag())
+		{
+			m_lvUpMachine		= m_AMObject[i]->GetModelID();
+		}
+
+		// MP追加処理 (リカバリーの時のみ機能)
+		if (m_mpPulsTimer >= MPPLUSTIME && !m_rotationStop && m_AMObject[i]->GetModelID() == MACHINE_TYPE::RECOVERY)
+		{
+			m_mpPulsVal += (int)m_AMObject[i]->GetMachineEffectValue();
+		}
+
 		// アルケミカルマシンの個別更新処理
 		Update_Attacker(i, enemys);
 		Update_Defenser(i, enemys);
 		Update_Mining(i, fieldManager,enemys);
 		Update_Upper(i, enemys);
-	}
-
-	// MP追加処理
-	if (m_mpPulsTimer >= MPPLUSTIME && !m_rotationStop)
-	{
-		m_mpPulsTimer = 0;
-		pDM.SetNowMP(pDM.GetNowMP() + ((int)MPPLUSNUM * (amNum - amNum_Nomal)));
-
-		// 処理順の影響でRecoveryのみここで処理をする
-		Update_Recovery(enemys);
+		Update_Recovery(i,enemys);
 	}
 
 	// マシンを召喚する処理
 	SpawnAMMachine(leftRelease);
+
+	// 魔力リソースを増やす
+	if (m_mpPulsTimer >= MPPLUSTIME && !m_rotationStop)
+	{
+		m_mpPulsTimer = 0;
+		m_mpPulsVal += ((int)MPPLUSNUM * ((amNum - amNum_Nomal) / 4));
+		pDM.SetNowMP(pDM.GetNowMP() + m_mpPulsVal);
+	}
+
+	// クリスタルリソースを増やす
+	pDM.SetNowCrystal(pDM.GetNowCrystal() + m_crystalPulsVal);
+
 
 	// 錬金ボタンが押されたら所持数を増やす
 	if (m_selectManager->GetManufacturingFlag())
@@ -325,7 +356,7 @@ void AlchemicalMachineManager::Render()
 			// モデルの描画			オブジェクトに割り当てられたIDをもとにモデル配列からデータを取り出す
 			m_AMObject[i]->ModelRender(m_AMFilter->HandOverAMModel(m_AMObject[i]->GetModelID()),
 									   m_AMFilter->GetRingModel(m_AMObject[i]->GetModelID()),true);
-			m_AMObject[i]->Draw();
+
 		}
 	}
 
@@ -338,10 +369,12 @@ void AlchemicalMachineManager::Render()
 			// モデルの描画			オブジェクトに割り当てられたIDをもとにモデル配列からデータを取り出す
 			m_AMObject[i]->ModelRender(m_AMFilter->HandOverAMModel(m_AMObject[i]->GetModelID()),
 				m_AMFilter->GetRingModel(m_AMObject[i]->GetModelID()), false);
+		
+			m_AMObject[i]->Draw();
+		
 		}
+
 	}
-
-
 
 	if (m_selectNumber != -1)
 	{
@@ -373,17 +406,12 @@ void AlchemicalMachineManager::DrawUI()
 {
 	m_selectManager->MagicCircleRender();
 
+	m_selectManager->Render();
+
 	// オブジェクトセレクトのrenderを呼び出す Noneを省くために1スタート
 	for (int i = 1; i < (int)MACHINE_TYPE::NUM; i++)
 	{
-		m_selectManager->ModelRender(m_AMFilter->HandOverAMModel((MACHINE_TYPE)i), i,
-			m_AMFilter->GetRingModel((MACHINE_TYPE)i));
-
-		// 所持数描画
-		m_machineNumRender->SetNumber(m_AMnums[i]);
-		m_machineNumRender->SetPosition({580 + 120.0f * i,110.0f});
-		m_machineNumRender->Render();
-
+		m_selectManager->ModelRender(i);
 	}
 
 	m_selectManager->RenderUI(m_AMnums);
@@ -400,10 +428,13 @@ void AlchemicalMachineManager::DrawUI()
 											m_AMFilter->GetRingModel(m_AMObject[m_selectNumber]->GetModelID()),
 											m_AMObject[m_selectNumber].get());
 
-		m_AMObject[m_selectNumber]->RenderUI(m_selectManager->GetTextuer());
+		m_AMObject[m_selectNumber]->RenderUI();
 		m_AMObject[m_selectNumber]->SelectRenderUI_Common();
 
 	}
+
+	m_lineVariable->Render();
+
 }
 
 void AlchemicalMachineManager::Finalize()
@@ -483,13 +514,14 @@ void AlchemicalMachineManager::Update_None(int baseLv)
 	if (m_scrollValue >= baseLv)	m_scrollValue = baseLv;
 
 	// 選択するラインを決める
-	LvToObjectActives(m_scrollValue);
+
 }
 
 void AlchemicalMachineManager::Update_Attacker(int index, EnemyManager* enemys)
 {
 	if (m_AMObject[index]->GetHP() <= 0) return;
 	if (m_AMObject[index]->GetModelID() != MACHINE_TYPE::ATTACKER) return;
+
 
 	AM_Attacker* attacker = dynamic_cast<AM_Attacker*>(m_AMObject[index].get());
 
@@ -507,6 +539,7 @@ void AlchemicalMachineManager::Update_Attacker(int index, EnemyManager* enemys)
 					 m_AMObject[j]->GetHP() >= 0;
 
 		if(flag)	 attacker->AllAlchemicalMachine(m_AMObject[j].get());
+
 	}
 
 	// 弾を発射する
@@ -536,32 +569,26 @@ void AlchemicalMachineManager::Update_Mining(int index, FieldObjectManager* fiel
 
 	AM_Mining* mining = dynamic_cast<AM_Mining*>(m_AMObject[index].get());
 
-	mining->AllFieldObject(fieldManager);
+	m_crystalPulsVal += mining->AllFieldObject(fieldManager);
 	mining->HitEnemy(enemys->GetEnemyData());
 
 	m_particle_Mining->Update(mining->GetPos(), !mining->GetCrystalFlag(),mining->GetColor());
 
 }
 
-void AlchemicalMachineManager::Update_Recovery(EnemyManager* enemys)
+void AlchemicalMachineManager::Update_Recovery(int index,EnemyManager* enemys)
 {
 	DataManager& pDM = *DataManager::GetInstance();
 
-	for (int i = 0; i < m_AMObject.size(); i++)
-	{
+	if (m_AMObject[index]->GetHP() <= 0) return;
+	if (m_AMObject[index]->GetModelID() != MACHINE_TYPE::RECOVERY) return;
 
-		if (m_AMObject[i]->GetHP() <= 0) continue;
-		if (m_AMObject[i]->GetModelID() != MACHINE_TYPE::RECOVERY) continue;
+	AM_Recovery* recovery = dynamic_cast<AM_Recovery*>(m_AMObject[index].get());
 
-		AM_Recovery* recovery = dynamic_cast<AM_Recovery*>(m_AMObject[i].get());
+	recovery->HitEnemy(enemys->GetEnemyData());
 
-		recovery->MPPuls(&pDM);
-		recovery->HitEnemy(enemys->GetEnemyData());
-
-		// 回収状態をパーティクルで示す
-		m_particle_Recovery->OnShot(recovery->GetPos(), true, recovery->GetColor());
-
-	}
+	// 回収状態をパーティクルで示す
+	m_particle_Recovery->OnShot(recovery->GetPos(), m_mpPulsTimer >= MPPLUSTIME && !m_rotationStop, recovery->GetColor());
 }
 
 void AlchemicalMachineManager::Update_Upper(int index,EnemyManager* enemyManager)
@@ -687,6 +714,9 @@ void AlchemicalMachineManager::SpawnAMMachine(bool leftButtom)
 
 		m_particle_Put->OnShot(m_AMObject[m_selectNumber]->GetPos(),true, m_AMObject[m_selectNumber]->GetColor());
 
+		SoundData::GetInstance().PlaySystemSE(XACT_WAVEBANK_SYSTEMSE_MACHINESPAWN);
+
+
 	}
 
 }
@@ -699,6 +729,9 @@ void AlchemicalMachineManager::Dismantling(int index)
 
 	// ライン情報を取得
 	int saveLine = m_AMObject[index]->GetLine();
+
+	// 通知を行うため、破壊時通知用変数にIDを入れる
+	m_destroyMachine = m_AMObject[index]->GetModelID();
 
 	// 本取得
 	m_AMObject[index] = m_AMFilter->HandOverAMClass(MACHINE_TYPE::NONE);

@@ -14,7 +14,7 @@ bool GameObjct2D::HitObject(SimpleMath::Vector2 pos)
 {
 	return	PointerToBox(pos,
 		-m_data.rage / 2 + m_data.pos,
-		m_data.rage / 2 + m_data.pos);
+		 m_data.rage / 2 + m_data.pos);
 }
 
 bool GameObjct2D::HitObject_RageSet(SimpleMath::Vector2 pos, float width, float height, float percent)

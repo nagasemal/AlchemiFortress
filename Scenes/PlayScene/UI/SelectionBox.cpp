@@ -5,14 +5,15 @@
 
 #include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/SoundData.h"
+#include "NecromaLib/Singleton/DeltaTime.h"
 
 #include "NecromaLib/GameData/SpriteCutter.h"
 
 SelectionBox::SelectionBox(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage)
 {
 
-	m_data.pos = pos;
-	m_data.rage = rage;
+	m_saveData.pos = m_data.pos = pos;
+	m_saveData.rage = m_data.rage = rage;
 
 	m_hitMouseFlag = false;
 	m_selectFlag = false;
@@ -214,7 +215,7 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textu
 	SimpleMath::Vector2 box_Pos = { m_data.pos.x,m_data.pos.y };
 
 	// 選択BOX
-	pSB->Draw(texture.Get(), box_Pos, &rect, colour, 0.0f, DirectX::XMFLOAT2(64 / 2, 64 / 2), m_data.rage);
+	pSB->Draw(texture.Get(), box_Pos, &rect, colour, 0.0f, DirectX::XMFLOAT2(rect.right / 2, rect.bottom / 2), m_data.rage);
 
 	// 中に表示するテクスチャがある場合
 	if (pulsTexture)

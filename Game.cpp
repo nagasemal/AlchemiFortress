@@ -23,7 +23,7 @@ using Microsoft::WRL::ComPtr;
 
 Game::Game() noexcept(false)
 {
-
+    //DXGI_FORMAT_B8G8R8A8_UNORM
     m_deviceResources = std::make_unique<DX::DeviceResources>(DXGI_FORMAT_B8G8R8A8_UNORM,DXGI_FORMAT_D24_UNORM_S8_UINT);
     // TODO: Provide parameters for swapchain format, depth/stencil format, and backbuffer count.
     //   Add DX::DeviceResources::c_AllowTearing to opt-in to variable rate displays.
@@ -108,6 +108,7 @@ void Game::Update(DX::StepTimer const& timer)
 
     float elapsedTime = float(timer.GetElapsedSeconds());
     pDeltaT->SetDeltaTime(elapsedTime);
+    pDeltaT->SetDoubleSpeed(1.0f);
 
     //===[ 更新処理 ]===//
         //->　キーボード
@@ -157,23 +158,20 @@ void Game::Render()
 
     // 射影行列の取得
     projection = mCamera->GetProjectionMatrix();
-
     // ビュー行列の取得
     view = mCamera->GetViewMatrix();
 
     // TODO: Add your rendering code here.
     context;
 
-    ///*===[ デバッグ文字描画 ]===*/
-    //std::wostringstream oss;
-
-    //oss << "fps:" << m_timer.GetFramesPerSecond();
-
-    //m_debugFont->AddString(oss.str().c_str(), SimpleMath::Vector2(0.f, 0.f));
+    /*===[ デバッグ文字描画 ]===*/
+    std::wostringstream oss;
+    oss << "fps:" << m_timer.GetFramesPerSecond();
+    m_debugFont->AddString(oss.str().c_str(), SimpleMath::Vector2(0.f, 0.f));
 
     m_SceneManager.get()->Render();
-    //m_debugFont->Render(m_commonStates.get());
 
+    m_debugFont->Render(m_commonStates.get());
     m_deviceResources->PIXEndEvent();
 
     // Show the new frame.
@@ -190,8 +188,9 @@ void Game::Clear()
     auto renderTarget = m_deviceResources->GetRenderTargetView();
     auto depthStencil = m_deviceResources->GetDepthStencilView();
 
-    context->ClearRenderTargetView(renderTarget, Colors::CornflowerBlue);
+    context->ClearRenderTargetView(renderTarget, Colors::Black);
     context->ClearDepthStencilView(depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
     context->OMSetRenderTargets(1, &renderTarget, depthStencil);
 
     // Set the viewport.
@@ -264,10 +263,10 @@ void Game::CreateDeviceDependentResources()
     auto device  = m_deviceResources->GetD3DDevice();
     auto context = m_deviceResources->GetD3DDeviceContext();
 
-    m_commonStates = std::make_unique<CommonStates>(device);
-    m_SpriteBatch = std::make_unique<SpriteBatch>(context);
-    m_debugFont = std::make_unique<Imase::DebugFont>(device,context,L"Resources/Font/SegoeUI_18.spritefont");
-    m_SpriteBatch = std::make_unique<SpriteBatch>(context);
+    m_commonStates  = std::make_unique<CommonStates>(device);
+    m_SpriteBatch   = std::make_unique<SpriteBatch>(context);
+    m_debugFont     = std::make_unique<Imase::DebugFont>(device,context,L"Resources/Font/SegoeUI_18.spritefont");
+    m_SpriteBatch   = std::make_unique<SpriteBatch>(context);
     m_EffectFactory = std::make_unique<DirectX::EffectFactory>(device);
 
     ShareData* pSD = &ShareData::GetInstance();

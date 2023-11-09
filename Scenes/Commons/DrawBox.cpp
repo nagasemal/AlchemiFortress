@@ -15,14 +15,16 @@ DrawBox::DrawBox(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage, float lineRa
 	m_animationData_Second = AnimationData();
 	m_rotate_easing = 0.0f;
 
-	m_boxPos = m_data.pos = pos;
-	m_data.rage = rage;
+	m_saveData.pos = m_boxPos = m_data.pos = pos;
+	m_saveData.rage = m_data.rage = rage;
 
 	m_color = Colors::Black;
 
 	m_lineRage_Vertical.x = m_lineRage_Beside.y = lineRage;
 
 	m_rect = RECT{ 1,1,2,2 };
+
+	m_animationFlag = false;
 
 }
 
@@ -35,7 +37,7 @@ void DrawBox::Update()
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
 
 	// ŽžŠÔŒv‘ª
-	if (m_hitMouseFlag)	m_animationData_First += deltaTime * 1.1f;
+	if (m_hitMouseFlag || m_animationFlag)	m_animationData_First += deltaTime * 1.1f;
 	else				m_animationData_First -= deltaTime * 1.1f;
 
 	HitMouse();
@@ -118,5 +120,13 @@ void DrawBox::Draw()
 	//	0.0f,
 	//	SimpleMath::Vector2(0, 0));
 
+
+}
+
+void DrawBox::SetPosRage(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage)
+{
+
+	m_data.pos = m_saveData.pos = pos;
+	m_data.rage = m_saveData.rage = rage;
 
 }

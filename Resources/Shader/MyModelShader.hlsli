@@ -29,19 +29,20 @@ cbuffer Parameters_User : register(b1)
 {
     // シャドウマップ上の射影空間へ変換する行列
     float4x4 LightViewProj          : packoffset(c0);
-    float3   LightPosition          : packoffset(c4);
+    float3   LightPosition2          : packoffset(c4);
     float    MaxDepth               : packoffset(c4.w);
     float    Offset                 : packoffset(c5);
     float    VSMFilterEnable        : packoffset(c5.y);
 };
 
 // プログラム側で変化する時間変数を入れる
-cbuffer TimeUpdate : register(b2)
+cbuffer UserParam : register(b2)
 {
     float4 Time;
     float4 PaintColor;
     float4 LimLightColor;
     float4 Eyes;    // 注視点
+    float4 LightPosition;
 }
 
 struct PSInput

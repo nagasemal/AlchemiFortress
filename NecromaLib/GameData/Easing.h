@@ -28,9 +28,6 @@ public:
 		SimpleMath::Vector3 look,
 		SimpleMath::Vector3 up);
 
-	// 距離減衰なく動けます。少し重い。
-	static SimpleMath::Vector3 Moveing(SimpleMath::Vector3 a, SimpleMath::Vector3 b);
-
 	// 向きを出します
 	static float LookAt(SimpleMath::Vector3 a, SimpleMath::Vector3 b);
 

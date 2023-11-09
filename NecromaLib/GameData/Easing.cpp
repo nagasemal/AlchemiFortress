@@ -73,27 +73,6 @@ SimpleMath::Matrix Easing::CalcLookAt(SimpleMath::Matrix matrix, SimpleMath::Vec
 	return matrix;
 }
 
-SimpleMath::Vector3 Easing::Moveing(SimpleMath::Vector3 a, SimpleMath::Vector3 b)
-{
-
-	float sb, sbx, sbz, ax, az, bx, bz = 0.f;
-
-	bx = b.x / 2;
-	bz = b.z / 2;
-
-	ax = a.x / 2;
-	az = a.z / 2;
-
-	sbx = ax - bx;
-	sbz = az - bz;
-
-	sb = sqrtf(sbx * sbx + sbz * sbz);
-
-	SimpleMath::Vector3 out = SimpleMath::Vector3(sbx / sb, 0, sbz / sb);
-
-	return out;
-}
-
 float Easing::LookAt(SimpleMath::Vector3 a, SimpleMath::Vector3 b)
 {
 	float sb, sbx, sbz, ax, az, bx, bz = 0.f;

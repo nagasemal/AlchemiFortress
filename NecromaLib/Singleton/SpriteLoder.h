@@ -62,6 +62,12 @@ public:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetAlchemiButtonTexture() { return m_alchemiSelectTexture; }
 	const wchar_t* GetAlchemiButtonTexturePath() { return L"Resources/Textures/AlchemiButton.png"; }
 
+	// 錬金用選択ボックスのカバーテクスチャを渡す
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetAlchemiButtonCoverTexture() { return m_alchemiCoverTexture; }
+
+	// マシンUIのカーソルテクスチャを渡す
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetMachineUICursorTexture() { return m_machineUICursorTexture; }
+
 	// マウスのテクスチャを渡す
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetMouseTexture() { return m_mouseTexture; }
 	const wchar_t* GetMouseTexturePath() { return L"Resources/Textures/Mouse.png"; }
@@ -96,6 +102,9 @@ public:
 	// 「製造」文字アイコンを渡す
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetManufacturingTexture() { return m_ManufacturingTexture; }
 	const wchar_t* GetManufacturingTexturePath() { return L"Resources/Textures/Seizou.png"; }
+
+	// マシンアイコンを渡す
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetMachineIconTexture() { return m_machineIconTexture; }
 
 	// ステージクリア、失敗を示すアイコンを渡す
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetStageClearTextTexture() { return m_stageClearTextTexture; }
@@ -155,6 +164,12 @@ public:
 	// 画像を読み込む
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> LoadingPngFile(const wchar_t* filename, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>& spriteResource);
 
+public:
+
+	void PlaySceneLoad();
+	void TitleSceneLoad();
+	void ResultSceneLoad();
+
 private:
 	SpriteLoder();
 	static SpriteLoder* instance;
@@ -164,6 +179,12 @@ private:
 
 	// 錬金用選択ボックスのテクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_alchemiSelectTexture;
+
+	// 錬金用選択ボックスのカバーテクスチャ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_alchemiCoverTexture;
+
+	// マシンUIのカーソルテクスチャ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_machineUICursorTexture;
 
 	// マウスのテクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_mouseTexture;
@@ -179,6 +200,10 @@ private:
 
 	// 製造の文字テクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_ManufacturingTexture;
+
+	// マシンアイコン
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_machineIconTexture;
+
 
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_explanationTextTexture;
 
@@ -201,7 +226,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_stageClearTextTexture;
 
 	// 魔法陣のテクスチャ
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_MagicCircleTexture[6];
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_MagicCircleTexture[6 + 1];
 
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_titleLogo;
 
@@ -221,7 +246,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_machineNormalMap[5];
 	// マシンテクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_machineTexture[5];
-
 
 	// エフェクト用のテクスチャ(オーラ表現)
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_auraBaseTexture;

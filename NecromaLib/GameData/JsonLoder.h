@@ -105,9 +105,13 @@ struct Stage_Data
 {
 	std::vector<Stage_Condition>		condition_Machine;			// ステージのクリア条件 (マシン配置条件)
 	std::vector<Stage_Condition>		condition_Alchemi;			// ステージのクリア条件 (マシン錬金条件)
+	std::vector<Stage_Condition>		condition_Destroy;			// ステージのクリア条件 (マシン破壊条件)
+	std::vector<Stage_Condition>		condition_Recovery;			// ステージのクリア条件 (マシン修繕条件)
+	std::vector<Stage_Condition>		condition_LvUP;				// ステージのクリア条件 (マシン強化条件)
 	std::vector<Stage_Condition>		condition_Enemy;			// ステージのクリア条件 (エネミー討伐)
 	std::vector<Stage_Condition>		condition_BaseLv;			// ステージのクリア条件 (拠点のLV条件)
 	std::vector<Stage_Condition>		condition_Time;				// ステージのクリア条件 (生存時間,規定時間)
+	std::vector<Stage_Condition>		condition_Resource;			// ステージのクリア条件 (リソース群(MP,Crystal))
 
 	std::vector<Enemys_Spawn>			enemys_Spawn;				// エネミーの出現情報			名前がRandomの場合"メタAI"に出現を任せる
 

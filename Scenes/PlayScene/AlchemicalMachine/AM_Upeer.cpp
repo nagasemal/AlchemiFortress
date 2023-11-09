@@ -82,7 +82,7 @@ void AM_Upper::Finalize()
 	//}
 }
 
-void AM_Upper::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
+void AM_Upper::RenderUI()
 {
 
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
@@ -93,7 +93,7 @@ void AM_Upper::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture
 	{
 		RECT rect_element = SpriteCutter(64, 64, 2 + i, 0);
 
-		m_selectBox[i]->DrawUI(texture, pSL.GetElementTexture(), rect_element);
+		m_selectBox[i]->DrawUI(pSL.GetSelectBoxTexture(), pSL.GetElementTexture(), rect_element);
 	}
 }
 
@@ -107,11 +107,16 @@ void AM_Upper::HitEnemy(std::list<EnemyObject>* enemy)
 	for (std::list<EnemyObject>::iterator it = enemy->begin(); it != enemy->end(); it++)
 	{
 
-		if (CircleCollider(it->GetCircle(), GetCircle()))
+		// ダウンキャストを行い、GameObject3D型に変換し判定の処理を得る
+		bool hitMachine = CircleCollider(GetObject3D(), it->GetObject3D());
+
+		if (hitMachine)
 		{
+			
 			// 体力減少
 			m_hp -= (int)it->GetPower();
 			m_invincibleFlag = true;
+
 		}
 	}
 }

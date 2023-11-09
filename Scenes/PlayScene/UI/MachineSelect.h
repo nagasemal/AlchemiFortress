@@ -35,7 +35,7 @@ public:
 	void Finalize()				override;
 
 	// モデルを描画するための関数
-	void DisplayObject(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture,DirectX::Model* model,SimpleMath::Matrix view,SimpleMath::Matrix proj, DirectX::Model* secondModel = nullptr);
+	void DisplayObject();
 
 public:
 
@@ -51,9 +51,11 @@ public:
 	MACHINE_TYPE GetMachineType()									{ return m_selectMachineType;}
 
 	SelectionBox* GetMachineBox()									{ return m_machineBox.get();}
-	SelectionBox* GetManufacturingBox()								{ return m_selectionAlchemi.get(); }
 
 	void SetChangeColorFlag(bool flag)								{ m_changeColorFlag = flag;}
+
+	// 現在UIが規定位置に存在するか否か
+	bool SelectUIFlag();
 
 private:
 
@@ -66,19 +68,10 @@ private:
 	// 選択ボックス(マシン)
 	std::unique_ptr<SelectionBox> m_machineBox;
 
-	// 選択ボックス(錬金ボタン用)
-	std::unique_ptr<SelectionBox> m_selectionAlchemi;
-
-	// 必要数表示
-	std::unique_ptr<Number>		  m_numberRender;
-
 	// ボックスの色味
 	SimpleMath::Color m_boxColor;
 	bool m_changeColorFlag;
 
 	// 色を変化させる時間変数
 	float m_colorChangeTime;
-
-	std::unique_ptr<AlchemicalMachineObject> m_machineObject;
-
 };

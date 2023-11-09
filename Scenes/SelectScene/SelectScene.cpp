@@ -60,6 +60,24 @@ void SelectScene::Initialize()
 
 	m_stageNumber = std::make_unique<Number>(NUMBER_POS, SimpleMath::Vector2{ 2.0f,2.0f});
 	m_stageNumber->SetNumber(m_selectStageNumber);
+
+
+
+	ShareData& pSD = ShareData::GetInstance();
+	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
+	fx->SetDirectory(L"Resources/Models");
+
+	m_skySphere = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/SkySphere.cmo", *fx);
+
+	m_skySphere->UpdateEffects([&](IEffect* effect)
+		{
+			// 今回はライトだけ欲しい
+			auto lights = dynamic_cast<IEffectLights*>(effect);
+			// 光の当たり方変更
+			lights->SetAmbientLightColor(SimpleMath::Color(0.8f, 0.7f, 0.4f, 0.8f));
+
+		});
+
 }
 
 GAME_SCENE SelectScene::Update()
@@ -130,15 +148,18 @@ void SelectScene::Draw()
 	ShareData& pSD = ShareData::GetInstance();
 	auto pSB = pSD.GetSpriteBatch();
 
-	/*===[ デバッグ文字描画 ]===*/
-	std::wostringstream oss;
-	oss << "SelectScene";
-	ShareData::GetInstance().GetDebugFont()->AddString(oss.str().c_str(), SimpleMath::Vector2(0.f, 60.f));
+	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
+	modelData = SimpleMath::Matrix::CreateScale({ 1.8f,1.8f,1.8f });
+	modelData = SimpleMath::Matrix::CreateTranslation({ 0.0f,70.0f,0.0f });
+
+	m_skySphere->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(),true);
+
 
 	pSB->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
 	m_machineDraw->Render();
 	m_missionDraw->Render();
+	
 	pSB->End();
 
 }
@@ -154,6 +175,7 @@ void SelectScene::DrawUI()
 	pSB->End();
 
 	m_nextSceneBox->Draw();
+	m_stageNumber->SetColor(SimpleMath::Color(1.0f,1.0f,1.0f,1.0f));
 	m_stageNumber->Render();
 
 }

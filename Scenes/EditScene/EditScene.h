@@ -82,10 +82,12 @@ private:
 	// Œˆ’èƒ{ƒ^ƒ“
 	std::unique_ptr<SelectionBox> m_decisionButton;
 
-	std::unique_ptr<TitleLogo>			m_titleLogo;
+	std::unique_ptr<TitleLogo>	 m_titleLogo;
 
 
 	std::unique_ptr<DirectX::Model> m_model;
+	std::unique_ptr<DirectX::Model> m_model_2;
+
 	std::unique_ptr<AM_Attacker> m_machine;
 
 	std::unique_ptr<MoveCamera> m_camera;

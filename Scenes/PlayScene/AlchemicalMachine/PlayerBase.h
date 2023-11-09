@@ -40,7 +40,7 @@ public:
 	int			GetBaseLv()		const { return m_baseLv;}
 	float		GetHP()			const { return m_hp; }
 	float		GetExp()		const { return m_exp; }
-	float		GetNextLvEXP();
+	int		GetNextLvEXP();
 
 	bool		GetHitMouse()	const { return m_hitMouseFlag;}
 	bool		GetLvUpTiming() const { return m_lvUpTiming; }

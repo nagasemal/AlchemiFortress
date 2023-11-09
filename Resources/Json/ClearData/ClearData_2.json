@@ -3,26 +3,26 @@
     "MACHINES": [
       {
         "ELEMENT": "Nomal",
-        "LV": 2,
+        "LV": 1,
         "NAME": "Attacker",
         "NUMBER": 0
       },
       {
         "ELEMENT": "Nomal",
-        "LV": 1,
+        "LV": 2,
         "NAME": "Attacker",
         "NUMBER": 1
       },
       {
         "ELEMENT": "Nomal",
-        "LV": 1,
+        "LV": 2,
         "NAME": "Attacker",
         "NUMBER": 2
       },
       {
         "ELEMENT": "Nomal",
         "LV": 1,
-        "NAME": "Attacker",
+        "NAME": "Mining",
         "NUMBER": 3
       },
       {
@@ -94,13 +94,13 @@
       {
         "ELEMENT": "Nomal",
         "LV": 1,
-        "NAME": "None",
+        "NAME": "Attacker",
         "NUMBER": 15
       },
       {
         "ELEMENT": "Nomal",
         "LV": 1,
-        "NAME": "None",
+        "NAME": "Recovery",
         "NUMBER": 16
       },
       {

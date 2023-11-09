@@ -3,9 +3,15 @@
 
 DeltaTime* DeltaTime::instance = nullptr;
 
+float DeltaTime::GetNomalDeltaTime()
+{
+	return m_deltaTime;
+}
+
 DeltaTime::DeltaTime():
 	m_deltaTime(0),
-	m_stopTimeFlag(false)
+	m_stopTimeFlag(false),
+	m_doubleSpeed(1)
 {
 
 }

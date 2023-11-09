@@ -21,16 +21,23 @@ public:
 
 	static DeltaTime& GetInstance() { return *instance; }
 
-	float GetDeltaTime() { return m_deltaTime * !m_stopTimeFlag; }
-	void SetDeltaTime(float time) { m_deltaTime = time; }
+	// ゲーム内デルタタイムを返します
+	float GetDeltaTime() { return (m_deltaTime * m_doubleSpeed) * !m_stopTimeFlag; }
 
-	void SetStopFlag(bool flag) { m_stopTimeFlag = flag; }
+	// 加算減算が行われていない素のデルタタイムを返します
+	float GetNomalDeltaTime();
+
+	void SetDeltaTime(float time)		{ m_deltaTime = time; }
+	void SetDoubleSpeed(float speed)	{ m_doubleSpeed = speed; }
+	void SetStopFlag(bool flag)			{ m_stopTimeFlag = flag; }
 
 private:
 	DeltaTime();
 	static DeltaTime* instance;
 
 	float m_deltaTime;
+
+	float m_doubleSpeed;
 
 	bool m_stopTimeFlag;
 

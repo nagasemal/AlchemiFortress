@@ -49,7 +49,7 @@
         "CONDITION": "",
         "SPAWNTIME": 13,
         "SPAWN_X": 10,
-        "SPAWN_Y": 1,
+        "SPAWN_Y": 0,
         "SPAWN_Z": 10,
         "LV": 1,
         "TYPE": "Slime"
@@ -58,7 +58,7 @@
         "CONDITION": "",
         "SPAWNTIME": 17,
         "SPAWN_X": 12,
-        "SPAWN_Y": 1,
+        "SPAWN_Y": 0,
         "SPAWN_Z": -8,
         "LV": 1,
         "TYPE": "Worm"
@@ -76,15 +76,16 @@
     "LV": 1,
     "HP": 500,
     "MINING": 1,
-    "MP": 500,
+    "MP": 300,
     "RECOVERY": 0,
     "UPPER": 0
   },
   "TUTORIAL": [
     { "NUMBER": 11 },
     { "NUMBER": 5 },
+    { "NUMBER": 16 },
     { "NUMBER": 14 },
-    { "NUMBER": 99 }
+    { "NUMBER": 0 }
   ],
   "LastWave": false,
   "EnemyLv": 1

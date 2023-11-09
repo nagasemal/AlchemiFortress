@@ -25,6 +25,7 @@
 class AlchemicalMachineObject;
 class Number;
 class MoveCamera;
+class DrawVariableNum;
 
 class AlchemicalMachineManager
 {
@@ -48,15 +49,17 @@ public:
 //アクセサ
 public:
 
-	const bool GetHitMouseFlag(int number)									const { return m_AMObject[number]->GetHitMouse();}
+	const bool GetHitMouseFlag(int number)											const { return m_AMObject[number]->GetHitMouse();}
 
 	const std::vector<std::shared_ptr<AlchemicalMachineObject>> GetAlchemicalMachineObject()		const { return m_AMObject; }
 	const std::shared_ptr<AlchemicalMachineObject>* GetAlchemicalMachineObject(int index)			const { return &m_AMObject[index];}
 
 	std::list<std::unique_ptr<Bullet>>* GetBullet()									{ return &m_bullets;}
 
-	const std::unique_ptr<MachineSelectManager>* GetMachineSelect()			const { return &m_selectManager; }
-	const std::unique_ptr<MachineExplanation>* GetMachineExplanation()		const { return &m_machineExplanation;}
+	const std::unique_ptr<MachineSelectManager>* GetMachineSelect()					const { return &m_selectManager; }
+	const std::unique_ptr<MachineExplanation>* GetMachineExplanation()				const { return &m_machineExplanation;}
+
+	const std::unique_ptr<DrawVariableNum>* GetVariableNum()						const { return &m_lineVariable;}
 
 	Model* GetSelectModel();
 
@@ -64,10 +67,25 @@ public:
 	void ReloadResource();
 
 	// マシンが設置されたことを知らせるフラグ
-	const MACHINE_TYPE SpawnMachineNotification() const { return m_spawnMachine; }
+	const MACHINE_TYPE SpawnMachineNotification()									const { return m_spawnMachine; }
+
+	// マシンが解体されたことを知らせるフラグ
+	const MACHINE_TYPE DestroyMachineNotification()									const { return m_destroyMachine; }
+
+	// マシンがLvUpされたことを知らせるフラグ
+	const MACHINE_TYPE LvUpMachineNotification()									const { return m_lvUpMachine; }
+
+	// マシンが修繕されたことを知らせるフラグ
+	const MACHINE_TYPE RepairBoxMachineNotification()								const { return m_recoveryMachine; }
+
+	// 現在のフレームで魔力が回収された量を返します
+	const int GetPulsMpVal()														const { return m_mpPulsVal; }
+
+	// 現在のフレームで結晶が回収された量を返します
+	const int GetPulsCrystalVal()													const { return m_crystalPulsVal; }
 
 	// 回転停止のフラグ
-	const bool GetRotateStopFlag()	const { return m_rotationStop; }
+	const bool GetRotateStopFlag()													const { return m_rotationStop; }
 
 	// マシンの選択番号を変更する
 	void SetSelectMachineNumber(int index) { m_selectNumber = index; }
@@ -86,7 +104,7 @@ private:
 
 	void Update_Mining(int index, FieldObjectManager* fieldManager, EnemyManager* enemyManager);
 
-	void Update_Recovery(EnemyManager* enemyManager);
+	void Update_Recovery(int index,EnemyManager* enemyManager);
 
 	void Update_Upper(int index,EnemyManager* enemyManager);
 
@@ -139,8 +157,8 @@ private:
 	// アルケミカルマシンモデルの受け渡し
 	std::unique_ptr<AlchemicalMachineFilter> m_AMFilter;
 
-	// 所持数を示す
-	std::unique_ptr<Number> m_machineNumRender;
+	// 現在のラインを示す
+	std::unique_ptr<DrawVariableNum> m_lineVariable;
 
 	//===後で消すテスト用変数
 	std::unique_ptr<DirectX::GeometricPrimitive> m_testBox;	//  仮置き弾モデル
@@ -187,7 +205,22 @@ private:
 	// マシンが設置されたことを通知する変数
 	MACHINE_TYPE m_spawnMachine;
 
+	// マシンが破壊されたことを通知する変数
+	MACHINE_TYPE m_destroyMachine;
+
+	// マシンが修繕されたことを通知する変数
+	MACHINE_TYPE m_recoveryMachine;
+
+	// マシンがLvUpされたことを通知する変数
+	MACHINE_TYPE m_lvUpMachine;
+
 	// 現在保有しているアルケミカルマシンの個数
 	int m_AMnums[MACHINE_TYPE::NUM];
+
+	// 魔力リソースを回復させた数
+	int m_mpPulsVal;
+
+	// 結晶リソースを回復させた数
+	int m_crystalPulsVal;
 
 };

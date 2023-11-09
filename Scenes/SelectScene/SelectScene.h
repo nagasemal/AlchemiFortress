@@ -45,6 +45,8 @@ private:
 	// 選択したステージの番号
 	int m_selectStageNumber;
 
+	std::unique_ptr<DirectX::Model>		m_skySphere;
+
 	// セレクトシーン内のカメラ
 	std::unique_ptr<SelectCamera> m_selectCamera;
 

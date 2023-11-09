@@ -5,8 +5,8 @@
 
 DrawArrow::DrawArrow(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage,int direction)
 {
-	m_data.pos = pos;
-	m_data.rage = rage;
+	m_saveData.pos = m_data.pos = pos;
+	m_saveData.rage = m_data.rage = rage;
 	m_direction = direction;
 
 	m_boxColor = { 1.0f,1.0f,1.0f,1.0f };

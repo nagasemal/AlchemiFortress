@@ -49,6 +49,7 @@ bool ParticleUtility::Update()
 
 	// 姿勢に回転を加える
 	m_quaternion = q * m_quaternion;
+
 	// スケール
 	m_nowScale = SimpleMath::Vector3::Lerp(m_startScale, m_endScale, 1.0f - m_life / m_startLife);
 	// 色

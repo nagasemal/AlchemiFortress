@@ -34,7 +34,7 @@ public:
 	// I—¹ˆ—
 	void Finalize()						override;
 
-	void RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture) override;
+	void RenderUI() override;
 
 	void LvUp() override;
 
@@ -46,5 +46,7 @@ public:
 private:
 
 	float m_selectModeTime;
+
+	std::unique_ptr<DirectX::GeometricPrimitive> m_testBox;
 
 };

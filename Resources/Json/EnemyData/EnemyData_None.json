@@ -8,7 +8,13 @@
     "EXP": 1.0,
 
     "MOVEING":[
-        {"TYPE":"Standerd","TIME":0.0,"DELAY":0.0,"VALUE":1.0}
+      {
+        "TYPE": "Standerd",
+        "TIME": 0.0,
+        "DELAY": 0.0,
+        "VALUE": 1.0
+      }
+
     ]
   }
 }

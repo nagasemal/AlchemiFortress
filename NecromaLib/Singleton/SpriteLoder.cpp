@@ -16,8 +16,18 @@ void SpriteLoder::Loading()
 	// 錬金用選択ボタンの取得
 	LoadingPngFile(L"Resources/Textures/AlchemiButton.png",m_alchemiSelectTexture);
 
+	// 錬金用選択ボックスカバーの取得
+	LoadingPngFile(L"Resources/Textures/ButtonCover.png", m_alchemiCoverTexture);
+
+
+	LoadingPngFile(L"Resources/Textures/SelectMachineUICursor.png", m_machineUICursorTexture);
+
 	// マウステクスチャの取得
 	LoadingPngFile(L"Resources/Textures/Mouse.png", m_mouseTexture);
+
+	// マシンアイコン取得
+	LoadingPngFile(L"Resources/Textures/MachineIcons.png", m_machineIconTexture);
+	
 
 	LoadingPngFile(L"Resources/Textures/NormalMap.png", m_machineNormalMap[0]);
 	LoadingPngFile(L"Resources/Textures/ModelTexture/Fire_NormalMap.png", m_machineNormalMap[1]);
@@ -146,64 +156,13 @@ void SpriteLoder::Loading()
 
 	// マシン魔法陣
 	{
-		// 魔法陣テクスチャ_None
-		DirectX::CreateWICTextureFromFile(
-			ShareData::GetInstance().GetDevice(),
-			L"Resources/Textures/MagicCircle/MajicCircle.png",
-			nullptr,
-			m_MagicCircleTexture[MACHINE_TYPE::NONE].ReleaseAndGetAddressOf()
-		);
-
-		// 魔法陣テクスチャ_Attacker
-		DirectX::CreateWICTextureFromFile(
-			ShareData::GetInstance().GetDevice(),
-			L"Resources/Textures/MagicCircle/Attacker.png",
-			nullptr,
-			m_MagicCircleTexture[MACHINE_TYPE::ATTACKER].ReleaseAndGetAddressOf()
-		);
-
-		// 魔法陣テクスチャ_Defenser
-		DirectX::CreateWICTextureFromFile(
-			ShareData::GetInstance().GetDevice(),
-			L"Resources/Textures/MagicCircle/Defencer.png",
-			nullptr,
-			m_MagicCircleTexture[MACHINE_TYPE::DEFENSER].ReleaseAndGetAddressOf()
-		);
-
-		// 魔法陣テクスチャ_Upper
-		DirectX::CreateWICTextureFromFile(
-			ShareData::GetInstance().GetDevice(),
-			L"Resources/Textures/MagicCircle/Upper.png",
-			nullptr,
-			m_MagicCircleTexture[MACHINE_TYPE::UPPER].ReleaseAndGetAddressOf()
-		);
-
-		// 魔法陣テクスチャ_Recovery
-		DirectX::CreateWICTextureFromFile(
-			ShareData::GetInstance().GetDevice(),
-			L"Resources/Textures/MagicCircle/Attacker.png",
-			nullptr,
-			m_MagicCircleTexture[MACHINE_TYPE::RECOVERY].ReleaseAndGetAddressOf()
-		);
-
-		// 魔法陣テクスチャ_Mining
-		DirectX::CreateWICTextureFromFile(
-			ShareData::GetInstance().GetDevice(),
-			L"Resources/Textures/MagicCircle/Attacker.png",
-			nullptr,
-			m_MagicCircleTexture[MACHINE_TYPE::MINING].ReleaseAndGetAddressOf()
-		);
-	}
-
-	// 説明用テクスチャ
-	{
-		//LoadingPngFile(L"Resources/Textures/Explanation/Attacker.png", m_explanationTexture[INSTRUCTION_TYPE::NONE]);
-		//LoadingPngFile(L"Resources/Textures/Explanation/Attacker.png", m_explanationTexture[INSTRUCTION_TYPE::ATTACKER]);
-		//LoadingPngFile(L"Resources/Textures/Explanation/Defencer.png", m_explanationTexture[INSTRUCTION_TYPE::DEFENSER]);
-		//LoadingPngFile(L"Resources/Textures/Explanation/Upper.png", m_explanationTexture[INSTRUCTION_TYPE::UPPER]);
-		//LoadingPngFile(L"Resources/Textures/Explanation/Recovery.png", m_explanationTexture[INSTRUCTION_TYPE::RECOVERY]);
-		//LoadingPngFile(L"Resources/Textures/Explanation/Excavator.png", m_explanationTexture[INSTRUCTION_TYPE::MINING]);
-		//LoadingPngFile(L"Resources/Textures/Explanation/Attacker.png", m_explanationTexture[INSTRUCTION_TYPE::OPERATION]);
+		LoadingPngFile(L"Resources/Textures/MagicCircle/MajicCircle.png", m_MagicCircleTexture[MACHINE_TYPE::NONE]);
+		LoadingPngFile(L"Resources/Textures/MagicCircle/Attacker.png", m_MagicCircleTexture[MACHINE_TYPE::ATTACKER]);
+		LoadingPngFile(L"Resources/Textures/MagicCircle/Defencer.png", m_MagicCircleTexture[MACHINE_TYPE::DEFENSER]);
+		LoadingPngFile(L"Resources/Textures/MagicCircle/Upper.png", m_MagicCircleTexture[MACHINE_TYPE::UPPER]);
+		LoadingPngFile(L"Resources/Textures/MagicCircle/Attacker.png", m_MagicCircleTexture[MACHINE_TYPE::RECOVERY]);
+		LoadingPngFile(L"Resources/Textures/MagicCircle/Attacker.png", m_MagicCircleTexture[MACHINE_TYPE::MINING]);
+		LoadingPngFile(L"Resources/Textures/MagicCircle/EnemySpawn.png", m_MagicCircleTexture[6]);
 	}
 
 }
@@ -226,12 +185,14 @@ void SpriteLoder::Finalize()
 Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> SpriteLoder::LoadingPngFile
 (const wchar_t* filename, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>& spriteResource)
 {
-	DirectX::CreateWICTextureFromFile(
-		ShareData::GetInstance().GetDevice(),
-		filename,
-		nullptr,
-		spriteResource.ReleaseAndGetAddressOf()
-	);
+
+
+		DirectX::CreateWICTextureFromFile(
+			ShareData::GetInstance().GetDevice(),
+			filename,
+			nullptr,
+			spriteResource.ReleaseAndGetAddressOf()
+		);
 
 	return spriteResource;
 }

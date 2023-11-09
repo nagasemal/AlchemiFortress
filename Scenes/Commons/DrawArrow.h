@@ -22,6 +22,8 @@ public:
 	// •`‰æ
 	void Draw()					override;
 
+	void SetDirection(int direction) { m_direction = direction; }
+
 private:
 
 	int m_direction;

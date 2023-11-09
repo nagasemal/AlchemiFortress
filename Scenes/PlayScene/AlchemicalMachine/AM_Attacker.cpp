@@ -96,6 +96,7 @@ void AM_Attacker::AllAlchemicalMachine(AlchemicalMachineObject* object)
 {
 		if (CircleCollider(object->GetMagicCircle(), GetCircle()))
 		{
+			
 			m_powerUPFlag = true;
 
 			//強化
@@ -104,11 +105,13 @@ void AM_Attacker::AllAlchemicalMachine(AlchemicalMachineObject* object)
 			m_bulletStatus.speed	 = m_saveBulletStatus.speed	  * 1.15f;
 			m_bulletStatus.span		 = m_saveBulletStatus.span	  * 0.95f;
 			m_bulletStatus.lossMp	 = (int)((float)m_saveBulletStatus.lossMp  * 0.15f);
+
 		}
 }
 
 bool AM_Attacker::BulletRequest(std::list<EnemyObject>* enemys)
 {
+
 	DataManager* pDataM = DataManager::GetInstance();
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
 
@@ -117,8 +120,12 @@ bool AM_Attacker::BulletRequest(std::list<EnemyObject>* enemys)
 	//	効果範囲toエネミー
 	for (std::list<EnemyObject>::iterator it = enemys->begin(); it != enemys->end(); it++)
 	{
+
+		// ダウンキャストを行い、GameObject3D型に変換し判定の処理を得る
+		bool hitMachine = CircleCollider(GetObject3D(), it->GetObject3D());
+
 		// 自機とエネミーの当たり判定
-		if (CircleCollider(it->GetCircle(), GetCircle()) && !m_invincibleFlag)
+		if (hitMachine && !m_invincibleFlag)
 		{
 			// ダメージを受ける
 			m_hp -= (int)it->GetPower();
@@ -126,7 +133,7 @@ bool AM_Attacker::BulletRequest(std::list<EnemyObject>* enemys)
 			m_invincibleFlag = true;
 		}
 
-		if (CircleCollider(it->GetCircle(), m_magicCircle))
+		if (CircleCollider(it->GetCircle(), m_magicCircle) && it->GetColliderActive())
 		{
 			// スパン毎に生成
 			if (m_timer >= m_bulletStatus.span && pDataM->GetNowMP() > 0)
@@ -160,7 +167,7 @@ Bullet AM_Attacker::GetBulletData()
 	return Bullet(data, m_color, m_data.pos,m_targetPos);
 }
 
-void AM_Attacker::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
+void AM_Attacker::RenderUI()
 {
 
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
@@ -171,7 +178,7 @@ void AM_Attacker::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> text
 	{
 		RECT rect_element = SpriteCutter(64, 64, 2 + i, 0);
 
-		m_selectBox[i]->DrawUI(texture, pSL.GetElementTexture(), rect_element);
+		m_selectBox[i]->DrawUI(pSL.GetSelectBoxTexture(), pSL.GetElementTexture(), rect_element);
 	}
 }
 

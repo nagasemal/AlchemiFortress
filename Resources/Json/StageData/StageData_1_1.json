@@ -11,7 +11,7 @@
     "ENEMY_KNOCKDOWN": [
       {
         "TYPE": "All",
-        "VALUE": 1
+        "VALUE": -1
       }
     ]
   },
@@ -27,6 +27,38 @@
     "MACHINE_ALCHEMI": [
       {
         "TYPE": "Attacker",
+        "VALUE": -1
+      }
+    ]
+  },
+  "Conditions_Destroy": {
+    "MACHINE_DESTROY": [
+      {
+        "TYPE": "Attacker",
+        "VALUE": -1
+      }
+    ]
+  },
+  "Conditions_Recovery": {
+    "MACHINE_RECOVERY": [
+      {
+        "TYPE": "Attacker",
+        "VALUE": -1
+      }
+    ]
+  },
+  "Conditions_LvUp": {
+    "MACHINE_LVUP": [
+      {
+        "TYPE": "Attacker",
+        "VALUE": -1
+      }
+    ]
+  },
+  "Conditions_Resource": {
+    "RESOURCE": [
+      {
+        "TYPE": "MP",
         "VALUE": -1
       }
     ]
@@ -53,7 +85,7 @@
         "CONDITION": "",
         "SPAWNTIME": 8,
         "SPAWN_X": 10,
-        "SPAWN_Y": 1,
+        "SPAWN_Y": 0,
         "SPAWN_Z": 10,
         "LV": 1,
         "TYPE": "Slime"
@@ -76,7 +108,8 @@
   },
   "TUTORIAL": [
     { "NUMBER": 1 },
-    { "NUMBER": 99 }
+    { "NUMBER": 14 },
+    { "NUMBER": 0 }
   ],
   "LastWave": false,
   "EnemyLv": 1

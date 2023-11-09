@@ -46,7 +46,34 @@ void EnemyManager::Initialize()
 	m_enemyModel = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Slime.cmo", *fx);
 
 	// エネミーの数値取得
-	ShareJsonData::GetInstance().LoadingJsonFile_Enemy();
+	auto pSJD = &ShareJsonData::GetInstance(); 
+	pSJD->LoadingJsonFile_Enemy();
+
+	ReloadEnemyData();
+
+	//// ランダム生成でない場合初めから生成をしておく
+	//if (pSJD->GetStageData().enemys_Spawn[0].type != ENEMY_TYPE::ENMEY_NONE)
+	//{
+	//	// 初めから出現させるエネミーの情報を取得しておく
+	//	for (int i = 0; i < pSJD->GetStageData().enemys_Spawn.size(); i++)
+	//	{
+	//		
+	//		EnemyObject object = GetEnemyStatus(ENEMY_TYPE::SLIME, i);
+	//		m_enemyObject->push_back(*std::make_unique<EnemyObject>(object));
+	//	
+	//	}
+	//}
+	//else
+	//{
+	//	// 初めから出現させるエネミーの情報を取得しておく
+	//	for (int i = 0; i < pSJD->GetStageData().condition_Enemy.size(); i++)
+	//	{
+	//
+	//		EnemyObject object = GetRandomEnemy();
+	//		m_enemyObject->push_back(*std::make_unique<EnemyObject>(object));
+	//	
+	//	}
+	//}
 }
 
 void EnemyManager::Update(SimpleMath::Vector3 basePos)
@@ -58,7 +85,6 @@ void EnemyManager::Update(SimpleMath::Vector3 basePos)
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
 
 	DataManager& pDM = *DataManager::GetInstance();
-	ShareJsonData& pSJD = ShareJsonData::GetInstance();
 
 	// 毎秒初期化
 	m_knokDownFlag = 0;
@@ -68,47 +94,50 @@ void EnemyManager::Update(SimpleMath::Vector3 basePos)
 	m_totalTimer += deltaTime;
 
 
-	// ランダムで出現
-	if (pSJD.GetStageData().enemys_Spawn[0].type == ENEMY_TYPE::ENMEY_NONE)
-	{
-		if (m_timer >= pSJD.GetStageData().enemys_Spawn[0].spawnTime)
-		{
-			EnemyObject object = GetRandomEnemy();
-
-			m_enemyObject->push_back(*std::make_unique<EnemyObject>(object));
-			// エフェクト表示
-			m_particle_spawn->OnShot(object.GetPos(), true);
-
-			// 次のエネミーを呼び出す準備
-			m_timer = 0.0f;
-
-		}
-	}
-	else
-	{
-		// 時間が来たら生成する
-		if (m_enemyNums < pSJD.GetStageData().enemys_Spawn.size())
-		{
-			if (m_timer >= pSJD.GetStageData().enemys_Spawn[m_enemyNums].spawnTime)
-			{
-				EnemyObject object = GetEnemyStatus(ENEMY_TYPE::SLIME, m_enemyNums);
-
-				m_enemyObject->push_back(*std::make_unique<EnemyObject>(object));
-				// エフェクト表示
-				m_particle_spawn->OnShot(object.GetPos(), true);
-
-				// 次のエネミーを呼び出す準備
-				m_enemyNums++;
-			}
-		}
-
-	}
+	//// ランダムで出現
+	//if (pSJD.GetStageData().enemys_Spawn[0].type == ENEMY_TYPE::ENMEY_NONE)
+	//{
+	//	if (m_timer >= pSJD.GetStageData().enemys_Spawn[0].spawnTime)
+	//	{
+	//		EnemyObject object = GetRandomEnemy();
+	//
+	//		m_enemyObject->push_back(*std::make_unique<EnemyObject>(object));
+	//		// エフェクト表示
+	//		m_particle_spawn->OnShot(object.GetPos(), true);
+	//
+	//		// 次のエネミーを呼び出す準備
+	//		m_timer = 0.0f;
+	//
+	//	}
+	//}
+	//else
+	//{
+	//	// 時間が来たら生成する
+	//	if (m_enemyNums < pSJD.GetStageData().enemys_Spawn.size())
+	//	{
+	//		if (m_timer >= pSJD.GetStageData().enemys_Spawn[m_enemyNums].spawnTime)
+	//		{
+	//			EnemyObject object = GetEnemyStatus(ENEMY_TYPE::SLIME, m_enemyNums);
+	//
+	//			m_enemyObject->push_back(*std::make_unique<EnemyObject>(object));
+	//			// エフェクト表示
+	//			m_particle_spawn->OnShot(object.GetPos(), true);
+	//
+	//			// 次のエネミーを呼び出す準備
+	//			m_enemyNums++;
+	//		}
+	//	}
+	//
+	//}
 
 	// 更新処理
 	for (std::list<EnemyObject>::iterator it = m_enemyObject->begin(); it != m_enemyObject->end(); it++)
 	{
+		// 生成された瞬間を取得してパーティクルを出す
+		m_particle_spawn->OnShot(it->GetPos(), it->GetAliveTimer() <= 0.0f);
+
 		// 子クラスからfalseで消す
-		if (it->GetHp() <= 0)
+		if (it->GetDethFlag())
 		{
 			pDM.SetNowEnemyKill(pDM.GetNowEnemyKill() + 1);
 
@@ -119,6 +148,7 @@ void EnemyManager::Update(SimpleMath::Vector3 basePos)
 			m_falmeTotalEnemyExp += it->GetEXP();
 
 			m_particle_delete->OnShot(it->GetPos(), true);
+
 			it->Finalize();
 			it = m_enemyObject->erase(it);
 
@@ -139,8 +169,8 @@ void EnemyManager::Render()
 	//std::wostringstream oss;
 	//oss << "EnemyNum - " << m_enemyObject->size();
 	//pSD.GetDebugFont()->AddString(oss.str().c_str(), SimpleMath::Vector2(400.f, 20.f));
-
 	//m_particle_hit	->Render();
+	
 	m_particle_delete	->Render();
 	m_particle_spawn	->Render();
 
@@ -171,6 +201,37 @@ void EnemyManager::ReloadEnemyData()
 {
 	m_enemyNums = 0;
 	m_timer = 0;
+
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
+
+	// 中身が存在しない場合は飛ばす
+	if(pSJD.GetStageData().enemys_Spawn.size() == 0) return;
+
+	// ランダム生成でない場合初めから生成をしておく
+	if (pSJD.GetStageData().enemys_Spawn[0].type != ENEMY_TYPE::ENMEY_NONE)
+	{
+		// 初めから出現させるエネミーの情報を取得しておく
+		for (int i = 0; i < pSJD.GetStageData().enemys_Spawn.size(); i++)
+		{
+
+			EnemyObject object = GetEnemyStatus(ENEMY_TYPE::SLIME, i);
+			m_enemyObject->push_back(*std::make_unique<EnemyObject>(object));
+		
+		}
+	}
+	else
+	{
+		// 初めから出現させるエネミーの情報を取得しておく
+		for (int i = 0; i < pSJD.GetStageData().condition_Enemy[0].value; i++)
+		{
+
+			EnemyObject object = GetRandomEnemy();
+			object.SetAliveTimer(pSJD.GetStageData().enemys_Spawn[0].spawnTime * (1 + i));
+			m_enemyObject->push_back(*std::make_unique<EnemyObject>(object));
+
+		}
+	}
+
 }
 
 //　Jsonファイルから読み取った情報を元にマシンを製造する
@@ -181,7 +242,7 @@ EnemyObject EnemyManager::GetEnemyStatus(ENEMY_TYPE type,int spawnNumber)
 	Enemys_Spawn enemySpawn = pSJD.GetStageData().enemys_Spawn[spawnNumber];
 
 	// エネミーオブジェクトを生成
-	EnemyObject enemy(type, enemySpawn.spawnPos, enemySpawn.lv);
+	EnemyObject enemy(type, enemySpawn.spawnPos, enemySpawn.lv,enemySpawn.spawnTime);
 
 	// エネミーのパラメータを生成
 	Enemy_Data enemyData = pSJD.GetEnemyData(pSJD.GetStageData().enemys_Spawn[spawnNumber].type);
@@ -213,7 +274,7 @@ EnemyObject EnemyManager::GetRandomEnemy()
 	float rand = static_cast<float>(dist(engine));
 	float rand2 = static_cast<float>(dist2(gen));
 
-	EnemyObject enemy((ENEMY_TYPE)enemyType_rand, SimpleMath::Vector3(rand2 * cosf(rand), 1.0f, rand2 * sinf(rand)), 1);
+	EnemyObject enemy((ENEMY_TYPE)enemyType_rand, SimpleMath::Vector3(rand2 * cosf(rand), 1.0f, rand2 * sinf(rand)), 1, 0.0f);
 	Enemy_Data enemyData = pSJD.GetEnemyData((ENEMY_TYPE)enemyType_rand);
 
 	enemy.Initialize();

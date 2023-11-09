@@ -141,7 +141,7 @@
   "TUTORIAL": [
     { "NUMBER": 0 }
   ],
-  "LastWave": true,
+  "LastWave": false,
   "EnemyLv": 2
 }
 

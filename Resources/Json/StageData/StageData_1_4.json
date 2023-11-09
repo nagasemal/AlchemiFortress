@@ -48,7 +48,7 @@
         "CONDITION": "",
         "SPAWNTIME": 10,
         "SPAWN_X": -10,
-        "SPAWN_Y": 1,
+        "SPAWN_Y": 0,
         "SPAWN_Z": 10,
         "LV": 1,
         "TYPE": "Worm"
@@ -57,7 +57,7 @@
         "CONDITION": "",
         "SPAWNTIME": 15,
         "SPAWN_X": 10,
-        "SPAWN_Y": 1,
+        "SPAWN_Y": 0,
         "SPAWN_Z": 10,
         "LV": 1,
         "TYPE": "Worm"
@@ -81,7 +81,8 @@
   "TUTORIAL": [
     { "NUMBER": 10 },
     { "NUMBER": 4 },
-    { "NUMBER": 99 }
+    { "NUMBER": 14 },
+    { "NUMBER": 0 }
   ],
   "LastWave": false,
   "EnemyLv": 1

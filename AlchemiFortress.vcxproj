@@ -214,6 +214,7 @@
     <ClInclude Include="NecromaLib\Singleton\SoundData.h" />
     <ClInclude Include="NecromaLib\Singleton\SpriteLoder.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="RenderTexture.h" />
     <ClInclude Include="Resources\Icon\Icon.h" />
     <ClInclude Include="Scenes\Commons\DrawArrow.h" />
     <ClInclude Include="Scenes\Commons\DrawBox.h" />
@@ -221,6 +222,7 @@
     <ClInclude Include="Scenes\Commons\DrawLine.h" />
     <ClInclude Include="Scenes\Commons\DrawSlider.h" />
     <ClInclude Include="Scenes\Commons\DrawTimer.h" />
+    <ClInclude Include="Scenes\Commons\DrawVariableNum.h" />
     <ClInclude Include="Scenes\Commons\SelectionUI.h" />
     <ClInclude Include="Scenes\Commons\ShaderButton.h" />
     <ClInclude Include="Scenes\Commons\UIKeyControl.h" />
@@ -250,6 +252,8 @@
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyMetaAI.h" />
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyManager.h" />
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyObject.h" />
+    <ClInclude Include="Scenes\PlayScene\Enemy\State\EnemyState.h" />
+    <ClInclude Include="Scenes\PlayScene\Enemy\State\IEnemyState.h" />
     <ClInclude Include="Scenes\PlayScene\Field\Crystal\Crystal.h" />
     <ClInclude Include="Scenes\PlayScene\Field\Field.h" />
     <ClInclude Include="Scenes\PlayScene\Field\FieldObjectManager.h" />
@@ -263,6 +267,9 @@
     <ClInclude Include="Scenes\PlayScene\Stage\MissionManager.h" />
     <ClInclude Include="Scenes\PlayScene\Tutorial\Explanation.h" />
     <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\ITutorialState.h" />
+    <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_ModelSelectState.h" />
+    <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_NoneState.h" />
+    <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_UISelectState.h" />
     <ClInclude Include="Scenes\PlayScene\Tutorial\Tutorial.h" />
     <ClInclude Include="Scenes\PlayScene\UI\BaseLv.h" />
     <ClInclude Include="Scenes\PlayScene\UI\DisplayMagicCircle.h" />
@@ -323,12 +330,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="RenderTexture.cpp" />
     <ClCompile Include="Scenes\Commons\DrawArrow.cpp" />
     <ClCompile Include="Scenes\Commons\DrawBox.cpp" />
     <ClCompile Include="Scenes\Commons\DrawMachine.cpp" />
     <ClCompile Include="Scenes\Commons\DrawLine.cpp" />
     <ClCompile Include="Scenes\Commons\DrawSlider.cpp" />
     <ClCompile Include="Scenes\Commons\DrawTimer.cpp" />
+    <ClCompile Include="Scenes\Commons\DrawVariableNum.cpp" />
     <ClCompile Include="Scenes\Commons\SelectionUI.cpp" />
     <ClCompile Include="Scenes\Commons\ShaderButton.cpp" />
     <ClCompile Include="Scenes\Commons\UIKeyControl.cpp" />
@@ -354,6 +363,7 @@
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_StandardMove.cpp" />
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyManager.cpp" />
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyObject.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Enemy\State\EnemyState.cpp" />
     <ClCompile Include="Scenes\PlayScene\Field\Crystal\Crystal.cpp" />
     <ClCompile Include="Scenes\PlayScene\Field\Field.cpp" />
     <ClCompile Include="Scenes\PlayScene\Field\FieldObjectManager.cpp" />
@@ -366,6 +376,9 @@
     <ClCompile Include="Scenes\PlayScene\Shadow\ParticleUtility.cpp" />
     <ClCompile Include="Scenes\PlayScene\Stage\MissionManager.cpp" />
     <ClCompile Include="Scenes\PlayScene\Tutorial\Explanation.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_ModelSelectState.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_NoneState.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_UISelectState.cpp" />
     <ClCompile Include="Scenes\PlayScene\Tutorial\Tutorial.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\BaseLv.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\DisplayMagicCircle.cpp" />
@@ -411,20 +424,23 @@
     <None Include="Resources\Json\EnemyData\EnemyData_Slime.json" />
     <None Include="Resources\Json\EnemyData\EnemyData_Worm.json" />
     <None Include="Resources\Json\GameParameter\GameParameter.json" />
+    <None Include="Resources\Json\GameParameter\UILayout.json" />
     <None Include="Resources\Json\MachineData\MachineData_Attacker.json" />
     <None Include="Resources\Json\MachineData\MachineData_Defenser.json" />
     <None Include="Resources\Json\MachineData\MachineData_Mining.json" />
     <None Include="Resources\Json\MachineData\MachineData_None.json" />
     <None Include="Resources\Json\MachineData\MachineData_Recovery.json" />
     <None Include="Resources\Json\MachineData\MachineData_Upper.json" />
-    <None Include="Resources\Json\StageData\StageData_1_1.json" />
-    <None Include="Resources\Json\StageData\StageData_1_2.json" />
-    <None Include="Resources\Json\StageData\StageData_1_3.json" />
-    <None Include="Resources\Json\StageData\StageData_1_4.json" />
-    <None Include="Resources\Json\StageData\StageData_1_5.json" />
-    <None Include="Resources\Json\StageData\StageData_1_6.json" />
     <None Include="Resources\Json\StageData\StageData_2_1.json" />
     <None Include="Resources\Json\StageData\StageData_2_2.json" />
+    <None Include="Resources\Json\StageData\StageData_2_3.json" />
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_1.json" />
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_2.json" />
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_3.json" />
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_4.json" />
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_5.json" />
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_6.json" />
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_7.json" />
     <None Include="Resources\Shader\BaseLv.hlsli" />
     <None Include="Resources\Shader\Button.hlsli" />
     <None Include="Resources\Shader\CutTexture.hlsli" />

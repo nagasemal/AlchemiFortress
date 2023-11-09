@@ -9,13 +9,13 @@
 #include "NecromaLib/Singleton/SoundData.h"
 
 
-#define RAGE 	SimpleMath::Vector2(0.8f, 0.6f)
+#define RAGE 	SimpleMath::Vector2(0.6f, 0.6f)
 
 RenderOption::RenderOption()
 {
-	m_userBar_BGM			= std::make_unique<DrawSlider>(SimpleMath::Vector2(500, 200), RAGE);
-	m_userBar_SE			= std::make_unique<DrawSlider>(SimpleMath::Vector2(500, 280), RAGE);
-	m_userBar_SystemSE		= std::make_unique<DrawSlider>(SimpleMath::Vector2(500, 360), RAGE);
+	m_userBar_BGM			= std::make_unique<DrawSlider>(SimpleMath::Vector2(400, 200), RAGE);
+	m_userBar_SE			= std::make_unique<DrawSlider>(SimpleMath::Vector2(400, 280), RAGE);
+	m_userBar_SystemSE		= std::make_unique<DrawSlider>(SimpleMath::Vector2(400, 360), RAGE);
 
 	m_cancelButton = std::make_unique<SelectionBox>(SimpleMath::Vector2(1280 / 2, 120),SimpleMath::Vector2(1.0f,1.0f));
 }

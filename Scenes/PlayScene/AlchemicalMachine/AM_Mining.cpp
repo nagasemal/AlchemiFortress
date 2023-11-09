@@ -61,9 +61,10 @@ void AM_Mining::Finalize()
 {
 }
 
-void AM_Mining::AllFieldObject(FieldObjectManager* fieldManager)
+int AM_Mining::AllFieldObject(FieldObjectManager* fieldManager)
 {
-	DataManager* pDM = DataManager::GetInstance();
+
+	int crystalPulsVal = 0;
 
 	for (std::list<Crystal>::iterator it = fieldManager->GetCrystalObject()->begin(); it != fieldManager->GetCrystalObject()->end(); it++)
 	{
@@ -75,10 +76,13 @@ void AM_Mining::AllFieldObject(FieldObjectManager* fieldManager)
 			if (m_timer >= m_span)
 			{
 				m_timer = 0.0f;
-				pDM->SetNowCrystal(pDM->GetNowCrystal() + (int)m_machineEffectValue);
+
+				crystalPulsVal += (int)m_machineEffectValue;
 			}
 		}
 	}
+
+	return crystalPulsVal;
 }
 
 void AM_Mining::HitEnemy(std::list<EnemyObject>* enemy)
@@ -91,7 +95,10 @@ void AM_Mining::HitEnemy(std::list<EnemyObject>* enemy)
 	for (std::list<EnemyObject>::iterator it = enemy->begin(); it != enemy->end(); it++)
 	{
 
-		if (CircleCollider(it->GetCircle(), GetCircle()))
+		// ダウンキャストを行い、GameObject3D型に変換し判定の処理を得る
+		bool hitMachine = CircleCollider(GetObject3D(), it->GetObject3D());
+
+		if (hitMachine)
 		{
 				// 体力減少
 				m_hp -= (int)it->GetPower();
@@ -108,7 +115,7 @@ bool AM_Mining::GetCrystalFlag()
 
 }
 
-void AM_Mining::RenderUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
+void AM_Mining::RenderUI()
 {
 	//SpriteLoder& pSL = SpriteLoder::GetInstance();
 	//RECT rect_lv = SpriteCutter(64, 64, m_lv, 0);

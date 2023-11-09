@@ -12,6 +12,7 @@ class MissionRender;
 class DrawTimer;
 class Veil;
 class UserInterface;
+class DrawArrow;
 
 class MissionManager
 {
@@ -43,22 +44,41 @@ private:
 
 	void MachineMission(AlchemicalMachineManager* alchemicalManager);
 	void AlchemiMission(AlchemicalMachineManager* alchemicalManager);
+	void DestroyMission(AlchemicalMachineManager* alchemicalManager);
+	void RecoveryMission(AlchemicalMachineManager* alchemicalManager);
+	void LvUPMission(AlchemicalMachineManager* alchemicalManager);
+
+	void ResourceMission();
+
 	void EnemyMission(EnemyManager* enemyManager);
 	void BaseLvMission(int baseLv);
 	void TimerMission();
 
 private:
 
-	// マシン関連の条件
+	// マシン設置の条件
 	std::vector<Stage_Condition> m_machineCondition;
 
-	// 錬金関連の条件
+	// マシン錬金の条件
 	std::vector<Stage_Condition> m_alchemiCondition;
+
+	// マシン破壊の条件
+	std::vector<Stage_Condition> m_destroyCondition;
+
+	// マシン修繕の条件
+	std::vector<Stage_Condition> m_recoveryCondition;
+
+	// マシン強化の条件
+	std::vector<Stage_Condition> m_lvUpCondition;
+
+	// 取得リソースの条件
+	std::vector<Stage_Condition> m_resourceCondition;
+
 
 	// エネミー関連の条件
 	std::vector<Stage_Condition> m_enemyCondition;
 
-	// 錬金関連の条件
+	// 拠点LV関連の条件
 	std::vector<Stage_Condition> m_baseLvCondition;
 
 	// 時間関連の条件
@@ -69,6 +89,8 @@ private:
 
 	// ミッション描画
 	std::unique_ptr<MissionRender> m_missionRender;
+
+	std::unique_ptr<DrawArrow> m_closeButton;
 
 	// 半透明幕(クリア時)の描画
 	std::unique_ptr<Veil> m_backVeil;
@@ -107,5 +129,10 @@ private:
 
 	// 次のWaveに進んだことを知らせるフラグ
 	bool m_nextWaveFlag;
+
+	// ミッションの表示を畳む
+	bool m_closeMission;
+	// 畳む際のアニメーション用変数
+	AnimationData m_closeAnimation;
 
 };

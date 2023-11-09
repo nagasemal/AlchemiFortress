@@ -32,6 +32,18 @@ public:
 	// 錬金系のミッション内容を描画
 	void Render_AlchemiMission(std::vector<Stage_Condition> stageData);
 
+	// 破壊系のミッション内容を描画
+	void Render_DestroyMission(std::vector<Stage_Condition> stageData);
+
+	// 強化系のミッション内容を描画
+	void Render_LvUpMission(std::vector<Stage_Condition> stageData);
+
+	// 修繕系のミッション内容を描画
+	void Render_RepairMission(std::vector<Stage_Condition> stageData);
+
+	// リソース確保系ミッション内容を描画
+	void Render_ResourceMission(std::vector<Stage_Condition> stageData);
+
 	// 拠点Lvのミッション内容を描画
 	void Render_BaseLvMission(std::vector<Stage_Condition> stageData);
 
@@ -47,8 +59,13 @@ public:
 	const SimpleMath::Vector2 GetPos()  ;
 	const SimpleMath::Vector2 GetRage() ;
 
+	void SetPos(SimpleMath::Vector2 pos) { m_position = pos; }
+	void SetRage(SimpleMath::Vector2 rage) { m_rage = rage; }
+
+
 private:
 
+	void ContentDraw(std::vector<Stage_Condition> stageData, ID3D11ShaderResourceView* nameTex,int purposeNum);
 	void LabelDraw(SimpleMath::Vector2 pos);
 
 private:

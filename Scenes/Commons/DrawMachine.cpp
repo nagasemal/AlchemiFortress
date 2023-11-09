@@ -23,11 +23,9 @@ DrawMachine::~DrawMachine()
 
 void DrawMachine::Initialize()
 {
-
 	m_AMFilter = std::make_unique<AlchemicalMachineFilter>();
 
 	SettingAMMachine_Title();
-
 }
 
 void DrawMachine::Initialize(int number)
@@ -35,7 +33,6 @@ void DrawMachine::Initialize(int number)
 	m_AMFilter = std::make_unique<AlchemicalMachineFilter>();
 
 	SettingAMMachine_Select(number);
-
 }
 
 void DrawMachine::Update()
@@ -130,8 +127,8 @@ void DrawMachine::SettingAMMachine_Select(int number)
 
 			// ‰Šú‰»ˆ—
 			m_AMobjects[counter]->Initialize();
-
 			m_AMobjects[counter]->SetElement(clearData.machines[counter].element);
+
 			// ‘¶Ý‚·‚éƒ‰ƒCƒ“Œˆ‚ß
 			m_AMobjects[counter]->SetLine(i);
 			m_AMobjects[counter]->SummonAM(SetVelocityCircle(j, CIRCLE_MAX_MIN * i, i * CIRCLE_LINE_DISTANCE));

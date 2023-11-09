@@ -2,9 +2,9 @@
   "Status": {
     "ELEMENT": "Nomal",
     "STR": 20.0,
-    "SPEED": 3.0,
-    "SPAN": 1.3,
+    "SPEED": 8.0,
+    "SPAN": 7.5,
     "LIFE": 6.0,
-    "LOSSMP": 15.0,
+    "LOSSMP": 25.0
   }
 }

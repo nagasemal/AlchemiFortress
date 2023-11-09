@@ -98,6 +98,7 @@ void EditScene::Initialize()
     std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
     fx->SetDirectory(L"Resources/Models");
     m_model = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Attacker.cmo", *fx);
+    m_model_2 = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/AM_Ring.cmo", *fx);
 
     m_camera = std::make_unique<MoveCamera>();
     m_camera->Initialize();
@@ -114,6 +115,10 @@ GAME_SCENE EditScene::Update()
     if (InputSupport::GetInstance().GetMouseState().leftButton == Mouse::ButtonStateTracker::PRESSED)
     {
         m_shaderFlag = !m_shaderFlag;
+    }
+
+    if (InputSupport::GetInstance().GetMouseState().rightButton == Mouse::ButtonStateTracker::PRESSED)
+    {
     }
 
     pSD.GetCamera()->SetViewMatrix(m_camera->GetViewMatrix());
@@ -170,7 +175,6 @@ GAME_SCENE EditScene::Update()
 void EditScene::Draw()
 {
     ShareData& pSD = ShareData::GetInstance();
-    auto pSB = pSD.GetSpriteBatch();
     auto device = pSD.GetDeviceResources();
 
     device;
@@ -199,7 +203,7 @@ void EditScene::Draw()
 
 
     m_machine->SetPos(SimpleMath::Vector3(0, 0, 7));
-    m_machine->ModelRender(m_model.get(),nullptr, m_shaderFlag);
+    m_machine->ModelRender(m_model.get(), m_model_2.get(), m_shaderFlag);
 
     //m_machine->Draw();
 

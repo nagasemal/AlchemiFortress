@@ -51,19 +51,19 @@ public:
 public:
 
 	// フィールドマネージャークラス
-	FieldObjectManager*		GetFieldManager()				const { return m_fieldManager.get(); }
+	FieldObjectManager*			GetFieldManager()				const { return m_fieldManager.get(); }
 	//ウスポインタークラス
 	MousePointer*				GetMousePointer()				const { return m_mousePointer.get(); }
 	//シンマネージャークラス
-	AlchemicalMachineManager* GetAlchemicalMachineManager()	const { return m_AM_Manager.get(); }
+	AlchemicalMachineManager*	GetAlchemicalMachineManager()	const { return m_AM_Manager.get(); }
 	//ネミーマネージャークラス
 	EnemyManager*				GetEnemyManager()				const { return m_enemyManager.get();}
 	//ッションマネージャークラス
-	MissionManager*			GetMissionManager()				const { return m_missionManager.get();}
+	MissionManager*				GetMissionManager()				const { return m_missionManager.get();}
 	//ージクラス
-	Gauge*					GetGauge()						const { return m_resourceGauge.get(); }
+	Gauge*						GetGauge()						const { return m_resourceGauge.get(); }
 	//Lvクラス
-	BaseLv*					GetBaseLv()						const { return m_baseLv.get(); }
+	BaseLv*						GetBaseLv()						const { return m_baseLv.get(); }
 	//説明クラス
 	Explanation*				GetExplanation()				const { return m_explanation.get(); }
 	//速ボタンクラス
@@ -92,6 +92,7 @@ private:
 	// HP,MP,クリスタルのゲージ
 	std::unique_ptr<Gauge>						m_resourceGauge;
 
+	// EXP表示に使用
 	std::unique_ptr<BaseLv>						m_baseLv;
 
 	// チュートリアルクラス
@@ -107,5 +108,10 @@ private:
 	int m_stageNumber;
 	// 倍速倍率
 	int m_doubleSpeedNum;
+
+	// レンダーテクスチャ
+	std::unique_ptr<DX::RenderTexture> m_offscreenRT;
+	// ポストプロセス
+	std::unique_ptr<DirectX::BasicPostProcess> m_postProcess;
 
 };

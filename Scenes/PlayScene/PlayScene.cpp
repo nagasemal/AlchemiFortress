@@ -38,6 +38,10 @@ void PlayScene::Initialize()
 	int width = device->GetOutputSize().right;
 	int height = device->GetOutputSize().bottom;
 
+	// ポストプロセスの生成
+	m_postProcess = std::make_unique<BasicPostProcess>(ShareData::GetInstance().GetDevice());
+
+
 	// フィールドマネージャークラスの生成
 	m_fieldManager = std::make_unique<FieldObjectManager>();
 	m_fieldManager ->Initialize();
@@ -58,6 +62,8 @@ void PlayScene::Initialize()
 	m_resourceGauge	->Initialize();
 	// 拠点のLvを示すクラスの生成
 	m_baseLv = std::make_unique<BaseLv>();
+	m_baseLv->SetPosition(SimpleMath::Vector2(40.0f, 40.0f));
+	m_baseLv->SetScale(SimpleMath::Vector2(0.1f, 0.1f));
 	// ミッションマネージャークラスの生成
 	m_missionManager = std::make_unique<MissionManager>();
 	m_missionManager->Initialize();
@@ -66,7 +72,7 @@ void PlayScene::Initialize()
 	m_explanation = std::make_unique<Explanation>();
 
 	// 倍速ボタンの生成
-	m_doubleSpeedButton = std::make_unique<SelectionBox>(SimpleMath::Vector2(width / 1.04f, height / 1.1f), SimpleMath::Vector2(1.0f, 1.0f));
+	m_doubleSpeedButton = std::make_unique<SelectionBox>(SimpleMath::Vector2(width / 1.05f, height / 1.6f), SimpleMath::Vector2(1.0f, 1.0f));
 
 	// 天球モデルのロード
 	ShareData& pSD = ShareData::GetInstance();
@@ -87,6 +93,14 @@ void PlayScene::Initialize()
 	// チュートリアルクラスの生成
 	m_tutorial = std::make_unique<Tutorial>();
 	m_tutorial->Initialize(ShareJsonData::GetInstance().GetStageData().tutorial, this);
+
+
+	// レンダーテクスチャの作成（シーン全体）
+	m_offscreenRT = std::make_unique<DX::RenderTexture>(DXGI_FORMAT_B8G8R8A8_UNORM);
+	m_offscreenRT->SetDevice(pSD.GetDevice());
+	RECT rect = pSD.GetDeviceResources()->GetOutputSize();
+	m_offscreenRT->SetWindow(rect);
+
 }
 
 GAME_SCENE PlayScene::Update()
@@ -100,9 +114,9 @@ GAME_SCENE PlayScene::Update()
 
 	m_tutorial			->Update(this,m_moveCamera->GetStopCameraFlag());
 
-	m_explanation->Update();
+	m_explanation		->Update();
 
-	m_missionManager->Update(m_AM_Manager.get(), m_enemyManager.get(), m_fieldManager.get());
+	m_missionManager	->Update(m_AM_Manager.get(), m_enemyManager.get(), m_fieldManager.get());
 
 	//　次のWaveに進んだことを知らせる
 	if (m_missionManager->NextWaveFlag())
@@ -123,6 +137,11 @@ GAME_SCENE PlayScene::Update()
 
 	}
 
+	// タイトル移行ボタンが押されたらタイトルシーンに向かう
+	if (m_tutorial->GetTitleSceneButton()->ClickMouse()) return GAME_SCENE::TITLE;
+	// セレクト移行ボタンが押されたらセレクトシーンに向かう
+	if (m_tutorial->GetSelectSceneButton()->ClickMouse()) return GAME_SCENE::SELECT;
+
 	//// チュートリアル中ならば以下の処理を通さない
 	if (tutorialFlag) 		return GAME_SCENE();
 
@@ -131,7 +150,7 @@ GAME_SCENE PlayScene::Update()
 	m_doubleSpeedNum += m_doubleSpeedButton->ClickMouse();
 	if (m_doubleSpeedNum > MAX_SPEED) m_doubleSpeedNum = 1;
 	// 倍速にする
-	pDelta.SetDeltaTime(pDelta.GetDeltaTime() * m_doubleSpeedNum);
+	pDelta.SetDoubleSpeed((float)m_doubleSpeedNum);
 
 	m_moveCamera		->Update(!m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven(), true);
 
@@ -196,11 +215,21 @@ void PlayScene::Draw()
 {
 	ShareData& pSD = ShareData::GetInstance();
 
-	///*===[ デバッグ文字描画 ]===*/
-	//std::wostringstream oss;
-	//oss << "PlayScene";
+	auto context = pSD.GetContext();
 
-	//pSD.GetDebugFont()->AddString(oss.str().c_str(), SimpleMath::Vector2(0.f, 60.f));
+	auto renderTarget = pSD.GetDeviceResources()->GetRenderTargetView();
+	auto depthStencil = pSD.GetDeviceResources()->GetDepthStencilView();
+	auto offscreenRTV = m_offscreenRT->GetRenderTargetView();
+	auto offscreenSRV = m_offscreenRT->GetShaderResourceView();
+
+	// -------------------------------------------------------------------------- //
+	// レンダーターゲットを変更（sceneRT）
+	// -------------------------------------------------------------------------- //
+	context->ClearRenderTargetView(m_offscreenRT->GetRenderTargetView(), Colors::Black);
+	context->ClearDepthStencilView(depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	context->OMSetRenderTargets(1, &offscreenRTV, depthStencil);
+	// -------------------------------------------------------------------------- //
+
 
 	pSD.GetSpriteBatch()->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
@@ -212,25 +241,41 @@ void PlayScene::Draw()
 	m_skySphere->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection());
 
 	// フィールドオブジェクト描画
-	m_fieldManager      ->Draw();
-
+	m_fieldManager	->Draw();
 	// エネミー描画
-	m_enemyManager		->Render();
-
+	m_enemyManager	->Render();
 	// マシンの描画
-	m_AM_Manager->Render();
+	m_AM_Manager	->Render();
 
 	// マウスポインターモデルを出す
 	m_mousePointer->Draw();
 	m_mousePointer->ModelDraw(m_AM_Manager->GetSelectModel());
 
 	pSD.GetSpriteBatch()->End();
+
+	// -------------------------------------------------------------------------- //
+	// レンダーターゲットとビューポートを元に戻す
+	// -------------------------------------------------------------------------- //
+	context->ClearRenderTargetView(renderTarget, Colors::Black);
+	context->ClearDepthStencilView(depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	context->OMSetRenderTargets(1, &renderTarget, depthStencil);
+	auto const viewport = pSD.GetDeviceResources()->GetScreenViewport();
+	context->RSSetViewports(1, &viewport);
+	// -------------------------------------------------------------------------- //
+
+	// セピア調に色を変えるポストプロセスを実行する
+	//m_postProcess->SetEffect(BasicPostProcess::Sepia);
+	m_postProcess->SetSourceTexture(offscreenSRV);
+	//m_postProcess->SetSourceTexture(SpriteLoder::GetInstance().GetAuraBase().Get());
+	m_postProcess->Process(context);
+
+
 }
 
 void PlayScene::DrawUI()
 {
 
-	m_tutorial			->Render();
+	m_tutorial->Render();
 
 	m_AM_Manager		->DrawUI();
 	m_resourceGauge		->Render();
@@ -239,13 +284,13 @@ void PlayScene::DrawUI()
 
 	m_missionManager	->Render();
 
-	m_tutorial			->Render_Layer2();
-
 	// 倍速ボタン
 	m_doubleSpeedButton->DrawUI(10 + m_doubleSpeedNum);
 
 	// 操作説明描画
 	m_explanation->Render(m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven(), m_AM_Manager->GetRotateStopFlag());
+
+	m_tutorial->Render_Layer2();
 
 	//SimpleMath::Vector2 origin = SimpleMath::Vector2(1280, 1280);
 	//RECT rect = { 0,0,origin.x,origin.y };
@@ -297,9 +342,8 @@ void PlayScene::EnemyToPlayerBase()
 
 	for (std::list<EnemyObject>::iterator enemyIt = m_enemyManager->GetEnemyData()->begin(); enemyIt != m_enemyManager->GetEnemyData()->end(); enemyIt++)
 	{
-		bool hitEnemy;
-
-		hitEnemy = CircleCollider(playerBase->GetCircle(), enemyIt->GetCircle());
+		// ダウンキャストを行い、GameObject3D型に変換し判定の処理を得る
+		bool hitEnemy = CircleCollider(playerBase->GetObject3D(),enemyIt->GetObject3D());
 
 		// 当たり判定処理
 		if (hitEnemy)
@@ -307,6 +351,9 @@ void PlayScene::EnemyToPlayerBase()
 			playerBase->Damage(enemyIt->GetPower());
 			enemyIt->HitMachine(hitEnemy);
 			enemyIt->SetStopFlag(hitEnemy);
+			// 反発させる
+			enemyIt->SetAccele(-enemyIt->GetAccele());
+
 		}
 	}
 }
@@ -318,12 +365,21 @@ void PlayScene::EnemyToBullet()
 	{
 		for (std::list<EnemyObject>::iterator enemyIt = m_enemyManager->GetEnemyData()->begin(); enemyIt != m_enemyManager->GetEnemyData()->end(); enemyIt++)
 		{
+
+			// 当たり判定を取るか否か
+			if (!enemyIt->GetColliderActive()) continue;
+
 			// 当たり判定処理
-			if (CircleCollider(bulletIt->get()->GetCircle(), enemyIt->GetCircle()))
+			if (CircleCollider(bulletIt->get()->GetObject3D(), enemyIt->GetObject3D()))
 			{
+
+				SimpleMath::Vector3 hitVectol = bulletIt->get()->GetPos() - enemyIt->GetPos();
+
 				bulletIt->get()->SetEnemyHit(true);
 				bulletIt->get()->SetLife(0);
-				enemyIt->SetHp(enemyIt->GetHp() - (int)bulletIt->get()->GetDamage());
+
+				enemyIt->HitBullet(hitVectol, (int)bulletIt->get()->GetDamage());
+
 			}
 		}
 	}

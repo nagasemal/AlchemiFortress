@@ -35,3 +35,14 @@ enum ENEMY_TYPE : int
 
 	ENEMY_NUM
 };
+
+enum OBJECT_TAG
+{
+	MAHINE		= 0,
+	SPAWN_ENEMY = 1,
+	ENEMY		= 2,
+	CRYSTAL		= 3,
+
+
+
+};

@@ -21,7 +21,7 @@ public:
 
 	// •\¦‚·‚é”š‚Ìİ’è
 	void SetNumber(int num);
-	void SetPosition(SimpleMath::Vector2 position) { m_position = position; }
+	void SetPosition(SimpleMath::Vector2 position) { m_position = position;	m_position.x += 32 * m_rage.x; }
 	void SetRage(SimpleMath::Vector2 rage) { m_rage = rage; }
 
 	void SetColor(SimpleMath::Color color) { m_color = color; }
@@ -31,6 +31,8 @@ public:
 
 	// Missions
 	void Render_SelectScene(int first,int next);
+
+	int GetNumber() { return m_num; }
 
 private:
 

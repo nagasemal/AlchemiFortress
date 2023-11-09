@@ -17,7 +17,7 @@ public:
 		SimpleMath::Matrix		m_matWorld;
 		SimpleMath::Matrix		m_matView;
 		SimpleMath::Matrix		m_matProj;
-		SimpleMath::Vector4	m_diffuse;
+		SimpleMath::Vector4		m_diffuse;
 	};
 
 public:
@@ -43,7 +43,6 @@ private:
 
 	// 丸影テクスチャ情報
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
-
 	// コンスタンスバッファ
 	Microsoft::WRL::ComPtr<ID3D11Buffer>	m_CBuffer;
 	// 入力レイアウト

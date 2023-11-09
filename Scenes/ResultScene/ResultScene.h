@@ -49,4 +49,6 @@ private:
 
 	std::unique_ptr<DirectX::Model> m_baseModel;	//  ‹’“_‚Ì3Dƒ‚ƒfƒ‹
 
+	std::unique_ptr<DirectX::Model>	m_skySphere;
+
 };

@@ -5,7 +5,8 @@ class TutorialStateContext;
 class ITutorialState
 {
 protected:
-    TutorialStateContext* m_tutorialContext;
+
+    TutorialStateContext* m_tutorialContext = nullptr;
 
 public:
     virtual ~ITutorialState() {}
@@ -13,7 +14,12 @@ public:
     // チュートリアルコンテキストをセットする
     void Set_Context(TutorialStateContext* context) { this->m_tutorialContext = context; }
 
+    // 更新処理
     virtual void Update() = 0;
+
+    // 描画処理
+    virtual void Render() = 0;
+
 };
 
 class TutorialStateContext
@@ -41,4 +47,7 @@ public:
     }
 
     void Update() { this->m_Tutorialstate->Update(); }
+
+    void Render() { this->m_Tutorialstate->Render(); }
+
 };

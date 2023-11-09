@@ -58,6 +58,7 @@ void SceneManager::Initialize()
 //-------------------------------------------------------------------
 void SceneManager::Update(const DX::StepTimer& timer)
 {
+
 	InputSupport& pINP = InputSupport::GetInstance();
 	m_Fade->Update(timer);
 	m_DataManager->Update();
@@ -190,7 +191,8 @@ void SceneManager::CreateScene()
 	}
 
 	// 作成したシーンを初期化
-	m_Scene->Initialize();
+	m_Scene		->Initialize();
+
 	// 次へのシーン情報を初期化
 	m_NextScene = GAME_SCENE::NONE;
 
@@ -209,6 +211,7 @@ void SceneManager::DeleteScene()
 	}
 	// 現シーンの終了処理
 	m_Scene->Finalize();
+
 	// 現シーンの削除
 	delete m_Scene;
 	m_Scene = nullptr;
