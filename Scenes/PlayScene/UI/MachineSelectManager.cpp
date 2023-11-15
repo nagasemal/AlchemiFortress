@@ -26,7 +26,8 @@ MachineSelectManager::MachineSelectManager() :
 	m_forwardOrderFlag(false),
 	m_rotateTime(),
 	m_selectNumber(1),
-	m_cursorMachineNumber()
+	m_cursorMachineNumber(),
+	m_prevSelectNumber()
 {
 }
 
@@ -349,4 +350,10 @@ void MachineSelectManager::RotationMachineList()
 
 		m_machineSelect[i + 2]->GetMachineBox()->SetSavePos(m_machineSelect[i + 2]->GetPos());
 	}
+}
+
+void MachineSelectManager::LRButtonLock(bool flag)
+{
+	m_selectionLeft->SetActiveFlag(flag);
+	m_selectionRight->SetActiveFlag(flag);
 }

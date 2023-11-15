@@ -29,7 +29,7 @@ void AM_Attacker::Initialize()
 
 	for (int i = 0; i < 4; i++)
 	{
-		m_selectBox[i] = std::make_unique<SelectionBox>(SimpleMath::Vector2(80.f + ((float)i * 65.f), 560.f), SimpleMath::Vector2(1.0f, 1.0f));
+		m_selectBox[i] = std::make_unique<SelectionBox>(SimpleMath::Vector2(150.f + ((float)i * 60.0f), 660.0f), SimpleMath::Vector2(0.8f, 0.8f));
 	}
 
 	m_color = ShareJsonData::GetInstance().GetElementColor(m_element);
@@ -104,7 +104,7 @@ void AM_Attacker::AllAlchemicalMachine(AlchemicalMachineObject* object)
 			m_bulletStatus.life		 = m_saveBulletStatus.life	  * 1.15f;
 			m_bulletStatus.speed	 = m_saveBulletStatus.speed	  * 1.15f;
 			m_bulletStatus.span		 = m_saveBulletStatus.span	  * 0.95f;
-			m_bulletStatus.lossMp	 = (int)((float)m_saveBulletStatus.lossMp  * 0.15f);
+			m_bulletStatus.lossMp	 = (int)((float)m_saveBulletStatus.lossMp  / 2.0f);
 
 		}
 }

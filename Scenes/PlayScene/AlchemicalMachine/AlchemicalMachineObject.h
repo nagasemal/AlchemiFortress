@@ -122,7 +122,18 @@ public:
 	// 解体で得られるクリスタルの量
 	const int GetDismantlingCrystal();
 
+	// 選択されている状態か否かを決定付ける
+	const int GetSelectModeFlag() const { return m_selectModeFlag; }
+
+	/// <summary>
+	/// マシンをクリックし、メニューを開いた際に現れるボタンのポインターを返します
+	/// </summary>
+	/// <param name="buttonType">0 = 修繕 ,1 = 破壊 , 2 = レベルアップ</param>
+	/// <returns></returns>
+	SelectionBox* GetMenuButton(int buttonType);
+
 	void SetLv(int lv)									{ m_lv = lv; }
+	void SetHP(int hp)									{ m_hp = hp; }
 	void SetPos(SimpleMath::Vector3 pos)				{ m_data.pos = pos; }
 	void SetMagicCircle(Circle circle)					{ m_magicCircle = circle;}
 	void SetActive(bool flag)							{ m_active = flag; }

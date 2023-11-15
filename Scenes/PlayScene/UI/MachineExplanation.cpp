@@ -16,7 +16,13 @@
 
 #define MINI_BOX_POS SimpleMath::Vector2(-85,-95)
 
-#define BIG_BOX_RAGEPERCENT 5.0f
+#define BIG_BOX_RAGEPERCENT SimpleMath::Vector2(5.0f,0.5f)
+
+struct position2D
+{
+	double x;
+	double y;
+};
 
 MachineExplanation::MachineExplanation():
 	m_moveTime(),
@@ -43,11 +49,11 @@ void MachineExplanation::Initialize()
 
 	m_camera = std::make_unique<Camera>();
 
-	m_data.pos  = { 180,550};
+	m_data.pos  = { 150,680};
 	m_data.rage = { 150,150};
 
 	m_machineGauge = std::make_unique<MachineGauge>();
-	m_machineGauge->AddHPGauge({m_data.pos.x + 50,m_data.pos.y - 110}, { 0.20,0.20 }, UserInterface::MIDDLE_CENTER);
+	m_machineGauge->AddHPGauge({m_data.pos.x + 60,m_data.pos.y - 130}, { 0.20,0.20 }, UserInterface::MIDDLE_CENTER);
 
 }
 
@@ -82,7 +88,7 @@ void MachineExplanation::Draw()
 	SimpleMath::Color colour = SimpleMath::Color(0.8f, 0.8f, 0.8f, 0.8f);
 
 	// BOX描画
-	pSB->Draw(m_texture.Get(),m_data.pos,&srcRect,colour,0.0f,XMFLOAT2(64 / 2, 64 / 2), BIG_BOX_RAGEPERCENT);
+	//pSB->Draw(m_texture.Get(),m_data.pos,&srcRect,colour,0.0f,XMFLOAT2(64 / 2, 64 / 2), BIG_BOX_RAGEPERCENT);
 
 	SimpleMath::Vector2 miniBox_pos = { m_data.pos.x + MINI_BOX_POS.x ,m_data.pos.y + MINI_BOX_POS.y };
 
@@ -109,14 +115,14 @@ void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* se
 	modelData *= SimpleMath::Matrix::CreateRotationZ(m_moveTime);
 
 	// ワールド座標変換
-	SimpleMath::Vector3 worldPos = CalcScreenToXZN((int)m_data.pos.x - 78,
-															(int)m_data.pos.y - 64,
+	SimpleMath::Vector3 worldPos = CalcScreenToXZN((int)m_data.pos.x - 86,
+															(int)m_data.pos.y,
 															pDR->GetOutputSize().right,
 															pDR->GetOutputSize().bottom,
 															m_camera->GetViewMatrix(),
 															m_camera->GetProjectionMatrix());
 
-	worldPos.z = 2.0f;
+	worldPos.z = 4.25f;
 
 	modelData *= SimpleMath::Matrix::CreateTranslation(worldPos);
 
@@ -143,18 +149,6 @@ void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* se
 	// セカンドモデルが存在するならば実行
 	if (secondModel != nullptr)
 	{
-
-		//secondModel->UpdateEffects([&](IEffect* effect)
-		//	{
-		//		// 今回はライトだけ欲しい
-		//		auto lights = dynamic_cast<IEffectLights*>(effect);
-
-		//		// 色変更
-		//		lights->SetLightDiffuseColor(0, SimpleMath::Color((float)object->GetPowerUpFlag(),(float)object->GetPowerUpFlag(), 0.0f, 1.0f));
-		//		lights->SetLightDiffuseColor(1, SimpleMath::Color((float)object->GetPowerUpFlag(), (float)object->GetPowerUpFlag(), 0.0f, 1.0f));
-		//		lights->SetLightDiffuseColor(2, SimpleMath::Color((float)object->GetPowerUpFlag(), (float)object->GetPowerUpFlag(), 0.0f, 1.0f));
-		//	});
-
 		secondModel->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
 	}
 

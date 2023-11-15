@@ -10,10 +10,10 @@ RECT SpriteCutter(int wight, int height, int key[], int beside, int vertical, in
 	int pulsX = wight * key[animationKey / interval];
 
 	RECT rect;
-	rect.top = 0 + (height * vertical);
+	rect.top	= 0 + (height * vertical);
 	rect.bottom = height + (height * vertical);
-	rect.left = 0 + pulsX;
-	rect.right = wight + pulsX;
+	rect.left	= 0 + pulsX;
+	rect.right	= wight + pulsX;
 
 	return rect;
 }

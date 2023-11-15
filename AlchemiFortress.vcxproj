@@ -265,12 +265,14 @@
     <ClInclude Include="Scenes\PlayScene\Shadow\Particle.h" />
     <ClInclude Include="Scenes\PlayScene\Shadow\ParticleUtility.h" />
     <ClInclude Include="Scenes\PlayScene\Stage\MissionManager.h" />
+    <ClInclude Include="Scenes\PlayScene\Tutorial\CommandPattern\Commander_Tutorial.h" />
+    <ClInclude Include="Scenes\PlayScene\Tutorial\CommandPattern\ICommand_Tutorial.h" />
+    <ClInclude Include="Scenes\PlayScene\Tutorial\CommandPattern\TutorialCommands.h" />
     <ClInclude Include="Scenes\PlayScene\Tutorial\Explanation.h" />
     <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\ITutorialState.h" />
-    <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_ModelSelectState.h" />
-    <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_NoneState.h" />
-    <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_UISelectState.h" />
-    <ClInclude Include="Scenes\PlayScene\Tutorial\Tutorial.h" />
+    <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\TutorialState.h" />
+    <ClInclude Include="Scenes\PlayScene\Tutorial\OperationInstructions.h" />
+    <ClInclude Include="Scenes\PlayScene\Tutorial\TutorialManager.h" />
     <ClInclude Include="Scenes\PlayScene\UI\BaseLv.h" />
     <ClInclude Include="Scenes\PlayScene\UI\DisplayMagicCircle.h" />
     <ClInclude Include="Scenes\PlayScene\UI\Gauge.h" />
@@ -375,11 +377,11 @@
     <ClCompile Include="Scenes\PlayScene\Shadow\Particle.cpp" />
     <ClCompile Include="Scenes\PlayScene\Shadow\ParticleUtility.cpp" />
     <ClCompile Include="Scenes\PlayScene\Stage\MissionManager.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Tutorial\CommandPattern\TutorialCommands.cpp" />
     <ClCompile Include="Scenes\PlayScene\Tutorial\Explanation.cpp" />
-    <ClCompile Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_ModelSelectState.cpp" />
-    <ClCompile Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_NoneState.cpp" />
-    <ClCompile Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_UISelectState.cpp" />
-    <ClCompile Include="Scenes\PlayScene\Tutorial\Tutorial.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Tutorial\StatePattern\TutorialState.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Tutorial\OperationInstructions.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Tutorial\TutorialManager.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\BaseLv.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\DisplayMagicCircle.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\Gauge.cpp" />
@@ -431,16 +433,22 @@
     <None Include="Resources\Json\MachineData\MachineData_None.json" />
     <None Include="Resources\Json\MachineData\MachineData_Recovery.json" />
     <None Include="Resources\Json\MachineData\MachineData_Upper.json" />
-    <None Include="Resources\Json\StageData\StageData_2_1.json" />
-    <None Include="Resources\Json\StageData\StageData_2_2.json" />
-    <None Include="Resources\Json\StageData\StageData_2_3.json" />
     <None Include="Resources\Json\StageData\Stage_1\StageData_1_1.json" />
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_10.json" />
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_11.json" />
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_12.json" />
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_13.json" />
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_14.json" />
     <None Include="Resources\Json\StageData\Stage_1\StageData_1_2.json" />
     <None Include="Resources\Json\StageData\Stage_1\StageData_1_3.json" />
     <None Include="Resources\Json\StageData\Stage_1\StageData_1_4.json" />
     <None Include="Resources\Json\StageData\Stage_1\StageData_1_5.json" />
     <None Include="Resources\Json\StageData\Stage_1\StageData_1_6.json" />
     <None Include="Resources\Json\StageData\Stage_1\StageData_1_7.json" />
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_8.json" />
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_9.json" />
+    <None Include="Resources\Json\StageData\Stage_2\StageData_2_1.json" />
+    <None Include="Resources\Json\StageData\Stage_2\StageData_2_2.json" />
     <None Include="Resources\Shader\BaseLv.hlsli" />
     <None Include="Resources\Shader\Button.hlsli" />
     <None Include="Resources\Shader\CutTexture.hlsli" />
@@ -449,6 +457,7 @@
     <None Include="Resources\Shader\MagicCircle.hlsli" />
     <None Include="Resources\Shader\Shadow.hlsli" />
     <None Include="Resources\Shader\Transition.hlsli" />
+    <None Include="Resources\Shader\TutorialShader.hlsli" />
     <None Include="Resources\Shader\UI.hlsli" />
     <None Include="Resources\Shader\Veil.hlsli" />
   </ItemGroup>
@@ -661,6 +670,28 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\TutorialShader_GS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\TutorialShader_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\TutorialShader_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Resources\Shader\UI_GS.hlsl">
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>

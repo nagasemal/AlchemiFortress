@@ -425,10 +425,12 @@ Stage_Data Json::FileLoad_StageData(const std::string filePath)
 
 	for (picojson::array::iterator it = tutorial.begin(); it != tutorial.end(); it++)
 	{
-		int number = 0;
-		number = (int)it->get<picojson::object>()["NUMBER"].get<double>();
+		Tutorial_Status tutorial;
 
-		status.tutorial.push_back(number);
+		tutorial.type	= (int)it->get<picojson::object>()["NUMBER"].get<double>();
+		tutorial.val	= (int)it->get<picojson::object>()["VAL"].get<double>();
+
+		status.tutorial.push_back(tutorial);
 
 	}
 
@@ -875,7 +877,8 @@ void Json::WritingJsonFile_StageData(int number, Stage_Data stageData)
 	for (int i = 0; i < tutorial.size(); i++)
 	{
 		picojson::object id;
-		id.insert(std::make_pair("NUMBER", picojson::value((double)stageData.tutorial[i])));
+		id.insert(std::make_pair("NUMBER", picojson::value((double)stageData.tutorial[i].type)));
+		id.insert(std::make_pair("VAL", picojson::value((double)stageData.tutorial[i].val)));
 
 		tutorial.emplace_back(id);
 	}

@@ -2,6 +2,8 @@
 
 // 前方宣言
 class TutorialStateContext;
+class PlayScene;
+class TutorialManager;
 class ITutorialState
 {
 protected:
@@ -9,16 +11,17 @@ protected:
     TutorialStateContext* m_tutorialContext = nullptr;
 
 public:
+
     virtual ~ITutorialState() {}
 
     // チュートリアルコンテキストをセットする
     void Set_Context(TutorialStateContext* context) { this->m_tutorialContext = context; }
 
     // 更新処理
-    virtual void Update() = 0;
+    virtual void Update(TutorialManager* manager) = 0;
 
     // 描画処理
-    virtual void Render() = 0;
+    virtual void Render(TutorialManager* manager) = 0;
 
 };
 
@@ -46,8 +49,8 @@ public:
         this->m_Tutorialstate->Set_Context(this);
     }
 
-    void Update() { this->m_Tutorialstate->Update(); }
+    void Update(TutorialManager* manager) { this->m_Tutorialstate->Update(manager); }
 
-    void Render() { this->m_Tutorialstate->Render(); }
+    void Render(TutorialManager* manager) { this->m_Tutorialstate->Render(manager); }
 
 };

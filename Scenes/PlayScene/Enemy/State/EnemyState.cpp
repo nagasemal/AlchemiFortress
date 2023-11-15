@@ -3,12 +3,16 @@
 
 #include "NecromaLib/Singleton/ModelShader.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
+#include "NecromaLib/Singleton/SpriteLoder.h"
+#include "NecromaLib/Singleton/ShareData.h"
 
 #include "Scenes/PlayScene/Enemy/EnemyList/ICommand_Enemy.h"
 #include "Scenes/PlayScene/Enemy/EnemyList/EnemyCommander.h"
 #include "Scenes/PlayScene/Enemy/EnemyObject.h"
 
 #include "Scenes/PlayScene/Shadow/MagicCircle.h"
+
+
 
 #define ENEMY_MAGICCIRCLE_NUM 6
 
@@ -54,6 +58,31 @@ void Enemy_IdlingState::Render(EnemyObject* object,Model* model)
 
 	m_magicCircle->CreateWorld();
 	m_magicCircle->Render(ENEMY_MAGICCIRCLE_NUM);
+
+}
+
+void Enemy_IdlingState::RenderIcon(EnemyObject* object)
+{
+
+	auto pSD = &ShareData::GetInstance();
+	auto camera = ShareData::GetInstance().GetCamera();
+
+	SimpleMath::Matrix billboardMatrix = SimpleMath::Matrix::CreateBillboard(object->GetPos(), camera->GetEyePosition(), camera->GetUpVector());
+
+	auto status = pSD->GetCommonStates();
+
+	//pSD->GetSpriteBatch()->Begin(SpriteSortMode_Deferred, status->NonPremultiplied(), nullptr, status->DepthNone(), status->CullCounterClockwise(), [=]
+	//	{
+	//	});
+
+	//RECT rect = RECT{ 0,0,64,64 };
+
+	//pSD->GetSpriteBatch()->Draw(SpriteLoder::GetInstance().GetAlchemiButtonTexture().Get(),
+	//	object->GetPos(),
+	//	&rect);
+
+	//pSD->GetSpriteBatch()->End();
+
 }
 
 
@@ -110,6 +139,10 @@ void Enemy_MoveingState::Render(EnemyObject* object,Model* model)
 		});
 }
 
+void Enemy_MoveingState::RenderIcon(EnemyObject* object)
+{
+}
+
 
 
 Enemy_StoppingState::Enemy_StoppingState()
@@ -145,6 +178,10 @@ void Enemy_StoppingState::Render(EnemyObject* object,Model* model)
 			// 深度ステンシルステートの設定
 			pSD.GetContext()->OMSetDepthStencilState(nullptr, 3);
 		});
+}
+
+void Enemy_StoppingState::RenderIcon(EnemyObject* object)
+{
 }
 
 
@@ -219,6 +256,10 @@ void Enemy_KnockBackState::Render(EnemyObject* object,Model* model)
 
 }
 
+void Enemy_KnockBackState::RenderIcon(EnemyObject* object)
+{
+}
+
 Enemy_DethState::Enemy_DethState()
 {
 	m_dethTime = 0.0f;
@@ -235,9 +276,10 @@ void Enemy_DethState::Update(EnemyObject* object)
 	m_dethTime += DeltaTime::GetInstance().GetDeltaTime();
 
 	object->SetAccele(SimpleMath::Vector3(0.0f,m_dethTime,0.0f));
+	object->GravityReset();
 
-	// 一定距離まで飛んだら消す
-	object->SetDethFlag(m_dethTime >= 10.0f);
+	// 一定時間経ったら消す
+	object->SetDethFlag(m_dethTime >= DETH_TIME);
 
 }
 
@@ -253,4 +295,8 @@ void Enemy_DethState::Render(EnemyObject* object,Model* model)
 			ModelShader::GetInstance().ToransparentShader();
 
 		});
+}
+
+void Enemy_DethState::RenderIcon(EnemyObject* object)
+{
 }

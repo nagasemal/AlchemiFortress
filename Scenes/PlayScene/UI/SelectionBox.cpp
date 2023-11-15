@@ -215,7 +215,7 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textu
 	SimpleMath::Vector2 box_Pos = { m_data.pos.x,m_data.pos.y };
 
 	// 選択BOX
-	pSB->Draw(texture.Get(), box_Pos, &rect, colour, 0.0f, DirectX::XMFLOAT2(rect.right / 2, rect.bottom / 2), m_data.rage);
+	pSB->Draw(texture.Get(), box_Pos, &rect, colour, 0.0f, DirectX::XMFLOAT2((float)rect.right / 2.0f, (float)rect.bottom / 2.0f), m_data.rage);
 
 	// 中に表示するテクスチャがある場合
 	if (pulsTexture)

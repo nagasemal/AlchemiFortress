@@ -6,11 +6,11 @@
     "MULTIPLIER_HP":		  1.25,     
     "AREAEFFECT":			    4.0,         
     "MULTIPLIER_EFFECT":	1.15, 
-    "ALCHEMI_MP": 			  30.0,       
-    "ALCHEMI_CRYSTAL":		20.0,   
-    "REPEA_CRYSTAL":		  35.0,     
+    "ALCHEMI_MP": 			  40.0,       
+    "ALCHEMI_CRYSTAL":		30.0,   
+    "REPEA_CRYSTAL":		  20.0,     
     "LVUP_CRYSTAL": 		  35.0,     
-    "DISMANTLING_CRYSTAL":10.0,
+    "DISMANTLING_CRYSTAL":15.0,
     "EFFECT_VALUE":			  0.0
   }
 }

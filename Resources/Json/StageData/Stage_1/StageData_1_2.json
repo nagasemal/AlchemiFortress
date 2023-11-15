@@ -6,7 +6,7 @@
     "ENEMY_KNOCKDOWN": [
       {
         "TYPE": "All",
-        "VALUE": -1
+        "VALUE": 2
       }
     ]
   },
@@ -30,7 +30,7 @@
     "MACHINE_DESTROY": [
       {
         "TYPE": "Attacker",
-        "VALUE": 1
+        "VALUE": -1
       }
     ]
   },
@@ -75,7 +75,26 @@
     ]
   },
   "ENEMY_SPAWNTIME": {
-    "ENEMYS": []
+    "ENEMYS": [
+      {
+        "CONDITION": "",
+        "SPAWNTIME": 6,
+        "SPAWN_X": 8,
+        "SPAWN_Y": 0,
+        "SPAWN_Z": 12,
+        "LV": 0,
+        "TYPE": "Slime"
+      },
+      {
+        "CONDITION": "",
+        "SPAWNTIME": 10,
+        "SPAWN_X": -12,
+        "SPAWN_Y": 0,
+        "SPAWN_Z": 8,
+        "LV": 0,
+        "TYPE": "Slime"
+      }
+    ]
   },
   "MACHINE_DEFAULET": {
     "MACHINES": []
@@ -92,15 +111,17 @@
     "UPPER": 0
   },
   "TUTORIAL": [
-    { "NUMBER": 0 }
+    {
+      "NUMBER": 16,
+      "VAL": 7
+    },
+    {
+      "NUMBER": 0,
+      "VAL": 0
+    }
   ],
   "LastWave": false,
   "EnemyLv": 1
 }
 
-
-    //{ "NUMBER": 9 },
-    //{ "NUMBER": 6 },
-    //{ "NUMBER": 12 },
-    //{ "NUMBER": 16 },
-
+// アタッカーマシンは魔力を消費して相手を攻撃することができることを知るチュートリアル

@@ -1,11 +1,6 @@
 {
   "CRYSTAL_SPAWN": {
-    "CRYSTALS": [
-      {
-        "SPAWN_X": -4,
-        "SPAWN_Z": 4
-      }
-    ]
+    "CRYSTALS": []
   },
   "Conditions_Enemy": {
     "ENEMY_KNOCKDOWN": [
@@ -18,7 +13,7 @@
   "Conditions_Machine": {
     "MACHINE_SPAWN": [
       {
-        "TYPE": "Attacker",
+        "TYPE": "Recovery",
         "VALUE": 1
       }
     ]
@@ -26,8 +21,8 @@
   "Conditions_Alchemi": {
     "MACHINE_ALCHEMI": [
       {
-        "TYPE": "Attacker",
-        "VALUE": -1
+        "TYPE": "Recovery",
+        "VALUE": 1
       }
     ]
   },
@@ -75,49 +70,55 @@
     "RESOURCE": [
       {
         "TYPE": "MP",
-        "VALUE": -1
+        "VALUE": 50
       }
     ]
   },
   "ENEMY_SPAWNTIME": {
-    "ENEMYS": [
-      {
-        "CONDITION": "",
-        "SPAWNTIME": 8,
-        "SPAWN_X": 10,
-        "SPAWN_Y": 0,
-        "SPAWN_Z": 10,
-        "LV": 1,
-        "TYPE": "Slime"
-      }
-    ]
+    "ENEMYS": []
   },
   "MACHINE_DEFAULET": {
     "MACHINES": []
   },
   "RESOURCE_DEFAULET": {
-    "ATTACKER": 1,
+    "ATTACKER": 0,
     "CRYSTAL": 0,
     "DEFFENCER": 0,
     "LV": 1,
     "HP": 500,
     "MINING": 0,
-    "MP": 500,
+    "MP": 0,
     "RECOVERY": 0,
     "UPPER": 0
   },
+
   "TUTORIAL": [
-    { "NUMBER": 1 },
-    { "NUMBER": 14 },
-    { "NUMBER": 0 }
+    {
+      "NUMBER": 4,
+      "VAL": 1
+    },
+    {
+      "NUMBER": 6,
+      "VAL": 1
+    },
+    {
+      "NUMBER": 4,
+      "VAL": 0
+    },
+    {
+      "NUMBER": 14,
+      "VAL": 1
+    },
+    {
+      "NUMBER": 8,
+      "VAL": 0
+    },
+    {
+      "NUMBER": 0,
+      "VAL": 0
+    }
   ],
   "LastWave": false,
   "EnemyLv": 1
 }
-
-
-    //{ "NUMBER": 9 },
-    //{ "NUMBER": 6 },
-    //{ "NUMBER": 12 },
-    //{ "NUMBER": 16 },
-
+// リカバリーマシンを錬金設置して、魔力の回復を実感するチュートリアル

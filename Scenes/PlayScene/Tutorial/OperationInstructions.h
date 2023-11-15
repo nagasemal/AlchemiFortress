@@ -24,7 +24,9 @@ class Particle;
 
 class PlayScene;
 
-class Tutorial
+struct Tutorial_Status;
+
+class OperationInstructions
 {
 public:
 	enum INSTRUCTION_TYPE : int
@@ -58,19 +60,18 @@ public:
 	};
 
 public:
-	Tutorial();
-	~Tutorial();
+	OperationInstructions();
+	~OperationInstructions();
 
-	void Initialize(std::vector<int> tutorialNumber, PlayScene* pPlayScene);
+	void Initialize(std::vector<Tutorial_Status> tutorialNumber, PlayScene* pPlayScene);
 	void Update(PlayScene* pPlayScene,bool stopFlag = false);
 	void Render();
 	void Render_Layer2(); // 表示の関係上もう一つ関数が必要であったため
 	void Finalize();
 
-	void RelodeTutorial(std::vector<int> tutorialNumber, PlayScene* pPlayScene);
+	void RelodeTutorial(std::vector<Tutorial_Status> tutorialNumber, PlayScene* pPlayScene);
 	void CreateInterfase();
 	
-	bool GetTutorialFlag() { return m_explanationFlag || (m_tutorialFlag && m_cameraFlag); }
 	bool GetExplanationFlag() { return m_explanationFlag; }
 
 	// 現在の選択状況からどこにラインを引くか決めます
@@ -116,7 +117,6 @@ private:
 	bool m_explanationFlag;
 
 	// チュートリアルモードに入っているか否か
-	bool m_tutorialFlag;
 	bool m_cameraFlag;
 
 	// チュートリアル時のアニメーション
@@ -124,7 +124,7 @@ private:
 
 	int m_selectNumber;
 	// 0 何もない ウェーブのチュートリアル番号が格納されている
-	std::vector<int> m_tutorialNumber;
+	std::vector<Tutorial_Status> m_tutorialNumber;
 
 	int m_maxSelectVal;
 

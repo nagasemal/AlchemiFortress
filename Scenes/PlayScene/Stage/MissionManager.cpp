@@ -143,10 +143,10 @@ void MissionManager::Update(AlchemicalMachineManager* pAlchemicalManager, EnemyM
 	if (m_timeCondition.size() > 0)																		TimerMission();
 
 	// リソースに変化があった際に通す
-	if (pAlchemicalManager->GetPulsMpVal() > 0.0f);
+	if (pAlchemicalManager->GetPulsMpVal() > 0.0f)		ResourceMission(pAlchemicalManager);
 
 	// クリスタルリソースに変化があった際に通す
-	if (pAlchemicalManager->GetPulsCrystalVal() > 0.0f);
+	if (pAlchemicalManager->GetPulsCrystalVal() > 0.0f)	ResourceMission(pAlchemicalManager);
 
 	// 拠点のHPが0になったことを知らせるフラグ
 	m_failureFlag = m_baseHP <= 0;
@@ -421,8 +421,24 @@ void MissionManager::LvUPMission(AlchemicalMachineManager* alchemicalManager)
 	}
 }
 
-void MissionManager::ResourceMission()
+void MissionManager::ResourceMission(AlchemicalMachineManager* alchemicalManager)
 {
+
+	// 対応する条件をTrueにする：リソース条件
+	for (int i = 0; i < m_resourceCondition.size(); i++)
+	{
+		if (m_resourceCondition[i].progress >= m_resourceCondition[i].value) continue;
+
+		if (m_resourceCondition[i].condition == "MP")		m_resourceCondition[i].progress += alchemicalManager->GetPulsMpVal();
+
+		if (m_resourceCondition[i].condition == "Crystal")	m_resourceCondition[i].progress += alchemicalManager->GetPulsCrystalVal();
+
+		if (m_resourceCondition[i].progress >= m_resourceCondition[i].value)
+		{
+			m_missionSituation++;
+		}
+
+	}
 }
 
 void MissionManager::EnemyMission(EnemyManager* enemyManager)

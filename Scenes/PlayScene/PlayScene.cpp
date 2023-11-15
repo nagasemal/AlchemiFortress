@@ -45,25 +45,32 @@ void PlayScene::Initialize()
 	// フィールドマネージャークラスの生成
 	m_fieldManager = std::make_unique<FieldObjectManager>();
 	m_fieldManager ->Initialize();
+
 	// マウスポインタークラスの生成
 	m_mousePointer	= std::make_unique<MousePointer>();
 	m_mousePointer	->Initialize();
+
 	// ユニット(マシン)マネージャークラスの生成
 	m_AM_Manager	= std::make_unique<AlchemicalMachineManager>();
 	m_AM_Manager	->Initialize();
+
 	// カメラを動かすクラスの生成
 	m_moveCamera	= std::make_unique<MoveCamera>();
 	m_moveCamera	->Initialize();
+
 	// エネミーマネージャークラスの生成
 	m_enemyManager  = std::make_unique<EnemyManager>();
 	m_enemyManager	->Initialize();
+
 	// リソースを示すゲージクラスの生成
 	m_resourceGauge = std::make_unique<Gauge>();
 	m_resourceGauge	->Initialize();
+
 	// 拠点のLvを示すクラスの生成
 	m_baseLv = std::make_unique<BaseLv>();
 	m_baseLv->SetPosition(SimpleMath::Vector2(40.0f, 40.0f));
 	m_baseLv->SetScale(SimpleMath::Vector2(0.1f, 0.1f));
+
 	// ミッションマネージャークラスの生成
 	m_missionManager = std::make_unique<MissionManager>();
 	m_missionManager->Initialize();
@@ -91,9 +98,11 @@ void PlayScene::Initialize()
 	});
 
 	// チュートリアルクラスの生成
-	m_tutorial = std::make_unique<Tutorial>();
-	m_tutorial->Initialize(ShareJsonData::GetInstance().GetStageData().tutorial, this);
+	m_operationInstructions = std::make_unique<OperationInstructions>();
+	m_operationInstructions->Initialize(ShareJsonData::GetInstance().GetStageData().tutorial, this);
 
+	m_tutorialManager = std::make_unique<TutorialManager>(this);
+	m_tutorialManager ->ChangeWave(1);
 
 	// レンダーテクスチャの作成（シーン全体）
 	m_offscreenRT = std::make_unique<DX::RenderTexture>(DXGI_FORMAT_B8G8R8A8_UNORM);
@@ -108,51 +117,63 @@ GAME_SCENE PlayScene::Update()
 	ShareData& pSD = ShareData::GetInstance();
 	SoundData& pSound = SoundData::GetInstance();
 	DeltaTime& pDelta = DeltaTime::GetInstance();
-	bool tutorialFlag = m_tutorial->GetExplanationFlag();
+	bool operationNow = m_operationInstructions->GetExplanationFlag();
 
 	pSound.PlayBGM(XACT_WAVEBANK_BGMS_BGM_PLAY, false);
 
-	m_tutorial			->Update(this,m_moveCamera->GetStopCameraFlag());
+	// 倍速ボタンの更新処理
+	m_doubleSpeedButton->HitMouse();
+	m_doubleSpeedNum += m_doubleSpeedButton->ClickMouse();
+	if (m_doubleSpeedNum > MAX_SPEED) m_doubleSpeedNum = 1;
 
-	m_explanation		->Update();
+	if (m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven())
+	{
+		// 低減
+		pDelta.SetDoubleSpeed((float)m_doubleSpeedNum / 1.5f);
+	}
+	else
+	{
+		// 倍速にする
+		pDelta.SetDoubleSpeed((float)m_doubleSpeedNum);
+	}
 
-	m_missionManager	->Update(m_AM_Manager.get(), m_enemyManager.get(), m_fieldManager.get());
+	m_operationInstructions ->Update(this,m_moveCamera->GetStopCameraFlag());
+
+	m_missionManager		->Update(m_AM_Manager.get(), m_enemyManager.get(), m_fieldManager.get());
+
+	m_tutorialManager		->Update(m_missionManager->NextWaveFlag());
+
+	m_explanation			->Update();
 
 	//　次のWaveに進んだことを知らせる
-	if (m_missionManager->NextWaveFlag())
+	if (m_missionManager	->NextWaveFlag())
 	{
 		DataManager* pDM = DataManager::GetInstance();
 		ShareJsonData& pSJD = ShareJsonData::GetInstance();
 		Stage_Data stageData = pSJD.GetStageData();
 
-		m_AM_Manager->ReloadResource();
-		m_enemyManager->ReloadEnemyData();
-		m_tutorial->RelodeTutorial(stageData.tutorial, this);
-		m_missionManager->ReloadWave();
+		m_AM_Manager			->ReloadResource();
+		m_enemyManager			->ReloadEnemyData();
+		m_operationInstructions	->RelodeTutorial(stageData.tutorial, this);
+		m_missionManager		->ReloadWave();
+		m_tutorialManager		->ChangeWave(m_missionManager->GetWave());
 
 		// リソース群を追加する
-		pDM->SetNowBaseHP(pDM->GetNowBaseHP() + stageData.resource.hp);
-		pDM->SetNowCrystal(pDM->GetNowCrystal() + stageData.resource.crystal);
-		pDM->SetNowMP(pDM->GetNowMP() + stageData.resource.mp);
+		pDM->SetNowBaseHP	(pDM->GetNowBaseHP()	+ stageData.resource.hp);
+		pDM->SetNowCrystal	(pDM->GetNowCrystal()	+ stageData.resource.crystal);
+		pDM->SetNowMP		(pDM->GetNowMP()		+ stageData.resource.mp);
 
 	}
 
 	// タイトル移行ボタンが押されたらタイトルシーンに向かう
-	if (m_tutorial->GetTitleSceneButton()->ClickMouse()) return GAME_SCENE::TITLE;
+	if (m_operationInstructions->GetTitleSceneButton()->ClickMouse())	return GAME_SCENE::TITLE;
 	// セレクト移行ボタンが押されたらセレクトシーンに向かう
-	if (m_tutorial->GetSelectSceneButton()->ClickMouse()) return GAME_SCENE::SELECT;
+	if (m_operationInstructions->GetSelectSceneButton()->ClickMouse())	return GAME_SCENE::SELECT;
 
-	//// チュートリアル中ならば以下の処理を通さない
-	if (tutorialFlag) 		return GAME_SCENE();
+	// チュートリアル中ならば以下の処理を通さない
+	if (operationNow) 		return GAME_SCENE();
 
-	// 倍速ボタンのアップデート
-	m_doubleSpeedButton->HitMouse();
-	m_doubleSpeedNum += m_doubleSpeedButton->ClickMouse();
-	if (m_doubleSpeedNum > MAX_SPEED) m_doubleSpeedNum = 1;
-	// 倍速にする
-	pDelta.SetDoubleSpeed((float)m_doubleSpeedNum);
-
-	m_moveCamera		->Update(!m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven(), true);
+	m_moveCamera->Update(!m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven(), true);
 
 	m_fieldManager		->Update(m_enemyManager.get());
 	m_mousePointer		->Update();
@@ -275,22 +296,28 @@ void PlayScene::Draw()
 void PlayScene::DrawUI()
 {
 
-	m_tutorial->Render();
+	m_operationInstructions	->Render();
 
-	m_AM_Manager		->DrawUI();
-	m_resourceGauge		->Render();
+	m_tutorialManager		->Render();
 
-	m_baseLv			->Render();
+	m_AM_Manager			->DrawUI();
+	m_enemyManager			->RenderUI();
 
-	m_missionManager	->Render();
+	m_resourceGauge			->Render();
+
+	m_baseLv				->Render();
+
+	m_missionManager		->Render();
 
 	// 倍速ボタン
-	m_doubleSpeedButton->DrawUI(10 + m_doubleSpeedNum);
+	m_doubleSpeedButton		->DrawUI(10 + m_doubleSpeedNum);
 
 	// 操作説明描画
-	m_explanation->Render(m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven(), m_AM_Manager->GetRotateStopFlag());
+	m_explanation			->Render(m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven(), m_AM_Manager->GetRotateStopFlag());
 
-	m_tutorial->Render_Layer2();
+	m_operationInstructions	->Render_Layer2();
+
+	m_tutorialManager->Render_Layer2();
 
 	//SimpleMath::Vector2 origin = SimpleMath::Vector2(1280, 1280);
 	//RECT rect = { 0,0,origin.x,origin.y };

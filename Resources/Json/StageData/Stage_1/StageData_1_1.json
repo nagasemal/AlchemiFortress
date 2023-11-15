@@ -19,7 +19,7 @@
     "MACHINE_SPAWN": [
       {
         "TYPE": "Attacker",
-        "VALUE": 2
+        "VALUE": 4
       }
     ]
   },
@@ -86,28 +86,32 @@
     "MACHINES": []
   },
   "RESOURCE_DEFAULET": {
-    "ATTACKER": 2,
+    "ATTACKER": 4,
     "CRYSTAL": 0,
     "DEFFENCER": 0,
     "LV": 1,
     "HP": 500,
     "MINING": 0,
-    "MP": 500,
+    "MP": 0,
     "RECOVERY": 0,
     "UPPER": 0
   },
   "TUTORIAL": [
-    { "NUMBER": 1 },
-    { "NUMBER": 14 },
-    { "NUMBER": 0 }
+    {
+      "NUMBER": 1,
+      "VAL": 0
+    },
+    {
+      "NUMBER": 14,
+      "VAL": 4
+    },
+    {
+      "NUMBER": 0,
+      "VAL": 0
+    }
   ],
   "LastWave": false,
   "EnemyLv": 1
 }
 
-
-    //{ "NUMBER": 9 },
-    //{ "NUMBER": 6 },
-    //{ "NUMBER": 12 },
-    //{ "NUMBER": 16 },
-
+// アタッカーマシンを設置するチュートリアル

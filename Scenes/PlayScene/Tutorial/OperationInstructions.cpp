@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "Tutorial.h"
+#include "OperationInstructions.h"
 
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
@@ -39,7 +39,7 @@
 // 示すラインの大きさ
 #define LINE_RAGE SimpleMath::Vector2(50.0f,50.0f)
 
-const std::vector<const wchar_t*> Tutorial::FILENAME =
+const std::vector<const wchar_t*> OperationInstructions::FILENAME =
 {
 	{L"Resources/Textures/Explanation/None.png"},			//  0.None
 	{L"Resources/Textures/Explanation/Attacker.png"},		//  1.Attacker
@@ -64,9 +64,8 @@ const std::vector<const wchar_t*> Tutorial::FILENAME =
 	{L"Resources/Textures/Explanation/None.png"},
 };
 
-Tutorial::Tutorial():
+OperationInstructions::OperationInstructions():
 	m_explanationFlag(false),
-	m_tutorialFlag(false),
 	m_cameraFlag(false),
 	m_selectNumber(1),
 	m_tutorialNumber(0),
@@ -77,11 +76,11 @@ Tutorial::Tutorial():
 
 }
 
-Tutorial::~Tutorial()
+OperationInstructions::~OperationInstructions()
 {
 }
 
-void Tutorial::Initialize(std::vector<int> tutorialNumber, PlayScene* pPlayScene)
+void OperationInstructions::Initialize(std::vector<Tutorial_Status> tutorialNumber, PlayScene* pPlayScene)
 {
 
 	m_showBox = std::make_unique<DrawBox>(SimpleMath::Vector2(), LINE_RAGE, 5.0f);
@@ -114,27 +113,24 @@ void Tutorial::Initialize(std::vector<int> tutorialNumber, PlayScene* pPlayScene
 	CreateInterfase();
 
 	// 説明画像テクスチャの読み込み
-	m_textTexture->LoadTexture(FILENAME[m_tutorialNumber[0]]);
+	m_textTexture->LoadTexture(FILENAME[m_tutorialNumber[0].type]);
 
 	// 対象オブジェクトを指すパーティクルクラス
 	m_particle_Select = std::make_unique<Particle>(Particle::MACHINE_SPAWN);
 	m_particle_Select->Initialize();
 	m_particle_Select->SetParticleSpawnTime(1.0f);
 
-	// チュートリアル数を取得
-	m_selectNumber = 0;
-	m_maxSelectVal = (const int)m_tutorialNumber.size() - 1;
-	LinePosSet(pPlayScene, m_tutorialNumber[m_selectNumber]);
+	//// チュートリアル数を取得
+	//m_selectNumber = 0;
+	//m_maxSelectVal = (const int)m_tutorialNumber.size() - 1;
+	//LinePosSet(pPlayScene, m_tutorialNumber[m_selectNumber]);
 
 }
 
-void Tutorial::Update(PlayScene* pPlayScene, bool stopFlag)
+void OperationInstructions::Update(PlayScene* pPlayScene, bool stopFlag)
 {
 
 	m_cameraFlag = stopFlag;
-
-	m_showBox->Update();
-	m_showBox->SetAnimationFlag( GetTutorialFlag() );
 
 	// パーティクルのアップデート処理
 	m_particle_Select->UpdateParticle();
@@ -142,12 +138,14 @@ void Tutorial::Update(PlayScene* pPlayScene, bool stopFlag)
 	// パーティクル出現のカウント
 	m_particleTime += DeltaTime::GetInstance().GetDeltaTime();
 
-
 	if(!m_cameraFlag) m_showBox->ResetAnimationData();
 
 	// 説明時モード
-	if (m_explanationFlag )
+	if (m_explanationFlag)
 	{
+		m_showBox->Update();
+		m_showBox->SetAnimationFlag(m_explanationFlag);
+
 		m_arrowL->HitMouse();
 		m_arrowR->HitMouse();
 
@@ -189,92 +187,92 @@ void Tutorial::Update(PlayScene* pPlayScene, bool stopFlag)
 
 	}
 
-	// チュートリアル時処理
-	if (m_tutorialFlag && m_cameraFlag)
-	{		
-
-		m_showBox->SetAnimationFlag(true);
-
-		// 指している場所をクリックする チュートリアルであるとき
-		if (m_showBox->ClickMouse())
-		{
-			NextTutorial(pPlayScene);
-		}
-
-		// Noneマシンを選択するチュートリアルであるとき
-		if (m_tutorialNumber[m_selectNumber] == SPAWN)
-		{
-			// Noneマシンのどれかが選択された
-			if (pPlayScene->GetAlchemicalMachineManager()->SpawnMachineNotification() != NONE)
-			{
-				NextTutorial(pPlayScene);
-			}
-
-			// Noneマシンを触るチュートリアルであるとき　且つ　パーティクルのスポーンタイムが規定値を超えたら
-			if (m_particleTime >= 1.0f)
-			{
-				NonePosSearch(pPlayScene);
-				m_particleTime = 0.0f;
-			}
-		}
-
-		// 全チュートリアルが終わったらチュートリアルモードを解除する
-		if (m_selectNumber >= m_maxSelectVal)
-		{
-			m_tutorialFlag = false;
-			m_selectNumber = 0;
-
-		}
-
-		//m_arrowL->HitMouse();
-		//m_arrowR->HitMouse();
-		//
-		//// 選択可能範囲の最大値を取得
-		//m_maxSelectVal = (const int)m_tutorialNumber.size() - 1;
-		//
-		//// 左ボタンでm_selectNumber増加
-		//if (m_arrowL->ClickMouse())
-		//{
-		//	m_selectNumber++;
-		//	// 上限下限設定
-		//	m_selectNumber = std::min(std::max(m_selectNumber, 0), m_maxSelectVal);
-		//
-		//	// テクスチャを読み込む
-		//	m_textTexture->LoadTexture(FILENAME[m_tutorialNumber[m_selectNumber]]);
-		//
-		//	// アニメーション値を0に戻す
-		//	m_showBox->ResetAnimationData();
-		//}
-		//
-		//// 右ボタンでm_selectNumber増加
-		//if (m_arrowR->ClickMouse())
-		//{
-		//
-		//	m_selectNumber--;
-		//	// 上限下限設定
-		//	m_selectNumber = std::min(std::max(m_selectNumber, 0), m_maxSelectVal);
-		//
-		//	// テクスチャを読み込む
-		//	m_textTexture->LoadTexture(FILENAME[m_tutorialNumber[m_selectNumber]]);
-		//
-		//	// アニメーション値を0に戻す
-		//	m_showBox->ResetAnimationData();
-		//}
-		//
-		//// ラインを引く位置を決める
-		//LinePosSet(pPlayScene,m_selectNumber);
-		//
-		//if (m_selectNumber >= m_maxSelectVal)
-		//{
-		//	m_tutorialExitButton->HitMouse();
-		//	if (m_tutorialExitButton->ClickMouse()) 			m_tutorialFlag = false;
-		//}
-
-	}
+	//// チュートリアル時処理
+	//if (m_tutorialFlag && m_cameraFlag)
+	//{		
+	//
+	//	m_showBox->SetAnimationFlag(true);
+	//
+	//	// 指している場所をクリックする チュートリアルであるとき
+	//	if (m_showBox->ClickMouse())
+	//	{
+	//		NextTutorial(pPlayScene);
+	//	}
+	//
+	//	// Noneマシンを選択するチュートリアルであるとき
+	//	if (m_tutorialNumber[m_selectNumber] == SPAWN)
+	//	{
+	//		// Noneマシンのどれかが選択された
+	//		if (pPlayScene->GetAlchemicalMachineManager()->SpawnMachineNotification() != NONE)
+	//		{
+	//			NextTutorial(pPlayScene);
+	//		}
+	//
+	//		// Noneマシンを触るチュートリアルであるとき　且つ　パーティクルのスポーンタイムが規定値を超えたら
+	//		if (m_particleTime >= 1.0f)
+	//		{
+	//			NonePosSearch(pPlayScene);
+	//			m_particleTime = 0.0f;
+	//		}
+	//	}
+	//
+	//	// 全チュートリアルが終わったらチュートリアルモードを解除する
+	//	if (m_selectNumber >= m_maxSelectVal)
+	//	{
+	//		m_tutorialFlag = false;
+	//		m_selectNumber = 0;
+	//
+	//	}
+	//
+	//	//m_arrowL->HitMouse();
+	//	//m_arrowR->HitMouse();
+	//	//
+	//	//// 選択可能範囲の最大値を取得
+	//	//m_maxSelectVal = (const int)m_tutorialNumber.size() - 1;
+	//	//
+	//	//// 左ボタンでm_selectNumber増加
+	//	//if (m_arrowL->ClickMouse())
+	//	//{
+	//	//	m_selectNumber++;
+	//	//	// 上限下限設定
+	//	//	m_selectNumber = std::min(std::max(m_selectNumber, 0), m_maxSelectVal);
+	//	//
+	//	//	// テクスチャを読み込む
+	//	//	m_textTexture->LoadTexture(FILENAME[m_tutorialNumber[m_selectNumber]]);
+	//	//
+	//	//	// アニメーション値を0に戻す
+	//	//	m_showBox->ResetAnimationData();
+	//	//}
+	//	//
+	//	//// 右ボタンでm_selectNumber増加
+	//	//if (m_arrowR->ClickMouse())
+	//	//{
+	//	//
+	//	//	m_selectNumber--;
+	//	//	// 上限下限設定
+	//	//	m_selectNumber = std::min(std::max(m_selectNumber, 0), m_maxSelectVal);
+	//	//
+	//	//	// テクスチャを読み込む
+	//	//	m_textTexture->LoadTexture(FILENAME[m_tutorialNumber[m_selectNumber]]);
+	//	//
+	//	//	// アニメーション値を0に戻す
+	//	//	m_showBox->ResetAnimationData();
+	//	//}
+	//	//
+	//	//// ラインを引く位置を決める
+	//	//LinePosSet(pPlayScene,m_selectNumber);
+	//	//
+	//	//if (m_selectNumber >= m_maxSelectVal)
+	//	//{
+	//	//	m_tutorialExitButton->HitMouse();
+	//	//	if (m_tutorialExitButton->ClickMouse()) 			m_tutorialFlag = false;
+	//	//}
+	//
+	//}
 
 	// 説明モード移行ボタン
 	m_explanationButton->HitMouse();
-	if (m_explanationButton->ClickMouse() && !m_tutorialFlag)
+	if (m_explanationButton->ClickMouse())
 	{
 		m_explanationFlag = !m_explanationFlag;
 
@@ -284,7 +282,7 @@ void Tutorial::Update(PlayScene* pPlayScene, bool stopFlag)
 
 }
 
-void Tutorial::Render()
+void OperationInstructions::Render()
 {
 	ShareData& pSD = ShareData::GetInstance();
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
@@ -338,7 +336,7 @@ void Tutorial::Render()
 
 }
 
-void Tutorial::Render_Layer2()
+void OperationInstructions::Render_Layer2()
 {
 	ShareData& pSD = ShareData::GetInstance();
 	pSD.GetSpriteBatch()->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
@@ -373,28 +371,27 @@ void Tutorial::Render_Layer2()
 
 }
 
-void Tutorial::Finalize()
+void OperationInstructions::Finalize()
 {
 }
 
-void Tutorial::RelodeTutorial(std::vector<int> tutorialNumber, PlayScene* pPlayScene)
+void OperationInstructions::RelodeTutorial(std::vector<Tutorial_Status> tutorialNumber, PlayScene* pPlayScene)
 {
 	m_selectNumber = 0;
-	m_tutorialFlag = (bool)tutorialNumber[0];
 	m_tutorialNumber = tutorialNumber;
-
+	
 	// 選択可能範囲の最大値を取得
 	m_maxSelectVal = (const int)m_tutorialNumber.size();
-
-	// UserInterFaceが生成されているならば再度画像を読み込む
-	if(m_textTexture) m_textTexture->LoadTexture(FILENAME[m_tutorialNumber[0]]);
-
+	
+	//UserInterFaceが生成されているならば再度画像を読み込む
+	if(m_textTexture) m_textTexture->LoadTexture(FILENAME[m_tutorialNumber[0].type]);
+	
 	// 線を引く位置を決める
-	LinePosSet(pPlayScene, m_tutorialNumber[0]);
+	LinePosSet(pPlayScene, m_tutorialNumber[0].type);
 
 }
 
-void Tutorial::CreateInterfase()
+void OperationInstructions::CreateInterfase()
 {
 	auto device = ShareData::GetInstance().GetDeviceResources();
 	float width = static_cast<float>(device->GetOutputSize().right);
@@ -422,7 +419,7 @@ void Tutorial::CreateInterfase()
 
 }
 
-void Tutorial::LinePosSet(PlayScene* pPlayScene, int number)
+void OperationInstructions::LinePosSet(PlayScene* pPlayScene, int number)
 {
 
 	SimpleMath::Vector2 linePos = SimpleMath::Vector2(-100,-100);
@@ -537,16 +534,16 @@ void Tutorial::LinePosSet(PlayScene* pPlayScene, int number)
 	m_showBox->SetPosRage(linePos,lineRage);
 }
 
-void Tutorial::NextTutorial(PlayScene* pPlayScene)
+void OperationInstructions::NextTutorial(PlayScene* pPlayScene)
 {
 	// 対象物がクリックされたら次のチュートリアルに向かう
 	m_selectNumber++;
 	// 上限設定
 	m_selectNumber = std::min(std::max(m_selectNumber, 0), (int)m_tutorialNumber.size() - 1);
-	LinePosSet(pPlayScene, m_tutorialNumber[m_selectNumber]);
+	LinePosSet(pPlayScene, m_tutorialNumber[m_selectNumber].type);
 }
 
-void Tutorial::NonePosSearch(PlayScene* pPlayScene)
+void OperationInstructions::NonePosSearch(PlayScene* pPlayScene)
 {
 	auto device = ShareData::GetInstance().GetDeviceResources();
 	float width = static_cast<float>(device->GetOutputSize().right);

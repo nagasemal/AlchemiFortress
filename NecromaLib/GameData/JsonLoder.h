@@ -101,6 +101,12 @@ struct Enemys_Spawn
 	bool condition					= false;					// 召喚を開始するタイミング
 };
 
+struct Tutorial_Status
+{
+	int type;		// チュートリアルの処理内容
+	int val;		// 処理内容に対して付加する数値
+};
+
 struct Stage_Data
 {
 	std::vector<Stage_Condition>		condition_Machine;			// ステージのクリア条件 (マシン配置条件)
@@ -120,7 +126,7 @@ struct Stage_Data
 
 	std::vector<SimpleMath::Vector2>	crystalPos;					// クリスタルの番号
 
-	std::vector<int>					tutorial;					// チュートリアル番号
+	std::vector<Tutorial_Status>			tutorial;					// チュートリアル番号
 	bool								lastWave		= true;		// 次にステージが控えているか	
 };
 

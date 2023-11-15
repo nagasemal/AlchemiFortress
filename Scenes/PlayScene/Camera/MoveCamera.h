@@ -24,8 +24,11 @@ public:
 	bool GetStopCameraFlag();
 
 	void SetEyeProsition(SimpleMath::Vector3 eye)			{ m_eye = eye;}
-	void SetTargetProsition(SimpleMath::Vector3 target)	{ m_target = target; }
+	void SetTargetProsition(SimpleMath::Vector3 target)		{ m_target = target; }
 	void SetSaveTargetProsition(SimpleMath::Vector3 target) { m_saveTarget = target; }
+
+	void SetCameraLock(bool flag) { m_moveLock = flag; }
+	bool GetCameraLock() { return m_moveLock; }
 
 	void TargetChange(SimpleMath::Vector3 targetA, SimpleMath::Vector3 targetB);
 	void ResetTargetChangeTimer() { m_targetChangeTime = 0; }
@@ -63,4 +66,6 @@ private:
 
 	// ビュー行列の算出
 	void CalculateViewMatrix();
+
+	bool m_moveLock;
 };

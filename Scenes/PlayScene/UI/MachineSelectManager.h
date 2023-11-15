@@ -50,6 +50,9 @@ public:
 	// マシンアイコンを回す
 	void RotationMachineList();
 
+	// マシンUIを動かすボタンのアクティブフラグを変更する
+	void LRButtonLock(bool flag);
+
 public:
 
 	void SetSelectNoneFlag(bool flag) { m_selectNoneFlag = flag; }
@@ -59,6 +62,8 @@ public:
 
 
 	int GetMachineUISelectNumber() { return m_selectNumber; }
+
+	void ChangeSelectMachine(int machineID) { m_selectNumber = machineID; m_rotateTime = 0.0f; }
 
 	// 選択ボックスが押されているかをTypeに応じて返す
 	bool GetHitMouseToSelectBox(int index)							{ return m_machineSelect[index]->GetHitMouseFlag();}
@@ -70,6 +75,9 @@ public:
 
 	// 一つの要素でもtrueなら
 	bool GetHitMouseToSelectBoxEven()								{ return m_selectBoxAll;}
+
+	// 錬金ボタン
+	SelectionBox* GetAlchemiButton() { return m_selectionAlchemi.get(); }
 
 private:
 

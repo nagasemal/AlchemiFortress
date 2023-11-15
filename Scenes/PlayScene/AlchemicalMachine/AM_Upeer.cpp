@@ -28,7 +28,7 @@ void AM_Upper::Initialize()
 
 	for (int i = 0; i < 4; i++)
 	{
-		m_selectBox[i] = std::make_unique<SelectionBox>(SimpleMath::Vector2(80.f + ((float)i * 65.f), 560.f), SimpleMath::Vector2(1.f, 1.f));
+		m_selectBox[i] = std::make_unique<SelectionBox>(SimpleMath::Vector2(150.f + ((float)i * 60.f), 660.0f), SimpleMath::Vector2(0.8f, 0.8f));
 	}
 
 	m_color = ShareJsonData::GetInstance().GetElementColor(m_element);

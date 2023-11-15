@@ -105,7 +105,7 @@ void EnemyObject::Update()
 
 void EnemyObject::Draw()
 {
-
+	m_stateContext->RenderIcon(this);
 }
 
 void EnemyObject::Render(Model* model)
@@ -202,6 +202,6 @@ void EnemyObject::HitBullet(SimpleMath::Vector3 vectol,int power)
 
 	// ‘Ì—Í‚ðŒ¸‚ç‚·
 	m_hp -= (int)power;
-	m_stateContext->TransitionTo(new Enemy_KnockBackState(vectol, power));
+	m_stateContext->TransitionTo(new Enemy_KnockBackState(vectol, (float)power));
 
 }

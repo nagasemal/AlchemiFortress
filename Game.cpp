@@ -171,7 +171,7 @@ void Game::Render()
 
     m_SceneManager.get()->Render();
 
-    m_debugFont->Render(m_commonStates.get());
+    //m_debugFont->Render(m_commonStates.get());
     m_deviceResources->PIXEndEvent();
 
     // Show the new frame.
@@ -266,7 +266,6 @@ void Game::CreateDeviceDependentResources()
     m_commonStates  = std::make_unique<CommonStates>(device);
     m_SpriteBatch   = std::make_unique<SpriteBatch>(context);
     m_debugFont     = std::make_unique<Imase::DebugFont>(device,context,L"Resources/Font/SegoeUI_18.spritefont");
-    m_SpriteBatch   = std::make_unique<SpriteBatch>(context);
     m_EffectFactory = std::make_unique<DirectX::EffectFactory>(device);
 
     ShareData* pSD = &ShareData::GetInstance();

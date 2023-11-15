@@ -229,7 +229,7 @@ void AlchemicalMachineManager::Update(
 	{
 		// アルケミカルマシンを中心点を軸に回す
 		MovingMachine(i);
-		m_AMObject[i]->SetSelectModeFlag(m_selectManager->GetHitMouseToSelectBoxEven());
+		//m_AMObject[i]->SetSelectModeFlag(m_selectManager->GetHitMouseToSelectBoxEven());
 		m_AMObject[i]->Update_Common();
 
 		// オブジェクトにマウスが入っているかどうか

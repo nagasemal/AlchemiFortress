@@ -34,7 +34,7 @@ DrawBox::~DrawBox()
 
 void DrawBox::Update()
 {
-	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
+	float deltaTime = DeltaTime::GetInstance().GetNomalDeltaTime();
 
 	// ŽžŠÔŒv‘ª
 	if (m_hitMouseFlag || m_animationFlag)	m_animationData_First += deltaTime * 1.1f;
@@ -49,7 +49,7 @@ void DrawBox::Update()
 	if (m_animationData_First) m_animationData_Second += deltaTime * 1.2f;
 	if (m_animationData_Second.MaxCheck()) m_animationData_Second = 0.0f;
 
-	m_color = SimpleMath::Color(1.0f, 1.0f, 1.0f - m_animationData_Second, 1.0f);
+	m_color = SimpleMath::Color(1.0f, 0.0f, 1.0f - m_animationData_Second, 1.0f);
 
 	m_keySelectFlag = false;
 

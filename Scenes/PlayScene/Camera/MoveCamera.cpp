@@ -21,6 +21,7 @@ MoveCamera::MoveCamera()
 	, m_eye(0.0f, 0.0f, 0.0f)
 	, m_target{ 0.f }
 	, m_saveTarget{ 0.f }
+	, m_moveLock()
 	, m_time()
 	, m_targetChangeTime()
 	, m_prevWheelValue()
@@ -48,6 +49,9 @@ void MoveCamera::Initialize()
 void MoveCamera::Update(bool scroll, bool move)
 {
 	scroll;
+
+	// カメラの動きを行わないようにする
+	if (m_moveLock) return;
 
 	auto state = InputSupport::GetInstance().GetMouseState().GetLastState();
 	auto keyboard = InputSupport::GetInstance().GetKeybordState().GetLastState();
@@ -124,6 +128,10 @@ bool MoveCamera::GetStopCameraFlag()
 
 void MoveCamera::TargetChange(SimpleMath::Vector3 targetA, SimpleMath::Vector3 targetB)
 {
+
+	// カメラの動きを行わないようにする
+	if (m_moveLock) return;
+
 	SimpleMath::Vector3 diffpos = targetA - targetB;
 
 	m_target.x = Easing::EaseOutQuint(m_saveTarget.x, m_saveTarget.x - diffpos.x, m_targetChangeTime);

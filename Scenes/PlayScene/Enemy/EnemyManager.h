@@ -22,6 +22,12 @@ public:
 	void Initialize();
 	void Update(SimpleMath::Vector3 basePos);
 	void Render();
+
+	/// <summary>
+	/// エネミーの上部に表示するビルボードされたアイコンを出す処理
+	/// </summary>
+	void RenderUI();
+	
 	void Finalize();
 
 	// エネミーのデータを再度読み取る

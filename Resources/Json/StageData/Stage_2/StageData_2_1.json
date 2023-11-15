@@ -2,8 +2,8 @@
   "CRYSTAL_SPAWN": {
     "CRYSTALS": [
       {
-        "SPAWN_X": -6,
-        "SPAWN_Z": 6
+        "SPAWN_X": -4,
+        "SPAWN_Z": 4
       },
       {
         "SPAWN_X": 12,
@@ -15,7 +15,7 @@
     "ENEMY_KNOCKDOWN": [
       {
         "TYPE": "All",
-        "VALUE": 8
+        "VALUE": 6
       }
     ]
   },
@@ -29,6 +29,30 @@
   },
   "Conditions_Alchemi": {
     "MACHINE_ALCHEMI": [
+      {
+        "TYPE": "Attacker",
+        "VALUE": -1
+      }
+    ]
+  },
+  "Conditions_Destroy": {
+    "MACHINE_DESTROY": [
+      {
+        "TYPE": "Attacker",
+        "VALUE": -1
+      }
+    ]
+  },
+  "Conditions_Recovery": {
+    "MACHINE_RECOVERY": [
+      {
+        "TYPE": "Attacker",
+        "VALUE": -1
+      }
+    ]
+  },
+  "Conditions_LvUp": {
+    "MACHINE_LVUP": [
       {
         "TYPE": "Attacker",
         "VALUE": -1
@@ -51,86 +75,74 @@
       }
     ]
   },
+  "Conditions_Resource": {
+    "RESOURCE": [
+      {
+        "TYPE": "MP",
+        "VALUE": -1
+      }
+    ]
+  },
   "ENEMY_SPAWNTIME": {
     "ENEMYS": [
       {
         "CONDITION": "",
-        "SPAWNTIME": 8,
-        "SPAWN_X": 15,
+        "SPAWNTIME": 7,
+        "SPAWN_X": 7,
         "SPAWN_Y": 0,
-        "SPAWN_Z": 15,
-        "LV": 1,
-        "TYPE": "Worm"
-      },
-      {
-        "CONDITION": "",
-        "SPAWNTIME": 8,
-        "SPAWN_X": -15,
-        "SPAWN_Y": 0,
-        "SPAWN_Z": 15,
+        "SPAWN_Z": 13,
         "LV": 1,
         "TYPE": "Slime"
       },
       {
         "CONDITION": "",
-        "SPAWNTIME": 8,
-        "SPAWN_X": 15,
+        "SPAWNTIME": 7,
+        "SPAWN_X": 10,
         "SPAWN_Y": 0,
-        "SPAWN_Z": -15,
-        "LV": 1,
-        "TYPE": "Slime"
-      },
-      {
-        "CONDITION": "",
-        "SPAWNTIME": 8,
-        "SPAWN_X": -15,
-        "SPAWN_Y": 0,
-        "SPAWN_Z": -15,
-        "LV": 1,
-        "TYPE": "Worm"
-      },
-
-      {
-        "CONDITION": "",
-        "SPAWNTIME": 30,
-        "SPAWN_X": 15,
-        "SPAWN_Y": 0,
-        "SPAWN_Z": 15,
-        "LV": 1,
-        "TYPE": "Slime"
-      },
-      {
-        "CONDITION": "",
-        "SPAWNTIME": 30,
-        "SPAWN_X": -15,
-        "SPAWN_Y": 0,
-        "SPAWN_Z": 15,
+        "SPAWN_Z": 10,
         "LV": 1,
         "TYPE": "Hop"
       },
       {
         "CONDITION": "",
-        "SPAWNTIME": 30,
-        "SPAWN_X": 15,
+        "SPAWNTIME": 7,
+        "SPAWN_X": 13,
         "SPAWN_Y": 0,
-        "SPAWN_Z": -15,
+        "SPAWN_Z": 7,
+        "LV": 1,
+        "TYPE": "Slime"
+      },
+      {
+        "CONDITION": "",
+        "SPAWNTIME": 16,
+        "SPAWN_X": -7,
+        "SPAWN_Y": 0,
+        "SPAWN_Z": -13,
+        "LV": 1,
+        "TYPE": "Slime"
+      },
+      {
+        "CONDITION": "",
+        "SPAWNTIME": 16,
+        "SPAWN_X": -10,
+        "SPAWN_Y": 0,
+        "SPAWN_Z": -10,
         "LV": 1,
         "TYPE": "Hop"
       },
       {
         "CONDITION": "",
-        "SPAWNTIME": 30,
-        "SPAWN_X": -15,
+        "SPAWNTIME": 16,
+        "SPAWN_X": -13,
         "SPAWN_Y": 0,
-        "SPAWN_Z": -15,
+        "SPAWN_Z": -7,
         "LV": 1,
         "TYPE": "Slime"
       }
     ]
   },
   "MACHINE_DEFAULET": {
-    "MACHINES": [
-    ]
+    "MACHINES": []
   },
   "RESOURCE_DEFAULET": {
     "ATTACKER": 0,
@@ -144,9 +156,13 @@
     "UPPER": 0
   },
   "TUTORIAL": [
-    { "NUMBER": 0 }
+    {
+      "NUMBER": 0,
+      "VAL": 0
+    }
   ],
   "LastWave": false,
   "EnemyLv": 1
 }
 
+// アタッカーマシンを設置するチュートリアル

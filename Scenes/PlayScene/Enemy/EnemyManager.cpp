@@ -176,8 +176,17 @@ void EnemyManager::Render()
 
 	for (std::list<EnemyObject>::iterator it = m_enemyObject->begin(); it != m_enemyObject->end(); it++)
 	{
-		it->Draw();
 		it->Render(m_enemyModel.get());
+	}
+
+}
+
+void EnemyManager::RenderUI()
+{
+
+	for (std::list<EnemyObject>::iterator it = m_enemyObject->begin(); it != m_enemyObject->end(); it++)
+	{
+		it->Draw();
 	}
 
 }

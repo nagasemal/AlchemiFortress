@@ -40,6 +40,8 @@ public:
 
 	int GetStartTimer();
 
+	int GetWave() { return m_wave; }
+
 private:
 
 	void MachineMission(AlchemicalMachineManager* alchemicalManager);
@@ -48,7 +50,7 @@ private:
 	void RecoveryMission(AlchemicalMachineManager* alchemicalManager);
 	void LvUPMission(AlchemicalMachineManager* alchemicalManager);
 
-	void ResourceMission();
+	void ResourceMission(AlchemicalMachineManager* alchemicalManager);
 
 	void EnemyMission(EnemyManager* enemyManager);
 	void BaseLvMission(int baseLv);

@@ -127,6 +127,10 @@ public:
 
 	const bool GetDethFlag()							const { return m_dethFlag; }
 
+	// d—Í‚ğ‚©‚©‚ç‚È‚­‚·‚é
+	void GravityReset() { m_gravityScale = 0.0f; }
+
+
 	EnemyObject* GetEnemyObject()						{ return this;}
 
 	EnemyCommander* GetEnemyCommand()					{ return m_commander.get();}

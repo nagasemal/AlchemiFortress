@@ -78,25 +78,15 @@ void PlayerBase::Update()
 		DataManager::GetInstance()->CrystalMAXRecalculation(m_baseLv);
 		DataManager::GetInstance()->BaseHPMAXRecalculation(m_baseLv);
 
-		//m_hp = (float)DataManager::GetInstance()->GetNowBaseHP_MAX()
-
 		// 超過分を入れる
 		m_exp = saveEXP;
 
 	}
-
-	//DataManager::GetInstance()->SetNowBaseHP((int)m_hp);
 }
 
 void PlayerBase::Draw()
 {
 	ShareData& pSD = ShareData::GetInstance();
-
-	///*===[ デバッグ文字描画 ]===*/
-	//std::wostringstream oss;
-	//oss << "Base-";
-	//if (m_hitMouseFlag) oss << "Hit";
-	//pSD.GetDebugFont()->AddString(oss.str().c_str(), SimpleMath::Vector2(0.f, 100.f));
 
 	SimpleMath::Matrix textBox = SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y + 3.0f, m_data.pos.z);
 
@@ -150,7 +140,7 @@ void PlayerBase::Damage(float damage)
 	{
 
 		m_invincibleTime = 0.0f;
-		DataManager::GetInstance()->SetNowBaseHP(DataManager::GetInstance()->GetNowBaseHP() - damage);
+		DataManager::GetInstance()->SetNowBaseHP(DataManager::GetInstance()->GetNowBaseHP() - (int)damage);
 	
 	}
 }

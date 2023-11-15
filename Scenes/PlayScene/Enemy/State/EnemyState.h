@@ -11,8 +11,9 @@ public:
 	Enemy_IdlingState();
 	~Enemy_IdlingState() = default;
 
-	void Update(EnemyObject* object) override;
-	void Render(EnemyObject* object,Model* model) override;
+	void Update(EnemyObject* object)				override;
+	void Render(EnemyObject* object,Model* model)	override;
+	void RenderIcon(EnemyObject* object)			override;
 
 private:
 
@@ -30,6 +31,7 @@ public:
 
 	void Update(EnemyObject* object) override;
 	void Render(EnemyObject* object, Model* model) override;
+	void RenderIcon(EnemyObject* object)			override;
 
 private:
 
@@ -44,6 +46,7 @@ public:
 
 	void Update(EnemyObject* object) override;
 	void Render(EnemyObject* object,Model* model) override;
+	void RenderIcon(EnemyObject* object)			override;
 
 private:
 
@@ -64,6 +67,7 @@ public:
 
 	void Update(EnemyObject* object) override;
 	void Render(EnemyObject* object,Model* model) override;
+	void RenderIcon(EnemyObject* object)			override;
 
 private:
 
@@ -82,6 +86,11 @@ public:
 
 	void Update(EnemyObject* object) override;
 	void Render(EnemyObject* object,Model* model) override;
+	void RenderIcon(EnemyObject* object)			override;
+
+private:
+
+	const float DETH_TIME = 5.0f;
 
 private:
 

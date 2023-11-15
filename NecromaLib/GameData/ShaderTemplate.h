@@ -33,7 +33,7 @@ public:
 	void LoadShaderFile(const wchar_t* path);
 	void AdvanceRender(); // 事前に長い処理は呼んでおく
 
-	void SetWindowSize(const int& width, const int& height)			{ m_windowWidth = width; m_windowHeight = height; };
+	void SetWindowSize(const int& width, const int& height)	{ m_windowWidth = width; m_windowHeight = height; };
 	void SetScale(SimpleMath::Vector2 scale)				{ m_scale = scale;}
 	void SetPosition(SimpleMath::Vector2 position)			{ m_position = position;}
 	void SetColor(SimpleMath::Color color)					{ m_color = color; }
@@ -44,26 +44,27 @@ public:
 
 protected:
 
-	// 魔法陣テクスチャ情報
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
-	Microsoft::WRL::ComPtr<ID3D11Resource> m_res;
+	// テクスチャ情報
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	m_texture;
+	Microsoft::WRL::ComPtr<ID3D11Resource>				m_res;
 
 	// コンスタンスバッファ
-	Microsoft::WRL::ComPtr<ID3D11Buffer>	m_cBuffer;
+	Microsoft::WRL::ComPtr<ID3D11Buffer>				m_cBuffer;
 	// 入力レイアウト
-	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
+	Microsoft::WRL::ComPtr<ID3D11InputLayout>			m_inputLayout;
 	// プリミティブバッチ
 	std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColorTexture>> m_batch;
 	// 頂点情報
-	std::vector<DirectX::VertexPositionColorTexture> m_vertices;
+	std::vector<DirectX::VertexPositionColorTexture>	m_vertices;
 	//コモンステート
-	std::unique_ptr<DirectX::CommonStates> m_states;
+	std::unique_ptr<DirectX::CommonStates>				m_states;
+
 	// 頂点シェーダ
-	Microsoft::WRL::ComPtr<ID3D11VertexShader> m_vertexShader;
+	Microsoft::WRL::ComPtr<ID3D11VertexShader>			m_vertexShader;
 	// ピクセルシェーダ
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pixelShader;
+	Microsoft::WRL::ComPtr<ID3D11PixelShader>			m_pixelShader;
 	// ジオメトリシェーダ
-	Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_geometryShader;
+	Microsoft::WRL::ComPtr<ID3D11GeometryShader>		m_geometryShader;
 
 	int m_windowWidth, m_windowHeight;
 	int m_textureWidth, m_textureHeight;

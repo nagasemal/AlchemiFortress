@@ -85,12 +85,12 @@ bool InputSupport::RightButton_Press()
 
 bool InputSupport::RightButton_Release()
 {
-	return m_mouseTracker.leftButton == Mouse::ButtonStateTracker::RELEASED;
+	return m_mouseTracker.rightButton == Mouse::ButtonStateTracker::RELEASED;
 }
 
 bool InputSupport::RightButton_Held()
 {
-	return m_mouseTracker.leftButton == Mouse::ButtonStateTracker::HELD;
+	return m_mouseTracker.rightButton == Mouse::ButtonStateTracker::HELD;
 }
 
 bool InputSupport::MiddleButton_Press()

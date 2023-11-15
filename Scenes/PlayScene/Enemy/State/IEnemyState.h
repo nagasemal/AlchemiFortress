@@ -39,6 +39,7 @@ public:
 
 	virtual void Update(EnemyObject* object) = 0;
 	virtual void Render(EnemyObject* object,Model* model) = 0;
+	virtual void RenderIcon(EnemyObject* object) = 0;
 
 	ENEMY_STATE GetState() { return m_state; }
 
@@ -87,6 +88,8 @@ public:
 	/// ó‘Ô‚É‰‚¶‚Ä•Ï‚í‚é•`‰æˆ—
 	/// </summary>
 	void Render(EnemyObject* object,Model* model) { this->m_enemyState->Render(object,model); }
+
+	void RenderIcon(EnemyObject* object) { this->m_enemyState->RenderIcon(object); }
 
 	/// <summary>
 	/// Œ»İ‚Ìó‘Ô‚ğENEMY_STATE‚Å•Ô‚·

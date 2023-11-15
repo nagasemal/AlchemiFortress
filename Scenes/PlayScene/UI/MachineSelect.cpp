@@ -85,11 +85,11 @@ void MachineSelect::Update()
 	//
 	//}
 
-	// 選択されているならば、全体の速度を落とす
-	if (m_hitMouseFlag)
-	{
-		DeltaTime::GetInstance().SetDoubleSpeed(0.5f);
-	}
+	//// 選択されているならば、全体の速度を落とす
+	//if (m_hitMouseFlag)
+	//{
+	//	DeltaTime::GetInstance().SetDoubleSpeed(0.5f);
+	//}
 
 }
 

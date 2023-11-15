@@ -17,7 +17,8 @@
 // UI関連
 #include "Scenes/PlayScene/UI/BaseLv.h"
 #include "Scenes/PlayScene/UI/Gauge.h"
-#include "Scenes/PlayScene/Tutorial/Tutorial.h"
+#include "Scenes/PlayScene/Tutorial/OperationInstructions.h"
+#include "Scenes/PlayScene/Tutorial/TutorialManager.h"
 #include "Scenes/PlayScene/Tutorial/Explanation.h"
 
 class PlayScene : public SceneObj
@@ -52,22 +53,24 @@ public:
 
 	// フィールドマネージャークラス
 	FieldObjectManager*			GetFieldManager()				const { return m_fieldManager.get(); }
-	//ウスポインタークラス
+	//マウスポインタークラス
 	MousePointer*				GetMousePointer()				const { return m_mousePointer.get(); }
-	//シンマネージャークラス
+	//マシンマネージャークラス
 	AlchemicalMachineManager*	GetAlchemicalMachineManager()	const { return m_AM_Manager.get(); }
-	//ネミーマネージャークラス
+	//エネミーマネージャークラス
 	EnemyManager*				GetEnemyManager()				const { return m_enemyManager.get();}
-	//ッションマネージャークラス
+	//ミッションマネージャークラス
 	MissionManager*				GetMissionManager()				const { return m_missionManager.get();}
-	//ージクラス
+	//ゲージクラス
 	Gauge*						GetGauge()						const { return m_resourceGauge.get(); }
 	//Lvクラス
 	BaseLv*						GetBaseLv()						const { return m_baseLv.get(); }
 	//説明クラス
 	Explanation*				GetExplanation()				const { return m_explanation.get(); }
-	//速ボタンクラス
+	//倍速ボタンクラス
 	SelectionBox*				GetSpeedUpButton()				const { return m_doubleSpeedButton.get(); }
+	// カメラクラス
+	MoveCamera*					GetMoveCamrera()				const { return m_moveCamera.get(); }
 
 private:
 
@@ -96,10 +99,15 @@ private:
 	std::unique_ptr<BaseLv>						m_baseLv;
 
 	// チュートリアルクラス
-	std::unique_ptr<Tutorial>					m_tutorial;
+	std::unique_ptr<OperationInstructions>		m_operationInstructions;
 
+	// チュートリアルマネージャークラス
+	std::unique_ptr<TutorialManager>			m_tutorialManager;
+
+	// マウス操作説明クラス
 	std::unique_ptr<Explanation>				m_explanation;
 
+	// 天球モデル
 	std::unique_ptr<DirectX::Model>				m_skySphere;
 
 	// 倍速ボタン

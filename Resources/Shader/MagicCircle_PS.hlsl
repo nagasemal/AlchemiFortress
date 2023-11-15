@@ -66,7 +66,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     output *= input.Color;
 	
     //output *= blur(input.Tex);
-	
+		
 	// UVƒXƒNƒ[ƒ‹	
     output.xyz += smoothstep(0.0f, 0.8f, output_3.xyz) * 0.5f;
 	

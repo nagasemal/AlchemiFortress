@@ -54,7 +54,7 @@ void EditScene::Initialize()
     m_stageData.enemys_Spawn        .push_back(Enemys_Spawn());
     m_stageData.machine             .push_back(Stage_Machine());
     m_stageData.resource            = Stage_Resource();
-    m_stageData.tutorial            = std::vector<int>();
+    m_stageData.tutorial            = std::vector<Tutorial_Status>();
     
     for (int i = 0; i < MACHINE_TYPE::NUM; i++)
     {

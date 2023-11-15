@@ -203,6 +203,9 @@
     <Filter Include="Scene\PlayScene\Enemy\EnemyState">
       <UniqueIdentifier>{8299e4ba-c5c3-49bf-a818-bd4bc91831f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\TutorialText">
+      <UniqueIdentifier>{afcaef18-fb4d-42ea-9eda-63ebd19e2bf2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -454,7 +457,7 @@
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyCommand_Identifier.h">
       <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\PlayScene\Tutorial\Tutorial.h">
+    <ClInclude Include="Scenes\PlayScene\Tutorial\OperationInstructions.h">
       <Filter>Scene\PlayScene\Tutorial</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\TitleScene\TitleLogo\TitleLogo.h">
@@ -520,15 +523,6 @@
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyMetaAI.h">
       <Filter>Scene\PlayScene\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_UISelectState.h">
-      <Filter>Scene\PlayScene\Tutorial\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_ModelSelectState.h">
-      <Filter>Scene\PlayScene\Tutorial\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_NoneState.h">
-      <Filter>Scene\PlayScene\Tutorial\State</Filter>
-    </ClInclude>
     <ClInclude Include="Scenes\PlayScene\Enemy\State\IEnemyState.h">
       <Filter>Scene\PlayScene\Enemy\EnemyState</Filter>
     </ClInclude>
@@ -540,6 +534,21 @@
     </ClInclude>
     <ClInclude Include="RenderTexture.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Tutorial\TutorialManager.h">
+      <Filter>Scene\PlayScene\Tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\TutorialState.h">
+      <Filter>Scene\PlayScene\Tutorial\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Tutorial\CommandPattern\ICommand_Tutorial.h">
+      <Filter>Scene\PlayScene\Tutorial\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Tutorial\CommandPattern\Commander_Tutorial.h">
+      <Filter>Scene\PlayScene\Tutorial\command</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Tutorial\CommandPattern\TutorialCommands.h">
+      <Filter>Scene\PlayScene\Tutorial\command</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -771,7 +780,7 @@
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyCommand_Identifier.cpp">
       <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\PlayScene\Tutorial\Tutorial.cpp">
+    <ClCompile Include="Scenes\PlayScene\Tutorial\OperationInstructions.cpp">
       <Filter>Scene\PlayScene\Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="Scenes\TitleScene\TitleLogo\TitleLogo.cpp">
@@ -822,15 +831,6 @@
     <ClCompile Include="Scenes\PlayScene\UI\BaseLv.cpp">
       <Filter>Scene\PlayScene\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_UISelectState.cpp">
-      <Filter>Scene\PlayScene\Tutorial\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_ModelSelectState.cpp">
-      <Filter>Scene\PlayScene\Tutorial\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Scenes\PlayScene\Tutorial\StatePattern\Tutorial_NoneState.cpp">
-      <Filter>Scene\PlayScene\Tutorial\State</Filter>
-    </ClCompile>
     <ClCompile Include="Scenes\PlayScene\Enemy\State\EnemyState.cpp">
       <Filter>Scene\PlayScene\Enemy\EnemyState</Filter>
     </ClCompile>
@@ -839,6 +839,15 @@
     </ClCompile>
     <ClCompile Include="RenderTexture.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Tutorial\TutorialManager.cpp">
+      <Filter>Scene\PlayScene\Tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Tutorial\StatePattern\TutorialState.cpp">
+      <Filter>Scene\PlayScene\Tutorial\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Tutorial\CommandPattern\TutorialCommands.cpp">
+      <Filter>Scene\PlayScene\Tutorial\command</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -932,20 +941,11 @@
     <None Include="Resources\Shader\BaseLv.hlsli">
       <Filter>Shader\BaseLv</Filter>
     </None>
-    <None Include="Resources\Json\StageData\StageData_2_1.json">
-      <Filter>Json\StageData\Stage2</Filter>
-    </None>
     <None Include="Resources\Json\GameParameter\GameParameter.json">
       <Filter>Json\GameParameterData</Filter>
     </None>
-    <None Include="Resources\Json\StageData\StageData_2_2.json">
-      <Filter>Json\StageData\Stage2</Filter>
-    </None>
     <None Include="Resources\Json\EnemyData\EnemyData_Retreat.json">
       <Filter>Json\EnemyData</Filter>
-    </None>
-    <None Include="Resources\Json\StageData\StageData_2_3.json">
-      <Filter>Json\StageData\Stage2</Filter>
     </None>
     <None Include="Resources\Json\GameParameter\UILayout.json">
       <Filter>Json\GameParameterData</Filter>
@@ -970,6 +970,36 @@
     </None>
     <None Include="Resources\Json\StageData\Stage_1\StageData_1_6.json">
       <Filter>Json\StageData\Stage1</Filter>
+    </None>
+    <None Include="Resources\Shader\TutorialShader.hlsli">
+      <Filter>Shader\TutorialText</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_8.json">
+      <Filter>Json\StageData\Stage1</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_9.json">
+      <Filter>Json\StageData\Stage1</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_10.json">
+      <Filter>Json\StageData\Stage1</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_11.json">
+      <Filter>Json\StageData\Stage1</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_12.json">
+      <Filter>Json\StageData\Stage1</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_13.json">
+      <Filter>Json\StageData\Stage1</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\Stage_1\StageData_1_14.json">
+      <Filter>Json\StageData\Stage1</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\Stage_2\StageData_2_1.json">
+      <Filter>Json\StageData\Stage2</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\Stage_2\StageData_2_2.json">
+      <Filter>Json\StageData\Stage2</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1071,6 +1101,15 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\MagicEffectShader_PS.hlsl">
       <Filter>Shader\Model</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\TutorialShader_VS.hlsl">
+      <Filter>Shader\TutorialText</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\TutorialShader_PS.hlsl">
+      <Filter>Shader\TutorialText</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\TutorialShader_GS.hlsl">
+      <Filter>Shader\TutorialText</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

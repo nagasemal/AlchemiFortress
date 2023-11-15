@@ -32,7 +32,7 @@ DrawLine::~DrawLine()
 
 void DrawLine::Update()
 {
-	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
+	float deltaTime = DeltaTime::GetInstance().GetNomalDeltaTime();
 
 	m_popPos = m_data.pos + m_data.rage;
 

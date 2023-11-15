@@ -38,14 +38,14 @@ AlchemicalMachineObject::AlchemicalMachineObject() :
 	m_invincibleFlag(),
 	m_spawnTime(1.0f)
 {
-	m_selectLvUpBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(170, 490),
-		SimpleMath::Vector2(1.0f, 1.0f));
+	m_selectLvUpBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(150, 600),
+		SimpleMath::Vector2(0.8f, 0.8f));
 
-	m_repairBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(250, 490),
-		SimpleMath::Vector2(1.0f, 1.0f));
+	m_repairBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(210, 600),
+		SimpleMath::Vector2(0.8f, 0.8f));
 
-	m_dismantlingBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(250, 650),
-		SimpleMath::Vector2(1.0f, 1.0f));
+	m_dismantlingBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(270, 600),
+		SimpleMath::Vector2(0.8f, 0.8f));
 
 	m_color = Json::ChangeColor(m_element);
 
@@ -122,7 +122,7 @@ void AlchemicalMachineObject::SelectRenderUI_Common()
 
 	// LVUP—pUI
 	RECT rect_UI = SpriteCutter(64, 64, m_lv, 0);
-	m_selectLvUpBox->DrawUI(pSL.GetSelectBoxTexture(), pSL.GetNumberTexture(), rect_UI);
+	m_selectLvUpBox->DrawUI(pSL.GetSelectBoxTexture(), pSL.GetNumberTexture(), rect_UI,SimpleMath::Color(0.0f,0.0f,0.0f,1.0f));
 
 	// C‘U—pUI
 	rect_UI = SpriteCutter(64, 64, SpriteLoder::REPAIR, 0);
@@ -307,6 +307,23 @@ const int AlchemicalMachineObject::GetDismantlingCrystal()
 	auto pSJD = &ShareJsonData::GetInstance();
 
 	return m_lv * (int)pSJD->GetMachineData(m_machineID).dismantling_crystal;
+}
+
+SelectionBox* AlchemicalMachineObject::GetMenuButton(int buttonType)
+{
+	switch (buttonType)
+	{
+	case 0:
+		return m_repairBox.get();
+	case 1:
+		return m_dismantlingBox.get();
+	case 2:
+		return m_selectLvUpBox.get();
+	}
+
+	// ‚»‚êˆÈŠO‚Ìê‡‚Í‚Æ‚è‚ ‚¦‚¸C‘U‘I‘ğBox‚ğ‘I‘ğ‚·‚é
+	return m_repairBox.get();
+
 }
 
 void AlchemicalMachineObject::SilhouetteRender(DirectX::Model* model, SimpleMath::Matrix matrix)
