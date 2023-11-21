@@ -96,5 +96,6 @@ namespace DX
 #include "Audio.h"
 #include "PostProcess.h"
 #include "RenderTexture.h"
+#include "Effects.h"
 
 using namespace DirectX;

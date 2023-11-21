@@ -11,7 +11,7 @@
 
 class SpriteLoder;
 struct Stage_Data;
-class Stage_Condition;
+struct Stage_Condition;
 
 class MissionRender
 {

@@ -6,7 +6,7 @@
 class AlchemicalMachineManager;
 class FieldObjectManager;
 class EnemyManager;
-class Stage_Condition;
+struct Stage_Condition;
 class Number;
 class MissionRender;
 class DrawTimer;

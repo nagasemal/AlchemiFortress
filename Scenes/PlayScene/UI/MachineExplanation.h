@@ -58,7 +58,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
 
 	// マシンのHPゲージ
-	std::unique_ptr<MachineGauge> m_machineGauge;
+	//std::unique_ptr<MachineGauge> m_machineGauge;
 
 	bool m_hitFlag;
 

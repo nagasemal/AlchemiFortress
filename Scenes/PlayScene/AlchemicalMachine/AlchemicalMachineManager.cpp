@@ -8,6 +8,8 @@
 
 #include "Scenes/Commons/DrawVariableNum.h"
 
+#include "DirectXHelpers.h"
+
 #include "Scenes/PlayScene/Camera/MoveCamera.h"
 #include "AM_None.h"
 #include "AM_Attacker.h"
@@ -59,53 +61,89 @@ AlchemicalMachineManager::~AlchemicalMachineManager()
 
 void AlchemicalMachineManager::Initialize()
 {
+	ShareData& pSD = ShareData::GetInstance();
+
+	//　====================[　クラス取得　]
+
+	//　　|=>　マシンの詳細描画クラス
 	m_machineExplanation = std::make_unique<MachineExplanation>();
 	m_machineExplanation->Initialize();
 
+	//　　|=>　マシンUIの描画クラス
 	m_selectManager		= std::make_unique<MachineSelectManager>();
 	m_selectManager		->TextuerLoader();
 	m_selectManager		->Initialize();
 
+	//　　|=>　マシンのモデルパッククラス
 	m_AMFilter = std::make_unique<AlchemicalMachineFilter>();
 
-	ShareData& pSD = ShareData::GetInstance();
-
+	//　　|=>　バレットに使用するモデル
 	m_testBox = GeometricPrimitive::CreateSphere(pSD.GetContext(),0.75f);
 
+	//　　|=>　丸影描画クラス
 	m_dorpShadow		= std::make_unique<DorpShadow>();
 	m_dorpShadow		->Initialize();
 
+	//　　|=>　[パーティクル] バレットToエネミー
 	m_particle_hit		= std::make_unique<Particle>(Particle::HIT_BULLET);
 	m_particle_hit		->Initialize();
 
+	//　　|=>　[パーティクル] マシン設置時
 	m_particle_Put		= std::make_unique<Particle>(Particle::MACHINE_SPAWN);
 	m_particle_Put		->Initialize();
 
+	//　　|=>　[パーティクル] ディフェンサー攻撃時
 	m_particle_Gurd		= std::make_unique<Particle>(Particle::DEFENSE_EFFECT);
 	m_particle_Gurd		->Initialize();
 
+	//　　|=>　[パーティクル] クリスタル回収時
 	m_particle_Mining	= std::make_unique<Particle>(Particle::MINING_EFFECT);
 	m_particle_Mining	->Initialize(L"Crystal");
 	m_particle_Mining	->SetParticleSpawnTime(1.0f);
 
+	//　　|=>　[パーティクル] 魔力回収時
 	m_particle_Recovery = std::make_unique<Particle>(Particle::RECOVERY_EFFECT);
 	m_particle_Recovery	->Initialize(L"MP");
 	m_particle_Recovery	->SetParticleSpawnTime(1.0f);
 
+	//　　|=>　[パーティクル] バレットの軌跡
 	m_particle_Bullet	= std::make_unique<Particle>(Particle::BULLET_LINE);
 	m_particle_Bullet	->Initialize();
 
+	//　　|=>　マシン用魔法陣描画クラス
 	m_magicCircle		= std::make_unique<MagicCircle>();
 	m_magicCircle		->Initialize();
 
+	//　　|=>　拠点用魔法陣描画クラス
 	m_magicCircle_Field = std::make_unique<MagicCircle>();
 	m_magicCircle_Field	->Initialize();
 
-	m_lineVariable = std::make_unique<DrawVariableNum>(SimpleMath::Vector2(1280 / 1.38f,720 / 1.05f),SimpleMath::Vector2(1.0f,1.0f));
 
+	//　====================[　マシンの生成　]
 	CreateAMMachine();
+	
+	//　====================[　現在場に出せるマシンの設定　]
 	LvToObjectActives(1);
+	
+	//　====================[　Jsonからリソースを取得する　]
 	JsonLoadResources();
+
+	//　====================[　ビルボード描画に使用　]
+	//　　|=> エフェクトを作成
+	m_effect = std::make_unique<BasicEffect>(ShareData::GetInstance().GetDevice());
+	m_effect->SetTextureEnabled(true);
+	m_effect->SetVertexColorEnabled(true);
+	m_effect->SetLightingEnabled(false);
+
+	//　　|=> 入力レイアウトを作成
+	DX::ThrowIfFailed(
+		CreateInputLayoutFromEffect(
+			ShareData::GetInstance().GetDevice(),
+			m_effect.get(),
+			VertexPositionColorTexture::InputElements,
+			VertexPositionColorTexture::InputElementCount,
+			m_inputLayout.ReleaseAndGetAddressOf())
+	);
 
 }
 
@@ -118,56 +156,49 @@ void AlchemicalMachineManager::Update(
 
 	InputSupport& pINP = InputSupport::GetInstance();
 	DataManager& pDM = *DataManager::GetInstance();
+	auto pPlayerBase = fieldManager->GetPlayerBase();
 
-	// 入力関係
-	auto mouse		= pINP.GetMouseState();
-	auto keyboard	= pINP.GetKeybordState();
-
+	//　====================[　入力関係　]
+	auto mouse			= pINP.GetMouseState();
+	auto keyboard		= pINP.GetKeybordState();
 	bool leftRelease	= pINP.LeftButton_Release();
 
-	// 回転を止めるフラグ
+	//　====================[　回転の停止/再開　]
 	if (pINP.RightButton_Press())
 	{
 		m_rotationStop = !m_rotationStop;
 	}
 
-	// プレイヤー拠点
-	auto pPlayerBase = fieldManager->GetPlayerBase();
+	//　====================[　設置個所の設定　]
+	LvToObjectActives(pPlayerBase->GetBaseLv());
 
-	// 選択ラインを変更する
-	m_lineVariable->Update(1,pPlayerBase->GetBaseLv());
-	LvToObjectActives(m_lineVariable->GetNumber());
-
-	// 現在出ているアルケミカルマシンの数
+	//　====================[　マシンの数をカウントする変数　]
+	//　　|=>　全てのマシン
 	int amNum = 0;
-
-	// Noneの出ている数
+	//　　|=>　Noneマシン
 	int amNum_Nomal = 0;
 
-	// MPが回復した量をリセットする
+	//　====================[　リソースの取得量のリセット　]
 	m_mpPulsVal = 0;
-
-	// クリスタルが回復した量をリセットする
 	m_crystalPulsVal = 0;
 
-	// セレクトマネージャーのアップデートを回す
-	m_selectManager->Update(fieldManager);
- 
-
-	// Mp追加までの時間計測
-	m_mpPulsTimer += DeltaTime::GetInstance().GetDeltaTime();
-
-	// 全てのアルケミカルマシンToマウスを判定する
+	//　====================[　マシンToマウスの判定リセット　]
 	m_allHitObjectToMouse = false;
 
-	// 通知系変数は全てNoneを返す
+	//　====================[　通知系変数のリセット　]
 	m_spawnMachine = m_destroyMachine = m_recoveryMachine = m_lvUpMachine = MACHINE_TYPE::NONE;
 
-	// パーティクルの更新
+	//　====================[　セレクトマネージャーの更新処理　]
+	m_selectManager->Update(fieldManager);
+
+	//　====================[　魔力回復周期　]
+	m_mpPulsTimer += DeltaTime::GetInstance().GetDeltaTime();
+
+	//　====================[　パーティクルの更新　]
 	Update_Particle();
 
-	// 何もないところで左クリックをすると選択状態が解除される
-	if (leftRelease && !m_machineExplanation->OnMouse())
+	//　====================[　選択状態の解除　]
+	if (leftRelease)
 	{
 
 		moveCamera->ResetTargetChangeTimer();
@@ -185,11 +216,13 @@ void AlchemicalMachineManager::Update(
 		}
 
 		// 選択状態の解除
-		m_selectNumber = -1;
-
+		if (!pINP.GetHitUI())
+		{
+			m_selectNumber = -1;
+		}
 	}
 
-	// 選択状態のオブジェクトがある
+	//　====================[　選択中のオブジェクトがある場合の処理　]
 	if (m_selectNumber != -1)
 	{
 
@@ -211,6 +244,7 @@ void AlchemicalMachineManager::Update(
 			m_AMObject[m_selectNumber]->GetColor());
 
 	}
+	//　====================[　選択中のオブジェクトがない場合の処理　]
 	else
 	{
 
@@ -221,21 +255,20 @@ void AlchemicalMachineManager::Update(
 		moveCamera->TargetChange(m_prevSelectMachinePos, { 0,0,0 });
 	}
 
-	// 丸影を落とす処理
+	//　====================[　登録した影情報を消す　]
 	m_dorpShadow->DeleteShadow();
 
-	//　現在存在するマシンを動かすための処理
+	//　====================[　全マシンの更新処理　]
 	for (int i = 0; i < m_AMObject.size(); i++)
 	{
-		// アルケミカルマシンを中心点を軸に回す
+		//　================[　マシンを動かす　]
 		MovingMachine(i);
-		//m_AMObject[i]->SetSelectModeFlag(m_selectManager->GetHitMouseToSelectBoxEven());
 		m_AMObject[i]->Update_Common();
 
-		// オブジェクトにマウスが入っているかどうか
+		//　================[　マシンToマウス　]
 		if (m_AMObject[i]->GetHitMouse())
 		{
-			// マシンに当たっている判定を是にする
+
 			m_allHitObjectToMouse = true;
 
 			// クリックで選択状態に移行
@@ -246,6 +279,8 @@ void AlchemicalMachineManager::Update(
 				m_machineExplanation->ResetMoveTime();
 			}
 		}
+
+		m_AMObject[i]->SetSelectModeFlag(m_selectNumber == i);
 
 		//　存在していれば処理を続ける
 		if (!m_AMObject[i]->GetActive()) continue;
@@ -262,28 +297,29 @@ void AlchemicalMachineManager::Update(
 		m_AMObject[i]->Update();
 		m_AMObject[i]->HitToMouse(pMP);
 
-		// 解体されたことを受け取る
+		// 解体された通知を受け取る
 		if (m_AMObject[i]->GetDismantlingFlag())
 		{
 			Dismantling(i);
 		}
 
-		// 修繕されたことを受け取る
+		// 修繕された通知を受け取る
 		if (m_AMObject[i]->GetRepairFlag())
 		{
 			m_recoveryMachine	= m_AMObject[i]->GetModelID();
 		}
 
-		// LvUpされたことを受け取る
+		// LvUpされた通知を受け取る
 		if (m_AMObject[i]->GetLvUpFlag())
 		{
 			m_lvUpMachine		= m_AMObject[i]->GetModelID();
 		}
 
-		// MP追加処理 (リカバリーの時のみ機能)
+		// MP追加処理 (インデックスがリカバリーを指し、魔力回復周期が来た時、回転を止めていれば魔力を回復させる)
 		if (m_mpPulsTimer >= MPPLUSTIME && !m_rotationStop && m_AMObject[i]->GetModelID() == MACHINE_TYPE::RECOVERY)
 		{
-			m_mpPulsVal += (int)m_AMObject[i]->GetMachineEffectValue();
+			// リカバリーマシンが生きていたら加算を行う
+			m_mpPulsVal += (int)m_AMObject[i]->GetHP() > 0 ? m_AMObject[i]->GetMachineEffectValue() * m_AMObject[i]->GetLv() : 0;
 		}
 
 		// アルケミカルマシンの個別更新処理
@@ -294,31 +330,31 @@ void AlchemicalMachineManager::Update(
 		Update_Recovery(i,enemys);
 	}
 
-	// マシンを召喚する処理
+	//　====================[　マシンを召喚する処理　]
 	SpawnAMMachine(leftRelease);
 
-	// 魔力リソースを増やす
+	//　====================[　魔力リソースの増加　]
 	if (m_mpPulsTimer >= MPPLUSTIME && !m_rotationStop)
 	{
 		m_mpPulsTimer = 0;
-		m_mpPulsVal += ((int)MPPLUSNUM * ((amNum - amNum_Nomal) / 4));
+		m_mpPulsVal += ((int)MPPLUSNUM * ((amNum - amNum_Nomal) / 8));
 		pDM.SetNowMP(pDM.GetNowMP() + m_mpPulsVal);
 	}
 
-	// クリスタルリソースを増やす
+	//　====================[　クリスタルリソースの増加　]
 	pDM.SetNowCrystal(pDM.GetNowCrystal() + m_crystalPulsVal);
 
 
-	// 錬金ボタンが押されたら所持数を増やす
+	//　====================[　所持数の増加　]
 	if (m_selectManager->GetManufacturingFlag())
 	{
 		m_AMnums[m_selectManager->GetSelectMachineType()]++;
 	}
 
-	// 離したのでマウスの当たり判定を元の大きさに戻す
+	//　====================[　マウスの当たり判定を戻す　]
 	if(leftRelease)  pMP->ReleaseLeftButtom();
 
-	// バレットの更新処理
+	//　====================[　バレット更新処理　]
 	for (std::list<std::unique_ptr<Bullet>>::iterator it = m_bullets.begin(); it != m_bullets.end(); it++)
 	{
 		it->get()->Update();
@@ -333,7 +369,7 @@ void AlchemicalMachineManager::Update(
 		}
 	}
 
-	// 魔法陣展開
+	//　====================[　魔法陣の位置を定める　]
 	m_magicCircle_Field->CreateMagicCircle(
 		SimpleMath::Vector3{ 0,MAGICCIRCLE_HEIGHT,0 },
 		pPlayerBase->GetBaseLv() * CIRCLE_LINE_DISTANCE);
@@ -344,10 +380,11 @@ void AlchemicalMachineManager::Update(
 void AlchemicalMachineManager::Render()
 {
 
-	// 置いた際に出すパーティクル
+	//　====================[　置いた際に出すパーティクル　]
+	//　　|=>　描画順の影響で先に描画
 	m_particle_Put->Render();
 
-	// シルエット描画用ドローコール
+	//　====================[　シルエット描画用ドローコール　]
 	for (int i = 0; i < m_AMObject.size(); i++)
 	{
 		// 存在しているかチェック
@@ -360,7 +397,7 @@ void AlchemicalMachineManager::Render()
 		}
 	}
 
-	// 通常描画用ドローコール
+	//　====================[　通常描画用ドローコール　]
 	for (int i = 0; i < m_AMObject.size(); i++)
 	{
 		// 存在しているかチェック
@@ -376,69 +413,98 @@ void AlchemicalMachineManager::Render()
 
 	}
 
+	//　====================[　選択されたマシンの魔法陣描画処理　]
 	if (m_selectNumber != -1)
 	{
 		m_magicCircle->CreateWorld();
 		m_magicCircle->Render(m_AMObject[m_selectNumber]->GetModelID());
 	}
 
-	// 丸影表示
+	
+	//　====================[　丸影の描画処理　]
 	m_dorpShadow->CreateWorld();
 	m_dorpShadow->Render();
 
-	m_particle_hit->Render();
-	m_particle_Gurd->Render();
-	m_particle_Mining->Render();
-	m_particle_Recovery->Render();
-	m_particle_Bullet->Render();
+	//　====================[　パーティクルの描画処理　]
+	m_particle_hit		->Render();
+	m_particle_Gurd		->Render();
+	m_particle_Mining	->Render();
+	m_particle_Recovery	->Render();
+	m_particle_Bullet	->Render();
 
-	// バレットの描画処理
+	//　====================[　バレットの描画処理　]
 	for (std::list<std::unique_ptr<Bullet>>::iterator it = m_bullets.begin(); it != m_bullets.end(); it++)
 	{
 		it->get()->Render(m_testBox.get());
 	}
 
+	//　====================[　拠点の魔法陣描画処理　]
 	m_magicCircle_Field->Render(0);
 
 }
 
+
 void AlchemicalMachineManager::DrawUI()
 {
-	m_selectManager->MagicCircleRender();
 
+	//　====================[　マシンUIの指定可視化UIの描画　]
 	m_selectManager->Render();
 
-	// オブジェクトセレクトのrenderを呼び出す Noneを省くために1スタート
-	for (int i = 1; i < (int)MACHINE_TYPE::NUM; i++)
+	//　====================[　マシンアイコンUIの描画　]
+	//　　|=>　Noneマシンを省くために1スタート
+	for (int i = 1; i < MACHINE_TYPE::NUM; i++)
 	{
 		m_selectManager->ModelRender(i);
 	}
 
+	//　====================[　UIのビルボード描画　]
+	for (int i = 0; i < m_AMObject.size(); i++)
+	{
+		// 存在しなければそれ以降も存在しないため、処理を終了する
+		if (!m_AMObject[i]->GetActive()) break;
+		// 選択番号と一致している場合は二回ドローコールをする必要はない為、飛ばす
+		if (m_selectNumber == i) continue;
+
+		// マウスの周辺にあるマシンの情報開示
+		Circle mouseCircle = Circle(InputSupport::GetInstance().GetMousePosWolrd(),5.0f);
+
+		if (PointerToCircle(mouseCircle, m_AMObject[i]->GetPos()) ||
+			m_AMObject[i]->GetPopTextTime() > 0.0f)
+		{
+			BillboardRenderUI(i);
+		}
+	}
+
+	//　====================[　マシンUIに関連する描画　]
+	//　　|=>　錬金ボタンUI
+	//　　|=>　マシンの名前
+	//　　|=>　必要リソース量
 	m_selectManager->RenderUI(m_AMnums);
 
-	// UIの表示 m_selectNumberが-1 = 選択されていない
+	//　====================[　UIの表示　]
 	if (m_selectNumber != -1)
 	{
+		BillboardRenderUI(m_selectNumber);
+
 		// 選択したモデルのIDがNoneなら表示しない
 		if (m_AMObject[m_selectNumber]->GetModelID() == MACHINE_TYPE::NONE) return;
 
-		/*===[ 確認用モデルの表示 ]===*/
 		m_machineExplanation->Draw();
 		m_machineExplanation->DisplayObject(m_AMFilter->HandOverAMModel(m_AMObject[m_selectNumber]->GetModelID()),
-											m_AMFilter->GetRingModel(m_AMObject[m_selectNumber]->GetModelID()),
-											m_AMObject[m_selectNumber].get());
+			m_AMFilter->GetRingModel(m_AMObject[m_selectNumber]->GetModelID()),
+			m_AMObject[m_selectNumber].get());
 
 		m_AMObject[m_selectNumber]->RenderUI();
 		m_AMObject[m_selectNumber]->SelectRenderUI_Common();
 
 	}
 
-	m_lineVariable->Render();
-
 }
 
 void AlchemicalMachineManager::Finalize()
 {
+
+	//　====================[　全マシンの終了処理　]
 	for (int i = 0; i < m_AMObject.size(); i++)
 	{
 		m_AMObject[i]->Finalize();
@@ -448,6 +514,7 @@ void AlchemicalMachineManager::Finalize()
 	m_AMObject.clear();
 	m_AMObject.shrink_to_fit();
 
+	//　====================[　全バレットの終了処理　]
 	for (std::list<std::unique_ptr<Bullet>>::iterator it = m_bullets.begin(); it != m_bullets.end(); it++)
 	{
 		it->get()->Finalize();
@@ -455,14 +522,66 @@ void AlchemicalMachineManager::Finalize()
 
 	m_bullets.clear();
 
+	//　====================[　UI描画クラスの終了処理　]
 	m_selectManager->Finalize();
 	m_selectManager.reset();
 
+	//　====================[　マシン詳細クラスの終了処理　]
 	m_machineExplanation->Finalize();
 	m_machineExplanation.reset();
 
 	m_AMFilter.reset();
 	m_testBox.reset();
+
+}
+
+void AlchemicalMachineManager::BillboardRenderUI(int index)
+{
+	ShareData& pSD = ShareData::GetInstance();
+	auto status = pSD.GetCommonStates();
+	auto camera = ShareData::GetInstance().GetCamera();
+	auto context = pSD.GetContext();
+
+	//　====================[　ビルボード行列生成　]
+	//　　|=>　スクリーン座標はY軸が＋－逆なので-1
+	SimpleMath::Matrix invertY = SimpleMath::Matrix::CreateScale(1.0f, -1.0f, 1.0f);
+
+	//　　|=> ビュー行列の回転を打ち消す行列を作成する
+	SimpleMath::Matrix invView = camera->GetViewMatrix().Invert();
+	invView._41 = 0.0f;
+	invView._42 = 0.0f;
+	invView._43 = 0.0f;
+
+	//　　|=> エフェクトにビュー行列と射影行列を設定する
+	m_effect->SetView(camera->GetViewMatrix());
+	m_effect->SetProjection(camera->GetProjectionMatrix());
+
+
+	//　====================[　UIをワールド空間に出す]
+	pSD.GetSpriteBatch()->Begin(SpriteSortMode_Deferred, status->NonPremultiplied(), nullptr, status->DepthNone(), status->CullCounterClockwise(), [=]
+	{	
+		// ワールド行列作成
+		SimpleMath::Matrix world =
+			SimpleMath::Matrix::CreateScale(0.01f) *
+			invertY *
+			invView *
+			SimpleMath::Matrix::CreateTranslation(m_AMObject[index]->GetPos() + SimpleMath::Vector3(0.0f, 4.5f, 0.0f));
+
+		// エフェクトを適応する
+		m_effect->SetWorld(world);
+		m_effect->Apply(context);
+		// 入力レイアウトを設定する
+		context->IASetInputLayout(m_inputLayout.Get());
+	});
+
+	//========  開始　========//
+
+	m_AMObject[index]->RenderHP();
+
+	//========  終了　========//
+
+	pSD.GetSpriteBatch()->End();
+
 
 }
 
@@ -475,9 +594,9 @@ void AlchemicalMachineManager::ReloadResource()
 {
 
 	auto pSJD = &ShareJsonData::GetInstance();
-
 	Stage_Resource resource = pSJD->GetStageData().resource;
 
+	//　====================[　マシン所持数を追加　]
 	m_AMnums[MACHINE_TYPE::ATTACKER]	+= resource.attacker;
 	m_AMnums[MACHINE_TYPE::DEFENSER]	+= resource.deffencer;
 	m_AMnums[MACHINE_TYPE::UPPER]		+= resource.upper;
@@ -488,33 +607,14 @@ void AlchemicalMachineManager::ReloadResource()
 
 void AlchemicalMachineManager::Update_Particle()
 {
-	// パーティクル群のアップデート処理
+
+	//　====================[　パーティクル群の更新処理　]
 	m_particle_hit			->UpdateParticle();
 	m_particle_Put			->UpdateParticle();
 	m_particle_Gurd			->UpdateParticle();
 	m_particle_Mining		->UpdateParticle();
 	m_particle_Recovery		->UpdateParticle();
 	m_particle_Bullet		->UpdateParticle();
-}
-
-void AlchemicalMachineManager::Update_None(int baseLv)
-{
-	InputSupport& pINP = InputSupport::GetInstance();
-	
-	int scrollWheelValue = pINP.GetMouseState().GetLastState().scrollWheelValue / 100;
-
-	// scrollWheelValueが前回の値より大きければm_saveWheelValueを足す。小さければ引く
-	if (m_saveWheelValue > scrollWheelValue) m_scrollValue++;
-	if (m_saveWheelValue < scrollWheelValue) m_scrollValue--;
-
-	m_saveWheelValue = scrollWheelValue;
-
-	// 上限下限設定
-	if (m_scrollValue <= 1)			m_scrollValue = 1;
-	if (m_scrollValue >= baseLv)	m_scrollValue = baseLv;
-
-	// 選択するラインを決める
-
 }
 
 void AlchemicalMachineManager::Update_Attacker(int index, EnemyManager* enemys)
@@ -532,17 +632,17 @@ void AlchemicalMachineManager::Update_Attacker(int index, EnemyManager* enemys)
 		int attackerMachineLine = m_AMObject[index]->GetLine();
 
 		// 判定を取る条件(ラインが±1の属性が同じUpperで且つ生存している)
-		bool flag = (upperMachineLine + 1 >= attackerMachineLine ||
+		bool toUpperflag = (upperMachineLine + 1 >= attackerMachineLine ||
 					 upperMachineLine - 1 >= attackerMachineLine) &&
 					 m_AMObject[j]->GetModelID() == MACHINE_TYPE::UPPER &&
 					 m_AMObject[j]->GetElement() == m_AMObject[index]->GetElement() &&
 					 m_AMObject[j]->GetHP() >= 0;
 
-		if(flag)	 attacker->AllAlchemicalMachine(m_AMObject[j].get());
+		if(toUpperflag)	 attacker->AllAlchemicalMachine(m_AMObject[j].get());
 
 	}
 
-	// 弾を発射する
+	//　====================[　バレットの発射リクエスト　]
 	if (attacker->BulletRequest(enemys->GetEnemyData()))
 	{
 		m_bullets.push_back(std::make_unique<Bullet>(attacker->GetBulletData()));
@@ -556,8 +656,10 @@ void AlchemicalMachineManager::Update_Defenser(int index, EnemyManager* enemys)
 
 	AM_Defenser* defenser = dynamic_cast<AM_Defenser*>(m_AMObject[index].get());
 
+	//　====================[　エネミーとの衝突時　]
 	defenser->EnemyHit(enemys->GetEnemyData());
 
+	//　　|=>　専用のパーティクルを出す
 	m_particle_Gurd->Update(defenser->GetPos(), defenser->CounterAttack(), defenser->GetColor());
 
 }
@@ -569,9 +671,13 @@ void AlchemicalMachineManager::Update_Mining(int index, FieldObjectManager* fiel
 
 	AM_Mining* mining = dynamic_cast<AM_Mining*>(m_AMObject[index].get());
 
-	m_crystalPulsVal += mining->AllFieldObject(fieldManager);
+	//　====================[　エネミーとの衝突時　]
 	mining->HitEnemy(enemys->GetEnemyData());
 
+	//　====================[　クリスタルリソースの回収　]
+	m_crystalPulsVal += mining->AllFieldObject(fieldManager);
+
+	//　　|=>　専用のパーティクルを出す
 	m_particle_Mining->Update(mining->GetPos(), !mining->GetCrystalFlag(),mining->GetColor());
 
 }
@@ -585,9 +691,10 @@ void AlchemicalMachineManager::Update_Recovery(int index,EnemyManager* enemys)
 
 	AM_Recovery* recovery = dynamic_cast<AM_Recovery*>(m_AMObject[index].get());
 
+	//　====================[　エネミーとの衝突時　]
 	recovery->HitEnemy(enemys->GetEnemyData());
 
-	// 回収状態をパーティクルで示す
+	//　====================[　回収状態ならばパーティクルを出す　]
 	m_particle_Recovery->OnShot(recovery->GetPos(), m_mpPulsTimer >= MPPLUSTIME && !m_rotationStop, recovery->GetColor());
 }
 
@@ -599,6 +706,7 @@ void AlchemicalMachineManager::Update_Upper(int index,EnemyManager* enemyManager
 
 	AM_Upper* upper = dynamic_cast<AM_Upper*>(m_AMObject[index].get());
 
+	//　====================[　エネミーとの衝突時　]
 	upper->HitEnemy(enemyManager->GetEnemyData());
 
 }
@@ -610,12 +718,11 @@ void AlchemicalMachineManager::MovingMachine(int number)
 
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
 
-	// 0,0,0を中心に回転移動
+	//　====================[　原点を中心に回転移動　]
 	SimpleMath::Matrix matrix = SimpleMath::Matrix::Identity;
-
 	matrix *= SimpleMath::Matrix::CreateRotationY(XMConvertToRadians(10.0f * deltaTime));
-
-	// 回転後の座標を代入
+	
+	//　　|=>  回転後の座標をマシンに代入
 	m_AMObject[number]->SetPos(SimpleMath::Vector3::Transform(m_AMObject[number]->GetPos(), matrix));
 
 }
@@ -625,10 +732,12 @@ void AlchemicalMachineManager::CreateAMMachine()
 {
 	int counter = 0;
 
+	//　====================[　影の配列をリセットする　]
 	m_dorpShadow->DeleteShadow();
 
 	int circle_max_line = ShareJsonData::GetInstance().GetGameParameter().baseLV_MAX;
 
+	//　====================[　配置箇所を決める　]
 	for (int i = 1; i < circle_max_line; i++)
 	{
 		for (int j = 0; j < CIRCLE_MAX_MIN * i; j++)
@@ -660,7 +769,7 @@ void AlchemicalMachineManager::LvToObjectActives(int lineNumber)
 
 		if (m_AMObject[i]->GetModelID() != MACHINE_TYPE::NONE) continue;
 
-		if (m_AMObject[i]->GetLine() == lineNumber)
+		if (m_AMObject[i]->GetLine() <= lineNumber)
 		{
 			m_AMObject[i]->SetActive(true);
 		}
@@ -675,10 +784,11 @@ void AlchemicalMachineManager::LvToObjectActives(int lineNumber)
 void AlchemicalMachineManager::SpawnAMMachine(bool leftButtom)
 {
 
-	// 選択ボックスUIに触れていない
-	// 対象オブジェクトに触れている
-	// 説明UIに触れていない
-	// 左ボタンを離すとオブジェクトを入れ替える
+	//　====================[　マシンの召喚処理　]
+	//　　|=>　 選択ボックスUIに触れていない
+	//　　|=>　 対象オブジェクトに触れている
+	//　　|=>　 説明UIに触れていない
+	//　　|=>　 左ボタンを離すとオブジェクトを入れ替える
 	if (m_allHitObjectToMouse &&
 		!m_machineExplanation->OnMouse() &&
 		leftButtom)
@@ -709,11 +819,14 @@ void AlchemicalMachineManager::SpawnAMMachine(bool leftButtom)
 
 		// 召喚したオブジェクトの保有数を一つ減らす
 		m_AMnums[m_selectManager->GetSelectMachineType()]--;
-
+		
+		// 召喚したマシンのIDを取得
 		m_spawnMachine = m_AMObject[m_selectNumber]->GetModelID();
 
+		// 召喚用のパーティクルを出現させる
 		m_particle_Put->OnShot(m_AMObject[m_selectNumber]->GetPos(),true, m_AMObject[m_selectNumber]->GetColor());
 
+		// 召喚用の音声を鳴らす
 		SoundData::GetInstance().PlaySystemSE(XACT_WAVEBANK_SYSTEMSE_MACHINESPAWN);
 
 

@@ -53,7 +53,7 @@ void EnemyObject::Initialize()
 
 void EnemyObject::Update()
 {
-	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
+	float deltaTime = DeltaTime::GetInstance().GetDeltaTime() * 1.3f;
 
 	// 拡縮アニメーション
 	m_data.rage.y = Easing::EaseInCirc(0.25f, 0.30f, sinf(m_aliveTimer));

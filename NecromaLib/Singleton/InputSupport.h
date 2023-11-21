@@ -36,6 +36,8 @@ public:
 	void HitUI() { m_hitUIFlag = true; }
 	void ExitUI() { m_hitUIFlag = false; }
 
+	bool GetHitUI() {return m_hitUIFlag;}
+
 	//===[ キーボード ]===//
 	void SetKeybordState(DirectX::Keyboard::KeyboardStateTracker tracker)	{m_keyboardTracker = tracker; }
 	DirectX::Keyboard::KeyboardStateTracker GetKeybordState()				{ return m_keyboardTracker; }

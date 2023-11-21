@@ -70,7 +70,7 @@
     "RESOURCE": [
       {
         "TYPE": "MP",
-        "VALUE": 50
+        "VALUE": 20
       }
     ]
   },
@@ -82,7 +82,7 @@
   },
   "RESOURCE_DEFAULET": {
     "ATTACKER": 0,
-    "CRYSTAL": 0,
+    "CRYSTAL": 10,
     "DEFFENCER": 0,
     "LV": 1,
     "HP": 500,
@@ -94,16 +94,16 @@
 
   "TUTORIAL": [
     {
+      "NUMBER": 19,
+      "VAL": 1
+    },
+    {
       "NUMBER": 4,
       "VAL": 1
     },
     {
       "NUMBER": 6,
       "VAL": 1
-    },
-    {
-      "NUMBER": 4,
-      "VAL": 0
     },
     {
       "NUMBER": 14,

@@ -22,12 +22,12 @@ void SpriteLoder::Loading()
 
 	LoadingPngFile(L"Resources/Textures/SelectMachineUICursor.png", m_machineUICursorTexture);
 
+	LoadingPngFile(L"Resources/Textures/EnemyIcon.png", m_enemyStateTexture);
+
 	// マウステクスチャの取得
 	LoadingPngFile(L"Resources/Textures/Mouse.png", m_mouseTexture);
-
-	// マシンアイコン取得
-	LoadingPngFile(L"Resources/Textures/MachineIcons.png", m_machineIconTexture);
 	
+	LoadingPngFile(L"Resources/Textures/GameStart.png", m_gameStartTexture);
 
 	LoadingPngFile(L"Resources/Textures/NormalMap.png", m_machineNormalMap[0]);
 	LoadingPngFile(L"Resources/Textures/ModelTexture/Fire_NormalMap.png", m_machineNormalMap[1]);
@@ -50,14 +50,6 @@ void SpriteLoder::Loading()
 		L"Resources/Textures/elementTex.png",
 		nullptr,
 		m_elementTextures.ReleaseAndGetAddressOf()
-	);
-
-	// テクスチャ
-	DirectX::CreateWICTextureFromFile(
-		ShareData::GetInstance().GetDevice(),
-		L"Resources/Textures/MachineNames.png",
-		nullptr,
-		m_machineNameTextures.ReleaseAndGetAddressOf()
 	);
 
 	// エネミーの名前のテクスチャ
@@ -156,14 +148,34 @@ void SpriteLoder::Loading()
 
 	// マシン魔法陣
 	{
-		LoadingPngFile(L"Resources/Textures/MagicCircle/MajicCircle.png", m_MagicCircleTexture[MACHINE_TYPE::NONE]);
-		LoadingPngFile(L"Resources/Textures/MagicCircle/Attacker.png", m_MagicCircleTexture[MACHINE_TYPE::ATTACKER]);
-		LoadingPngFile(L"Resources/Textures/MagicCircle/Defencer.png", m_MagicCircleTexture[MACHINE_TYPE::DEFENSER]);
-		LoadingPngFile(L"Resources/Textures/MagicCircle/Upper.png", m_MagicCircleTexture[MACHINE_TYPE::UPPER]);
-		LoadingPngFile(L"Resources/Textures/MagicCircle/Attacker.png", m_MagicCircleTexture[MACHINE_TYPE::RECOVERY]);
-		LoadingPngFile(L"Resources/Textures/MagicCircle/Attacker.png", m_MagicCircleTexture[MACHINE_TYPE::MINING]);
-		LoadingPngFile(L"Resources/Textures/MagicCircle/EnemySpawn.png", m_MagicCircleTexture[6]);
+		LoadingPngFileData(L"Resources/Textures/MagicCircle/MajicCircle.png", m_magicCircleTexture[MACHINE_TYPE::NONE]);
+		LoadingPngFileData(L"Resources/Textures/MagicCircle/Attacker.png", m_magicCircleTexture[MACHINE_TYPE::ATTACKER]);
+		LoadingPngFileData(L"Resources/Textures/MagicCircle/Defencer.png", m_magicCircleTexture[MACHINE_TYPE::DEFENSER]);
+		LoadingPngFileData(L"Resources/Textures/MagicCircle/Upper.png", m_magicCircleTexture[MACHINE_TYPE::UPPER]);
+		LoadingPngFileData(L"Resources/Textures/MagicCircle/Attacker.png", m_magicCircleTexture[MACHINE_TYPE::RECOVERY]);
+		LoadingPngFileData(L"Resources/Textures/MagicCircle/Attacker.png", m_magicCircleTexture[MACHINE_TYPE::MINING]);
+		LoadingPngFileData(L"Resources/Textures/MagicCircle/EnemySpawn.png", m_magicCircleTexture[6]);
 	}
+
+	// マシンUIのテキスト
+	{
+		LoadingPngFileData(L"Resources/Textures/UIText/AttackerText.png", m_machineUIText[MACHINE_TYPE::NONE]);
+		LoadingPngFileData(L"Resources/Textures/UIText/AttackerText.png", m_machineUIText[MACHINE_TYPE::ATTACKER]);
+		LoadingPngFileData(L"Resources/Textures/UIText/DefencerText.png", m_machineUIText[MACHINE_TYPE::DEFENSER]);
+		LoadingPngFileData(L"Resources/Textures/UIText/UpperText.png", m_machineUIText[MACHINE_TYPE::UPPER]);
+		LoadingPngFileData(L"Resources/Textures/UIText/RecoveryText.png", m_machineUIText[MACHINE_TYPE::RECOVERY]);
+		LoadingPngFileData(L"Resources/Textures/UIText/ExcavatorText.png", m_machineUIText[MACHINE_TYPE::MINING]);
+	}
+
+	LoadingPngFileData(L"Resources/Textures/UIText/UIText.png", m_uiText);
+
+	LoadingPngFileData(L"Resources/Textures/Gauge_base.png", m_baseGageTex);
+	LoadingPngFileData(L"Resources/Textures/Gauge_main.png", m_mainGageTex);
+
+	// マシンアイコン取得
+	LoadingPngFileData(L"Resources/Textures/MachineIcons.png", m_machineIconTexture);
+	// マシンの名前文字テクスチャ取得
+	LoadingPngFileData(L"Resources/Textures/MachineNames.png", m_machineNameTextures);
 
 }
 
@@ -172,14 +184,8 @@ void SpriteLoder::Finalize()
 	// 解放
 	m_selectBoxTexture.Reset();
 	m_elementTextures.Reset();
-	m_machineNameTextures.Reset();
 	m_ManufacturingTexture.Reset();
 	m_NumberTexture.Reset();
-
-	for (int i = 0; i < MACHINE_TYPE::NUM;i++)
-	{
-		m_MagicCircleTexture[i].Reset();
-	}
 }
 
 Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> SpriteLoder::LoadingPngFile
@@ -195,6 +201,30 @@ Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> SpriteLoder::LoadingPngFile
 		);
 
 	return spriteResource;
+}
+
+SpriteLoder::TextureData SpriteLoder::LoadingPngFileData(const wchar_t* filename, TextureData& textuerData)
+{
+	Microsoft::WRL::ComPtr<ID3D11Resource> res;
+
+	DirectX::CreateWICTextureFromFile(
+		ShareData::GetInstance().GetDevice(),
+		filename,
+		res.ReleaseAndGetAddressOf(),
+		textuerData.tex.ReleaseAndGetAddressOf()
+	);
+
+
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> tex;
+	DX::ThrowIfFailed(res.As(&tex));
+
+	D3D11_TEXTURE2D_DESC desc;
+	tex->GetDesc(&desc);
+
+	textuerData.width = desc.Width;
+	textuerData.height = desc.Height;
+
+	return textuerData;
 }
 
 SpriteLoder::SpriteLoder()

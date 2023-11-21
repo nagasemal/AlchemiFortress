@@ -30,7 +30,7 @@
     "MACHINE_DESTROY": [
       {
         "TYPE": "Attacker",
-        "VALUE": 3
+        "VALUE": 2
       }
     ]
   },
@@ -87,11 +87,15 @@
     "LV": 1,
     "HP": 0,
     "MINING": 0,
-    "MP": 30,
+    "MP": 0,
     "RECOVERY": 0,
     "UPPER": 0
   },
   "TUTORIAL": [
+    {
+      "NUMBER": 19,
+      "VAL": 1
+    },
     {
       "NUMBER": 11,
       "VAL": 0

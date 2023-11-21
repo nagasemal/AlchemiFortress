@@ -4,6 +4,8 @@
 
 #include "NecromaLib/GameData/BinaryFile.h"
 
+#include "NecromaLib/Singleton/ShareData.h"
+
 using namespace DirectX;
 
 /// <summary>

@@ -178,10 +178,10 @@ void Particle::Render()
 
 	//シェーダーに渡す追加のバッファを作成する。(ConstBuffer）
 	ConstBuffer cbuff;
-	cbuff.matView = view.Transpose();
-	cbuff.matProj = proj.Transpose();
-	cbuff.matWorld = m_billboard.Transpose();
-	cbuff.Diffuse = SimpleMath::Vector4(1, 1, 1, 1);
+	cbuff.matView	= view.Transpose();
+	cbuff.matProj	= proj.Transpose();
+	cbuff.matWorld	= m_billboard.Transpose();
+	cbuff.Diffuse	= SimpleMath::Vector4(1, 1, 1, 1);
 
 	//受け渡し用バッファの内容更新(ConstBufferからID3D11Bufferへの変換）
 	context->UpdateSubresource(m_cBuffer.Get(), 0, NULL, &cbuff, 0, 0);
@@ -224,7 +224,6 @@ void Particle::Render()
 
 	//// 板ポリゴンを描画
 	m_batch->Begin();
-	////m_batch->DrawQuad(vertex[0], vertex[1], vertex[2], vertex[3]);
 	m_batch->Draw(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST, &m_vertices[0], m_vertices.size());
 	m_batch->End();
 

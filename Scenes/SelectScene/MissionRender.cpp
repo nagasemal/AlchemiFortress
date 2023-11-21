@@ -67,7 +67,7 @@ void MissionRender::Render_MachineMission(std::vector<Stage_Condition> stageData
 
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
 
-	ContentDraw(stageData, pSL.GetMachineNameTexture().Get(), 0);
+	ContentDraw(stageData, pSL.GetMachineNameTexture().tex.Get(), 0);
 
 }
 
@@ -85,7 +85,7 @@ void MissionRender::Render_AlchemiMission(std::vector<Stage_Condition> stageData
 
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
 
-	ContentDraw(stageData, pSL.GetMachineNameTexture().Get(), 3);
+	ContentDraw(stageData, pSL.GetMachineNameTexture().tex.Get(), 3);
 
 }
 
@@ -94,7 +94,7 @@ void MissionRender::Render_DestroyMission(std::vector<Stage_Condition> stageData
 
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
 
-	ContentDraw(stageData, pSL.GetMachineNameTexture().Get(),4);
+	ContentDraw(stageData, pSL.GetMachineNameTexture().tex.Get(),4);
 }
 
 void MissionRender::Render_LvUpMission(std::vector<Stage_Condition> stageData)
@@ -102,7 +102,7 @@ void MissionRender::Render_LvUpMission(std::vector<Stage_Condition> stageData)
 
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
 
-	ContentDraw(stageData, pSL.GetMachineNameTexture().Get(), 1);
+	ContentDraw(stageData, pSL.GetMachineNameTexture().tex.Get(), 1);
 
 }
 
@@ -111,7 +111,7 @@ void MissionRender::Render_RepairMission(std::vector<Stage_Condition> stageData)
 
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
 
-	ContentDraw(stageData, pSL.GetMachineNameTexture().Get(), 5);
+	ContentDraw(stageData, pSL.GetMachineNameTexture().tex.Get(), 5);
 
 }
 

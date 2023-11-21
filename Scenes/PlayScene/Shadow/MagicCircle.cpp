@@ -134,7 +134,7 @@ void MagicCircle::Render(int magicCircleNumber)
 	context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
 
 	//ピクセルシェーダにテクスチャを登録する。
-	context->PSSetShaderResources(0, 1, SpriteLoder::GetInstance().GetMagicCircleTexture(magicCircleNumber).GetAddressOf());
+	context->PSSetShaderResources(0, 1, SpriteLoder::GetInstance().GetMachineMagicCircleTexture(magicCircleNumber).tex.GetAddressOf());
 	context->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetRule().GetAddressOf());
 	context->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetAuraBase().GetAddressOf());
 

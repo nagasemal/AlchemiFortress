@@ -52,8 +52,8 @@ void MachineExplanation::Initialize()
 	m_data.pos  = { 150,680};
 	m_data.rage = { 150,150};
 
-	m_machineGauge = std::make_unique<MachineGauge>();
-	m_machineGauge->AddHPGauge({m_data.pos.x + 60,m_data.pos.y - 130}, { 0.20,0.20 }, UserInterface::MIDDLE_CENTER);
+	//m_machineGauge = std::make_unique<MachineGauge>();
+	//m_machineGauge->AddHPGauge({m_data.pos.x + 60,m_data.pos.y - 130}, { 0.20,0.20 }, UserInterface::MIDDLE_CENTER);
 
 }
 
@@ -71,7 +71,7 @@ void MachineExplanation::Update()
 void MachineExplanation::Update_MachineData(AlchemicalMachineObject* object)
 {
 
-	m_machineGauge->Update(object->GetHP(),object->GetMAXHP());
+	//m_machineGauge->Update(object->GetHP(),object->GetMAXHP());
 
 }
 
@@ -98,7 +98,7 @@ void MachineExplanation::Draw()
 	pSB->End();
 
 	// HPƒQ[ƒW
-	m_machineGauge->Render();
+	//m_machineGauge->Render();
 }
 
 void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* secondModel, AlchemicalMachineObject* object)

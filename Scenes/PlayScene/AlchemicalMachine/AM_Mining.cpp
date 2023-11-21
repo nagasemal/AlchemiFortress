@@ -11,6 +11,8 @@
 #define LVUP_MAGNIFICATION_HP 1.25f
 #define STANDARD_HP 100
 
+#define CRYSTAL_SPAN 2.0f
+
 AM_Mining::AM_Mining():
 	m_timer()
 {
@@ -32,7 +34,7 @@ void AM_Mining::Initialize()
 	m_magicCircle.r = (float)pSJD.GetMachineData(m_machineID).effect_rage;
 	m_machineEffectValue = (float)pSJD.GetMachineData(m_machineID).effect_value;
 
-	m_span = 1.0f;
+	m_span = CRYSTAL_SPAN;
 }
 
 void AM_Mining::Update()

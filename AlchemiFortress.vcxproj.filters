@@ -206,6 +206,12 @@
     <Filter Include="Shader\TutorialText">
       <UniqueIdentifier>{afcaef18-fb4d-42ea-9eda-63ebd19e2bf2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Json\StageData\Stage3">
+      <UniqueIdentifier>{96c3d61f-9c32-48a0-a457-4a7a5d3e3e9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\ZoomUI">
+      <UniqueIdentifier>{ca213ce8-26ed-442e-9ea2-6dd84714d3ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -1001,6 +1007,21 @@
     <None Include="Resources\Json\StageData\Stage_2\StageData_2_2.json">
       <Filter>Json\StageData\Stage2</Filter>
     </None>
+    <None Include="Resources\Json\StageData\Stage_3\StageData_3_1.json">
+      <Filter>Json\StageData\Stage3</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\Stage_3\StageData_3_2.json">
+      <Filter>Json\StageData\Stage3</Filter>
+    </None>
+    <None Include="Resources\Json\StageData\Stage_3\StageData_3_3.json">
+      <Filter>Json\StageData\Stage3</Filter>
+    </None>
+    <None Include="Resources\Shader\ZoomUI.hlsli">
+      <Filter>Shader\ZoomUI</Filter>
+    </None>
+    <None Include="Resources\Shader\3DUI.hlsli">
+      <Filter>Shader\UI</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Transition_GS.hlsl">
@@ -1110,6 +1131,24 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\TutorialShader_GS.hlsl">
       <Filter>Shader\TutorialText</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\ZoomUI_GS.hlsl">
+      <Filter>Shader\ZoomUI</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\ZoomUI_VS.hlsl">
+      <Filter>Shader\ZoomUI</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\ZoomUI_PS.hlsl">
+      <Filter>Shader\ZoomUI</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\3DUI_GS.hlsl">
+      <Filter>Shader\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\3DUI_PS.hlsl">
+      <Filter>Shader\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\3DUI_VS.hlsl">
+      <Filter>Shader\UI</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

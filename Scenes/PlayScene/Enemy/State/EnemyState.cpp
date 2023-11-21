@@ -12,9 +12,14 @@
 
 #include "Scenes/PlayScene/Shadow/MagicCircle.h"
 
-
+#include "NecromaLib/GameData/SpriteCutter.h"
 
 #define ENEMY_MAGICCIRCLE_NUM 6
+
+#define TEX_W 64
+#define TEX_H 64
+
+#define TEX_RAGE 2.0f
 
 Enemy_IdlingState::Enemy_IdlingState()
 {
@@ -23,6 +28,7 @@ Enemy_IdlingState::Enemy_IdlingState()
 
 	m_magicCircle = std::make_unique<MagicCircle>();
 	m_magicCircle->Initialize();
+
 }
 
 void Enemy_IdlingState::Update(EnemyObject* object)
@@ -63,26 +69,19 @@ void Enemy_IdlingState::Render(EnemyObject* object,Model* model)
 
 void Enemy_IdlingState::RenderIcon(EnemyObject* object)
 {
-
 	auto pSD = &ShareData::GetInstance();
-	auto camera = ShareData::GetInstance().GetCamera();
 
-	SimpleMath::Matrix billboardMatrix = SimpleMath::Matrix::CreateBillboard(object->GetPos(), camera->GetEyePosition(), camera->GetUpVector());
+	// oŒ»ŽžŠÔ‚ð•`‰æ‚·‚é
+	if (object->GetAliveTimer() <= 5.0f)
+	{
 
-	auto status = pSD->GetCommonStates();
+		RECT rect = RECT{ TEX_W * (int)object->GetAliveTimer() + 1 ,0,TEX_W + TEX_H * (int)object->GetAliveTimer() + 1,TEX_H};
 
-	//pSD->GetSpriteBatch()->Begin(SpriteSortMode_Deferred, status->NonPremultiplied(), nullptr, status->DepthNone(), status->CullCounterClockwise(), [=]
-	//	{
-	//	});
+		pSD->GetSpriteBatch()->Draw(SpriteLoder::GetInstance().GetNumberTexture().Get(),
+			object->GetPos(),
+			&rect, Colors::Black, 0.0f, SimpleMath::Vector2(TEX_W / 2, TEX_H / 2), TEX_RAGE);
 
-	//RECT rect = RECT{ 0,0,64,64 };
-
-	//pSD->GetSpriteBatch()->Draw(SpriteLoder::GetInstance().GetAlchemiButtonTexture().Get(),
-	//	object->GetPos(),
-	//	&rect);
-
-	//pSD->GetSpriteBatch()->End();
-
+	}
 }
 
 
@@ -141,6 +140,14 @@ void Enemy_MoveingState::Render(EnemyObject* object,Model* model)
 
 void Enemy_MoveingState::RenderIcon(EnemyObject* object)
 {
+	auto pSD = &ShareData::GetInstance();
+
+	RECT rect = SpriteCutter(TEX_W, TEX_H,0,0);
+
+	pSD->GetSpriteBatch()->Draw(SpriteLoder::GetInstance().GetEnemyStateTexture().Get(),
+		object->GetPos(),
+		&rect, Colors::White, 0.0f, SimpleMath::Vector2(TEX_W / 2, TEX_H / 2), TEX_RAGE);
+
 }
 
 
@@ -258,6 +265,13 @@ void Enemy_KnockBackState::Render(EnemyObject* object,Model* model)
 
 void Enemy_KnockBackState::RenderIcon(EnemyObject* object)
 {
+	auto pSD = &ShareData::GetInstance();
+
+	RECT rect = SpriteCutter(TEX_W, TEX_H, 1, 0);
+
+	pSD->GetSpriteBatch()->Draw(SpriteLoder::GetInstance().GetEnemyStateTexture().Get(),
+		object->GetPos(),
+		&rect, Colors::White, 0.0f, SimpleMath::Vector2(TEX_W / 2, TEX_H / 2), TEX_RAGE);
 }
 
 Enemy_DethState::Enemy_DethState()
@@ -273,7 +287,7 @@ void Enemy_DethState::Update(EnemyObject* object)
 	// “–‚½‚è”»’è‚ð‚Æ‚ç‚È‚¢
 	object->SetColliderActive(false);
 
-	m_dethTime += DeltaTime::GetInstance().GetDeltaTime();
+	m_dethTime += DeltaTime::GetInstance().GetDeltaTime() * 2.5f;
 
 	object->SetAccele(SimpleMath::Vector3(0.0f,m_dethTime,0.0f));
 	object->GravityReset();
@@ -299,4 +313,12 @@ void Enemy_DethState::Render(EnemyObject* object,Model* model)
 
 void Enemy_DethState::RenderIcon(EnemyObject* object)
 {
+	auto pSD = &ShareData::GetInstance();
+
+	RECT rect = SpriteCutter(TEX_W, TEX_H, 2, 0);
+
+	pSD->GetSpriteBatch()->Draw(SpriteLoder::GetInstance().GetEnemyStateTexture().Get(),
+		object->GetPos(),
+		&rect, Colors::White, 0.0f, SimpleMath::Vector2(TEX_W / 2, TEX_H / 2), TEX_RAGE);
+
 }

@@ -33,8 +33,17 @@ public:
 		SPEED_2 = 12,
 		SPEED_3 = 13,
 		SPEED_4 = 14,
-		CANCEL = 15
+		CANCEL = 15,
 
+		NUM
+
+	};
+
+	struct TextureData
+	{
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> tex = nullptr;
+		int width = 0;
+		int height = 0;
 	};
 
 public:
@@ -76,10 +85,9 @@ public:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetElementTexture() { return m_elementTextures;}
 	const wchar_t* GetElementTexturePath() { return L"Resources/Textures/elementTex.png";}
 
-	// マシンの名前を渡す
-	// 横幅:128　縦幅:28
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetMachineNameTexture() { return m_machineNameTextures; }
-	const wchar_t* GetMachineNameTexturePath() { return L"Resources/Textures/MachineNames.png"; }
+	// ゲームスタートの文字を渡す
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetGameStartTexture() { return m_gameStartTexture; }
+
 
 	// エネミーの名前を渡す
 	// 横幅:128　縦幅:28
@@ -103,9 +111,6 @@ public:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetManufacturingTexture() { return m_ManufacturingTexture; }
 	const wchar_t* GetManufacturingTexturePath() { return L"Resources/Textures/Seizou.png"; }
 
-	// マシンアイコンを渡す
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetMachineIconTexture() { return m_machineIconTexture; }
-
 	// ステージクリア、失敗を示すアイコンを渡す
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetStageClearTextTexture() { return m_stageClearTextTexture; }
 	const wchar_t* GetStageClearTextTexturePath() { return L"Resources/Textures/SuccessFailureText.png"; }
@@ -113,10 +118,6 @@ public:
 	// デザイン数字テクスチャを渡す
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetNumberTexture() { return m_NumberTexture; }
 	const wchar_t* GetNumberTexturePath() { return L"Resources/Textures/number.png"; }
-
-	// 魔法陣テクスチャを渡す
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetMagicCircleTexture(int number) { return m_MagicCircleTexture[number]; }
-	const wchar_t* GetMagicCircleTexturePath() { return L"Resources/Textures/MagicCircle/MajicCircle.png"; }
 
 	// タイトルロゴテクスチャを渡す
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetTitleLogo() { return m_titleLogo; }
@@ -133,6 +134,9 @@ public:
 	// UIアイコンテクスチャを渡す
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetUIIcons() { return m_uiIcons; }
 	const wchar_t* GetUIIconsPath() { return L"Resources/Textures/UIIcons.png"; }
+
+	// エネミー状態アイコンテクスチャを渡す
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetEnemyStateTexture() { return m_enemyStateTexture; }
 
 	// 矢印アイコンテクスチャを渡す
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetUIArrow() { return m_uiArrow; }
@@ -161,8 +165,25 @@ public:
 	//// 説明用画像を渡す
 	//Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetExplanationTexture(int type) { return m_explanationTexture[type]; }
 
+	TextureData GetBaseGage() { return m_baseGageTex; }
+	TextureData GetMainGage() { return m_mainGageTex; }
+
+	// マシンアイコンを渡す
+	TextureData GetMachineIconTexture() { return m_machineIconTexture; }
+	// マシンの名前を渡す
+	TextureData GetMachineNameTexture() { return m_machineNameTextures; }
+
+	TextureData GetMachineMagicCircleTexture(int machineType) { return m_magicCircleTexture[machineType]; }
+
+	// マシンUI用のテキスト
+	TextureData GetMachineUIText(int machineType) { return m_machineUIText[machineType]; }
+	// UI用のテキスト
+	TextureData GetUIText() { return m_uiText; }
+
 	// 画像を読み込む
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> LoadingPngFile(const wchar_t* filename, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>& spriteResource);
+
+	TextureData LoadingPngFileData(const wchar_t* filename, TextureData& textuerData);
 
 public:
 
@@ -176,6 +197,13 @@ private:
 
 	//　選択ボックスのテクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_selectBoxTexture;
+
+	//　ゲームスタートの文字テクスチャ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_gameStartTexture;
+
+	//  エネミーアイコンテクスチャ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_enemyStateTexture;
+
 
 	// 錬金用選択ボックスのテクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_alchemiSelectTexture;
@@ -192,17 +220,13 @@ private:
 	//　属性アイコンのテクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_elementTextures;
 
-	//　マシンの名前のテクスチャ
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_machineNameTextures;
-
 	// エネミーの名前テクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_enemyNameTextures;
 
 	// 製造の文字テクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_ManufacturingTexture;
 
-	// マシンアイコン
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_machineIconTexture;
+
 
 
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_explanationTextTexture;
@@ -224,9 +248,6 @@ private:
 
 	// ステージクリア,失敗を示す文字テクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_stageClearTextTexture;
-
-	// 魔法陣のテクスチャ
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_MagicCircleTexture[6 + 1];
 
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_titleLogo;
 
@@ -252,5 +273,20 @@ private:
 	// エフェクト用のテクスチャ(オーラ表現)
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_auraMaskTexture;
 
+
+	//　マシンの名前のテクスチャ
+	TextureData m_machineNameTextures;
+	// マシンアイコン
+	TextureData m_machineIconTexture;
+
+	// 魔法陣のテクスチャ
+	TextureData m_magicCircleTexture[6 + 1];
+
+	TextureData m_baseGageTex;
+	TextureData m_mainGageTex;
+
+	TextureData m_machineUIText[6];
+
+	TextureData m_uiText;
 
 };

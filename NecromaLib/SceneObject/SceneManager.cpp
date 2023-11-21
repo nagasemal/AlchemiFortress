@@ -61,8 +61,6 @@ void SceneManager::Update(const DX::StepTimer& timer)
 
 	InputSupport& pINP = InputSupport::GetInstance();
 	m_Fade->Update(timer);
-	m_DataManager->Update();
-
 	// ESCキーで終了
 	if (pINP.GetKeybordState().IsKeyPressed(Keyboard::Escape)) PostQuitMessage(0);
 
@@ -93,6 +91,8 @@ void SceneManager::Update(const DX::StepTimer& timer)
 	{
 		m_NextScene = m_Scene->Update();
 	}
+
+	m_DataManager->Update();
 
 	//　デバッグ機能
 	{

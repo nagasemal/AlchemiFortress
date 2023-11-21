@@ -67,29 +67,9 @@ void MachineSelect::Update()
 	m_colorChangeTime += deltaTime * 5.0f;
 	m_boxColor.G(0.5f + cosf(m_colorChangeTime) / 2);
 
-
-	// 錬金ボタンが押された
-	//m_selectionAlchemi->HitMouse(true);
-
 	// リストの中から選ばれた
 	m_onMouseFlag = m_machineBox->HitMouse(true);
-	m_hitMouseFlag = m_machineBox->SelectionMouse();
-
-	//錬金ボタンが押されたよ。
-	//if (m_selectionAlchemi->ClickMouse())
-	//{
-	//	m_manufacturingFlag = true;
-	//
-	//	// 選択状態でなければ選択状態にする
-	//	if (!m_hitMouseFlag) m_machineBox->SetSelectFlag(true);
-	//
-	//}
-
-	//// 選択されているならば、全体の速度を落とす
-	//if (m_hitMouseFlag)
-	//{
-	//	DeltaTime::GetInstance().SetDoubleSpeed(0.5f);
-	//}
+	//m_hitMouseFlag = m_machineBox->SelectionMouse();
 
 }
 
@@ -122,9 +102,11 @@ void MachineSelect::DisplayObject()
 	// 内部BOX (オブジェクトを配置する箇所)
 	//pSB->Draw(pSL.GetSelectBoxTexture().Get(), box_Pos, &srcRect, color, 0.0f, DirectX::XMFLOAT2(IMAGE_WIGHT / 2, IMAGE_HEIGHT / 2), 1.5f);
 
-	srcRect = SpriteCutter(200,200,m_selectMachineType - 1,0);
+	SpriteLoder::TextureData texData = pSL.GetMachineIconTexture();
 
-	pSB->Draw(pSL.GetMachineIconTexture().Get(), m_data.pos, &srcRect, color, 0.0f, DirectX::XMFLOAT2(200 / 2, 200 / 2),0.4f);
+	srcRect = SpriteCutter(texData.width / (MACHINE_TYPE::NUM - 1), texData.height, m_selectMachineType - 1, 0);
+
+	pSB->Draw(texData.tex.Get(), m_data.pos, &srcRect, color, 0.0f, DirectX::XMFLOAT2((texData.width / (MACHINE_TYPE::NUM - 1)) / 2, texData.height / 2), 0.4f);
 	
 	pSB->End();
 

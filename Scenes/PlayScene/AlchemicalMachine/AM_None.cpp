@@ -19,6 +19,7 @@ void AM_None::Initialize()
 {
 	m_machineID = MACHINE_TYPE::NONE;
 	m_objectName = "None";
+	m_lv = 0;
 
 	ShareData& pSD = ShareData::GetInstance();
 	m_testBox = GeometricPrimitive::CreateGeoSphere(pSD.GetContext());

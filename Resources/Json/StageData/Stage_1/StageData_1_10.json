@@ -93,20 +93,16 @@
   },
   "TUTORIAL": [
     {
+      "NUMBER": 19,
+      "VAL": 1
+    },
+    {
       "NUMBER": 3,
       "VAL": 1
     },
     {
       "NUMBER": 6,
       "VAL": 1
-    },
-    {
-      "NUMBER": 3,
-      "VAL": 0
-    },
-    {
-      "NUMBER": 13,
-      "VAL": 0
     },
     {
       "NUMBER": 15,

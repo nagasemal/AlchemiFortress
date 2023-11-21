@@ -12,6 +12,7 @@
 #include "NecromaLib/GameData/UserInterfase.h"
 
 class SelectionBox;
+class Number;
 
 class Gauge
 {
@@ -53,6 +54,11 @@ private:
 	// 減る際の遷移用
 	std::unique_ptr<UserInterface> m_back_Mp;
 
+	// 詳細な数を描画
+	std::unique_ptr<Number> m_resourceRenderMP;
+	//// 前Fの魔力量
+	//float m_prevMP;
+
 	// Mpの画像表示
 	std::unique_ptr<SelectionBox> m_box_mp;
 
@@ -63,6 +69,11 @@ private:
 
 	std::unique_ptr<SelectionBox> m_box_Crystal;
 
+	// 詳細な数を描画
+	std::unique_ptr<Number> m_resourceRenderCrystal;
+	//// 前Fの結晶量
+	//float m_prevCrystal;
+
 
 	// HP
 	std::unique_ptr<UserInterface> m_gauge_Hp;
@@ -70,6 +81,11 @@ private:
 	std::unique_ptr<UserInterface> m_back_Hp;
 
 	std::unique_ptr<SelectionBox> m_box_Hp;
+
+	// 詳細な数を描画
+	std::unique_ptr<Number> m_resourceRenderHP;
+	//// 前FのHP量
+	//float m_prevHP;
 
 	// 前FのHP割合を保持
 	float m_difRedioHp;

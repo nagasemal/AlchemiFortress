@@ -4,6 +4,7 @@
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/ShareJsonData.h"
 #include "NecromaLib/Singleton/SoundData.h"
+#include "NecromaLib/Singleton/SpriteLoder.h"
 
 #include "Scenes/Commons/DrawArrow.h"
 #include "Scenes/Commons/UIKeyControl.h"
@@ -169,14 +170,22 @@ void SelectScene::DrawUI()
 	ShareData& pSD = ShareData::GetInstance();
 	auto pSB = pSD.GetSpriteBatch();
 
-	pSB->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
-	/*if (m_selectStageNumber > MIN_STAGE)*/ m_arrowDraw[0]->Draw();
-	/*if (m_selectStageNumber < MAX_STAGE)*/ m_arrowDraw[1]->Draw();
-	pSB->End();
 
 	m_nextSceneBox->Draw();
-	m_stageNumber->SetColor(SimpleMath::Color(1.0f,1.0f,1.0f,1.0f));
+
+	m_stageNumber->SetColor(SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
 	m_stageNumber->Render();
+
+	pSB->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
+
+	if (m_arrowDraw[0]->GetActiveFlag()) m_arrowDraw[0]->Draw();
+	if (m_arrowDraw[1]->GetActiveFlag()) m_arrowDraw[1]->Draw();
+
+	RECT rect = { 0,0,256,64 };
+
+	pSB->Draw(SpriteLoder::GetInstance().GetGameStartTexture().Get(), m_nextSceneBox->GetPos(),&rect,Colors::White,0.0f,SimpleMath::Vector2((float)rect.right / 2.0f, (float)rect.bottom / 2.0f));
+
+	pSB->End();
 
 }
 

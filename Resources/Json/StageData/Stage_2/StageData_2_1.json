@@ -15,7 +15,7 @@
     "ENEMY_KNOCKDOWN": [
       {
         "TYPE": "All",
-        "VALUE": 6
+        "VALUE": 3
       }
     ]
   },
@@ -87,7 +87,7 @@
     "ENEMYS": [
       {
         "CONDITION": "",
-        "SPAWNTIME": 7,
+        "SPAWNTIME": 10,
         "SPAWN_X": 7,
         "SPAWN_Y": 0,
         "SPAWN_Z": 13,
@@ -96,7 +96,7 @@
       },
       {
         "CONDITION": "",
-        "SPAWNTIME": 7,
+        "SPAWNTIME": 10,
         "SPAWN_X": 10,
         "SPAWN_Y": 0,
         "SPAWN_Z": 10,
@@ -105,37 +105,10 @@
       },
       {
         "CONDITION": "",
-        "SPAWNTIME": 7,
+        "SPAWNTIME": 10,
         "SPAWN_X": 13,
         "SPAWN_Y": 0,
         "SPAWN_Z": 7,
-        "LV": 1,
-        "TYPE": "Slime"
-      },
-      {
-        "CONDITION": "",
-        "SPAWNTIME": 16,
-        "SPAWN_X": -7,
-        "SPAWN_Y": 0,
-        "SPAWN_Z": -13,
-        "LV": 1,
-        "TYPE": "Slime"
-      },
-      {
-        "CONDITION": "",
-        "SPAWNTIME": 16,
-        "SPAWN_X": -10,
-        "SPAWN_Y": 0,
-        "SPAWN_Z": -10,
-        "LV": 1,
-        "TYPE": "Hop"
-      },
-      {
-        "CONDITION": "",
-        "SPAWNTIME": 16,
-        "SPAWN_X": -13,
-        "SPAWN_Y": 0,
-        "SPAWN_Z": -7,
         "LV": 1,
         "TYPE": "Slime"
       }

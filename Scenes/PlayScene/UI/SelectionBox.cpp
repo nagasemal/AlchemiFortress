@@ -8,6 +8,7 @@
 #include "NecromaLib/Singleton/DeltaTime.h"
 
 #include "NecromaLib/GameData/SpriteCutter.h"
+#include "NecromaLib/GameData/Easing.h"
 
 SelectionBox::SelectionBox(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage)
 {
@@ -22,6 +23,8 @@ SelectionBox::SelectionBox(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage)
 	m_luminousFlag = false;
 
 	m_rect = { 0, 0, 64, 64 };
+
+	m_popUITextTimer = 0.0f;
 
 }
 
@@ -137,20 +140,41 @@ void SelectionBox::DrawUI(int UInumber)
 
 	if (m_luminousFlag) colour = m_boxColor;
 
-	if (m_hitMouseFlag) colour = { 0.9f,0.9f,0.9f,1.0f };
+	if (m_hitMouseFlag)
+	{
+		colour = { 0.9f,0.9f,0.9f,1.0f };
+
+		m_popUITextTimer += DeltaTime::GetInstance().GetNomalDeltaTime();
+
+	}
+	else
+	{
+		m_popUITextTimer -= DeltaTime::GetInstance().GetNomalDeltaTime();
+	}
 
 	if (HoldMouse()) colour = { 0.7f, 0.7f, 0.7f, 1.0f };
 
-	SimpleMath::Vector2 box_Pos = { m_data.pos.x,m_data.pos.y };
 
-	// 選択BOX
-	pSB->Draw(pSL->GetSelectBoxTexture().Get(), box_Pos, &m_rect, colour, 0.0f, DirectX::XMFLOAT2(static_cast<float>(m_rect.right) / 2, static_cast<float>(m_rect.bottom) / 2), m_data.rage);
+	m_popUITextTimer = std::min(std::max(0.0f, m_popUITextTimer),1.0f);
+
+	// 触れた際に上部に出現する説明用テキストの描画
+	SpriteLoder::TextureData texData = pSL->GetUIText();
+	int texWidth = 48;
+
+	RECT textRect = SpriteCutter(texWidth, texData.height, UInumber, 0);
+	pSB->Draw(texData.tex.Get(), m_data.pos - SimpleMath::Vector2(0.0f, Easing::EaseInOutQuint(0.0f, texWidth * m_data.rage.y, m_popUITextTimer)),
+		&textRect, SimpleMath::Color(0.0f, 0.0f, 0.0f,m_popUITextTimer),
+		1.0f - Easing::EaseOutCirc(0.0f, 1.0f, m_popUITextTimer), DirectX::XMFLOAT2(texWidth / 2, texData.height / 2), 1.0f);
+
+	// 選択BOX描画
+	pSB->Draw(pSL->GetSelectBoxTexture().Get(), m_data.pos, &m_rect, colour, 0.0f, DirectX::XMFLOAT2(static_cast<float>(m_rect.right) / 2, static_cast<float>(m_rect.bottom) / 2), m_data.rage);
 
 
 	// 画像のサイズ
 	RECT srcRect = SpriteCutter(64, 64, UInumber, 0);
 	// 中のUI表示
-	pSB->Draw(pSL->GetUIIcons().Get(), box_Pos, &srcRect, SimpleMath::Color(0.0f,0.0f,0.0f,1.0f), 0.0f, DirectX::XMFLOAT2(64 / 2, 64 / 2), 0.8f);
+	pSB->Draw(pSL->GetUIIcons().Get(), m_data.pos, &srcRect, SimpleMath::Color(0.0f,0.0f,0.0f,1.0f), 0.0f, DirectX::XMFLOAT2(64 / 2, 64 / 2), 0.8f);
+
 
 	pSB->End();
 

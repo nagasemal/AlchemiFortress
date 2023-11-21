@@ -3,6 +3,9 @@
 #include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/GameData/SpriteCutter.h"
+#include "NecromaLib/Singleton/DeltaTime.h"
+
+#include "NecromaLib/GameData/Easing.h"
 
 #define MAX_NUM 2
 #define SPRITE_WEIGHT 64
@@ -12,18 +15,23 @@ Number::Number():
 	m_num(),
 	m_position(),
 	m_rage(),
-	m_color(0.0f,0.0f,0.0f,1.0f)
+	m_color(0.0f,0.0f,0.0f,1.0f),
+	m_animationPosTime(),
+	m_prevNum(),
+	m_animationFlag()
 {
 }
 
 Number::Number(SimpleMath::Vector2 position, SimpleMath::Vector2 rage)
 {
-	m_num = 0;
+	m_prevNum = m_num = 0;
 	m_position = position;
 	m_rage = rage;
 
 	m_position.x += 32 * m_rage.x;
 
+	m_animationFlag = false;
+	m_animationPosTime = 0.0f;
 }
 
 Number::~Number()
@@ -32,19 +40,45 @@ Number::~Number()
 
 void Number::SetNumber(int num)
 {
+	// 前回の値を保存する
+	if (m_prevNum != m_num)
+	{
+		m_prevNum = m_num;
+		m_animationPosTime += 0.1f;
+		m_animationFlag = true;
+
+	}
+
 	m_num = num;
 }
 
 void Number::Render()
 {
+	if (m_animationFlag)
+	{
+		m_animationPosTime += DeltaTime::GetInstance().GetDeltaTime() * 2.0f;
+
+		if (m_animationPosTime >= 1.0f) m_animationFlag = false;
+	}
+	else
+	{
+		m_animationPosTime -= DeltaTime::GetInstance().GetDeltaTime();
+	}
+
+	m_animationPosTime = std::min(std::max(0.0f, m_animationPosTime), 1.0f);
 
 	ShareData& pSD = ShareData::GetInstance();
 	auto pSB = pSD.GetSpriteBatch();
 	SpriteLoder::GetInstance().GetNumberTexture();
 
+	// 桁数取得
+	int numDigit = (int)log10(m_num) + 1;
+
+	if (numDigit <= 0) numDigit = 1;
+
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
-	for (int i = MAX_NUM; i >= 0; i--)
+	for (int i = numDigit; i >= 0; i--)
 	{
 		// 基数　桁数取得
 		int base = 1;
@@ -57,6 +91,7 @@ void Number::Render()
 
 			SimpleMath::Vector2 pos = m_position;
 			pos.x -= ((64 * m_rage.x) * j);
+			pos.y -= Easing::EaseOutCubic(0.0f,5.0f,m_animationPosTime);
 
 			// 数字描画
 			pSB->Draw(SpriteLoder::GetInstance().GetNumberTexture().Get(),

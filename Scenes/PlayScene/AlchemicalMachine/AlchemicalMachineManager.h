@@ -43,6 +43,7 @@ public:
 
 	void Finalize();
 
+	void BillboardRenderUI(int index);
 
 public:
 
@@ -59,7 +60,7 @@ public:
 	const std::unique_ptr<MachineSelectManager>* GetMachineSelect()					const { return &m_selectManager; }
 	const std::unique_ptr<MachineExplanation>* GetMachineExplanation()				const { return &m_machineExplanation;}
 
-	const std::unique_ptr<DrawVariableNum>* GetVariableNum()						const { return &m_lineVariable;}
+	//const std::unique_ptr<DrawVariableNum>* GetVariableNum()						const { return &m_lineVariable;}
 
 	Model* GetSelectModel();
 
@@ -142,6 +143,11 @@ private:
 		return pos;
 	}
 
+	// エフェクト
+	std::unique_ptr<DirectX::BasicEffect> m_effect;
+	// 入力レイアウト
+	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
+
 	// アルケミカルマシン選択ボックスの表示
 	std::unique_ptr<MachineSelectManager> m_selectManager;
 
@@ -158,7 +164,7 @@ private:
 	std::unique_ptr<AlchemicalMachineFilter> m_AMFilter;
 
 	// 現在のラインを示す
-	std::unique_ptr<DrawVariableNum> m_lineVariable;
+	//std::unique_ptr<DrawVariableNum> m_lineVariable;
 
 	//===後で消すテスト用変数
 	std::unique_ptr<DirectX::GeometricPrimitive> m_testBox;	//  仮置き弾モデル

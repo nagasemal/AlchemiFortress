@@ -92,14 +92,22 @@
     "LV": 1,
     "HP": 500,
     "MINING": 0,
-    "MP": 0,
+    "MP": 500,
     "RECOVERY": 0,
     "UPPER": 0
   },
   "TUTORIAL": [
     {
-      "NUMBER": 1,
+      "NUMBER": 13,
       "VAL": 0
+    },
+    {
+      "NUMBER": 19,
+      "VAL": 1
+    },
+    {
+      "NUMBER": 1,
+      "VAL": 1
     },
     {
       "NUMBER": 14,

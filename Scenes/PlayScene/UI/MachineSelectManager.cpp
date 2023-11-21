@@ -14,6 +14,11 @@
 #include "NecromaLib/GameData/SpriteCutter.h"
 
 #define POS 		SimpleMath::Vector2(1200, 640)
+
+#define NUM_RENDER_POS			SimpleMath::Vector2(1200, 670)
+#define MP_RENDER_POS			SimpleMath::Vector2(1210, 590)
+#define CRYSTAL_RENDER_POS		SimpleMath::Vector2(1210, 620)
+
 #define DIRECTION	120.0f
 
 #define MACHINE_NAME_POS_SHIFT SimpleMath::Vector2(20, 60)
@@ -82,7 +87,11 @@ void MachineSelectManager::Initialize()
 	m_selectionRight->Initialize();
 	m_selectionRight->SetLayer(1);
 
-	m_machineNumRender = std::make_unique<Number>(POS, SimpleMath::Vector2(1.0f, 1.0f));
+	m_machineNumRender	= std::make_unique<Number>(NUM_RENDER_POS, SimpleMath::Vector2(0.6f, 0.6f));
+
+	m_mpNumRender		= std::make_unique<Number>(MP_RENDER_POS, SimpleMath::Vector2(0.3f, 0.3f));
+
+	m_crystalRender		= std::make_unique<Number>(CRYSTAL_RENDER_POS, SimpleMath::Vector2(0.3f, 0.3f));
 
 }
 
@@ -92,7 +101,7 @@ void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
 	m_selectBoxAll		= false;
 	m_manufacturingFlag = false;
 
-	m_selectMachineType = MACHINE_TYPE::NONE;
+	//m_selectMachineType = MACHINE_TYPE::NONE;
 
 	auto datas = DataManager::GetInstance();
 	// jsonから読み取った値を使用する
@@ -105,68 +114,16 @@ void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
 	m_selectionLeft		->HitMouse(true);
 	m_selectionRight	->HitMouse(true);
 
-	//// Noneを省くために1スタート
-	//for (int i = 1; i < MACHINE_TYPE::NUM; i++)
-	//{
-	//	// 要素の更新処理
-	//	m_machineSelect[i]->Update();
-	//
-	//	// 触れている物の所持数を描画する
-	//	if (m_machineSelect[i]->GetHitMouseFlag())
-	//	{
-	//		m_selectNumber = i;
-	//	}
-	//
-	//	// 要素から製造ボタンが押された判定を受け取る リソースが足りない場合は弾く
-	//	m_selectionAlchemi->SetActiveFlag(
-	//		datas->GetNowMP() - pSJD->GetMachineData((MACHINE_TYPE)i).alchemi_mp >= 0 &&
-	//		datas->GetNowCrystal() - pSJD->GetMachineData((MACHINE_TYPE)i).alchemi_crystal >= 0);
-	//
-	//	if (m_selectionAlchemi->ClickMouse())
-	//	{
-	//		m_manufacturingFlag = true;
-	//		m_selectMachineType = m_machineSelect[i]->GetMachineType();
-	//		ReduceResource((MACHINE_TYPE)i);
-	//	}
-	//
-	//	// 何かマシンが選択された
-	//	if (m_machineSelect[i]->GetHitMouseFlag() || m_selectionAlchemi->ClickMouse())
-	//	{
-	//		m_selectBoxAll = true;
-	//		m_selectMachineType = m_machineSelect[i]->GetMachineType();
-	//
-	//		// 選択状態以外のマシンの選択状態をfalseにする
-	//		for (int j = 1; j < MACHINE_TYPE::NUM; j++)
-	//		{
-	//			if (j == i) continue;
-	//
-	//			m_machineSelect[j]->GetMachineBox()->SetSelectFlag(false);
-	//			m_machineSelect[j]->SetHitMouseFlag(false);
-	//		}
-	//	}
-	//}
 
-	for (int i = 1; i < MACHINE_TYPE::NUM; i++)
+	m_machineSelect[m_selectNumber]->Update();
+
+	if (m_machineSelect[m_selectNumber]->GetHitMouseFlag())
 	{
-		// 要素の更新処理
-		m_machineSelect[i]->Update();
-
-		// 何かマシンが選択された
-		if (m_machineSelect[i]->GetHitMouseFlag())
-		{
-			m_selectBoxAll = true;
-			m_selectMachineType = m_machineSelect[i]->GetMachineType();
-
-			// 選択状態以外のマシンの選択状態をfalseにする
-			for (int j = 1; j < MACHINE_TYPE::NUM; j++)
-			{
-				if (j == i) continue;
-
-				m_machineSelect[j]->GetMachineBox()->SetSelectFlag(false);
-				m_machineSelect[j]->SetHitMouseFlag(false);
-			}
-		}
-		
+		m_textAnimation += DeltaTime::GetInstance().GetNomalDeltaTime();
+	}
+	else
+	{
+		m_textAnimation -= DeltaTime::GetInstance().GetNomalDeltaTime();
 	}
 
 	// 何処かのクリスタルが選択されているならば、type：マイニングの選択ボックスの色を変える
@@ -176,7 +133,7 @@ void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
 	m_displayMagicCircle->TransparentUpdate(m_selectBoxAll);
 
 
-	m_machineName->SetPos(pINP->GetMousePosScreen() - MACHINE_NAME_POS_SHIFT);
+	m_machineName->SetSavePos(pINP->GetMousePosScreen() - MACHINE_NAME_POS_SHIFT);
 
 	RotationMachineList();
 
@@ -207,12 +164,17 @@ void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
 
 	// マシンUIが選択されているならば対象のIDを入力
 	// 選択されていない状態ならば規定位置に存在するマシンUIのIDを入力
-	MACHINE_TYPE machineType = m_selectMachineType != MACHINE_TYPE::NONE ? m_selectMachineType : (MACHINE_TYPE)m_selectNumber;
+	MACHINE_TYPE machineType = (MACHINE_TYPE)m_selectNumber;
+
+	//m_selectMachineType = machineType;
 
 	// 要素から製造ボタンが押された判定を受け取る リソースが足りない場合は弾く
 	m_selectionAlchemi->SetActiveFlag(
 		datas->GetNowMP() - pSJD->GetMachineData(machineType).alchemi_mp >= 0 &&
 		datas->GetNowCrystal() - pSJD->GetMachineData(machineType).alchemi_crystal >= 0);
+
+	m_mpNumRender	->	SetNumber(pSJD->GetMachineData(machineType).alchemi_mp);
+	m_crystalRender	->	SetNumber(pSJD->GetMachineData(machineType).alchemi_crystal);
 
 	// 錬金ボタンが押された
 	if (m_selectionAlchemi->ClickMouse())
@@ -241,6 +203,9 @@ void MachineSelectManager::Render()
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 	RECT rect = { 0,0,84,84 };
 	pSB->Draw(pSL.GetMachineUICursorTexture().Get(), SimpleMath::Vector2(1120, 560), &rect, Colors::White, 0.0f, SimpleMath::Vector2(84 / 2, 84 / 2));
+
+
+
 	pSB->End();
 
 }
@@ -249,37 +214,56 @@ void MachineSelectManager::RenderUI(int machineNum[])
 {
 
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
-
-	for (int i = 1; i < MACHINE_TYPE::NUM; i++)
-	{
-
-		 // マウスが置かれているマシンの名前を描画する(設置可能なら灰色,不可能であれば赤色で描画)
-		if (m_machineSelect[i]->GetHitMouseFlag())
-		{
-
-			SimpleMath::Color name_color = SimpleMath::Color(0.9f, 0.9f, 0.9f, 0.95f);
-
-			if(machineNum[i] <= 0) name_color = SimpleMath::Color(1.0f, 0.0f, 0.0f, 0.95f);
-
-			m_machineName->DrawUI(pSL.GetMachineNameTexture().Get(),
-				SpriteCutter(768 / 6,28,i,0),
-				nullptr,
-				RECT(),
-				SimpleMath::Color(),
-				name_color);
-		}
-
-	}
+	auto pSB = ShareData::GetInstance().GetSpriteBatch();
+	ShareData& pSD = ShareData::GetInstance();
+	auto pINP = &InputSupport::GetInstance();
 
 	m_selectionLeft->Draw();
 	m_selectionRight->Draw();
 
 	RECT rect = { 0,0,120,120 };
-	m_selectionAlchemi->DrawUI(pSL.GetAlchemiButtonTexture().Get(),rect,nullptr);
+	m_selectionAlchemi->DrawUI(pSL.GetAlchemiButtonTexture().Get(), rect, nullptr);
+
+	// マシンの名前の描画を行う(現在どのマシンを選択しているか鮮明にするため)
+	SimpleMath::Color name_color = SimpleMath::Color(0.9f, 0.9f, 0.9f, 0.95f);
+
+	if (machineNum[m_selectNumber] <= 0) name_color = SimpleMath::Color(1.0f, 0.0f, 0.0f, 0.95f);
+
+	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
+
+	// マシンの名前を描画する
+	if (!pINP->GetHitUI())
+	{
+		rect = SpriteCutter(768 / 6, 28, m_selectNumber, 0);
+		pSB->Draw(pSL.GetMachineNameTexture().tex.Get(), pINP->GetMousePosScreen() - MACHINE_NAME_POS_SHIFT,
+			&rect, name_color, 0.0f, SimpleMath::Vector2((768.0f / 6.0f) / 2.0f, 28.0f / 2.0f));
+	}
+
+	// 魔力アイコンを描画する
+	rect = SpriteCutter(64,64,0,0);
+	pSB->Draw(pSL.GetElementTexture().Get(), MP_RENDER_POS - SimpleMath::Vector2(40.0f,0.0f),
+		&rect, Colors::White,0.0f, SimpleMath::Vector2(64.0f / 2.0f, 64.0f / 2.0f),0.5f);
+
+	// 結晶アイコンを描画する
+	rect = SpriteCutter(64, 64, 1, 0);
+	pSB->Draw(pSL.GetElementTexture().Get(), CRYSTAL_RENDER_POS - SimpleMath::Vector2(40.0f, 0.0f),
+		&rect, Colors::White, 0.0f, SimpleMath::Vector2(64.0f / 2.0f, 64.0f / 2.0f),0.5f);
+
+	// マシン説明テキストを描画する
+	SpriteLoder::TextureData textData = pSL.GetMachineUIText(m_selectNumber);
+	rect = { 0,0,textData.width,textData.height };
+	pSB->Draw(textData.tex.Get(), SimpleMath::Vector2(1000.0f, 500.0f - Easing::EaseOutQuint(0.0f,30.0f,m_textAnimation)),
+			&rect, SimpleMath::Color(1.0f,1.0f,1.0f, m_textAnimation), 0.0f, SimpleMath::Vector2(textData.width / 2.0f, textData.height / 2.0f), 0.5f);
+
+	pSB->End();
 
 	// 所持数を描画する
-	m_machineNumRender->SetNumber(machineNum[m_selectMachineType != 0 ? m_selectMachineType : m_selectNumber]);
+	m_machineNumRender->SetNumber(machineNum[m_selectNumber]);
 	m_machineNumRender->Render();
+
+	// 必要リソース量を描画する
+	m_mpNumRender	->	Render();
+	m_crystalRender	->	Render();
 
 }
 
@@ -341,7 +325,11 @@ void MachineSelectManager::RotationMachineList()
 
 	float posWaveY = Easing::EaseInExpo(0.8f, 1.0f, m_rotateTime) * 50.0f;
 
-	m_machineNumRender->SetPosition(SimpleMath::Vector2(POS.x, POS.y + sin(posWaveY)));
+	m_machineNumRender->SetPosition(SimpleMath::Vector2(NUM_RENDER_POS.x, NUM_RENDER_POS.y + sin(posWaveY)));
+
+	m_mpNumRender->SetPosition(SimpleMath::Vector2(MP_RENDER_POS.x, MP_RENDER_POS.y + sin(posWaveY)));
+
+	m_crystalRender->SetPosition(SimpleMath::Vector2(CRYSTAL_RENDER_POS.x, CRYSTAL_RENDER_POS.y + sin(posWaveY)));
 
 	for (int i = -1; i < MACHINE_TYPE::NUM - 2; i++)
 	{

@@ -139,7 +139,7 @@ void TitleLogo::Render()
 
 	//ピクセルシェーダにテクスチャを登録する。
 	context->PSSetShaderResources(0, 1, SpriteLoder::GetInstance().GetTitleLogo().GetAddressOf());
-	context->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetMagicCircleTexture(2).GetAddressOf());
+	context->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetMachineMagicCircleTexture(2).tex.GetAddressOf());
 	context->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetRule().GetAddressOf());
 
 	//インプットレイアウトの登録

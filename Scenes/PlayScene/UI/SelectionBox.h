@@ -49,4 +49,9 @@ public:
 		SimpleMath::Color nomalColor		= { 1.0f,1.0f,1.0f,1.0f },
 		SimpleMath::Color onColor			= { 0.9f,0.9f,0.9f,1.0f },
 		SimpleMath::Color pressdColor		= { 0.7f,0.7f,0.7f,1.0f });
+
+private:
+
+	float m_popUITextTimer;
+
 };

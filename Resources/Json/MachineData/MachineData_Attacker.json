@@ -4,7 +4,7 @@
     "LV":					        1.0,                 
     "HP":					        10.0,                
     "MULTIPLIER_HP":		  1.25,     
-    "AREAEFFECT":			    4.0,         
+    "AREAEFFECT":			    6.0,         
     "MULTIPLIER_EFFECT":	1.15, 
     "ALCHEMI_MP": 			  40.0,       
     "ALCHEMI_CRYSTAL":		30.0,   

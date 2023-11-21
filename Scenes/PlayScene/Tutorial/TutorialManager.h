@@ -47,6 +47,9 @@ public:
 
 	DrawBox* GetDisplayBox() { return m_displayBox.get(); }
 
+	DrawArrow* GetTextArrow_left() { return m_leftArrow.get(); }
+	DrawArrow* GetTextArrow_right() { return m_rightArrow.get(); }
+
 	Particle* GetParticle() { return m_machineSelectParticle.get(); }
 
 

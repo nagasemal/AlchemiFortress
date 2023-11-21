@@ -9,6 +9,7 @@
 //--------------------------------------------------------------------------------------
 
 #pragma once
+#include "NecromaLib/GameData/Animation.h"
 #include "Scenes/PlayScene/AlchemicalMachine/AlchemicalMachineObject.h"
 #include "Scenes/PlayScene/UI/MachineSelect.h"
 #include "NecromaLib/GameData/Camera.h"
@@ -58,7 +59,7 @@ public:
 	void SetSelectNoneFlag(bool flag) { m_selectNoneFlag = flag; }
 
 	// 選択中のマシンのタイプを返す
-	MACHINE_TYPE GetSelectMachineType()	{ return m_selectMachineType; }
+	MACHINE_TYPE GetSelectMachineType()	{ return (MACHINE_TYPE)m_selectNumber; }
 
 
 	int GetMachineUISelectNumber() { return m_selectNumber; }
@@ -92,6 +93,12 @@ private:
 
 	// 所持数を示す
 	std::unique_ptr<Number> m_machineNumRender;
+
+	// 必要魔力量を示す
+	std::unique_ptr<Number> m_mpNumRender;
+	// 必要結晶量を示す
+	std::unique_ptr<Number> m_crystalRender;
+
 
 	MACHINE_TYPE m_selectMachineType;
 
@@ -127,5 +134,8 @@ private:
 
 	// UI回転が順転か否か
 	bool m_forwardOrderFlag;
+
+	// マシンUIの出現に使用するアニメーション用変数
+	AnimationData m_textAnimation;
 
 };

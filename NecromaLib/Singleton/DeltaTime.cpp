@@ -5,7 +5,7 @@ DeltaTime* DeltaTime::instance = nullptr;
 
 float DeltaTime::GetNomalDeltaTime()
 {
-	return m_deltaTime * SPEED;
+	return m_deltaTime;
 }
 
 DeltaTime::DeltaTime():

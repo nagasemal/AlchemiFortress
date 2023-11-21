@@ -24,14 +24,14 @@ BaseLv::BaseLv()
 
 
 	auto windowSize = ShareData::GetInstance().GetDeviceResources()->GetOutputSize();
-	Create(SpriteLoder::GetInstance().GetMagicCircleTexturePath());
+	Create(L"Resources/Textures/MagicCircle/Attacker.png");
 	LoadShaderFile(L"BaseLv");
 	SetWindowSize(windowSize.right, windowSize.bottom);
 	SetColor(SimpleMath::Color(1.0f,1.0f,1.0f,1.0f));
 	SetPosition(SimpleMath::Vector2(70.0f, 70.0f));
 	SetScale(SimpleMath::Vector2(0.15f, 0.15f));
 
-	m_baseLvRender = std::make_unique<Number>(m_position,m_scale * 5.0f);
+	m_baseLvRender = std::make_unique<Number>(m_position,m_scale * 3.5f);
 
 	m_expRedio = 0.0f;
 }
@@ -64,7 +64,7 @@ void BaseLv::Render()
 	// Tex.xy		:ウィンドウサイズ（バッファも同じ。こちらは未使用）
 	VertexPositionColorTexture vertex[1] = {
 		VertexPositionColorTexture(SimpleMath::Vector3(m_scale.x, m_scale.y, static_cast<float>(MIDDLE_CENTER))
-		, SimpleMath::Vector4(m_position.x, m_position.y, static_cast<float>(m_textureWidth), static_cast<float>(m_textureHeight))
+		, SimpleMath::Vector4(70.0f, 70.0f, static_cast<float>(m_textureWidth), static_cast<float>(m_textureHeight))
 		, SimpleMath::Vector2(m_expRedio,0.8f))
 	};
 

@@ -42,6 +42,9 @@ public:
 	// 共通して描画するUIの処理
 	void SelectRenderUI_Common();
 
+	// HP残量をビルボード描画する
+	void RenderHP();
+
 	// 他のオブジェクト同士の当たり判定
 	void HitToMouse(MousePointer* pMP);
 
@@ -125,6 +128,8 @@ public:
 	// 選択されている状態か否かを決定付ける
 	const int GetSelectModeFlag() const { return m_selectModeFlag; }
 
+	const float GetPopTextTime() const { return m_popHPTimer; }
+
 	/// <summary>
 	/// マシンをクリックし、メニューを開いた際に現れるボタンのポインターを返します
 	/// </summary>
@@ -140,6 +145,7 @@ public:
 	void SetLine(int line)								{ m_line = line; }
 	void SetPowerUpFlag(bool flag)						{ m_powerUPFlag = flag; }
 	void SetSelectModeFlag(bool flag)					{ m_selectModeFlag = flag;}
+	void SetHitMouseFlag(bool flag)						{ m_hitMouseFlag = flag; }
 	void SetElement(ELEMENT element)					{ m_element = element; }
 	void SetColor(SimpleMath::Color color)				{ m_color = color;}
 
@@ -194,6 +200,9 @@ protected:
 	// Y軸回転させるための変数
 	float m_rotateAnimation;
 
+	// HPが徐々に減るようにする変数
+	float m_difRedioHp;
+
 	// オブジェクトのライン位置(どの円形線状にあるか)
 	int m_line;
 
@@ -232,5 +241,8 @@ protected:
 	std::unique_ptr<SelectionBox> m_repairBox;
 	// 解体用の選択ボックス
 	std::unique_ptr<SelectionBox> m_dismantlingBox;
+
+	// 触れたら出現するHPバーUI用の時間変数
+	float m_popHPTimer;
 
 };

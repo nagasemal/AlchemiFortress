@@ -209,7 +209,7 @@ void TitleScene::DrawUI()
 {
 	// 必要なリソースの確保
 	ShareData& pSD		= ShareData::GetInstance();
-	SpriteLoder& pSL	= SpriteLoder::GetInstance();
+	SpriteLoder::TextureData texData = SpriteLoder::GetInstance().GetMachineMagicCircleTexture(1);
 	auto pSB			= pSD.GetSpriteBatch();
 	auto device			= pSD.GetDeviceResources();
 
@@ -224,17 +224,17 @@ void TitleScene::DrawUI()
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
 	// 画像のサイズ
-	RECT rect_circle	= { 0, 0, 1280, 1280 };
+	RECT rect_circle	= { 0, 0, texData.width, texData.height};
 
 	SimpleMath::Vector2 box_Pos = { (float)width,0.0f};
 
 	// 魔法陣描画
-	pSB->Draw(pSL.GetMagicCircleTexture(1).Get(),
+	pSB->Draw(texData.tex.Get(),
 			  box_Pos,
 			  &rect_circle,
 			  COLOR,
 			  m_animationData.anim,
-			  DirectX::XMFLOAT2(1280 / 2, 1280 / 2),
+			  DirectX::XMFLOAT2(texData.width / 2, texData.height / 2),
 			  0.5f);
 
 	// ボタンの描画

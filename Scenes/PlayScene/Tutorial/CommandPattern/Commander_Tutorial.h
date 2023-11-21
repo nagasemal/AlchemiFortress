@@ -28,13 +28,15 @@ public:
 		DESTOROY_UI,				// 破壊UIへの誘導を行う
 		LVUP_UI,					// LVUPUIへの誘導を行う
 
-		MACHINE_LINE_UI,			// マシン設置ラインUIへの誘導を行う
+		LR_BUTTON_LOCK,				// マシンUIの移動を制限する
 
 		NONE_MACHINE_SELECT,		// ノーンマシンへの視線誘導を行う
 		PROPHERAL_ATTACKER_MACHINE,	// アタッカーマシン周辺のマシンに視線誘導させる
 		ENEMY_ATTENTION,			// エネミー出現位置に視線誘導を行う
 		BREAK_MACHINE,				// マシンを破壊する
-		REPAIR_MACHINE				// マシンを修繕する
+		REPAIR_MACHINE,				// マシンを修繕する
+
+		TEXT_ARROW,					// チュートリアルのテキストを流す
 	};
 
 public:

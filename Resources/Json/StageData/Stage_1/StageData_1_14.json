@@ -83,7 +83,7 @@
         "SPAWN_Y": 0,
         "SPAWN_Z": 0,
         "LV": 0,
-        "TYPE": "Slime"
+        "TYPE": "Random"
       }
     ]
   },
@@ -102,6 +102,10 @@
     "UPPER": 0
   },
   "TUTORIAL": [
+    {
+      "NUMBER": 13,
+      "VAL": 1
+    },
     {
       "NUMBER": 18,
       "VAL": 0

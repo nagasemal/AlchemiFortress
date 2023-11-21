@@ -42,8 +42,8 @@ public:
 	// »‘¢ƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½uŠÔ‚ğæ“¾
 	bool GetManufacturingFlag()										{ return m_manufacturingFlag; }
 
-	bool GetHitMouseFlag()											{ return m_hitMouseFlag; }
-	void SetHitMouseFlag(bool flag)									{ m_hitMouseFlag = flag; }
+	bool GetHitMouseFlag()											{ return m_onMouseFlag; }
+	void SetHitMouseFlag(bool flag)									{ m_onMouseFlag = flag; }
 
 	void SetPosition(SimpleMath::Vector2 pos)						{ m_data.pos = pos; }
 

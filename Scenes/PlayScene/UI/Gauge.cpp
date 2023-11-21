@@ -4,16 +4,24 @@
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
 
+#include "NecromaLib/GameData/SpriteCutter.h"
+
+#include "Scenes/PlayScene/UI/Number.h"
 #include "Scenes/DataManager.h"
 #include "SelectionBox.h"
 
 #include <math.h>
 
-#define HP_GAUGE_POS        { 335.0f,50.0f }
-#define MP_GAUGE_POS        { 335.0f,75.0f }
-#define CRYSTAL_GAUGE_POS   { 335.0f,95.0f}
+#define OFFSET_POS              SimpleMath::Vector2(100.0f,320.0f)
 
-#define REDUCE_HP 0.1f
+#define HP_GAUGE_POS            SimpleMath::Vector2(630.0f,360.0f) - OFFSET_POS
+#define MP_GAUGE_POS            SimpleMath::Vector2(450.0f,400.0f) - OFFSET_POS
+#define CRYSTAL_GAUGE_POS       SimpleMath::Vector2(810.0f,400.0f) - OFFSET_POS
+
+#define BIG_GAUGE_RAGE          SimpleMath::Vector2(0.8f,0.2f)
+#define SMALL_GAUGE_RAGE        SimpleMath::Vector2(0.4f,0.2f)
+
+#define REDUCE 0.05f
 
 Gauge::Gauge():
     m_difRedioHp(1.0f),
@@ -29,19 +37,20 @@ Gauge::~Gauge()
 void Gauge::Initialize()
 {
     auto device = ShareData::GetInstance().GetDeviceResources();
-    int width = device->GetOutputSize().right;
-    int height = device->GetOutputSize().bottom;
 
-    width;
-    height;
+    Add_Hp( HP_GAUGE_POS, BIG_GAUGE_RAGE, UserInterface::ANCHOR::MIDDLE_CENTER);
+    Add_MP( MP_GAUGE_POS, SMALL_GAUGE_RAGE, UserInterface::ANCHOR::MIDDLE_CENTER);
+    Add_Crystal( CRYSTAL_GAUGE_POS, SMALL_GAUGE_RAGE, UserInterface::ANCHOR::MIDDLE_CENTER);
 
-	//m_gauge = std::make_unique<UserInterface>();
-	//m_gauge->Create(device, L"Resources/Textures/Seizou.png",{100,300},{1,1},ANCHOR::MIDDLE_CENTER);
 
-    Add_Hp( HP_GAUGE_POS, { 0.55f,0.35f }, UserInterface::ANCHOR::MIDDLE_CENTER);
-    Add_MP( MP_GAUGE_POS, { 0.55f,0.25f }, UserInterface::ANCHOR::MIDDLE_CENTER);
-    Add_Crystal( CRYSTAL_GAUGE_POS, { 0.55f,0.25f }, UserInterface::ANCHOR::MIDDLE_CENTER);
+    m_resourceRenderHP = std::make_unique<Number>(HP_GAUGE_POS, BIG_GAUGE_RAGE);
+    m_resourceRenderHP->SetColor(SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
 
+    m_resourceRenderMP = std::make_unique<Number>(MP_GAUGE_POS, SMALL_GAUGE_RAGE);
+    m_resourceRenderMP->SetColor(SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
+
+    m_resourceRenderCrystal = std::make_unique<Number>(CRYSTAL_GAUGE_POS, SMALL_GAUGE_RAGE);
+    m_resourceRenderCrystal->SetColor(SimpleMath::Color(1.0f,1.0f,1.0f,1.0f));
 }
 
 void Gauge::Update()
@@ -57,7 +66,7 @@ void Gauge::Update()
     m_gauge_Hp->SetColor({ 0.5f,1.0f,0.7f,1.0f });
 
     // 徐々に減るHPの処理
-    m_difRedioHp -= REDUCE_HP * deltaTime;
+    m_difRedioHp -= REDUCE * deltaTime;
     m_difRedioHp = std::min(std::max(m_difRedioHp, radio_Hp), 1.0f);
 
     m_back_Hp->SetRenderRatio(m_difRedioHp);
@@ -70,7 +79,7 @@ void Gauge::Update()
     m_gauge_Mp->SetColor({0.6f,0.6f,1.0f,1.0f});
 
     // 徐々に減るMPの処理
-    m_difRedioMp -= REDUCE_HP * deltaTime;
+    m_difRedioMp -= REDUCE * deltaTime;
     m_difRedioMp = std::min(std::max(m_difRedioMp, radio_Mp), 1.0f);
 
     m_back_Mp->SetRenderRatio(m_difRedioMp);
@@ -83,7 +92,7 @@ void Gauge::Update()
     m_gauge_Crystal->SetColor({ 1.0f,0.2f,1.0f,1.0f });
 
     // 徐々に減るクリスタルの処理
-    m_difRedioCrystal -= REDUCE_HP * deltaTime;
+    m_difRedioCrystal -= REDUCE * deltaTime;
     m_difRedioCrystal = std::min(std::max(m_difRedioCrystal, radio_Crystal), 1.0f);
 
     m_back_Crystal->SetRenderRatio(m_difRedioCrystal);
@@ -93,17 +102,60 @@ void Gauge::Update()
 
 void Gauge::Render()
 {
-    m_base_Hp->Render();
-    m_back_Hp->Render();
-    m_gauge_Hp->Render();
+    DataManager& pDataM = *DataManager::GetInstance();
 
-    m_base_Mp->Render();
-    m_back_Mp->Render();
-    m_gauge_Mp->Render();
+    // 耐久値描画
+    m_base_Hp   ->Render();
+    m_back_Hp   ->Render();
+    m_gauge_Hp  ->Render();
 
-    m_base_Crystal->Render();
-    m_back_Crystal->Render();
-    m_gauge_Crystal->Render();
+    m_resourceRenderHP->SetNumber(pDataM.GetNowBaseHP());
+    m_resourceRenderHP->SetRage(SimpleMath::Vector2(0.5f,0.5f));
+    m_resourceRenderHP->SetPosition(HP_GAUGE_POS + SimpleMath::Vector2(m_base_Hp->GetTexture_W() / 2.2f * BIG_GAUGE_RAGE.x,
+                                                                     m_base_Hp->GetTexture_H() / 2.2f * BIG_GAUGE_RAGE.y));
+    m_resourceRenderHP->Render();
+
+    // 魔力リソース量描画
+    m_base_Mp   ->Render();
+    m_back_Mp   ->Render();
+    m_gauge_Mp  ->Render();
+
+    m_resourceRenderMP->SetNumber(pDataM.GetNowMP());
+    m_resourceRenderMP->SetRage(SimpleMath::Vector2(0.4f, 0.4f));
+    m_resourceRenderMP->SetPosition(MP_GAUGE_POS + SimpleMath::Vector2(m_base_Mp->GetTexture_W() / 2.2f * SMALL_GAUGE_RAGE.x,
+                                                                     m_base_Mp->GetTexture_H() / 2.2f * SMALL_GAUGE_RAGE.y));
+    m_resourceRenderMP->Render();
+
+
+    // 結晶リソース量描画
+    m_base_Crystal  ->Render();
+    m_back_Crystal  ->Render();
+    m_gauge_Crystal ->Render();
+
+    m_resourceRenderCrystal->SetNumber(pDataM.GetNowCrystal());
+    m_resourceRenderCrystal->SetRage(SimpleMath::Vector2(0.4f, 0.4f));
+    m_resourceRenderCrystal->SetPosition(CRYSTAL_GAUGE_POS + SimpleMath::Vector2(m_base_Crystal->GetTexture_W() / 2.2f * SMALL_GAUGE_RAGE.x,
+                                                                          m_base_Crystal->GetTexture_H() / 2.2f * SMALL_GAUGE_RAGE.y));
+    m_resourceRenderCrystal->Render();
+
+    ShareData& pSD = ShareData::GetInstance();
+    SpriteBatch* pSB = pSD.GetSpriteBatch();
+    SpriteLoder& pSL = SpriteLoder::GetInstance();
+
+    pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
+
+    // 魔力アイコンを描画する
+    RECT rect = SpriteCutter(64, 64, 0, 0);
+    pSB->Draw(pSL.GetElementTexture().Get(), MP_GAUGE_POS - SimpleMath::Vector2((m_gauge_Mp->GetTexture_W() / 2) * SMALL_GAUGE_RAGE.x, 0.0f),
+        &rect, Colors::White, 0.0f, SimpleMath::Vector2(64.0f / 2.0f, 64.0f / 2.0f), 0.5f);
+
+    // 結晶アイコンを描画する
+    rect = SpriteCutter(64, 64, 1, 0);
+    pSB->Draw(pSL.GetElementTexture().Get(), CRYSTAL_GAUGE_POS - SimpleMath::Vector2((m_gauge_Crystal->GetTexture_W() / 2) * SMALL_GAUGE_RAGE.x,0.0f),
+        &rect, Colors::White, 0.0f, SimpleMath::Vector2(64.0f / 2.0f, 64.0f / 2.0f), 0.5f);
+
+    pSB->End();
+
 }
 
 void Gauge::Finalize()
@@ -138,6 +190,8 @@ void Gauge::Add_Crystal(SimpleMath::Vector2 position, SimpleMath::Vector2 scale,
     m_base_Crystal = std::make_unique<UserInterface>();
     createGage(m_base_Crystal.get(),true);
 
+    m_base_Crystal->SetColor({ 0.7f,0.4f,0.0,1.0f });
+
     m_back_Crystal = std::make_unique<UserInterface>();
     createGage(m_back_Crystal.get());
 
@@ -170,6 +224,7 @@ void Gauge::Add_Hp(SimpleMath::Vector2 position, SimpleMath::Vector2 scale, User
 
     m_base_Hp = std::make_unique<UserInterface>();
     createGage(m_base_Hp.get(),true);
+    m_base_Hp->SetColor({ 0.5f,1.0f,0.7f,1.0f });
 
     // 背後に描画する赤いバー(徐々に減衰)
     m_back_Hp = std::make_unique<UserInterface>();
@@ -219,6 +274,7 @@ void Gauge::Add_MP(SimpleMath::Vector2 position,SimpleMath::Vector2 scale,UserIn
 
     m_base_Mp = std::make_unique<UserInterface>();
     createGage(m_base_Mp.get(), true);
+    m_base_Mp->SetColor({ 0.4f,0.4f,0.8,1.0f });
 
     m_back_Mp = std::make_unique<UserInterface>();
     createGage(m_back_Mp.get());

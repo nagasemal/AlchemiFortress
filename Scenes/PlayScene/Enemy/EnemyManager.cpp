@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <random>
 
+#include "DirectXHelpers.h"
+
 #include "NecromaLib/Singleton/ShareJsonData.h"
 
 EnemyManager::EnemyManager() :
@@ -50,6 +52,22 @@ void EnemyManager::Initialize()
 	pSJD->LoadingJsonFile_Enemy();
 
 	ReloadEnemyData();
+
+	// エフェクトを作成
+	m_effect = std::make_unique<BasicEffect>(ShareData::GetInstance().GetDevice());
+	m_effect->SetTextureEnabled(true);
+	m_effect->SetVertexColorEnabled(true);
+	m_effect->SetLightingEnabled(false);
+
+	// 入力レイアウトを作成
+	DX::ThrowIfFailed(
+		CreateInputLayoutFromEffect(
+			ShareData::GetInstance().GetDevice(),
+			m_effect.get(),
+			VertexPositionColorTexture::InputElements,
+			VertexPositionColorTexture::InputElementCount,
+			m_inputLayout.ReleaseAndGetAddressOf())
+	);
 
 	//// ランダム生成でない場合初めから生成をしておく
 	//if (pSJD->GetStageData().enemys_Spawn[0].type != ENEMY_TYPE::ENMEY_NONE)
@@ -165,12 +183,6 @@ void EnemyManager::Update(SimpleMath::Vector3 basePos)
 void EnemyManager::Render()
 {
 
-	///*===[ デバッグ文字描画 ]===*/
-	//std::wostringstream oss;
-	//oss << "EnemyNum - " << m_enemyObject->size();
-	//pSD.GetDebugFont()->AddString(oss.str().c_str(), SimpleMath::Vector2(400.f, 20.f));
-	//m_particle_hit	->Render();
-	
 	m_particle_delete	->Render();
 	m_particle_spawn	->Render();
 
@@ -183,10 +195,48 @@ void EnemyManager::Render()
 
 void EnemyManager::RenderUI()
 {
+	ShareData& pSD = ShareData::GetInstance();
+	auto status = pSD.GetCommonStates();
+
+	// ビルボードされたUIを描画するための設定
+	auto camera = ShareData::GetInstance().GetCamera();
+	auto context = pSD.GetContext();
+	// スクリーン座標はY軸が＋－逆なので
+	SimpleMath::Matrix invertY = SimpleMath::Matrix::CreateScale(1.0f, -1.0f, 1.0f);
+
+	// ビュー行列の回転を打ち消す行列を作成する
+	SimpleMath::Matrix invView = camera->GetViewMatrix().Invert();
+	invView._41 = 0.0f;
+	invView._42 = 0.0f;
+	invView._43 = 0.0f;
+
+	// エフェクトにビュー行列と射影行列を設定する
+	m_effect->SetView(camera->GetViewMatrix());
+	m_effect->SetProjection(camera->GetProjectionMatrix());
 
 	for (std::list<EnemyObject>::iterator it = m_enemyObject->begin(); it != m_enemyObject->end(); it++)
 	{
+
+		pSD.GetSpriteBatch()->Begin(SpriteSortMode_Deferred, status->NonPremultiplied(), nullptr, status->DepthNone(), status->CullCounterClockwise(), [=]
+			{
+				// ワールド行列作成
+				SimpleMath::Matrix world =
+					SimpleMath::Matrix::CreateScale(0.01f) *
+					invertY *
+					invView *
+					SimpleMath::Matrix::CreateTranslation(it->GetPos() + SimpleMath::Vector3(0.0f, 1.0f, 0.0f));
+
+				// エフェクトを適応する
+				m_effect->SetWorld(world);
+				m_effect->Apply(context);
+				// 入力レイアウトを設定する
+				context->IASetInputLayout(m_inputLayout.Get());
+			});
+
 		it->Draw();
+
+
+		pSD.GetSpriteBatch()->End();
 	}
 
 }

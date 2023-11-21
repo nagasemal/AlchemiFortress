@@ -22,7 +22,7 @@ public:
 	static DeltaTime& GetInstance() { return *instance; }
 
 	// ゲーム内デルタタイムを返します
-	float GetDeltaTime() { return (m_deltaTime * SPEED * m_doubleSpeed) * !m_stopTimeFlag; }
+	float GetDeltaTime() { return (m_deltaTime * m_doubleSpeed) * !m_stopTimeFlag; }
 
 	// 加算減算が行われていない素のデルタタイムを返します
 	float GetNomalDeltaTime();

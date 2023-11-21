@@ -22,12 +22,12 @@
 #include "Scenes/PlayScene/Shadow/Particle.h"
 
 #define TEXTPOS SimpleMath::Vector2(300,500)
-#define ARROWPOS SimpleMath::Vector2(200,20)
+#define ARROWPOS SimpleMath::Vector2(200,-15)
 
 #define TEX_W 600.0f
 #define TEX_H 200.0f
 
-#define OFFSET_Y 20 
+#define OFFSET_Y 10 
 
 TutorialManager::TutorialManager(PlayScene* pPlayScene)
 {
@@ -166,7 +166,7 @@ void TutorialManager::Render_Layer2()
 
 	pSB->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
-	if (m_displayBox->GetActiveFlag())m_displayBox->Draw();
+	if (m_displayBox->GetActiveFlag()) m_displayBox->Draw();
 
 	pSB->End();
 }
@@ -259,12 +259,12 @@ ICommand_Tutorial* TutorialManager::GenerateCommand(Tutorial_Status type)
 	case TutorialCommander::DESTOROY_UI:
 	case TutorialCommander::LVUP_UI:
 
-		return new Tutorial_MachineExplanation(type.type - (int)TutorialCommander::REPEA_UI);
+		return new Tutorial_MachineExplanation(type.type - (int)TutorialCommander::REPEA_UI, (MACHINE_TYPE)type.val);
 
 		break;
-	case TutorialCommander::MACHINE_LINE_UI:
+	case TutorialCommander::LR_BUTTON_LOCK:
 
-		return new Tutorial_SpawnLine();
+		return new Tutorial_LockMachineUI((bool)type.val);
 
 	case TutorialCommander::NONE_MACHINE_SELECT:
 
@@ -289,6 +289,11 @@ ICommand_Tutorial* TutorialManager::GenerateCommand(Tutorial_Status type)
 	case TutorialCommander::REPAIR_MACHINE:
 
 		return new Tutorial_MachineRepia((MACHINE_TYPE)type.val);
+
+	case TutorialCommander::TEXT_ARROW:
+
+
+		return new Tutorial_TextArrow((MACHINE_TYPE)type.val);
 
 	default:
 		break;

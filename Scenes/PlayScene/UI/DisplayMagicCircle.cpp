@@ -72,16 +72,18 @@ void DisplayMagicCircle::SpritebatchRender()
 	auto& pSD = ShareData::GetInstance();
 	auto pSB = pSD.GetSpriteBatch();
 
+	SpriteLoder::TextureData texData = SpriteLoder::GetInstance().GetMachineMagicCircleTexture(0);
+
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
 	// 画像のサイズ
-	RECT srcRect = { 0, 0, m_textureWidth, m_textureHeight };
+	RECT srcRect = { 0, 0, texData.width, texData.height };
 
 	SimpleMath::Vector2 box_Pos = { static_cast<float>(m_windowWidth) / 2,static_cast<float>(m_windowHeight) / 2 };
 
 	// 選択BOX
-	pSB->Draw(SpriteLoder::GetInstance().GetMagicCircleTexture(0).Get(), box_Pos, &srcRect,
-			  m_color,m_rotateTime, DirectX::XMFLOAT2((float)m_textureWidth / 2, (float)m_textureHeight / 2), 1.5f);
+	pSB->Draw(texData.tex.Get(), box_Pos, &srcRect,
+			  m_color,m_rotateTime, DirectX::XMFLOAT2((float)texData.width / 2, (float)texData.height / 2), 1.5f);
 
 	pSB->End();
 }

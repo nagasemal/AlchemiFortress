@@ -37,9 +37,11 @@ public:
 
 	// マウスが当たっている判定を変えられます
 	void SetHitMouseFlag(bool flag) { m_hitMouseFlag = flag; }
+	
 	// 選択状態になっている判定を変えられます
 	void SetSelectFlag(bool flag) { m_selectFlag = flag; }
 	void SetKeySelectFlag(bool flag) { m_keySelectFlag = flag;}
+
 	// 色を自由に変えられます。(ボックスを強調したい際などに使用)
 	void SetLuminousColor(SimpleMath::Color color) { m_boxColor = color; }
 	void SetLuminousFlag(bool flag) { m_luminousFlag = flag; };
@@ -69,6 +71,7 @@ protected:
 
 	int m_layer;
 
+	// 選択失敗時震わせる時間遷移用変数
 	float m_vibrationTime;
 
 };

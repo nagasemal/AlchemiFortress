@@ -13,6 +13,10 @@ using namespace DirectX;
 class GameObjct3D
 {
 public:
+
+	/// <summary>
+	/// 3Dオブジェクトの位置情報,大きさ情報が格納された構造体
+	/// </summary>
 	struct ObjectData3D
 	{
 		SimpleMath::Vector3 pos;

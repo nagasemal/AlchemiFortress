@@ -522,8 +522,8 @@ void OperationInstructions::LinePosSet(PlayScene* pPlayScene, int number)
 	}
 	case INSTRUCTION_TYPE::LINE_SELECT:
 	{
-		linePos = machineManager->GetVariableNum()->get()->GetSelectionBox()->GetPos();
-		lineRage = SimpleMath::Vector2(100.0f, 36.0f);
+		//linePos = machineManager->GetVariableNum()->get()->GetSelectionBox()->GetPos();
+		//lineRage = SimpleMath::Vector2(100.0f, 36.0f);
 		break;
 	}
 	default:

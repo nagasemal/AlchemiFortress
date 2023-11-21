@@ -76,4 +76,9 @@ private:
 
 	int m_enemyNums;
 
+	// エフェクト
+	std::unique_ptr<DirectX::BasicEffect> m_effect;
+	// 入力レイアウト
+	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
+
 };

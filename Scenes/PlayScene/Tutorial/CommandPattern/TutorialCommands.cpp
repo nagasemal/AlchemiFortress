@@ -8,6 +8,7 @@
 #include "Scenes/Commons/DrawVariableNum.h"
 
 #include "Scenes/Commons/DrawBox.h"
+#include "Scenes/Commons/DrawArrow.h"
 
 #include "Scenes/PlayScene/Tutorial/CommandPattern/ICommand_Tutorial.h"
 #include "Scenes/PlayScene/Tutorial/TutorialManager.h"
@@ -231,8 +232,9 @@ void Tutorial_EnemySpawn::Reset()
 
 
 // ==マシンメニューの視線誘導コマンド=========================
-Tutorial_MachineExplanation::Tutorial_MachineExplanation(int type):
-	m_menuButtonType(type)
+Tutorial_MachineExplanation::Tutorial_MachineExplanation(int type, MACHINE_TYPE machineType):
+	m_menuButtonType(type),
+	m_machineType(machineType)
 {
 	Reset();
 }
@@ -252,9 +254,20 @@ void Tutorial_MachineExplanation::Initialize()
 		// 早期コンテニュー
 		if (machine->GetModelID() == MACHINE_TYPE::NONE) continue;
 
-		// 一番最初に見つけたNone以外のマシンのメニューを開く　以降は処理しなくても良い為returnを行う
-		machine->SetSelectModeFlag(true);
-		break;
+		// 選ぶ対象がNoneタイプならば一番初めに見つけたマシンのメニューを開く
+		if (m_machineType == MACHINE_TYPE::NONE)
+		{
+			// 一番最初に見つけたNone以外のマシンのメニューを開く　以降は処理しなくても良い為returnを行う
+			machine->SetSelectModeFlag(true);
+			break;
+		}
+
+		// 指定マシンで行う
+		if (m_machineType == machine->GetModelID())
+		{
+			machine->SetSelectModeFlag(true);
+			break;
+		}
 
 	}
 
@@ -354,9 +367,15 @@ void Tutorial_ResourceGauge::Initialize()
 		m_tutorialManager->GetDisplayBox()->SetPosRage(gauge->GetHPGaugePos(), rage);
 		break;
 	case 1:
+
+		rage = SimpleMath::Vector2(100.0f, 10.0f);
+
 		m_tutorialManager->GetDisplayBox()->SetPosRage(gauge->GetMPGaugePos(), rage);
 		break;
 	case 2:
+
+		rage = SimpleMath::Vector2(100.0f, 10.0f);
+
 		m_tutorialManager->GetDisplayBox()->SetPosRage(gauge->GetCrystalGaugePos(),rage);
 		break;
 
@@ -662,16 +681,53 @@ void Tutorial_NoneSelect::Reset()
 
 
 
-Tutorial_SpawnLine::Tutorial_SpawnLine()
+Tutorial_LockMachineUI::Tutorial_LockMachineUI(bool activeFlag):
+	m_activeFlag(activeFlag)
 {
 	Reset();
 }
 
-Tutorial_SpawnLine::~Tutorial_SpawnLine()
+Tutorial_LockMachineUI::~Tutorial_LockMachineUI()
 {
 }
 
-void Tutorial_SpawnLine::Initialize()
+void Tutorial_LockMachineUI::Initialize()
+{
+	if (m_initializeFlag) return;
+
+	// 左右UI移動をさせなくする
+	m_tutorialManager->GetPlayScene()->GetAlchemicalMachineManager()->GetMachineSelect()->get()->LRButtonLock(m_activeFlag);
+
+	m_initializeFlag = true;
+	m_completion = true;
+}
+
+void Tutorial_LockMachineUI::Execute()
+{
+	if (m_completion) return;
+
+	m_completion = true;
+}
+
+void Tutorial_LockMachineUI::Finalize()
+{
+}
+
+void Tutorial_LockMachineUI::Reset()
+{
+}
+
+Tutorial_TextArrow::Tutorial_TextArrow(int type):
+	m_type(type)
+{
+	Reset();
+}
+
+Tutorial_TextArrow::~Tutorial_TextArrow()
+{
+}
+
+void Tutorial_TextArrow::Initialize()
 {
 	if (m_initializeFlag) return;
 
@@ -680,13 +736,24 @@ void Tutorial_SpawnLine::Initialize()
 	m_initializeFlag = true;
 }
 
-void Tutorial_SpawnLine::Execute()
+void Tutorial_TextArrow::Execute()
 {
-
 	auto machineManager = m_tutorialManager->GetPlayScene()->
 		GetAlchemicalMachineManager();
 
-	m_tutorialManager->GetDisplayBox()->SetPosRage(machineManager->GetVariableNum()->get()->GetSelectionBox()->GetPos(), SimpleMath::Vector2(70.0f, 55.0f));
+	SimpleMath::Vector2 arrowPos = SimpleMath::Vector2();
+
+	if (m_type == 0)
+	{
+		arrowPos = m_tutorialManager->GetTextArrow_left()->GetPos();
+
+	}
+	else if (m_type == 1)
+	{
+		arrowPos = m_tutorialManager->GetTextArrow_right()->GetPos();
+	}
+
+	m_tutorialManager->GetDisplayBox()->SetPosRage(arrowPos, SimpleMath::Vector2(30.0f, 30.0f));
 
 	// 視線誘導用ボックスの描画,アニメーション,更新処理を行う
 	m_tutorialManager->GetDisplayBox()->SetActiveFlag(true);
@@ -700,10 +767,10 @@ void Tutorial_SpawnLine::Execute()
 
 }
 
-void Tutorial_SpawnLine::Finalize()
+void Tutorial_TextArrow::Finalize()
 {
 }
 
-void Tutorial_SpawnLine::Reset()
+void Tutorial_TextArrow::Reset()
 {
 }

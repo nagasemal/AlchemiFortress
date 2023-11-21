@@ -46,4 +46,10 @@ private:
 
 	int m_num;
 
+	int m_prevNum;
+
+	float m_animationPosTime;
+
+	bool m_animationFlag;
+
 };

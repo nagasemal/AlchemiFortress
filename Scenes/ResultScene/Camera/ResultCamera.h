@@ -43,7 +43,7 @@ private:
 	int m_prevX, m_prevY;						// 前回のマウス座標(X,Y)
 	int m_scrollWheelValue;						// マウスホイールのスクロール値
 	int m_prevWheelValue;						// 前回のスクロール値
-	SimpleMath::Vector3 m_move;		// 移動値
+	SimpleMath::Vector3 m_move;			// 移動値
 	SimpleMath::Matrix m_view;			// 生成されたビュー行列
 	SimpleMath::Vector3 m_eye;			// カメラの座標
 	SimpleMath::Vector3 m_target;		// 注視点

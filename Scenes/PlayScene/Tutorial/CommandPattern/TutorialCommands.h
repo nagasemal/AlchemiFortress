@@ -134,7 +134,7 @@ public:
 	/// マシンの選択時メニュー内の操作
 	/// </summary>
 	/// <param name="type">0 = 修繕 ,1 = 破壊 , 2 = レベルアップ</param>
-	Tutorial_MachineExplanation(int type);
+	Tutorial_MachineExplanation(int type,MACHINE_TYPE machineType);
 	~Tutorial_MachineExplanation();
 
 	// 処理が開始した際に通す処理
@@ -153,6 +153,8 @@ private:
 	TutorialManager* m_tutorialManager;	// 対象のポインター
 
 	int m_menuButtonType;				// マシンメニュー内の選択ボックスのポインターを指定する際に使用
+
+	MACHINE_TYPE m_machineType;
 
 };
 
@@ -252,8 +254,6 @@ private:
 
 };
 
-
-
 /// <summary>
 /// 置く場所をプログラム側で決めるコマンド_Upper用
 /// </summary>
@@ -329,16 +329,16 @@ private:
 };
 
 /// <summary>
-/// 設置ラインを決める
+/// マシンUIの移動ロックを行う
 /// </summary>
-class Tutorial_SpawnLine : public ICommand_Tutorial
+class Tutorial_LockMachineUI : public ICommand_Tutorial
 {
 public:
 	/// <summary>
 	/// マシンの設置ラインを決める
 	/// </summary>
-	Tutorial_SpawnLine();
-	~Tutorial_SpawnLine();
+	Tutorial_LockMachineUI(bool activeFlag);
+	~Tutorial_LockMachineUI();
 
 	// 処理が開始した際に通す処理
 	void Initialize() override;
@@ -355,5 +355,40 @@ private:
 
 	// 対象のポインター
 	TutorialManager* m_tutorialManager;
+
+	bool m_activeFlag;
+
+};
+
+/// <summary>
+/// チュートリアルのテキストを進める矢印を作ります
+/// </summary>
+class Tutorial_TextArrow : public ICommand_Tutorial
+{
+public:
+	/// <summary>
+	/// マシンの設置ラインを決める
+	/// </summary>
+	Tutorial_TextArrow(int type);
+	~Tutorial_TextArrow();
+
+	// 処理が開始した際に通す処理
+	void Initialize() override;
+	// 処理実行関数
+	void Execute() override;
+	// 処理が終了した際に通す処理
+	void Finalize() override;
+	// 初期化の内容を記述
+	void Reset() override;
+
+	void SetTutorialManagerPtr(TutorialManager* object) override { m_tutorialManager = object; }
+
+private:
+
+	// 対象のポインター
+	TutorialManager* m_tutorialManager;
+
+	// どのような処理を行うか
+	int m_type;
 
 };

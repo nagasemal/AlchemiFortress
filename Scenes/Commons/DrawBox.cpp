@@ -10,7 +10,9 @@ DrawBox::DrawBox(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage, float lineRa
 {
 
 	m_animationData_First = AnimationData(0.0f,0.0f,1.0f,0.8f);
+
 	m_lineRage_Vertical = m_lineRage_Beside = SimpleMath::Vector2();
+	m_lineRage_Vertical.x = m_lineRage_Beside.y = lineRage;
 
 	m_animationData_Second = AnimationData();
 	m_rotate_easing = 0.0f;
@@ -19,8 +21,6 @@ DrawBox::DrawBox(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage, float lineRa
 	m_saveData.rage = m_data.rage = rage;
 
 	m_color = Colors::Black;
-
-	m_lineRage_Vertical.x = m_lineRage_Beside.y = lineRage;
 
 	m_rect = RECT{ 1,1,2,2 };
 
@@ -42,10 +42,16 @@ void DrawBox::Update()
 
 	HitMouse();
 
-	// ü‚ğ“®‚©‚·
-	m_lineRage_Vertical.y = Easing::EaseInOutCirc(0.0f	, m_data.rage.y * 2.0f, m_animationData_First);
-	m_lineRage_Beside.x	  = Easing::EaseInOutCirc(0.0f  , m_data.rage.x * 2.0f, m_animationData_First);
+	// ˜g‚ğ“®‚©‚· ˆê’iŠK–Ú
+	m_data.rage.x = Easing::EaseInOutCirc(m_data.rage.x * 50.0f, m_saveData.rage.x,m_animationData_First);
+	m_data.rage.y = Easing::EaseInOutCirc(m_data.rage.y * 50.0f, m_saveData.rage.y,m_animationData_First);
 
+	m_lineRage_Vertical.x = m_lineRage_Beside.y = Easing::EaseInOutCirc(50.0f, 3.0f, m_animationData_First);
+
+	m_lineRage_Vertical.y = m_data.rage.y * 2.0f;
+	m_lineRage_Beside.x	  = m_data.rage.x * 2.0f;
+
+	// “ñ’iŠK–Ú
 	if (m_animationData_First) m_animationData_Second += deltaTime * 1.2f;
 	if (m_animationData_Second.MaxCheck()) m_animationData_Second = 0.0f;
 

@@ -104,6 +104,7 @@ public:
 		, SimpleMath::Vector2 scale
 		, ANCHOR anchor);
 
+	// XYïΩñ Ç…èoÇ∑
 	void Render();
 
 	void SetWindowSize(const int& width, const int& height);
