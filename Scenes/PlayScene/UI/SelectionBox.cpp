@@ -164,10 +164,14 @@ void SelectionBox::DrawUI(int UInumber)
 	RECT textRect = SpriteCutter(texWidth, texData.height, UInumber, 0);
 	pSB->Draw(texData.tex.Get(), m_data.pos - SimpleMath::Vector2(0.0f, Easing::EaseInOutQuint(0.0f, texWidth * m_data.rage.y, m_popUITextTimer)),
 		&textRect, SimpleMath::Color(0.0f, 0.0f, 0.0f,m_popUITextTimer),
-		1.0f - Easing::EaseOutCirc(0.0f, 1.0f, m_popUITextTimer), DirectX::XMFLOAT2(texWidth / 2, texData.height / 2), 1.0f);
+		1.0f - Easing::EaseOutCirc(0.0f, 1.0f, m_popUITextTimer),
+		DirectX::XMFLOAT2(static_cast<float>(texWidth / 2),
+						  static_cast<float>(texData.height / 2)), 1.0f);
 
 	// 選択BOX描画
-	pSB->Draw(pSL->GetSelectBoxTexture().Get(), m_data.pos, &m_rect, colour, 0.0f, DirectX::XMFLOAT2(static_cast<float>(m_rect.right) / 2, static_cast<float>(m_rect.bottom) / 2), m_data.rage);
+	pSB->Draw(pSL->GetSelectBoxTexture().Get(), m_data.pos, &m_rect, colour, 0.0f,
+		DirectX::XMFLOAT2(static_cast<float>(m_rect.right) / 2,
+						  static_cast<float>(m_rect.bottom) / 2), m_data.rage);
 
 
 	// 画像のサイズ

@@ -18,7 +18,8 @@ SelectionUI::SelectionUI() :
 	m_layer(),
 	m_activeFlag(true),
 	m_rect{ 0,0,64,64 },
-	m_vibrationTime()
+	m_vibrationTime(),
+	m_holdTime()
 {
 }
 
@@ -123,7 +124,10 @@ bool SelectionUI::HoldMouse()
 	InputSupport& pINP = InputSupport::GetInstance();
 	bool leftFlag = pINP.GetMouseState().leftButton;
 
-	return m_hitMouseFlag && leftFlag;
+	if (m_hitMouseFlag && leftFlag) m_holdTime += DeltaTime::GetInstance().GetDeltaTime();
+	else m_holdTime = 0.0f;
+
+	return m_holdTime >= 1.0f;
 }
 
 bool SelectionUI::ExitMouse()

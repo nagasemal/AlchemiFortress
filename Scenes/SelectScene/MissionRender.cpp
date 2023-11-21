@@ -25,8 +25,12 @@ MissionRender::MissionRender(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage)
 
 	ShareJsonData& pSJD = ShareJsonData::GetInstance();
 	Stage_Data missionData = pSJD.GetStageData();
-	m_missionNum = static_cast<int>(missionData.condition_Enemy.size() + missionData.condition_Machine.size() + missionData.condition_Time.size());
 
+	m_missionNum = 0;
+	for (int i = 0; i < MISSION_TYPE::MISSION_NUM; i++)
+	{
+		m_missionNum += static_cast<int>(missionData.condition[i].size());
+	}
 }
 
 MissionRender::~MissionRender()
@@ -42,11 +46,11 @@ void MissionRender::Render()
 
 	Stage_Data missionData = pSJD.GetStageData();
 
-	Render_MachineMission(missionData.condition_Machine);
-	Render_AlchemiMission(missionData.condition_Alchemi);
-	Render_EnemyMission(missionData.condition_Enemy);
-	Render_BaseLvMission(missionData.condition_BaseLv);
-	Render_TimerMission(missionData.condition_Time);
+	Render_MachineMission(missionData.condition[MISSION_TYPE::SPAWN]);
+	Render_AlchemiMission(missionData.condition[MISSION_TYPE::ALCHEMI]);
+	Render_EnemyMission(missionData.condition[MISSION_TYPE::ENEMY_KILL]);
+	Render_BaseLvMission(missionData.condition[MISSION_TYPE::BASELV]);
+	Render_TimerMission(missionData.condition[MISSION_TYPE::TIMER]);
 }
 
 
@@ -54,11 +58,18 @@ void MissionRender::Render(Stage_Data data)
 {
 	m_lineCount = 0;
 
-	Render_MachineMission(data.condition_Machine);
-	Render_AlchemiMission(data.condition_Alchemi);
-	Render_EnemyMission(data.condition_Enemy);
-	Render_BaseLvMission(data.condition_BaseLv);
-	Render_TimerMission(data.condition_Time);
+	Render_MachineMission(data.condition[MISSION_TYPE::SPAWN]);
+	Render_AlchemiMission(data.condition[MISSION_TYPE::ALCHEMI]);
+	Render_LvUpMission(data.condition[MISSION_TYPE::LVUP]);
+	Render_RepairMission(data.condition[MISSION_TYPE::REPAIR]);
+	Render_DestroyMission(data.condition[MISSION_TYPE::DESTROY]);
+
+	Render_EnemyMission(data.condition[MISSION_TYPE::ENEMY_KILL]);
+
+	Render_BaseLvMission(data.condition[MISSION_TYPE::BASELV]);
+	Render_ResourceMission(data.condition[MISSION_TYPE::RESOURCE]);
+
+	Render_TimerMission(data.condition[MISSION_TYPE::TIMER]);
 
 }
 

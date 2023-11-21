@@ -319,7 +319,7 @@ void AlchemicalMachineManager::Update(
 		if (m_mpPulsTimer >= MPPLUSTIME && !m_rotationStop && m_AMObject[i]->GetModelID() == MACHINE_TYPE::RECOVERY)
 		{
 			// リカバリーマシンが生きていたら加算を行う
-			m_mpPulsVal += (int)m_AMObject[i]->GetHP() > 0 ? m_AMObject[i]->GetMachineEffectValue() * m_AMObject[i]->GetLv() : 0;
+			m_mpPulsVal += (int)m_AMObject[i]->GetHP() > 0 ? (int)m_AMObject[i]->GetMachineEffectValue() * m_AMObject[i]->GetLv() : 0;
 		}
 
 		// アルケミカルマシンの個別更新処理

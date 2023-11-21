@@ -3,15 +3,13 @@
 #pragma once
 
 #include "NecromaLib/SceneObject/SceneObj.h"
-
 #include "NecromaLib/GameData/JsonLoder.h"
-
 #include "Scenes/PlayScene/UI/SelectionBox.h"
 #include "Scenes/Commons/UIKeyControl.h"
-
 #include "Scenes/PlayScene/UI/Number.h"
-
 #include "Scenes/SelectScene/MissionRender.h"
+
+#include "Scenes/Commons/DrawVariableNum.h"
 
 #include <list>
 
@@ -53,28 +51,21 @@ public:
 
 private:
 
-	int m_stageNum;
-	Stage_Data m_stageData;
+private:
 
+	// 書き込む生成したデータ
+	Stage_Data m_writingData;
+
+	// ミッション内容を描画する
 	std::unique_ptr<MissionRender> m_missionRender;
 
-	// ミッション内容を描画
-	std::unique_ptr<DrawArrow> m_machineMissions_puls [MACHINE_TYPE::NUM];
-	std::unique_ptr<DrawArrow> m_machineMissions_minus[MACHINE_TYPE::NUM];
-
-	std::vector<std::unique_ptr<SelectionBox>> m_enemyMissions;
-	std::vector<std::unique_ptr<SelectionBox>> m_timeMissions;
-
-	// ステージ番号を管理
-	std::unique_ptr<Number>		 m_ui_StageNumber;
-	std::unique_ptr<DrawArrow>	 m_stageNum_puls;
-	std::unique_ptr<DrawArrow>	 m_stageNum_minus;
+	// マシンの生成関係のユーザー可変数値
+	std::unique_ptr<DrawVariableNum> m_userVariable[MISSION_TYPE::MISSION_NUM];
 
 	// リソース群
-	std::unique_ptr<SelectionBox>	m_resource_Machine[MACHINE_TYPE::NUM];
-	std::unique_ptr<SelectionBox>	m_resource_Lv;
-	std::unique_ptr<DrawSlider>		m_resource_MP;
-	std::unique_ptr<DrawSlider>		m_resource_Crystal;
+	std::unique_ptr<DrawVariableNum> m_resource_Machine[MACHINE_TYPE::NUM];
+	std::unique_ptr<DrawSlider>		 m_resource_MP;
+	std::unique_ptr<DrawSlider>		 m_resource_Crystal;
 
 	// 読み込みボタン
 	std::unique_ptr<SelectionBox> m_writingButton;
@@ -82,16 +73,6 @@ private:
 	// 決定ボタン
 	std::unique_ptr<SelectionBox> m_decisionButton;
 
-	std::unique_ptr<TitleLogo>	 m_titleLogo;
-
-
-	std::unique_ptr<DirectX::Model> m_model;
-	std::unique_ptr<DirectX::Model> m_model_2;
-
-	std::unique_ptr<AM_Attacker> m_machine;
-
 	std::unique_ptr<MoveCamera> m_camera;
-
-	bool m_shaderFlag;
 
 };

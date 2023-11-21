@@ -74,4 +74,7 @@ protected:
 	// 選択失敗時震わせる時間遷移用変数
 	float m_vibrationTime;
 
+	// ホールド時間を取得する時間遷移用変数
+	float m_holdTime;
+
 };

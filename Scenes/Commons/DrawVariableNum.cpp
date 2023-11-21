@@ -46,8 +46,18 @@ void DrawVariableNum::Update(int minval, int maxVal)
 	m_leftArrow->HitMouse();
 	m_rightArrow->HitMouse();
 
-	m_number->SetNumber(m_number->GetNumber() - m_leftArrow->ClickMouse());
-	m_number->SetNumber(m_number->GetNumber() + m_rightArrow->ClickMouse() + m_box->ClickMouse());
+	m_number->SetNumber(m_number->GetNumber() - (m_leftArrow->ClickMouse() || m_leftArrow->HoldMouse()));
+	m_number->SetNumber(m_number->GetNumber() + (m_rightArrow->ClickMouse() || m_rightArrow->HoldMouse()) + m_box->ClickMouse());
+
+	if (m_number->GetNumber() >= maxVal)
+	{
+		m_number->SetNumber(minval);
+	}
+
+	if (m_number->GetNumber() < minval)
+	{
+		m_number->SetNumber(maxVal);
+	}
 
 	m_number->SetNumber(std::min(std::max(minval, m_number->GetNumber()), maxVal));
 

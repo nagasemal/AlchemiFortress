@@ -445,9 +445,6 @@
     <ClInclude Include="Scenes\EditScene\EditScene.h">
       <Filter>Scene\EditScene</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\EditScene\MIssionUIEdit.h">
-      <Filter>Scene\EditScene</Filter>
-    </ClInclude>
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyList\ICommand_Enemy.h">
       <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand</Filter>
     </ClInclude>

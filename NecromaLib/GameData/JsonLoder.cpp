@@ -233,31 +233,31 @@ Stage_Data Json::FileLoad_StageData(const std::string filePath)
 
 
 	// マシン設置
-	createCondition("Conditions_Machine", "MACHINE_SPAWN",status.condition_Machine);
+	createCondition("Conditions_Machine", "MACHINE_SPAWN",status.condition[MISSION_TYPE::SPAWN]);
 
 	// マシン錬金
-	createCondition("Conditions_Alchemi", "MACHINE_ALCHEMI", status.condition_Alchemi);
+	createCondition("Conditions_Alchemi", "MACHINE_ALCHEMI", status.condition[MISSION_TYPE::ALCHEMI]);
 
 	// マシン破壊
-	createCondition("Conditions_Destroy", "MACHINE_DESTROY", status.condition_Destroy);
+	createCondition("Conditions_Destroy", "MACHINE_DESTROY", status.condition[MISSION_TYPE::DESTROY]);
 
 	// マシン修繕
-	createCondition("Conditions_Recovery", "MACHINE_RECOVERY", status.condition_Recovery);
+	createCondition("Conditions_Recovery", "MACHINE_RECOVERY", status.condition[MISSION_TYPE::REPAIR]);
 
 	// マシン強化
-	createCondition("Conditions_LvUp", "MACHINE_LVUP", status.condition_LvUP);
+	createCondition("Conditions_LvUp", "MACHINE_LVUP", status.condition[MISSION_TYPE::LVUP]);
 
 	// 拠点LV
-	createCondition("Conditions_BaseLv", "BASE_LV", status.condition_BaseLv);
+	createCondition("Conditions_BaseLv", "BASE_LV", status.condition[MISSION_TYPE::BASELV]);
 
 	// エネミー討伐
-	createCondition("Conditions_Enemy", "ENEMY_KNOCKDOWN", status.condition_Enemy);
+	createCondition("Conditions_Enemy", "ENEMY_KNOCKDOWN", status.condition[MISSION_TYPE::ENEMY_KILL]);
 
 	// 指定時間
-	createCondition("Conditions_Time", "TIME", status.condition_Time);
+	createCondition("Conditions_Time", "TIME", status.condition[MISSION_TYPE::TIMER]);
 
 	// リソース獲得
-	createCondition("Conditions_Resource", "RESOURCE", status.condition_Resource);
+	createCondition("Conditions_Resource", "RESOURCE", status.condition[MISSION_TYPE::RESOURCE]);
 
 	//	読み込んだデータを構造体に代入
 	// クリア条件
@@ -733,82 +733,20 @@ void Json::WritingJsonFile_StageData(int number, Stage_Data stageData)
 
 	// 書き換える情報をjsonから取得
 	// ミッション内容：マシン
-	{
-		picojson::object& stageData_Machine = val.get<picojson::object>()["Conditions_Machine"].get<picojson::object>();
-		picojson::array& machine_array = stageData_Machine["MACHINE_SPAWN"].get<picojson::array>();
-
-		machine_array.clear();
-		for (int i = 0; i < stageData.condition_Machine.size(); i++)
-		{
-			picojson::object id;
-			id.insert(std::make_pair("TYPE", stageData.condition_Machine[i].condition));
-			id.insert(std::make_pair("VALUE", (double)stageData.condition_Machine[i].value));
-
-			machine_array.emplace_back(picojson::value(id));
-		}
-	}
-
-	// ミッション内容：錬金
-	{
-		picojson::object& stageData_Alchemi = val.get<picojson::object>()["Conditions_Alchemi"].get<picojson::object>();
-		picojson::array& machine_array = stageData_Alchemi["MACHINE_ALCHEMI"].get<picojson::array>();
-
-		machine_array.clear();
-		for (int i = 0; i < stageData.condition_Alchemi.size(); i++)
-		{
-			picojson::object id;
-			id.insert(std::make_pair("TYPE", stageData.condition_Alchemi[i].condition));
-			id.insert(std::make_pair("VALUE", (double)stageData.condition_Alchemi[i].value));
-
-			machine_array.emplace_back(picojson::value(id));
-		}
-	}
-
-
-	// ミッション内容：エネミー
-	{
-		picojson::object& stageData_enemy = val.get<picojson::object>()["Conditions_Enemy"].get<picojson::object>();
-		picojson::array& enemy_array = stageData_enemy["ENEMY_KNOCKDOWN"].get<picojson::array>();
-		enemy_array.clear();
-		for (int i = 0; i < stageData.condition_Enemy.size(); i++)
-		{
-			picojson::object id;
-			id.insert(std::make_pair("TYPE", stageData.condition_Enemy[i].condition));
-			id.insert(std::make_pair("VALUE", (double)stageData.condition_Enemy[i].value));
-
-			enemy_array.emplace_back(picojson::value(id));
-		}
-	}
-
-	// ミッション内容：時間
-	{
-		picojson::object& stageData_Time = val.get<picojson::object>()["Conditions_Time"].get<picojson::object>();
-		picojson::array& time_array = stageData_Time["TIME"].get<picojson::array>();
-		time_array.clear();
-		for (int i = 0; i < stageData.condition_Time.size(); i++)
-		{
-			picojson::object id;
-			id.insert(std::make_pair("TYPE", stageData.condition_Time[i].condition));
-			id.insert(std::make_pair("VALUE", (double)stageData.condition_Time[i].value));
-
-			time_array.emplace_back(picojson::value(id));
-		}
-	}
-
-	// ミッション内容：拠点LV
-	{
-		picojson::object& stageData_BaseLv = val.get<picojson::object>()["Conditions_BaseLv"].get<picojson::object>();
-		picojson::array& BaseLv_array = stageData_BaseLv["BASE_LV"].get<picojson::array>();
-		BaseLv_array.clear();
-		for (int i = 0; i < stageData.condition_BaseLv.size(); i++)
-		{
-			picojson::object id;
-			id.insert(std::make_pair("TYPE", stageData.condition_BaseLv[i].condition));
-			id.insert(std::make_pair("VALUE", (double)stageData.condition_BaseLv[i].value));
-
-			BaseLv_array.emplace_back(picojson::value(id));
-		}
-	}
+	//{
+	//	picojson::object& stageData_Machine = val.get<picojson::object>()["Conditions_Machine"].get<picojson::object>();
+	//	picojson::array& machine_array = stageData_Machine["MACHINE_SPAWN"].get<picojson::array>();
+	//
+	//	machine_array.clear();
+	//	for (int i = 0; i < stageData.condition_Machine.size(); i++)
+	//	{
+	//		picojson::object id;
+	//		id.insert(std::make_pair("TYPE", stageData.condition_Machine[i].condition));
+	//		id.insert(std::make_pair("VALUE", (double)stageData.condition_Machine[i].value));
+	//
+	//		machine_array.emplace_back(picojson::value(id));
+	//	}
+	//}
 
 	// 出現するエネミー情報
 	{

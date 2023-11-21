@@ -65,7 +65,8 @@ void MachineGauge::Render(AlchemicalMachineObject* gameObject)
         &rect,
         Colors::White,
         0.0f,
-        SimpleMath::Vector2(baseTexData.width / 2, baseTexData.height / 2),
+        SimpleMath::Vector2(static_cast<float>(baseTexData.width / 2),
+                            static_cast<float>(baseTexData.height / 2)),
         0.4f);
 
 

@@ -106,7 +106,9 @@ void MachineSelect::DisplayObject()
 
 	srcRect = SpriteCutter(texData.width / (MACHINE_TYPE::NUM - 1), texData.height, m_selectMachineType - 1, 0);
 
-	pSB->Draw(texData.tex.Get(), m_data.pos, &srcRect, color, 0.0f, DirectX::XMFLOAT2((texData.width / (MACHINE_TYPE::NUM - 1)) / 2, texData.height / 2), 0.4f);
+	pSB->Draw(texData.tex.Get(), m_data.pos, &srcRect, color, 0.0f, 
+		DirectX::XMFLOAT2(static_cast<float>((texData.width / (MACHINE_TYPE::NUM - 1)) / 2),
+						  static_cast<float>(texData.height / 2)), 0.4f);
 	
 	pSB->End();
 

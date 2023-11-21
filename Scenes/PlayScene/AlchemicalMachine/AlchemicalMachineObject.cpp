@@ -190,7 +190,8 @@ void AlchemicalMachineObject::RenderHP()
 		&rect,
 		color,
 		0.0f,
-		SimpleMath::Vector2(texData.width / 2, texData.height / 2),
+		SimpleMath::Vector2(static_cast<float>(texData.width / 2),
+							static_cast<float>(texData.height / 2)),
 		HPGAUGE_RAGE);
 
 	// マシンアイコンの描画位置の設定に使用
@@ -205,8 +206,9 @@ void AlchemicalMachineObject::RenderHP()
 		&rect,
 		Colors::Red * color,
 		0.0f,
-		SimpleMath::Vector2(texData.width / 2, texData.height / 2),
-		HPGAUGE_RAGE);
+		SimpleMath::Vector2(static_cast<float>(texData.width / 2),
+							static_cast<float>(texData.height / 2)),
+			HPGAUGE_RAGE);
 
 	// マシンのHPゲージ(一気に減少)===========
 	rect = { 0,0,static_cast<LONG>(texData.width * (static_cast<float>(GetHP()) / static_cast<float>(GetMAXHP()))),texData.height };
@@ -215,7 +217,8 @@ void AlchemicalMachineObject::RenderHP()
 		&rect,
 		Colors::HotPink * color,
 		0.0f,
-		SimpleMath::Vector2(texData.width / 2, texData.height / 2),
+		SimpleMath::Vector2(static_cast<float>(texData.width / 2),
+							static_cast<float>(texData.height / 2)),
 		HPGAUGE_RAGE);
 
 	//　マシンの名前を描画========
@@ -227,7 +230,8 @@ void AlchemicalMachineObject::RenderHP()
 		&rect,
 		color,
 		0.0f,
-		SimpleMath::Vector2((texData.width / MACHINE_TYPE::NUM) / 2, texData.height / 2),
+		SimpleMath::Vector2(static_cast<float>((texData.width / MACHINE_TYPE::NUM) / 2),
+							static_cast<float>(texData.height / 2)),
 		MACHINENAME_RAGE);
 
 	// マシンの魔法陣を描画========
@@ -239,7 +243,8 @@ void AlchemicalMachineObject::RenderHP()
 		&rect,
 		SimpleMath::Color(1.0f, 1.0f, 1.0f, 0.7f) * color,
 		easingValRotate,
-		SimpleMath::Vector2(texData.width / 2, texData.height / 2),
+		SimpleMath::Vector2(static_cast<float>(texData.width / 2),
+							static_cast<float>(texData.height / 2)),
 		MAGICCIRCLE_RAGE);
 
 	//　マシンのアイコンを描画========
@@ -251,7 +256,8 @@ void AlchemicalMachineObject::RenderHP()
 		&rect,
 		SimpleMath::Color(1.0f,1.0f,1.0f,0.6f) * color,
 		0.0f,
-		SimpleMath::Vector2(texData.width / (MACHINE_TYPE::NUM - 1 ) / 2, texData.height / 2),
+		SimpleMath::Vector2(static_cast<float>(texData.width / (MACHINE_TYPE::NUM - 1 ) / 2),
+							static_cast<float>(texData.height / 2)),
 		MACHINEICON_RAGE);
 
 	//　マシンのレベルを描画=======

@@ -281,7 +281,7 @@ void EnemyManager::ReloadEnemyData()
 	else
 	{
 		// 初めから出現させるエネミーの情報を取得しておく
-		for (int i = 0; i < pSJD.GetStageData().condition_Enemy[0].value; i++)
+		for (int i = 0; i < pSJD.GetStageData().condition[MISSION_TYPE::ENEMY_KILL][0].value; i++)
 		{
 
 			EnemyObject object = GetRandomEnemy();

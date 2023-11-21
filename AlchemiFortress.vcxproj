@@ -228,7 +228,6 @@
     <ClInclude Include="Scenes\Commons\UIKeyControl.h" />
     <ClInclude Include="Scenes\DataManager.h" />
     <ClInclude Include="Scenes\EditScene\EditScene.h" />
-    <ClInclude Include="Scenes\EditScene\MIssionUIEdit.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineFilter.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineManager.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineObject.h" />

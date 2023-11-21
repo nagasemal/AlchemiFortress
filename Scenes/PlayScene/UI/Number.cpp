@@ -113,6 +113,7 @@ void Number::Render()
 
 void Number::Render_SelectScene(int first, int next)
 {
+
 	Number_Render(first,m_position);
 
 	m_position.x += 32.0f;
@@ -123,11 +124,17 @@ void Number::Render_SelectScene(int first, int next)
 
 void Number::Number_Render(int num, SimpleMath::Vector2 pos)
 {
+
 	pos;
 	ShareData& pSD = ShareData::GetInstance();
 	auto pSB = pSD.GetSpriteBatch();
 
-	for (int i = MAX_NUM; i >= 0; i--)
+
+	// 桁数取得
+	int numDigit = (int)log10(num) + 1;
+	if (numDigit <= 0) numDigit = 1;
+
+	for (int i = numDigit; i >= 0; i--)
 	{
 		// 基数　桁数取得
 		int base = 1;
@@ -140,6 +147,7 @@ void Number::Number_Render(int num, SimpleMath::Vector2 pos)
 
 			SimpleMath::Vector2 render_pos = m_position;
 			render_pos.x -= ((64 * (m_rage.x / 2)) * j);
+			render_pos.y -= Easing::EaseOutCubic(0.0f, 2.5f, m_animationPosTime);
 
 			// 数字描画
 			pSB->Draw(SpriteLoder::GetInstance().GetNumberTexture().Get(),

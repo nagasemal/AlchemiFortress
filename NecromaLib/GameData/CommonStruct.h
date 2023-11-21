@@ -10,6 +10,23 @@ enum ELEMENT : int
 	Num
 };
 
+// ミッションの種類
+enum MISSION_TYPE : int
+{
+	SPAWN,		// マシンの生成
+	ALCHEMI,	// マシンの錬金
+	LVUP,		// マシンのレベルアップ
+	REPAIR,		// マシンの修繕
+	DESTROY,	// マシンの破壊
+	ENEMY_KILL,		// エネミーの討伐
+	BASELV,		// 拠点レベル
+	RESOURCE,	// リソース特定量取得
+	TIMER,		// 時間
+
+	MISSION_NUM
+
+};
+
 // キーを列挙型として持っておけるようにする
 enum MACHINE_TYPE : int
 {

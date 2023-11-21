@@ -234,7 +234,7 @@ void TitleScene::DrawUI()
 			  &rect_circle,
 			  COLOR,
 			  m_animationData.anim,
-			  DirectX::XMFLOAT2(texData.width / 2, texData.height / 2),
+			  DirectX::XMFLOAT2(static_cast<float>(texData.width / 2), static_cast<float>(texData.height / 2)),
 			  0.5f);
 
 	// ƒ{ƒ^ƒ“‚Ì•`‰æ
