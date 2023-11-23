@@ -287,7 +287,6 @@ void PlayScene::Draw()
 	// セピア調に色を変えるポストプロセスを実行する
 	//m_postProcess->SetEffect(BasicPostProcess::Sepia);
 	m_postProcess->SetSourceTexture(offscreenSRV);
-	//m_postProcess->SetSourceTexture(SpriteLoder::GetInstance().GetAuraBase().Get());
 	m_postProcess->Process(context);
 
 

@@ -4,6 +4,7 @@
 #include "NecromaLib/Singleton/DeltaTime.h"
 #include "NecromaLib/Singleton/ShareJsonData.h"
 #include "NecromaLib/Singleton/ModelShader.h"
+#include "NecromaLib/Singleton/SpriteLoder.h"
 
 #include "Scenes/DataManager.h"
 
@@ -40,6 +41,12 @@ void PlayerBase::Initialize()
 	pDataM->BaseHPMAXRecalculation	(m_baseLv);
 
 	pDataM->Initialize();
+
+	ShareData& pSD = ShareData::GetInstance();
+	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
+	fx->SetDirectory(L"Resources/Models");
+	m_baseModel_Towor = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Tower_1.cmo", *fx);
+	m_baseModel_Pillar = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Tower_2.cmo", *fx);
 
 }
 
@@ -104,14 +111,34 @@ void PlayerBase::Render(DirectX::Model* model)
 	modelData *= SimpleMath::Matrix::CreateRotationY(XMConvertToRadians(180));
 	modelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y - 1.5f, m_data.pos.z);
 
-	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(),
+	m_baseModel_Towor->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(),
 		false, [&]()
 		{
 
-			//ModelShader::GetInstance().SilhouetteShader();
+			ModelShader::GetInstance().ModelDrawShader(
+				SimpleMath::Color(1.0f,1.0f,1.0f,1.0f),
+			SimpleMath::Vector4(1.0f,1.0f,1.0f,1.0f),SpriteLoder::GetInstance().GetTowerBaseTexture());
 
-			// 深度ステンシルステートの設定
-			//pSD.GetContext()->OMSetDepthStencilState(ModelShader::GetInstance().GetStencilBase().Get(), 0);
+			pSD.GetContext()->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetTowerBaseTexture().GetAddressOf());
+			pSD.GetContext()->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetTowerBaseNormalMap().GetAddressOf());
+
+			//　====================[　深度ステンシルステートの設定　]
+			pSD.GetContext()->OMSetDepthStencilState(pSD.GetCommonStates()->DepthDefault(), 0);
+
+		});
+
+	m_baseModel_Pillar->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(),
+		false, [&]()
+		{
+
+			ModelShader::GetInstance().ModelDrawShader(
+				SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f),
+				SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f), SpriteLoder::GetInstance().GetTowerPillarTexture());
+
+			pSD.GetContext()->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetTowerPillarTexture().GetAddressOf());
+			pSD.GetContext()->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetTowerPillarTexture().GetAddressOf());
+
+			//　====================[　深度ステンシルステートの設定　]
 			pSD.GetContext()->OMSetDepthStencilState(pSD.GetCommonStates()->DepthDefault(), 0);
 
 		});

@@ -67,6 +67,17 @@ CommonVSOutput ComputeCommonVSOutputWithLighting(float4 position, float3 normal,
     return vout;
 }
 
+// 逆行列の計算
+float3x3 Invert(float3x3 m)
+{
+    return 1.0 / determinant(m) *
+        float3x3(
+            m._22 * m._33 - m._23 * m._32, -(m._12 * m._33 - m._13 * m._32), m._12 * m._23 - m._13 * m._22,
+            -(m._21 * m._33 - m._23 * m._31), m._11 * m._33 - m._13 * m._31, -(m._11 * m._23 - m._13 * m._21),
+            m._21 * m._32 - m._22 * m._31, -(m._11 * m._32 - m._12 * m._31), m._11 * m._22 - m._12 * m._21
+        );
+}
+
 // DirectXTKの頂点シェーダーをベースに改造した頂点シェーダー（no Fog)
 PSInput main(VSInput vin)
 {
@@ -80,6 +91,6 @@ PSInput main(VSInput vin)
     vout.TexCoord       = vin.TexCoord;
     vout.Position       = cout.Position;
     vout.Normal         = vin.Normal;
-
+    
     return vout;
 }

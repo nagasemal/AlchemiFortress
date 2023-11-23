@@ -27,7 +27,8 @@ void FieldObjectManager::Initialize()
 	// モデルの読み込み
 	m_floorModel = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Ground.cmo", *fx);
 	m_crystalModel = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Crystal.cmo", *fx);
-	m_baseModel = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Tower.cmo", *fx);
+	m_baseModel_Towor = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Tower_1.cmo", *fx);
+	m_baseModel_Pillar = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/Tower_2.cmo", *fx);
 
 	// 結晶モデルのエフェクトの設定
 	m_crystalModel->UpdateEffects([&](IEffect* effect)
@@ -37,6 +38,19 @@ void FieldObjectManager::Initialize()
 
 			// 光の当たり方変更
 			lights->SetAmbientLightColor(SimpleMath::Color(0.4f, 0.4f, 1.f, 0.2f));
+
+		});
+
+	// エフェクトの設定
+	m_baseModel_Towor->UpdateEffects([&](IEffect* effect)
+		{
+			// 今回はライトだけ欲しい
+			auto lights = dynamic_cast<IEffectLights*>(effect);
+
+			// 色変更
+			lights->SetLightDiffuseColor(0, Colors::Gray);
+			lights->SetLightDiffuseColor(1, Colors::Gray);
+			lights->SetLightDiffuseColor(2, Colors::Gray);
 
 		});
 
@@ -101,7 +115,7 @@ void FieldObjectManager::Draw()
 	m_field->Render(m_floorModel.get());
 
 	// プレイヤー拠点の描画処理
-	m_playerBase->Render(m_baseModel.get());
+	m_playerBase->Render(m_baseModel_Towor.get());
 
 	// クリスタルの描画処理
 	for (std::list<Crystal>::iterator it = m_crystals->begin(); it != m_crystals->end(); it++)

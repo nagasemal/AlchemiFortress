@@ -11,6 +11,9 @@
 
 #pragma once
 
+class SpriteLoder;
+class TextureData;
+
 class UserInterface
 {
 public:
@@ -56,6 +59,10 @@ private:
 
 	// テクスチャハンドル
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
+
+	// テクスチャハンドル(中身の描画)
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture_2;
+
 	Microsoft::WRL::ComPtr<ID3D11Resource> m_res;
 
 	// 頂点シェーダ
@@ -103,6 +110,8 @@ public:
 		, SimpleMath::Vector2 position
 		, SimpleMath::Vector2 scale
 		, ANCHOR anchor);
+
+	void SetPulsTextuer(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> tex) { m_texture_2 = tex; }
 
 	// XY平面に出す
 	void Render();

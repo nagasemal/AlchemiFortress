@@ -13,10 +13,12 @@ Tutorial_IdlingState::Tutorial_IdlingState()
 
 void Tutorial_IdlingState::Update(TutorialManager* manager)
 {
+	manager;
 }
 
 void Tutorial_IdlingState::Render(TutorialManager* manager)
 {
+	manager;
 }
 
 /// <summary>

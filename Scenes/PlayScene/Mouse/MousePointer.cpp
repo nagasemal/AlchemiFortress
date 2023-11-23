@@ -89,7 +89,7 @@ void MousePointer::ModelDraw(DirectX::Model* model)
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false, [&]
 		{
 
-			ModelShader::GetInstance().ModelDrawShader(SimpleMath::Color(1.0f,1.0f,1.0f,0.5f),
+			ModelShader::GetInstance().MachineDrawShader(SimpleMath::Color(1.0f,1.0f,1.0f,0.5f),
 													   SimpleMath::Vector4(m_time,0.6f,0.0f,1.0f),
 													   SpriteLoder::GetInstance().GetRule());
 

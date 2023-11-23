@@ -152,7 +152,7 @@ void ResultScene::Draw()
 	m_baseModel->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(),
 		false, [&]()
 		{
-			//// 深度ステンシルステートの設定
+			////　====================[　深度ステンシルステートの設定　]
 			//pSD.GetContext()->OMSetDepthStencilState(pSD.GetStencilBase().Get(), 1);
 		});
 

@@ -1,6 +1,7 @@
 {
   "CRYSTAL_SPAWN": {
-    "CRYSTALS": []
+    "CRYSTALS": [
+    ]
   },
   "Conditions_Enemy": {
     "ENEMY_KNOCKDOWN": [

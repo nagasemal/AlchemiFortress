@@ -4,7 +4,10 @@
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/InputSupport.h"
 #include "NecromaLib/Singleton/ModelShader.h"
-#define RAGE 60.f
+
+#include "NecromaLib/Singleton/SpriteLoder.h"
+
+#define RAGE 100.f
 
 Field::Field():
 	m_hitMouseFlag()
@@ -59,6 +62,14 @@ void Field::Render(DirectX::Model* model)
 	modelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y, m_data.pos.z);
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false,[&]()
 		{
+
+			ModelShader::GetInstance().ModelDrawShader(
+				SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f),
+				SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f), SpriteLoder::GetInstance().GetFiledTexture());
+
+			pSD.GetContext()->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetFiledTexture().GetAddressOf());
+			pSD.GetContext()->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetFiledNormalMap().GetAddressOf());
+
 		});
 }
 

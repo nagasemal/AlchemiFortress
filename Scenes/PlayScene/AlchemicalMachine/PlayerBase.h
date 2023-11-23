@@ -29,7 +29,7 @@ public:
 	// 描画
 	void Draw()			override;
 
-	void Render(DirectX::Model* model) override;
+	void Render(DirectX::Model* model_1) override;
 
 	// 終了処理
 	void Finalize()		override;
@@ -61,5 +61,10 @@ private:
 
 	//===後で消すテスト用変数
 	std::unique_ptr<GeometricPrimitive> m_testBox;	//  仮置き四角モデル
+
+	// 拠点モデル
+	std::unique_ptr<DirectX::Model> m_baseModel_Towor;
+
+	std::unique_ptr<DirectX::Model> m_baseModel_Pillar;
 
 };

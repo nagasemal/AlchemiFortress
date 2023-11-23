@@ -22,6 +22,9 @@ int GameObjct3D::HitObject_Box(GameObjct3D* data)
 			-m_data.rage / 2 + m_data.pos,
 			m_data.rage / 2 + m_data.pos);
 	}
+
+	return false;
+
 }
 
 bool GameObjct3D::HitObject_Circle(GameObjct3D* data)

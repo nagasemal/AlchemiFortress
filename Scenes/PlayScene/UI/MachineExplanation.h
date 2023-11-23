@@ -39,6 +39,22 @@ public:
 	// モデルを描画するための関数
 	void DisplayObject(DirectX::Model* model,DirectX::Model* secondModel = nullptr,AlchemicalMachineObject* object = nullptr);
 
+	/// <summary>
+	/// マシンをクリックし、メニューを開いた際に現れるボタンのポインターを返します
+	/// </summary>
+	/// <param name="buttonType">0 = 修繕 ,1 = 破壊 , 2 = レベルアップ</param>
+	/// <returns></returns>
+	SelectionBox* GetMenuButton(int buttonType);
+
+	// 解体された瞬間を返すフラグ
+	bool GetDismantlingFlag();
+
+	// 修繕された瞬間を返すフラグ
+	bool GetRepairFlag();
+
+	// LvUPされた瞬間を返すフラグ
+	bool GetLvUpFlag();
+
 	void ResetMoveTime() { m_moveTime = 0; m_hitFlag = false;}
 
 public:
@@ -56,6 +72,13 @@ private:
 
 	// テキストボックスのテクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
+
+	// LvUp用の選択ボックス
+	std::unique_ptr<SelectionBox> m_selectLvUpBox;
+	// 修理用の選択ボックス
+	std::unique_ptr<SelectionBox> m_repairBox;
+	// 解体用の選択ボックス
+	std::unique_ptr<SelectionBox> m_dismantlingBox;
 
 	// マシンのHPゲージ
 	//std::unique_ptr<MachineGauge> m_machineGauge;

@@ -185,7 +185,7 @@ void MissionRender::ContentDraw(std::vector<Stage_Condition> stageData, ID3D11Sh
 {
 
 	// 目標値が-1以下ならば更新する必要が無い　(仕様上要素がなくてはならない為この形で実装を行う)
-	if (stageData[0].value <= -1) return;
+	if (stageData[0].value <= 0) return;
 
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
 	ShareData& pSD = ShareData::GetInstance();
@@ -255,7 +255,9 @@ void MissionRender::ContentDraw(std::vector<Stage_Condition> stageData, ID3D11Sh
 			m_number->SetColor(color);
 			m_number->Render_SelectScene(stageData[i].progress, stageData[i].value);
 		}
+
 		m_lineCount++;
+	
 	}
 
 }

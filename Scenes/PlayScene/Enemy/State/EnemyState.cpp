@@ -133,7 +133,7 @@ void Enemy_MoveingState::Render(EnemyObject* object,Model* model)
 
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), object->GetModleMatrix(), pSD.GetView(), pSD.GetProjection(), false, [&]
 		{
-			// 深度ステンシルステートの設定
+			//　====================[　深度ステンシルステートの設定　]
 			pSD.GetContext()->OMSetDepthStencilState(nullptr, 3);
 		});
 }
@@ -182,13 +182,14 @@ void Enemy_StoppingState::Render(EnemyObject* object,Model* model)
 
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), object->GetModleMatrix(), pSD.GetView(), pSD.GetProjection(), false, [&]
 		{
-			// 深度ステンシルステートの設定
+			//　====================[　深度ステンシルステートの設定　]
 			pSD.GetContext()->OMSetDepthStencilState(nullptr, 3);
 		});
 }
 
 void Enemy_StoppingState::RenderIcon(EnemyObject* object)
 {
+	object;
 }
 
 
@@ -257,7 +258,7 @@ void Enemy_KnockBackState::Render(EnemyObject* object,Model* model)
 
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), object->GetModleMatrix(), pSD.GetView(), pSD.GetProjection(), false, [&]
 		{
-			// 深度ステンシルステートの設定
+			//　====================[　深度ステンシルステートの設定　]
 			pSD.GetContext()->OMSetDepthStencilState(nullptr, 3);
 		});
 
@@ -305,7 +306,7 @@ void Enemy_DethState::Render(EnemyObject* object,Model* model)
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), object->GetModleMatrix(), pSD.GetView(), pSD.GetProjection(), false, [&]
 		{
 
-			// 深度ステンシルステートの設定
+			//　====================[　深度ステンシルステートの設定　]
 			ModelShader::GetInstance().ToransparentShader();
 
 		});

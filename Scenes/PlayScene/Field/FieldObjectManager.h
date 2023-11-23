@@ -48,7 +48,9 @@ private:
 	// 結晶モデル
 	std::unique_ptr<DirectX::Model> m_crystalModel;
 	// 拠点モデル
-	std::unique_ptr<DirectX::Model> m_baseModel;
+	std::unique_ptr<DirectX::Model> m_baseModel_Towor;
+
+	std::unique_ptr<DirectX::Model> m_baseModel_Pillar;
 
 	// フィールドオブジェクト
 	std::unique_ptr<Field> m_field;

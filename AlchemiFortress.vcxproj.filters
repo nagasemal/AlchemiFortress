@@ -553,6 +553,9 @@
     <ClInclude Include="Scenes\PlayScene\Tutorial\CommandPattern\TutorialCommands.h">
       <Filter>Scene\PlayScene\Tutorial\command</Filter>
     </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\UI\RenderMachineUIList.h">
+      <Filter>Scene\PlayScene\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -1146,6 +1149,9 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\3DUI_VS.hlsl">
       <Filter>Shader\UI</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\NomalModelShader_PS.hlsl">
+      <Filter>Shader\Model</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

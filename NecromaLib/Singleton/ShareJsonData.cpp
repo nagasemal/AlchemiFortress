@@ -75,8 +75,16 @@ void ShareJsonData::LoadingJsonFile_Stage(int number, int wave)
 
 	std::string filePath = "Resources/Json/StageData/" + oss.str() + ".json";
 
+	//　====================[　引き継ぐ情報を保存する　]
+	//　　|=>　クリスタルの位置
+	std::vector<SimpleMath::Vector2> saveCrystalPos;
+	if (wave > 1)	saveCrystalPos = m_stageData.crystalPos;
+
+	//　====================[　ステージデータを読み込む　]
 	m_stageData = Json::FileLoad_StageData(filePath);
 
+	//　====================[　保存した情報を再度入れなおす　]
+	if (wave > 1)	m_stageData.crystalPos = saveCrystalPos;
 }
 
 void ShareJsonData::LoadingJsonFile_ClearData(int number)

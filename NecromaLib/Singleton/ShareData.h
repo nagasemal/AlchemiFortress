@@ -85,10 +85,4 @@ private:
 
 	DirectX::EffectFactory*			m_effectFactory;
 
-
-
-private:
-
-
-
 };

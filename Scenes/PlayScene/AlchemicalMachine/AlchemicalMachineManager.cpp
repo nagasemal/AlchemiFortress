@@ -297,24 +297,6 @@ void AlchemicalMachineManager::Update(
 		m_AMObject[i]->Update();
 		m_AMObject[i]->HitToMouse(pMP);
 
-		// 解体された通知を受け取る
-		if (m_AMObject[i]->GetDismantlingFlag())
-		{
-			Dismantling(i);
-		}
-
-		// 修繕された通知を受け取る
-		if (m_AMObject[i]->GetRepairFlag())
-		{
-			m_recoveryMachine	= m_AMObject[i]->GetModelID();
-		}
-
-		// LvUpされた通知を受け取る
-		if (m_AMObject[i]->GetLvUpFlag())
-		{
-			m_lvUpMachine		= m_AMObject[i]->GetModelID();
-		}
-
 		// MP追加処理 (インデックスがリカバリーを指し、魔力回復周期が来た時、回転を止めていれば魔力を回復させる)
 		if (m_mpPulsTimer >= MPPLUSTIME && !m_rotationStop && m_AMObject[i]->GetModelID() == MACHINE_TYPE::RECOVERY)
 		{
@@ -328,6 +310,30 @@ void AlchemicalMachineManager::Update(
 		Update_Mining(i, fieldManager,enemys);
 		Update_Upper(i, enemys);
 		Update_Recovery(i,enemys);
+	}
+
+	// 配列外参照を避けるために-1を弾く
+	if (m_selectNumber != -1)
+	{
+
+		// 解体された通知を受け取る
+		if (m_machineExplanation->GetDismantlingFlag())
+		{
+			Dismantling(m_selectNumber);
+		}
+
+		// 修繕された通知を受け取る
+		if (m_machineExplanation->GetRepairFlag())
+		{
+			m_recoveryMachine = m_AMObject[m_selectNumber]->GetModelID();
+		}
+
+		// LvUpされた通知を受け取る
+		if (m_machineExplanation->GetLvUpFlag())
+		{
+			m_lvUpMachine = m_AMObject[m_selectNumber]->GetModelID();
+		}
+
 	}
 
 	//　====================[　マシンを召喚する処理　]
@@ -684,7 +690,6 @@ void AlchemicalMachineManager::Update_Mining(int index, FieldObjectManager* fiel
 
 void AlchemicalMachineManager::Update_Recovery(int index,EnemyManager* enemys)
 {
-	DataManager& pDM = *DataManager::GetInstance();
 
 	if (m_AMObject[index]->GetHP() <= 0) return;
 	if (m_AMObject[index]->GetModelID() != MACHINE_TYPE::RECOVERY) return;

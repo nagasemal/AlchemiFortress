@@ -30,6 +30,8 @@
 // 魔法陣の大きさ
 #define MAGICCIRCLE_RAGE 0.2f
 
+
+
 AlchemicalMachineObject::AlchemicalMachineObject() :
 	m_hp(1),
 	m_maxHp(1),
@@ -53,17 +55,9 @@ AlchemicalMachineObject::AlchemicalMachineObject() :
 	m_invincibleFlag(),
 	m_spawnTime(1.0f),
 	m_difRedioHp(),
-	m_popHPTimer()
+	m_popHPTimer(),
+	m_selectModeTime()
 {
-	m_selectLvUpBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(150, 600),
-		SimpleMath::Vector2(0.8f, 0.8f));
-
-	m_repairBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(210, 600),
-		SimpleMath::Vector2(0.8f, 0.8f));
-
-	m_dismantlingBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(270, 600),
-		SimpleMath::Vector2(0.8f, 0.8f));
-
 	m_color = Json::ChangeColor(m_element);
 
 }
@@ -114,57 +108,14 @@ void AlchemicalMachineObject::SelectUpdate_Common()
 
 	m_dismantlingFlag = false;
 
-	DataManager& pDataM = *DataManager::GetInstance();
-	//auto pSJD = &ShareJsonData::GetInstance();
 
-	// LvUp用の選択ボックスの設定
-	m_selectLvUpBox->HitMouse();
 
-	// クリスタルを減らす
-	DataManager& pDM = *DataManager::GetInstance();
-
-	// Lvが上限または変更後のクリスタルが0以下
-	m_selectLvUpBox->SetActiveFlag(m_lv <= MAX_LV && pDM.GetNowCrystal() - GetNextLvCrystal() >= 0);
-
-	if (m_selectLvUpBox->ClickMouse()) 		LvUp();
-
-	// 修繕用の選択ボックスの設定
-	m_repairBox->HitMouse();
-	m_repairBox->SetActiveFlag(pDataM.GetNowCrystal() - GetRepairCrystal() >= 0 && m_hp < m_maxHp);
-
-	// 修繕選択ボックスを押す　現在のCrystal量から修繕に掛かるCrystal量が0以上ならば実行
-	if (m_repairBox->ClickMouse())
-	{
-		m_hp = m_maxHp;
-		pDataM.SetNowCrystal(pDataM.GetNowCrystal() - GetRepairCrystal());
-	}
-
-	// 破壊用の選択ボックス
-	m_dismantlingBox->HitMouse();
-
-	// 破壊選択ボックスを押す　現在のCrystal量から増加するCrystal量が最大値以下ならば実行
-	if (m_dismantlingBox->ClickMouse() && pDataM.GetNowCrystal() + GetDismantlingCrystal() <= pDataM.GetNowCrystal_MAX())
-	{
-		m_dismantlingFlag = true;
-
-		pDataM.SetNowCrystal(pDataM.GetNowCrystal() + GetDismantlingCrystal());
-	}
+	m_selectModeTime += DeltaTime::GetInstance().GetDeltaTime();
 
 }
 
 void AlchemicalMachineObject::SelectRenderUI_Common()
 {
-
-	SpriteLoder& pSL = SpriteLoder::GetInstance();
-
-	// LVUP用UI
-	m_selectLvUpBox->DrawUI(SpriteLoder::LVUP);
-
-	// 修繕用UI
-	m_repairBox->DrawUI(SpriteLoder::REPAIR);
-
-	// 解体用UI
-	m_dismantlingBox->DrawUI(SpriteLoder::DISMATIONG);
 
 }
 
@@ -173,16 +124,18 @@ void AlchemicalMachineObject::RenderHP()
 	ShareData& pSD = ShareData::GetInstance();
 	auto pSB = pSD.GetSpriteBatch();
 
-	// 徐々に上方向へ出現させる変数
+	//　====================[　徐々に上方向へ出現させる変数　]
 	float easingValCirc  = Easing::EaseInOutCirc(0.0f, 1.0f, m_popHPTimer);
 	SimpleMath::Vector2 billboardUIPosition = SimpleMath::Vector2(GetPos().x, GetPos().y - easingValCirc * 50.0f);
 
-	// 魔法陣を回転させる変数
+	//　====================[　魔法陣を回転させる変数　]
 	float easingValRotate = Easing::EaseOutQuint(0.0f, XMConvertToRadians(360.0f), m_popHPTimer);
 
+	//　====================[　徐々に透明度を下げる変数　]
 	SimpleMath::Color color(1.0f , 1.0f, 1.0f, easingValCirc);
 
-	// マシンのHPゲージ(外枠)========
+
+	//　====================[　マシンのHPゲージ(外枠)　]
 	SpriteLoder::TextureData texData = SpriteLoder::GetInstance().GetBaseGage();
 	RECT rect = { 0,0,texData.width,texData.height };
 	pSB->Draw(texData.tex.Get(),
@@ -195,9 +148,10 @@ void AlchemicalMachineObject::RenderHP()
 		HPGAUGE_RAGE);
 
 	// マシンアイコンの描画位置の設定に使用
-	float gaugeWidthHalf = texData.width / 2;
+	float gaugeWidthHalf = static_cast<float>(texData.width / 2);
 
-	// マシンのHPゲージ(徐々に減少)===========
+
+	//　====================[　マシンのHPゲージ(徐々に減少)　]
 	texData = SpriteLoder::GetInstance().GetMainGage();
 	rect = { 0,0,static_cast<LONG>(texData.width * m_difRedioHp),texData.height };
 
@@ -210,7 +164,8 @@ void AlchemicalMachineObject::RenderHP()
 							static_cast<float>(texData.height / 2)),
 			HPGAUGE_RAGE);
 
-	// マシンのHPゲージ(一気に減少)===========
+
+	//　====================[　マシンのHPゲージ(一気に減少)　]
 	rect = { 0,0,static_cast<LONG>(texData.width * (static_cast<float>(GetHP()) / static_cast<float>(GetMAXHP()))),texData.height };
 	pSB->Draw(texData.tex.Get(),
 		billboardUIPosition,
@@ -221,7 +176,8 @@ void AlchemicalMachineObject::RenderHP()
 							static_cast<float>(texData.height / 2)),
 		HPGAUGE_RAGE);
 
-	//　マシンの名前を描画========
+
+	//　====================[　マシンの名前描画　]
 	texData = SpriteLoder::GetInstance().GetMachineNameTexture();
 	rect = SpriteCutter(texData.width / MACHINE_TYPE::NUM,texData.height,(int)m_machineID,0);
 
@@ -234,7 +190,8 @@ void AlchemicalMachineObject::RenderHP()
 							static_cast<float>(texData.height / 2)),
 		MACHINENAME_RAGE);
 
-	// マシンの魔法陣を描画========
+
+	//　====================[　マシンの魔法陣描画　]
 	texData = SpriteLoder::GetInstance().GetMachineMagicCircleTexture((int)m_machineID);
 	rect = { 0,0, texData.width,texData.height };
 
@@ -247,7 +204,8 @@ void AlchemicalMachineObject::RenderHP()
 							static_cast<float>(texData.height / 2)),
 		MAGICCIRCLE_RAGE);
 
-	//　マシンのアイコンを描画========
+
+	//　====================[　マシンのアイコン描画　]
 	texData = SpriteLoder::GetInstance().GetMachineIconTexture();
 	rect = SpriteCutter(texData.width / (MACHINE_TYPE::NUM - 1), texData.height, (int)m_machineID - 1, 0);
 
@@ -260,7 +218,8 @@ void AlchemicalMachineObject::RenderHP()
 							static_cast<float>(texData.height / 2)),
 		MACHINEICON_RAGE);
 
-	//　マシンのレベルを描画=======
+
+	//　====================[　マシンのLv描画　]
 	rect = SpriteCutter(64, 64, m_lv , 0);
 	pSB->Draw(SpriteLoder::GetInstance().GetNumberTexture().Get(),
 		billboardUIPosition + SimpleMath::Vector3(-gaugeWidthHalf * HPGAUGE_RAGE, 0.0f, 0.0f),
@@ -269,6 +228,8 @@ void AlchemicalMachineObject::RenderHP()
 		0.0f,
 		SimpleMath::Vector2(64 / 2, 64 / 2),
 		MACHINELV_RAGE);
+
+
 
 }
 
@@ -379,6 +340,13 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 		if (ring != nullptr) 		NomalRender(ring, ringData, m_subColor);
 	}
 
+	////　====================[　選択時　オーラエフェクトの描画　]
+	//if (m_selectModeFlag)
+	//{
+	//	ModelShader& pMS = ModelShader::GetInstance();
+	//	pMS.DrawAuraEffect(m_selectModeTime, GetPos() + SimpleMath::Vector3(0.0f, 0.0f, 0.0f), GetRage() * SimpleMath::Vector3(10.0f,0.1f,10.0f));
+	//}
+
 	// シェーダーの解除
 	pSD.GetContext()->PSSetShader(nullptr, nullptr, 0);
 	pSD.GetContext()->OMSetDepthStencilState(nullptr, 0);
@@ -392,16 +360,6 @@ void AlchemicalMachineObject::SummonAM(SimpleMath::Vector3 pos)
 	m_data.pos = pos;
 	m_active = true;
 	m_spawnTime = 0.0f;
-}
-
-bool AlchemicalMachineObject::GetRepairFlag()
-{
-	return m_repairBox->ClickMouse();
-}
-
-bool AlchemicalMachineObject::GetLvUpFlag()
-{
-	return m_selectLvUpBox->ClickMouse();
 }
 
 const int AlchemicalMachineObject::GetNextLvCrystal()
@@ -425,23 +383,6 @@ const int AlchemicalMachineObject::GetDismantlingCrystal()
 	return m_lv * (int)pSJD->GetMachineData(m_machineID).dismantling_crystal;
 }
 
-SelectionBox* AlchemicalMachineObject::GetMenuButton(int buttonType)
-{
-	switch (buttonType)
-	{
-	case 0:
-		return m_repairBox.get();
-	case 1:
-		return m_dismantlingBox.get();
-	case 2:
-		return m_selectLvUpBox.get();
-	}
-
-	// それ以外の場合はとりあえず修繕選択Boxを選択する
-	return m_repairBox.get();
-
-}
-
 void AlchemicalMachineObject::SilhouetteRender(DirectX::Model* model, SimpleMath::Matrix matrix)
 {
 	// 出現時演出が終わるまで処理をしない
@@ -450,6 +391,7 @@ void AlchemicalMachineObject::SilhouetteRender(DirectX::Model* model, SimpleMath
 	ShareData& pSD = ShareData::GetInstance();
 
 	// 重なった際、影を描画
+	// モデルは弾くので、枠描画にも使用
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), matrix, pSD.GetView(), pSD.GetProjection(), false, [&]
 		{
 			ModelShader::GetInstance().SilhouetteShader();
@@ -461,15 +403,18 @@ void AlchemicalMachineObject::NomalRender(DirectX::Model* model, SimpleMath::Mat
 {
 	ShareData& pSD = ShareData::GetInstance();
 
+	ModelShader& pMS = ModelShader::GetInstance();
+
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), matrix, pSD.GetView(), pSD.GetProjection(), false, [&]
 		{
 
-			ModelShader::GetInstance().ModelDrawShader(color,SimpleMath::Vector4(m_spawnTime, m_span, m_invincibleTime,1.0f), SpriteLoder::GetInstance().GetRule());
+			pMS.MachineDrawShader(color,SimpleMath::Vector4(m_spawnTime, m_span, m_invincibleTime,1.0f), SpriteLoder::GetInstance().GetRule());
 
 			pSD.GetContext()->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetMachineTextuer(m_element).GetAddressOf());
 			pSD.GetContext()->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetNormalMap(m_element).GetAddressOf());
 
 		});
+
 
 	//シェーダの登録を解除しておく
 	pSD.GetContext()->VSSetShader(nullptr, nullptr, 0);
@@ -485,10 +430,7 @@ void AlchemicalMachineObject::TransparentRender(DirectX::Model* model, SimpleMat
 	// 重なった際、影を描画
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), matrix, pSD.GetView(), pSD.GetProjection(), false, [&]
 		{
-
 			ModelShader::GetInstance().ToransparentShader();
-
-
 		});
 
 }
@@ -500,7 +442,7 @@ void AlchemicalMachineObject::NotShaderRender(DirectX::Model* model, SimpleMath:
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), matrix, pSD.GetView(), pSD.GetProjection(), false, [&]
 		{
 
-			//半透明描画指定
+			//　====================[　半透明描画指定　]
 			ID3D11BlendState* blendstate = pSD.GetCommonStates()->NonPremultiplied();
 			// 透明判定処理
 			pSD.GetContext()->OMSetBlendState(blendstate, nullptr, 0xFFFFFFFF);

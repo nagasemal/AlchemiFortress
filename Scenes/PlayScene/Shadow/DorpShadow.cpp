@@ -94,11 +94,11 @@ void DorpShadow::Render()
 	context->GSSetConstantBuffers(0, 1, cb);
 	context->PSSetConstantBuffers(0, 1, cb);
 
-	//画像用サンプラーの登録
+	//　====================[　画像用サンプラーの登録　]
 	ID3D11SamplerState* sampler[1] = { m_states->LinearWrap()};
 	context->PSSetSamplers(0, 1, sampler);
 
-	//半透明描画指定
+	//　====================[　半透明描画指定　]
 	ID3D11BlendState* blendstate = m_states->NonPremultiplied();
 
 	// 透明判定処理
@@ -107,7 +107,7 @@ void DorpShadow::Render()
 	// 深度バッファに書き込み参照する
 	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
 
-	// カリングは左周り
+	//　====================[　カリング：左周り　]
 	context->RSSetState(m_states->CullNone());
 
 	//シェーダをセットする
@@ -118,7 +118,7 @@ void DorpShadow::Render()
 	//ピクセルシェーダにテクスチャを登録する。
 	context->PSSetShaderResources(0, 1, m_texture.GetAddressOf());
 
-	//インプットレイアウトの登録
+	//　====================[　インプットレイアウトの登録　]
 	context->IASetInputLayout(m_inputLayout.Get());
 
 	// 板ポリゴンを描画

@@ -1,14 +1,13 @@
 //--------------------------------------------------------------------------------------
 // File: SpriteLoder.h
 //
-// スプライト情報をmap配列で保存するシングルトンクラス
+// スプライト情報を保存するシングルトンクラス
 // 繰り返し使うものや、シーンをまたいで使うものは定義して使いやすくしておく
 // 
 // Date: 2023.6.19
 // Author: Kazuma Nagase
 //--------------------------------------------------------------------------------------
 #pragma once
-#include <map>
 
 class SpriteLoder
 {
@@ -39,6 +38,7 @@ public:
 
 	};
 
+	// テクスチャ情報
 	struct TextureData
 	{
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> tex = nullptr;
@@ -153,6 +153,22 @@ public:
 	// マシンに使うテクスチャの画像を渡します
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetMachineTextuer(int element) { return m_machineTexture[element]; }
 
+	// 床のノーマルマップ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetFiledNormalMap() { return m_fieldNormalMap; }
+	// 床のテクスチャ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetFiledTexture() { return m_fieldTexture; }
+
+	// 塔[ベース]のノーマルマップ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetTowerBaseNormalMap() { return m_towerNormalMap; }
+	// 塔[ベース]のテクスチャ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetTowerBaseTexture() { return m_towerTexture; }
+
+	// 塔[柱]のノーマルマップ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetTowerPillarNormalMap() { return m_towerPillarNormalMap; }
+	// 塔[柱]のテクスチャ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetTowerPillarTexture() { return m_towerPillarTexture; }
+
+
 	// 0~3
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetMagicRule(int index) { return m_transition[index]; }
 
@@ -162,10 +178,10 @@ public:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetAuraMask() { return m_auraMaskTexture; }
 
 
-	//// 説明用画像を渡す
-	//Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetExplanationTexture(int type) { return m_explanationTexture[type]; }
-
+	// ゲージ(背景)を返す
 	TextureData GetBaseGage() { return m_baseGageTex; }
+
+	// ゲージ(中身)を返す
 	TextureData GetMainGage() { return m_mainGageTex; }
 
 	// マシンアイコンを渡す
@@ -173,16 +189,27 @@ public:
 	// マシンの名前を渡す
 	TextureData GetMachineNameTexture() { return m_machineNameTextures; }
 
+	/// <summary>
+	/// 魔法陣テクスチャを渡す
+	/// </summary>
+	/// <param name="machineType">マシンID</param>
+	/// <returns></returns>
 	TextureData GetMachineMagicCircleTexture(int machineType) { return m_magicCircleTexture[machineType]; }
 
-	// マシンUI用のテキスト
+	/// <summary>
+	/// マシンUIテクスチャを渡す
+	/// </summary>
+	/// <param name="machineType">マシンID</param>
+	/// <returns></returns>
 	TextureData GetMachineUIText(int machineType) { return m_machineUIText[machineType]; }
+
 	// UI用のテキスト
 	TextureData GetUIText() { return m_uiText; }
 
 	// 画像を読み込む
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> LoadingPngFile(const wchar_t* filename, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>& spriteResource);
 
+	// 画像を読み込む
 	TextureData LoadingPngFileData(const wchar_t* filename, TextureData& textuerData);
 
 public:
@@ -268,6 +295,23 @@ private:
 	// マシンテクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_machineTexture[5];
 
+	// 床のノーマルマップ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_fieldNormalMap;
+	// 床のテクスチャ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_fieldTexture;
+
+	// 塔[ベース]のノーマルマップ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_towerNormalMap;
+	// 塔[ベース]のテクスチャ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_towerTexture;
+
+	// 塔[柱]のノーマルマップ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_towerPillarNormalMap;
+	// 塔[柱]のテクスチャ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_towerPillarTexture;
+
+
+
 	// エフェクト用のテクスチャ(オーラ表現)
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_auraBaseTexture;
 	// エフェクト用のテクスチャ(オーラ表現)
@@ -282,11 +326,16 @@ private:
 	// 魔法陣のテクスチャ
 	TextureData m_magicCircleTexture[6 + 1];
 
+	// ゲージ(背景)
 	TextureData m_baseGageTex;
+
+	// ゲージ(中身)
 	TextureData m_mainGageTex;
 
+	// マシンUIの説明テキスト
 	TextureData m_machineUIText[6];
 
+	// UIの説明テキスト
 	TextureData m_uiText;
 
 };

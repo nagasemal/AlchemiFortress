@@ -45,8 +45,4 @@ public:
 
 private:
 
-	float m_selectModeTime;
-
-	std::unique_ptr<DirectX::GeometricPrimitive> m_testBox;
-
 };

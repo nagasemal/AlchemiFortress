@@ -43,6 +43,7 @@ cbuffer UserParam : register(b2)
     float4 LimLightColor;
     float4 Eyes;    // íçéãì_
     float4 LightPosition;
+    float4 CrystalPosition[10];
 }
 
 struct PSInput

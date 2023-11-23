@@ -5,8 +5,7 @@
 #include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
 
-AM_None::AM_None():
-	m_selectModeTime()
+AM_None::AM_None()
 {
 }
 
@@ -22,7 +21,7 @@ void AM_None::Initialize()
 	m_lv = 0;
 
 	ShareData& pSD = ShareData::GetInstance();
-	m_testBox = GeometricPrimitive::CreateGeoSphere(pSD.GetContext());
+
 
 }
 
@@ -76,22 +75,4 @@ void AM_None::LvUp()
 
 void AM_None::LightLine()
 {
-
-	ShareData& pSD = ShareData::GetInstance();
-
-	SimpleMath::Matrix textBox = SimpleMath::Matrix::CreateScale(m_data.rage * 3.0f);
-	textBox *= SimpleMath::Matrix::CreateTranslation(m_data.pos);
-
-	m_testBox->Draw(textBox, pSD.GetView(), pSD.GetProjection(), m_color, nullptr,false,[&]()
-		{
-			//ModelShader::GetInstance().ToransparentShader();
-
-			ModelShader::GetInstance().ModelEffectShader(SimpleMath::Color(0.6f,0.8f,0.0f,1.0f),
-			SimpleMath::Vector4(0.0f,0.0f,0.0f,m_selectModeTime),
-			SpriteLoder::GetInstance().GetAuraBase());
-
-			pSD.GetContext()->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetAuraMask().GetAddressOf());
-
-		});
-
 }

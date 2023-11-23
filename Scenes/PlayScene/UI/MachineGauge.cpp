@@ -38,9 +38,10 @@ MachineGauge::~MachineGauge()
 
 void MachineGauge::Update(int hp, int maxHp)
 {
-
+    hp;
+    maxHp;
     // HPÉQÅ[ÉW
-    float radio_Hp = (static_cast<float>(hp) / static_cast<float>(maxHp));
+    //float radio_Hp = (static_cast<float>(hp) / static_cast<float>(maxHp));
     //m_gauge_Hp->SetRenderRatio(radio_Hp);
     //m_gauge_Hp->SetColor({ 0.9f,0.6f,0.7f,1.0f });
 
@@ -49,7 +50,7 @@ void MachineGauge::Update(int hp, int maxHp)
 void MachineGauge::Render(AlchemicalMachineObject* gameObject)
 {
 
-    float radio_Hp = (static_cast<float>(gameObject->GetHP()) / static_cast<float>(gameObject->GetMAXHP()));
+    //float radio_Hp = (static_cast<float>(gameObject->GetHP()) / static_cast<float>(gameObject->GetMAXHP()));
 
     ShareData& pSD = ShareData::GetInstance();
     SpriteLoder::TextureData baseTexData = SpriteLoder::GetInstance().GetBaseGage();
@@ -71,7 +72,6 @@ void MachineGauge::Render(AlchemicalMachineObject* gameObject)
 
 
     //rect = { 0,0,mainTexData.width * radio_Hp,mainTexData.height };
-
     //pSB->Draw(mainTexData.tex.Get(), 
     //    gameObject->GetPos(),
     //    &rect,

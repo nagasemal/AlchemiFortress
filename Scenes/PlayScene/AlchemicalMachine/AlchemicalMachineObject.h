@@ -70,15 +70,6 @@ public:
 	// マウスが触れているか否か
 	const bool GetHitMouse()								const { return m_hitMouseFlag;}
 
-	// 解体された瞬間を返すフラグ
-	const bool GetDismantlingFlag()							const { return m_dismantlingFlag; }
-
-	// 修繕された瞬間を返すフラグ
-	bool GetRepairFlag();
-
-	// LvUPされた瞬間を返すフラグ
-	bool GetLvUpFlag();
-
 	// オブジェクトの名前
 	const std::string GetObjectName()						const { return m_objectName; }
 
@@ -129,13 +120,6 @@ public:
 	const int GetSelectModeFlag() const { return m_selectModeFlag; }
 
 	const float GetPopTextTime() const { return m_popHPTimer; }
-
-	/// <summary>
-	/// マシンをクリックし、メニューを開いた際に現れるボタンのポインターを返します
-	/// </summary>
-	/// <param name="buttonType">0 = 修繕 ,1 = 破壊 , 2 = レベルアップ</param>
-	/// <returns></returns>
-	SelectionBox* GetMenuButton(int buttonType);
 
 	void SetLv(int lv)									{ m_lv = lv; }
 	void SetHP(int hp)									{ m_hp = hp; }
@@ -221,6 +205,9 @@ protected:
 	// 解体されたか否か
 	bool m_dismantlingFlag;
 
+	// 選択されている間の時間
+	float m_selectModeTime;
+
 	// 効果範囲
 	Circle m_magicCircle;
 
@@ -235,12 +222,8 @@ protected:
 	// オブジェクトの属性
 	ELEMENT m_element;
 
-	// LvUp用の選択ボックス
-	std::unique_ptr<SelectionBox> m_selectLvUpBox;
-	// 修理用の選択ボックス
-	std::unique_ptr<SelectionBox> m_repairBox;
-	// 解体用の選択ボックス
-	std::unique_ptr<SelectionBox> m_dismantlingBox;
+	// UIの位置を決める
+	SimpleMath::Vector3 m_offsetUIPos;
 
 	// 触れたら出現するHPバーUI用の時間変数
 	float m_popHPTimer;

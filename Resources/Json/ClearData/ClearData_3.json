@@ -4,79 +4,79 @@
       {
         "ELEMENT": "Nomal",
         "LV": 2,
-        "NAME": "Recovery",
+        "NAME": "Attacker",
         "NUMBER": 0
       },
       {
-        "ELEMENT": "Aqua",
-        "LV": 3,
+        "ELEMENT": "Nomal",
+        "LV": 1,
         "NAME": "Attacker",
         "NUMBER": 1
-      },
-      {
-        "ELEMENT": "Aqua",
-        "LV": 2,
-        "NAME": "Attacker",
-        "NUMBER": 2
       },
       {
         "ELEMENT": "Nomal",
         "LV": 1,
         "NAME": "Mining",
+        "NUMBER": 2
+      },
+      {
+        "ELEMENT": "Nomal",
+        "LV": 2,
+        "NAME": "Recovery",
         "NUMBER": 3
       },
       {
         "ELEMENT": "Nomal",
-        "LV": 0,
-        "NAME": "None",
+        "LV": 2,
+        "NAME": "Recovery",
         "NUMBER": 4
       },
       {
         "ELEMENT": "Nomal",
-        "LV": 0,
-        "NAME": "None",
+        "LV": 1,
+        "NAME": "Upper",
         "NUMBER": 5
       },
       {
         "ELEMENT": "Nomal",
-        "LV": 0,
-        "NAME": "None",
+        "LV": 2,
+        "NAME": "Attacker",
         "NUMBER": 6
       },
       {
-        "ELEMENT": "Aqua",
-        "LV": 1,
-        "NAME": "Upper",
+        "ELEMENT": "Nomal",
+        "LV": 2,
+        "NAME": "Attacker",
         "NUMBER": 7
       },
       {
         "ELEMENT": "Nomal",
-        "LV": 0,
-        "NAME": "None",
+        "LV": 1,
+        "NAME": "Attacker",
         "NUMBER": 8
       },
       {
         "ELEMENT": "Nomal",
-        "LV": 0,
-        "NAME": "None",
+        "LV": 1,
+        "NAME": "Attacker",
         "NUMBER": 9
       },
       {
         "ELEMENT": "Nomal",
-        "LV": 0,
-        "NAME": "None",
+        "LV": 1,
+        "NAME": "Attacker",
         "NUMBER": 10
       },
       {
         "ELEMENT": "Nomal",
-        "LV": 0,
-        "NAME": "None",
+        "LV": 1,
+        "NAME": "Recovery",
         "NUMBER": 11
       },
       {
         "ELEMENT": "Nomal",
-        "LV": 0,
-        "NAME": "None",
+        "LV": 2,
+        "NAME": "Recovery",
         "NUMBER": 12
       },
       {
@@ -123,14 +123,14 @@
       },
       {
         "ELEMENT": "Nomal",
-        "LV": 0,
-        "NAME": "None",
+        "LV": 1,
+        "NAME": "Recovery",
         "NUMBER": 20
       },
       {
         "ELEMENT": "Nomal",
-        "LV": 0,
-        "NAME": "None",
+        "LV": 1,
+        "NAME": "Upper",
         "NUMBER": 21
       },
       {
@@ -141,8 +141,8 @@
       },
       {
         "ELEMENT": "Nomal",
-        "LV": 0,
-        "NAME": "None",
+        "LV": 1,
+        "NAME": "Mining",
         "NUMBER": 23
       },
       {

@@ -34,12 +34,13 @@ void InputSupport::Update()
 	ShareData& pSD = ShareData::GetInstance();
 	DX::DeviceResources* pDR = pSD.GetDeviceResources();
 
-	// UIに触れている
+	//　====================[　UIに触れている　]
 	if (m_hitUIFlag)
 	{
-		// 見えない位置まで持っていく
-		m_WorldScreenMouse = SimpleMath::Vector3(1000000,0.0f,0.0f);
+		// 触れられるものがない場所に置く
+		m_WorldScreenMouse = SimpleMath::Vector3(FLT_MAX,0.0f,0.0f);
 	}
+	//　====================[　UIに触れていない　]
 	else
 	{
 
@@ -51,9 +52,10 @@ void InputSupport::Update()
 			pSD.GetView(), pSD.GetProjection());
 	}
 
-	// 触れられる状態に戻す
+	//　====================[　UIに触れられるようにする　]
 	m_hitUIFlag = false;
-	// レイヤー番号を元に戻す
+
+	//　====================[　現在のレイヤー番号を戻す　]
 	m_nowLayer = 0;
 
 }

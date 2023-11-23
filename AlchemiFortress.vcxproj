@@ -279,6 +279,7 @@
     <ClInclude Include="Scenes\PlayScene\UI\MachineGauge.h" />
     <ClInclude Include="Scenes\PlayScene\UI\MachineSelect.h" />
     <ClInclude Include="Scenes\PlayScene\UI\MachineSelectManager.h" />
+    <ClInclude Include="Scenes\PlayScene\UI\RenderMachineUIList.h" />
     <ClInclude Include="Scenes\PlayScene\UI\SelectionBox.h" />
     <ClInclude Include="Scenes\PlayScene\UI\Number.h" />
     <ClInclude Include="Scenes\ResultScene\Camera\ResultCamera.h" />
@@ -649,6 +650,14 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\NomalModelShader_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0_level_9_3</ShaderModel>
     </FxCompile>
     <FxCompile Include="Resources\Shader\Shadow_GS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>

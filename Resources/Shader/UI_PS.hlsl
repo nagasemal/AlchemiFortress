@@ -1,7 +1,6 @@
 #include "UI.hlsli"
 
 Texture2D tex : register(t0);
-Texture2D tex2 : register(t1);
 SamplerState samLinear : register(s0);
 
 #define PI 3.14159265359

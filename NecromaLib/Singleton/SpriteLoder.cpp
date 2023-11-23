@@ -29,17 +29,36 @@ void SpriteLoder::Loading()
 	
 	LoadingPngFile(L"Resources/Textures/GameStart.png", m_gameStartTexture);
 
+	//　====================[　マシンのノーマルマップ取得　]
 	LoadingPngFile(L"Resources/Textures/NormalMap.png", m_machineNormalMap[0]);
 	LoadingPngFile(L"Resources/Textures/ModelTexture/Fire_NormalMap.png", m_machineNormalMap[1]);
 	LoadingPngFile(L"Resources/Textures/ModelTexture/Ice_NormalMap.png", m_machineNormalMap[2]);
 	LoadingPngFile(L"Resources/Textures/ModelTexture/Wind_NormalMap.png", m_machineNormalMap[3]);
 	LoadingPngFile(L"Resources/Textures/ModelTexture/Earth_NormalMap.png", m_machineNormalMap[4]);
 
+	//　====================[　マシンのテクスチャ取得　]
 	LoadingPngFile(L"Resources/Textures/NormalMap.png", m_machineTexture[0]);
 	LoadingPngFile(L"Resources/Textures/ModelTexture/Fire_Texture.png", m_machineTexture[1]);
 	LoadingPngFile(L"Resources/Textures/ModelTexture/Ice_Texture.png", m_machineTexture[2]);
 	LoadingPngFile(L"Resources/Textures/ModelTexture/Wind_Texture.png", m_machineTexture[3]);
 	LoadingPngFile(L"Resources/Textures/ModelTexture/Earth_Texture.png", m_machineTexture[4]);
+
+	//　====================[　フィールドのノーマルマップ取得　]
+	LoadingPngFile(L"Resources/Textures/ModelTexture/StornTile_Nomal.png", m_fieldNormalMap);
+	//　====================[　フィールドのテクスチャ取得　]
+	LoadingPngFile(L"Resources/Textures/ModelTexture/StornTile.png", m_fieldTexture);
+
+	//　====================[　塔[ベース]のノーマルマップ取得　]
+	LoadingPngFile(L"Resources/Textures/ModelTexture/Diriseki_Nomal.png", m_towerNormalMap);
+	//　====================[　塔[ベース]のテクスチャ取得　]
+	LoadingPngFile(L"Resources/Textures/ModelTexture/Diriseki.jpg", m_towerTexture);
+
+	//　====================[　塔[柱]のノーマルマップ取得　]
+	LoadingPngFile(L"Resources/Textures/ModelTexture/Pillar_Nomal.png", m_towerPillarNormalMap);
+	//　====================[　塔[柱]のテクスチャ取得　]
+	LoadingPngFile(L"Resources/Textures/ModelTexture/Pillar.jpg", m_towerPillarTexture);
+
+
 
 	LoadingPngFile(L"Resources/Textures/Effect/Aura.png", m_auraBaseTexture);
 	LoadingPngFile(L"Resources/Textures/Effect/Flare.png", m_auraMaskTexture);

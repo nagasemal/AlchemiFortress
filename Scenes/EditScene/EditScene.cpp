@@ -33,7 +33,7 @@ EditScene::~EditScene()
 
 void EditScene::Initialize()
 {
-    SpriteLoder& pSL = SpriteLoder::GetInstance();
+    //SpriteLoder& pSL = SpriteLoder::GetInstance();
     ShareData& pSD = ShareData::GetInstance();
 
     m_decisionButton = std::make_unique<SelectionBox>(SimpleMath::Vector2(1100.0f,600.0f),SimpleMath::Vector2(2.0f,1.0f));
@@ -50,6 +50,7 @@ void EditScene::Initialize()
 
     for (int i = 0; i < MISSION_TYPE::MISSION_NUM; i++)
     {
+
         m_writingData.condition[i].push_back(Stage_Condition());
 
         m_userVariable[i] = std::make_unique<DrawVariableNum>(SimpleMath::Vector2(600.0f, 150.0f + 48 * i), SimpleMath::Vector2(0.5f, 0.5f));
@@ -66,6 +67,9 @@ void EditScene::Initialize()
     int width = device->GetOutputSize().right;
     int height = device->GetOutputSize().bottom;
 
+    width;
+    height;
+
     std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
     fx->SetDirectory(L"Resources/Models");
 
@@ -76,7 +80,6 @@ void EditScene::Initialize()
 
 GAME_SCENE EditScene::Update()
 {
-    ShareData& pSD = ShareData::GetInstance();
     // ƒJƒƒ‰‚ð“®‚©‚·
     m_camera->Update(true , true);
     m_camera->SetTargetProsition(SimpleMath::Vector3::Zero);
@@ -106,7 +109,9 @@ void EditScene::DrawUI()
     auto pSB = pSD.GetSpriteBatch();
 
     pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
-    m_missionRender->Render(m_writingData);
+    m_missionRender->Render_AlchemiMission(m_writingData.condition[MISSION_TYPE::ALCHEMI]);
+
+
     pSB->End();
 
     for (int i = 0; i < MISSION_TYPE::MISSION_NUM; i++)

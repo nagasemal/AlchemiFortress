@@ -1,3 +1,12 @@
+//--------------------------------------------------------------------------------------
+// File: ModelShader.h
+//
+//　3Dモデルに適応させるシェーダーの設定を保持するシングルトンクラス
+// 
+// Date: 2023.10.06
+// Author: Kazuma Nagase
+//--------------------------------------------------------------------------------------
+
 #pragma once
 class ModelShader
 {
@@ -17,43 +26,106 @@ public:
 
 	static ModelShader& GetInstance() { return *instance; }
 
+	/// <summary>
+	/// 3Dモデル用のシェーダーを生成します
+	/// </summary>
 	void CreateModelShader();
 
+	/// <summary>
+	/// エフェクト用のシェーダーを生成します
+	/// </summary>
 	void CreateEffectModel();
 
 public:
 
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GetStencilBase() { return m_depthStencilState_Base; }
-	// オブジェクトの後ろにモデルが入ったら描画されるステンシル
+
+	/// <summary>
+	/// シルエット描画用のデプスステンシルの設定を返します
+	/// </summary>
+	/// <returns></returns>
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GetStencilShadow() { return m_depthStencilState_Shadow; }
 
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> GetStencilNomal() { return m_depthStencilState_Nomal; }
-
-	// モデルのシルエット用
+	/// <summary>
+	/// モデルのシルエット用ピクセルシェーダーを返します
+	/// </summary>
+	/// <returns></returns>
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> GetModelShadowShader() { return m_modelShadowShader; }
-	// モデルの半透明描画用
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> GetModelTransparentShader() { return m_modelTransparentShader; }
-	// モデルの凍結描画用
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> GetModelEffectShader() { return m_modelEffect_PS; }
 
-	// モデル描画のシェーダー (テスト)
+	/// <summary>
+	/// モデルの半透明描画用ピクセルシェーダーを返します
+	/// </summary>
+	/// <returns></returns>
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> GetModelTransparentShader() { return m_modelTransparentShader; }
+
+	/// <summary>
+	/// モデルのエフェクト化ピクセルシェーダーを返します
+	/// </summary>
+	/// <returns></returns>
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> GetModelEffectShader() { return m_modelEffect_PS; }
+	
+	/// <summary>
+	/// モデル描画設定に使用するピクセルシェーダーを返します[マシン用]
+	/// </summary>
+	/// <returns></returns>
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> GetMachineModelShader_PS() { return m_machineModelShader_PS; }
+
+	/// <summary>
+	/// モデル描画設定に使用するピクセルシェーダーを返します[汎用]
+	/// </summary>
+	/// <returns></returns>
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> GetModelMyShader_PS() { return m_modelMyShader_PS; }
+
+	/// <summary>
+	/// モデル描画設定に使用するヴァーテックスシェーダーを返します
+	/// </summary>
+	/// <returns></returns>
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> GetModelMyShader_VS() { return m_modelMyShader_VS; }
 
 	DirectX::Model* GetMagicTrauabgukarPyram() { return m_magicTrauabgukarPyram.get(); }
+	
+	/// <summary>
+	/// モデル(マシン)の描画設定
+	/// </summary>
+	/// <param name="color">色情報</param>
+	/// <param name="time">時間情報</param>
+	/// <param name="texture">テクスチャ情報</param>
+	void MachineDrawShader(SimpleMath::Color color,SimpleMath::Vector4 time, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture);
 
 
-	// モデル描画(マシン)のシェーダー設定
-	void ModelDrawShader(SimpleMath::Color color,SimpleMath::Vector4 time, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture);
+	/// <summary>
+	/// モデル(汎用)の描画設定
+	/// </summary>
+	/// <param name="color">色情報</param>
+	/// <param name="time">時間情報</param>
+	/// <param name="texture">テクスチャ情報</param>
+	void ModelDrawShader(SimpleMath::Color color, SimpleMath::Vector4 time, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture);
 
-	// モデルを用いたエフェクトのシェーダー設定
+	/// <summary>
+	/// モデルエフェクトの描画設定
+	/// </summary>
+	/// <param name="color">色情報</param>
+	/// <param name="time">時間情報</param>
+	/// <param name="texture">テクスチャ情報</param>
 	void ModelEffectShader(SimpleMath::Color color, SimpleMath::Vector4 time, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture);
 
-	// シルエット描画用設定
+	/// <summary>
+	/// シルエット描画の描画設定
+	/// </summary>
 	void SilhouetteShader();
 
-	// 透明描画用
+	/// <summary>
+	/// 半透明描画の描画設定
+	/// </summary>
 	void ToransparentShader();
+
+	/// <summary>
+	/// オーラ風のエフェクトを描画します
+	/// </summary>
+	/// <param name="time">揺らめかせる時間変数</param>
+	/// <param name="pos">位置</param>
+	/// <param name="rage">大きさ</param>
+	/// <param name="color">色情報</param>
+	void DrawAuraEffect(float time,SimpleMath::Vector3 pos, SimpleMath::Vector3 rage,SimpleMath::Color color = SimpleMath::Color(1.0f,1.0f,1.0f,1.0f));
 
 private:
 
@@ -73,9 +145,13 @@ private:
 		SimpleMath::Vector4 eyes;			// 注視点(4の倍数しか受け取れない為、Vector4とする)
 
 		SimpleMath::Vector4 mousePos;		// ポイントライトの位置
+
+		SimpleMath::Vector4 crystalPos[10];		// クリスタルの位置
 	};
 
 	// マシンモデルに使用するシェーダー
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_machineModelShader_PS;
+	// 通常描画モデルに使用するシェーダー
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_modelMyShader_PS;
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> m_modelMyShader_VS;
 
@@ -92,5 +168,8 @@ private:
 
 	// エフェクト用のモデル
 	std::unique_ptr<DirectX::Model> m_magicTrauabgukarPyram;
+
+	// エフェクト用のジオメトリックプリミティブ
+	std::unique_ptr<DirectX::GeometricPrimitive> m_effectBox;
 
 };

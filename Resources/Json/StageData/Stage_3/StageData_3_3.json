@@ -7,7 +7,7 @@
     "ENEMY_KNOCKDOWN": [
       {
         "TYPE": "All",
-        "VALUE": 20
+        "VALUE": 30
       }
     ]
   },

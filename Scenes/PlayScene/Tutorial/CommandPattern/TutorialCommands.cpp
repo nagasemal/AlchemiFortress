@@ -283,19 +283,21 @@ void Tutorial_MachineExplanation::Execute()
 	bool selectFlag = false;
 	int machineNumber = -1;
 
+	auto explanation = m_tutorialManager->GetPlayScene()->GetAlchemicalMachineManager()->GetMachineExplanation();
+
 	for (auto& machine : m_tutorialManager->GetPlayScene()->GetAlchemicalMachineManager()->GetAlchemicalMachineObject())
 	{
 		machineNumber++;
-
+	
 		// 早期コンテニュー
 		if (machine->GetModelID() == MACHINE_TYPE::NONE) continue;
-
+	
 		// マシンが選択されているならば処理を行う
 		if (machine->GetSelectModeFlag())
 		{
 			selectFlag = true;
-			boxPos = machine->GetMenuButton(m_menuButtonType)->GetPos();
-
+			boxPos = explanation->get()->GetMenuButton(m_menuButtonType)->GetPos();
+	
 			break;
 		}
 	}
@@ -738,8 +740,6 @@ void Tutorial_TextArrow::Initialize()
 
 void Tutorial_TextArrow::Execute()
 {
-	auto machineManager = m_tutorialManager->GetPlayScene()->
-		GetAlchemicalMachineManager();
 
 	SimpleMath::Vector2 arrowPos = SimpleMath::Vector2();
 

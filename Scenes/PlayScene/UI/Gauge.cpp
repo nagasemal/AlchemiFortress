@@ -37,6 +37,7 @@ Gauge::~Gauge()
 void Gauge::Initialize()
 {
     auto device = ShareData::GetInstance().GetDeviceResources();
+    device;
 
     Add_Hp( HP_GAUGE_POS, BIG_GAUGE_RAGE, UserInterface::ANCHOR::MIDDLE_CENTER);
     Add_MP( MP_GAUGE_POS, SMALL_GAUGE_RAGE, UserInterface::ANCHOR::MIDDLE_CENTER);

@@ -1,3 +1,11 @@
+//--------------------------------------------------------------------------------------
+// File: InputSupport.h
+//
+//　マウス入力,キーボード入力をサポートするシングルトンクラス
+// 
+// Date: 2023.05.09
+// Author: Kazuma Nagase
+//--------------------------------------------------------------------------------------
 #pragma once
 class InputSupport
 {
@@ -30,20 +38,56 @@ public:
 
 	void Update();
 
+	/// <summary>
+	/// 現在触れているUIレイヤーを設定します
+	/// </summary>
+	/// <param name="layer">UIレイヤー番号</param>
 	void SetLayer(int layer);
+
+	/// <summary>
+	/// 現在触れているUIレイヤー番号を返します
+	/// </summary>
+	/// <returns></returns>
 	bool GetLayer() { return m_nowLayer; }
 
+	/// <summary>
+	/// UIに触れている
+	/// </summary>
 	void HitUI() { m_hitUIFlag = true; }
+
+	/// <summary>
+	/// UIに触れていない
+	/// </summary>
 	void ExitUI() { m_hitUIFlag = false; }
 
+	/// <summary>
+	/// UIへの接触判定
+	/// </summary>
+	/// <returns></returns>
 	bool GetHitUI() {return m_hitUIFlag;}
 
-	//===[ キーボード ]===//
+	/// <summary>
+	/// キーボードクラスを設定
+	/// </summary>
+	/// <param name="tracker">生成したトラッカー</param>
 	void SetKeybordState(DirectX::Keyboard::KeyboardStateTracker tracker)	{m_keyboardTracker = tracker; }
+
+	/// <summary>
+	/// キーボードトラッカーを返す
+	/// </summary>
+	/// <returns></returns>
 	DirectX::Keyboard::KeyboardStateTracker GetKeybordState()				{ return m_keyboardTracker; }
 
-	//===[ マウス ]===//
+	/// <summary>
+	/// マウスクラスを設定
+	/// </summary>
+	/// <param name="tracker">生成したマウストラッカー</param>
 	void SetMouseState(DirectX::Mouse::ButtonStateTracker tracker) { m_mouseTracker = tracker; }
+
+	/// <summary>
+	/// マウストラッカーを返す
+	/// </summary>
+	/// <returns></returns>
 	DirectX::Mouse::ButtonStateTracker GetMouseState() { return m_mouseTracker; }
 
 public:
@@ -69,10 +113,10 @@ public:
 	// マウスホイールが押され続けている
 	bool MiddleButton_Held();
 
-	//===[ マウス座標(ワールド空間) ]===//
+	// マウス座標(ワールド空間)
 	SimpleMath::Vector3 GetMousePosWolrd();
 
-	//===[ マウス座標(スクリーン空間) ]===//
+	// マウス座標(スクリーン空間)
 	SimpleMath::Vector2 GetMousePosScreen();
 
 };
