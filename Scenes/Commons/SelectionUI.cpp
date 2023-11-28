@@ -37,12 +37,12 @@ void SelectionUI::Finalize()
 
 bool SelectionUI::HitMouse(bool layerCheck)
 {
-	//// activeó‘Ô‚Å‚È‚¯‚ê‚Îˆ—‚ğ”ò‚Î‚·
-	//if (!m_activeFlag)return false;
-
 	InputSupport& pINP = InputSupport::GetInstance();
 
-	m_hitMouseFlag = HitObject_RageSet(pINP.GetMousePosScreen(), static_cast<float>(m_rect.right), static_cast<float>(m_rect.bottom), m_data.rage);
+	m_hitMouseFlag = HitObject_RageSet(pINP.GetMousePosScreen(), 
+									   static_cast<float>(m_rect.right),
+									   static_cast<float>(m_rect.bottom),
+									   m_data.rage);
 
 	if (m_hitMouseFlag) pINP.HitUI();
 

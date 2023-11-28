@@ -142,7 +142,6 @@ void MachineExplanation::Draw()
 	SimpleMath::Color colour = SimpleMath::Color(0.8f, 0.8f, 0.8f, 0.8f);
 
 	// BOX描画
-	//pSB->Draw(m_texture.Get(),m_data.pos,&srcRect,colour,0.0f,XMFLOAT2(64 / 2, 64 / 2), BIG_BOX_RAGEPERCENT);
 
 	SimpleMath::Vector2 miniBox_pos = { m_data.pos.x + MINI_BOX_POS.x ,m_data.pos.y + MINI_BOX_POS.y };
 
@@ -227,21 +226,23 @@ void MachineExplanation::Finalize()
 
 SelectionBox* MachineExplanation::GetMenuButton(int buttonType)
 {
+	//　====================[　番号に則した選択ボックスを返す　]
 	switch (buttonType)
 	{
 	case 0:
+		//　　|=>　修繕
 		return m_repairBox.get();
 
 	case 1:
+		//　　|=>　破壊
 		return m_dismantlingBox.get();
 
 	case 2:
+		//　　|=>　強化
 		return m_selectLvUpBox.get();
-
-	
 	}
 
-	// それ以外の場合はとりあえず修繕選択Boxを選択する
+	// それ以外の場合は修繕を選択する
 	return m_repairBox.get();
 
 }

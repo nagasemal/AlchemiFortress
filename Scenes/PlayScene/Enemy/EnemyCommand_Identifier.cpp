@@ -12,12 +12,3 @@ EnemyCommand_Identifier::EnemyCommand_Identifier()
 EnemyCommand_Identifier::~EnemyCommand_Identifier()
 {
 }
-
-ICommand_Enemy* ChangeEnemyMoveCommand(const std::string moveName)
-{
-	if (moveName == "Standard")		return new Enemy_StanderMove();
-	if (moveName == "Meandering")	return new Enemy_MeanderingMove();
-	if (moveName == "Hopping")		return new Enemy_HoppingMove();
-
-	return nullptr;
-}

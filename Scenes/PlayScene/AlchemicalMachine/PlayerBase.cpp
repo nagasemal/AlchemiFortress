@@ -104,6 +104,7 @@ void PlayerBase::Draw()
 void PlayerBase::Render(DirectX::Model* model)
 {
 	ShareData& pSD = ShareData::GetInstance();
+	SpriteLoder& pSL = SpriteLoder::GetInstance();
 
 	// モデル情報(位置,大きさ)
 	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
@@ -114,13 +115,12 @@ void PlayerBase::Render(DirectX::Model* model)
 	m_baseModel_Towor->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(),
 		false, [&]()
 		{
-
 			ModelShader::GetInstance().ModelDrawShader(
-				SimpleMath::Color(1.0f,1.0f,1.0f,1.0f),
-			SimpleMath::Vector4(1.0f,1.0f,1.0f,1.0f),SpriteLoder::GetInstance().GetTowerBaseTexture());
-
-			pSD.GetContext()->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetTowerBaseTexture().GetAddressOf());
-			pSD.GetContext()->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetTowerBaseNormalMap().GetAddressOf());
+				SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f),
+				SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f), pSL.GetTowerBaseTexture());
+			
+			pSD.GetContext()->PSSetShaderResources(1, 1, pSL.GetTowerBaseTexture().GetAddressOf());
+			pSD.GetContext()->PSSetShaderResources(2, 1, pSL.GetTowerBaseNormalMap().GetAddressOf());
 
 			//　====================[　深度ステンシルステートの設定　]
 			pSD.GetContext()->OMSetDepthStencilState(pSD.GetCommonStates()->DepthDefault(), 0);

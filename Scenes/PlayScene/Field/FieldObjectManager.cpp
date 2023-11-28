@@ -72,7 +72,7 @@ void FieldObjectManager::Initialize()
 
 		SimpleMath::Vector3 crystalPos = SimpleMath::Vector3(loadCrysralPos.x,-1.0f, loadCrysralPos.y);
 
-		m_crystals->push_back(*std::make_unique<Crystal>(crystalPos, cos(5)));
+		m_crystals->push_back(*std::make_unique<Crystal>(crystalPos, (float)cos(5)));
 	}
 
 	// ƒNƒŠƒXƒ^ƒ‹‚Ì‰Šú‰»ˆ—

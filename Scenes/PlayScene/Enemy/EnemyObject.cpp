@@ -7,9 +7,10 @@
 
 #include "NecromaLib/GameData/Easing.h"
 
+#include "Scenes/PlayScene/Enemy/EnemyManager.h"
+
 // コマンドパターン
 #include "Scenes/PlayScene/Enemy/EnemyList/EnemyCommander.h"
-#include "Scenes/PlayScene/Enemy/EnemyCommand_Identifier.h"
 
 // ステートパターン
 #include "Scenes/PlayScene/Enemy/State/IEnemyState.h"
@@ -151,7 +152,7 @@ void EnemyObject::Bouns()
 
 }
 
-void EnemyObject::SetEnemyData(Enemy_Data data)
+void EnemyObject::SetEnemyData(Enemy_Data data, EnemyManager* manager)
 {
 	// lvに応じてパラメータが上昇する
 	m_hp		= data.hp		+ (data.hp		* m_lv - 1) / 2;
@@ -171,7 +172,7 @@ void EnemyObject::SetEnemyData(Enemy_Data data)
 	for (auto& moveData : data.moveData)
 	{
 		// 受け取りたい動きの入ったコマンドクラスを取得する
-		ICommand_Enemy* command = ChangeEnemyMoveCommand(moveData.moveName);
+		ICommand_Enemy* command = manager->CreateEnemyMoveCommand(moveData.moveName);
 		// 値取得
 		MoveParameter moveParam = MoveParameter();
 

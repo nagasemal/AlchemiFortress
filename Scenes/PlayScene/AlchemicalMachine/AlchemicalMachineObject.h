@@ -150,9 +150,6 @@ private:
 
 	// 出現時演出に使用するタイマー
 	float m_spawnTime;
-	// 色変え時演出に使用するタイマー
-	float m_changeTime;
-
 
 protected:
 

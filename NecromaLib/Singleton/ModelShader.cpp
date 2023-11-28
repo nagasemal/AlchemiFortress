@@ -11,7 +11,8 @@
 ModelShader* ModelShader::instance = nullptr;
 
 ModelShader::ModelShader():
-	m_constBuffer()
+	m_constBuffer(),
+	m_shaderTimer()
 {
 
 }
@@ -166,6 +167,11 @@ void ModelShader::CreateEffectModel()
 
 }
 
+void ModelShader::Update(float deltaTime)
+{
+	m_shaderTimer += deltaTime;
+}
+
 void ModelShader::MachineDrawShader(SimpleMath::Color color, SimpleMath::Vector4 time, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
 {
 	ShareData& pSD = ShareData::GetInstance();
@@ -173,12 +179,27 @@ void ModelShader::MachineDrawShader(SimpleMath::Color color, SimpleMath::Vector4
 
 	//　====================[　バッファの作成　]
 	ConstBuffer cbuff;
-	cbuff.Time = time;
+	cbuff.Time = SimpleMath::Vector4(time.x, time.y, time.z, m_shaderTimer);
 	cbuff.PaintColor = color;
 	cbuff.eyes = SimpleMath::Vector4(pSD.GetCamera()->GetTargetPosition());
 	cbuff.LimLightColor = SimpleMath::Color(1.0f, 0.95f, 0.6f, 0.25f);
 	cbuff.mousePos = SimpleMath::Vector4(mousePos.x, mousePos.y, mousePos.z,0.0f);
 
+	auto crystalPos = ShareJsonData::GetInstance().GetStageData().crystalPos;
+
+	for (int i = 0; i < 10; i++)
+	{
+
+		if (crystalPos.size() <= i)
+		{
+			// 光の影響を受けない座標に設定する
+			cbuff.crystalPos[i] = SimpleMath::Vector4(FLT_MAX, 0.0f, 0.0f, 0.0f);
+		}
+		else
+		{
+			cbuff.crystalPos[i] = SimpleMath::Vector4(crystalPos[i].x, 0.f, crystalPos[i].y, 0.0f);
+		}
+	}
 
 	//　====================[　バッファの更新　]
 	//　　|=>　ConstBufferからID3D11Bufferへの変換
@@ -225,7 +246,7 @@ void ModelShader::ModelDrawShader(SimpleMath::Color color, SimpleMath::Vector4 t
 
 	//　====================[　バッファの作成　]
 	ConstBuffer cbuff;
-	cbuff.Time = time;
+	cbuff.Time = SimpleMath::Vector4(time.x,time.y,time.z,m_shaderTimer);
 	cbuff.PaintColor = color;
 	cbuff.eyes = SimpleMath::Vector4(pSD.GetCamera()->GetTargetPosition());
 	cbuff.LimLightColor = SimpleMath::Color(1.0f, 0.95f, 0.6f, 0.25f);
@@ -238,7 +259,7 @@ void ModelShader::ModelDrawShader(SimpleMath::Color color, SimpleMath::Vector4 t
 
 		if (crystalPos.size() <= i)
 		{
-			// 光の影響を受けない場所に設定する
+			// 光の影響を受けない座標に設定する
 			cbuff.crystalPos[i] = SimpleMath::Vector4(FLT_MAX, 0.0f, 0.0f, 0.0f);
 		}
 		else

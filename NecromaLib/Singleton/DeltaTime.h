@@ -7,6 +7,7 @@
 // Author: Kazuma Nagase
 //--------------------------------------------------------------------------------------
 #pragma once
+#include "StepTimer.h"
 
 class DeltaTime
 {
@@ -25,7 +26,7 @@ public:
 	/// ゲーム内で変化するデルタタイムを返します
 	/// </summary>
 	/// <returns></returns>
-	float GetDeltaTime() { return (m_deltaTime * m_doubleSpeed) * !m_stopTimeFlag; }
+	float GetDeltaTime() { return ((float)m_stepTimer.GetElapsedSeconds() * m_doubleSpeed) * !m_stopTimeFlag; }
 
 	/// <summary>
 	/// 値の加算減算がおこなわれてない素のデルタタイムを返します
@@ -34,10 +35,15 @@ public:
 	float GetNomalDeltaTime();
 
 	/// <summary>
+	/// ステップタイマークラスを返します
+	/// </summary>
+	DX::StepTimer GetStepTimer() { return m_stepTimer; }
+
+	/// <summary>
 	/// デルタタイムを入力
 	/// </summary>
 	/// <param name="time"></param>
-	void SetDeltaTime(float time)		{ m_deltaTime = time; }
+	void SetDeltaTime(DX::StepTimer timer)		{ m_stepTimer = timer; }
 	
 	/// <summary>
 	/// 倍速量を入力
@@ -58,8 +64,8 @@ private:
 	// 元のスピードよりやや早くする
 	const float SPEED = 1.2f;
 
-	// デルタタイム
-	float m_deltaTime;
+	// ステップタイマー
+	DX::StepTimer m_stepTimer;
 
 	// 倍速量
 	float m_doubleSpeed;

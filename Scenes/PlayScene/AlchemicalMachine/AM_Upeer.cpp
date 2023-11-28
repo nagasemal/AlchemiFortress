@@ -26,10 +26,10 @@ void AM_Upper::Initialize()
 	// 効果範囲をLvに応じて決める
 	m_magicCircle.r = pSJD.GetMachineData(m_machineID).effect_rage * (pSJD.GetMachineData(m_machineID).multiplier_effect * m_lv);
 
-	for (int i = 0; i < 4; i++)
-	{
-		m_selectBox[i] = std::make_unique<SelectionBox>(SimpleMath::Vector2(150.f + ((float)i * 60.f), 660.0f), SimpleMath::Vector2(0.8f, 0.8f));
-	}
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	m_selectBox[i] = std::make_unique<SelectionBox>(SimpleMath::Vector2(150.f + ((float)i * 60.f), 660.0f), SimpleMath::Vector2(0.8f, 0.8f));
+	//}
 
 	m_color = ShareJsonData::GetInstance().GetElementColor(m_element);
 
@@ -48,26 +48,26 @@ void AM_Upper::Update()
 
 void AM_Upper::SelectUpdate()
 {
-	// 選択状態がノーマルの時ならば、属性選択モード
-	if (m_element == NOMAL)
-	{
-		m_selectBox[0]->HitMouse();
-		m_selectBox[1]->HitMouse();
-		m_selectBox[2]->HitMouse();
-		m_selectBox[3]->HitMouse();
-
-		//　外部ファイルから読み込めるようにしたい
-		//　Nomalを省くために1からスタート
-		for (int i = 1; i < ELEMENT::Num; i++)
-		{
-			if (m_selectBox[i - 1]->ClickMouse())
-			{
-				// 情報更新
-				m_element = (ELEMENT)i;
-				m_color = ShareJsonData::GetInstance().GetElementColor(m_element);
-			}
-		}
-	}
+	//// 選択状態がノーマルの時ならば、属性選択モード
+	//if (m_element == NOMAL)
+	//{
+	//	m_selectBox[0]->HitMouse();
+	//	m_selectBox[1]->HitMouse();
+	//	m_selectBox[2]->HitMouse();
+	//	m_selectBox[3]->HitMouse();
+	//
+	//	//　外部ファイルから読み込めるようにしたい
+	//	//　Nomalを省くために1からスタート
+	//	for (int i = 1; i < ELEMENT::Num; i++)
+	//	{
+	//		if (m_selectBox[i - 1]->ClickMouse())
+	//		{
+	//			// 情報更新
+	//			m_element = (ELEMENT)i;
+	//			m_color = ShareJsonData::GetInstance().GetElementColor(m_element);
+	//		}
+	//	}
+	//}
 }
 
 void AM_Upper::Draw()

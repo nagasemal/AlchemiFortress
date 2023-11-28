@@ -86,19 +86,23 @@ float4 ChangeSepia(float4 col)
 	return float4(g * 1.44f, g * 0.99f, g * 0.57f, col.a);
 }
 
+float4 ApplyPointLight(float3 position, float3 lightPos, float power,float rage)
+{
+    // 光源の方向
+    float3 lightDirection = position - lightPos;
+    
+    // 光源までの距離
+    float lightDistance = length(lightDirection) * rage;
+
+    // 光源からの距離の影響
+    float atten = saturate(1.0f / (lightDistance * lightDistance));
+    
+    return atten * power;
+}
+
+
 float4 main(PSInput input) : SV_TARGET0
 {
-
-
-	// 光源の方向
-	float3 lightDirection = input.Position.xyz - LightPosition.xyz;
-
-	// 光源までの距離
-	float lightDistance = length(lightDirection);
-
-	// 光源からの距離の影響
-	float atten = saturate(1.0f / (lightDistance * lightDistance));
-
 	float texInput = Texture.Sample(Sampler, input.TexCoord);
 
 	// テクスチャ取得
@@ -110,7 +114,7 @@ float4 main(PSInput input) : SV_TARGET0
 	// ノーマルマップ取得
 	float3 nomalTex = NomalTexture.Sample(Sampler, input.TexCoord);
 
-    float4 diff = pow(dot(nomalTex, input.Diffuse.rgb), 0.5f) + ApplyLimLight(input.Normal) + float4(0.7, 0.7, 0.4, 0.0f) * atten;
+    float4 diff = pow(dot(nomalTex, input.Diffuse.rgb), 0.5f) + ApplyLimLight(input.Normal);
 
 	float4 color = diff;
 
@@ -118,7 +122,7 @@ float4 main(PSInput input) : SV_TARGET0
 	input.Specular *= SpecularPower;
 
 	// スペキュラーを設定する
-	AddSpecular(color, pow(clamp(dot(input.Specular, nomalTex), 0.0f, 1.0f), 2.0f));
+    AddSpecular(color, pow(clamp(dot(input.Specular, nomalTex), 0.0f, 1.0f), 2.0f));
 
 	//// リムライトを設定する
 	//color.rgb += ApplyLimLight(input.Normal);
@@ -131,19 +135,15 @@ float4 main(PSInput input) : SV_TARGET0
 	// 時間経過で出現させる(ルール画像)
 	color.w = step(texInput, Time.x);
 
+    color.w *= DiffuseColor.w;
+	
+    color += float4(0.7, 0.7, 0.4, 0.0f) * ApplyPointLight(input.Position.xyz, LightPosition.xyz, 1.0f, 1.0f);
 
-	//float3 eyevec = nomalize(EyePosition - pin.PositionWS.xyz);
-	//float halfVec = nomalize(eyeVec - LightDirection[0]);
-	//float dotH = dot(halfVector,worldNormal);
-	//float3 specular = pow(max(dotH,0) * zeroL,SoecularPower) + dotH);
-	//
-	// あそび
-	//Asobi(color,input.TexCoord);
-
-	// 網目模様をかける
-	//color.rgb *= float4(1.0f,1.0f,1.0f,1.0f) * frac(input.Position.y + Time.z);
-
-	color.w *= DiffuseColor.w;
+	// クリスタルの周辺を発光させる
+    for (int i = 0; i < 3; i++)
+    {
+        color += float4(0.7, 0.2, 0.7, 0.0f) * ApplyPointLight(input.Position.xyz, CrystalPosition[i].xyz, 1.0f, 1.5f - cos(Time.w));
+    }
 
 	// 時間経過で色を付ける
 	return float4(color.xyz, color.w);

@@ -99,6 +99,13 @@ void ShareJsonData::LoadingJsonFile_ClearData(int number)
 	m_clearData = Json::FileLoad_StageClearData(filePath);
 }
 
+void ShareJsonData::LoadingUIData()
+{
+
+
+
+}
+
 const Bullet_Data ShareJsonData::GetBulletData(ELEMENT element)
 {
 	return m_bulletData[element];

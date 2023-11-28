@@ -2,10 +2,12 @@
 #include "Crystal.h"
 
 #include "NecromaLib/Singleton/InputSupport.h"
+#include "NecromaLib/Singleton/SpriteLoder.h"
+#include "NecromaLib/Singleton/ModelShader.h"
+#include "NecromaLib/Singleton/DeltaTime.h"
 
 Crystal::Crystal(SimpleMath::Vector3 pos, float rotateY)
 {
-
 	m_data.pos = pos;
 	m_data.rage = SimpleMath::Vector3(0.8f, 0.8f, 0.8f);
 	m_rotateY = rotateY;
@@ -43,7 +45,22 @@ void Crystal::Render(Model* model)
 	modelData *= SimpleMath::Matrix::CreateRotationY(m_rotateY);
 	modelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y, m_data.pos.z);
 
-	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection());
+;
+
+	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false, [&]()
+		{
+
+			ModelShader::GetInstance().ModelDrawShader(
+				SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f),
+				SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f), SpriteLoder::GetInstance().GetTowerPillarTexture());
+
+			pSD.GetContext()->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetTowerPillarTexture().GetAddressOf());
+			pSD.GetContext()->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetTowerPillarTexture().GetAddressOf());
+
+			//　====================[　深度ステンシルステートの設定　]
+			pSD.GetContext()->OMSetDepthStencilState(pSD.GetCommonStates()->DepthDefault(), 0);
+
+		});
 
 }
 

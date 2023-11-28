@@ -111,6 +111,61 @@ void Number::Render()
 	pSB->End();
 }
 
+void Number::Render_NoSpriteBatch()
+{
+	if (m_animationFlag)
+	{
+		m_animationPosTime += DeltaTime::GetInstance().GetDeltaTime() * 2.0f;
+
+		if (m_animationPosTime >= 1.0f) m_animationFlag = false;
+	}
+	else
+	{
+		m_animationPosTime -= DeltaTime::GetInstance().GetDeltaTime();
+	}
+
+	m_animationPosTime = std::min(std::max(0.0f, m_animationPosTime), 1.0f);
+
+	ShareData& pSD = ShareData::GetInstance();
+	auto pSB = pSD.GetSpriteBatch();
+	SpriteLoder::GetInstance().GetNumberTexture();
+
+	// 桁数取得
+	int numDigit = (int)log10(m_num) + 1;
+
+	if (numDigit <= 0) numDigit = 1;
+
+	for (int i = numDigit; i >= 0; i--)
+	{
+		// 基数　桁数取得
+		int base = 1;
+
+		for (int j = 0; j < i; j++)
+		{
+			// i桁目の数字を[0, 9]の範囲として取得
+			int digit = (m_num / base) % 10;
+			RECT numRect = SpriteCutter(64, 64, digit, 0);
+
+			SimpleMath::Vector2 pos = m_position;
+			pos.x -= ((64 * m_rage.x) * j);
+			pos.y -= Easing::EaseOutCubic(0.0f, 5.0f, m_animationPosTime);
+
+			// 数字描画
+			pSB->Draw(SpriteLoder::GetInstance().GetNumberTexture().Get(),
+				pos,
+				&numRect,
+				m_color,
+				0.0f,
+				DirectX::XMFLOAT2(64 / 2, 64 / 2),
+				m_rage);
+
+			// 10のi乗を計算
+			base *= 10;
+
+		}
+	}
+}
+
 void Number::Render_SelectScene(int first, int next)
 {
 

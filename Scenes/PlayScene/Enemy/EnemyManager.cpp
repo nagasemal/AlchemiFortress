@@ -10,6 +10,10 @@
 
 #include "NecromaLib/Singleton/ShareJsonData.h"
 
+#include "Scenes/PlayScene/Enemy/EnemyList/Enemy_StandardMove.h"
+#include "Scenes/PlayScene/Enemy/EnemyList/Enemy_MeanderingMove.h"
+#include "Scenes/PlayScene/Enemy/EnemyList/Enemy_HoppingMove.h"
+
 EnemyManager::EnemyManager() :
 	m_timer(),
 	m_totalTimer(),
@@ -273,7 +277,7 @@ void EnemyManager::ReloadEnemyData()
 		for (int i = 0; i < pSJD.GetStageData().enemys_Spawn.size(); i++)
 		{
 
-			EnemyObject object = GetEnemyStatus(ENEMY_TYPE::SLIME, i);
+			EnemyObject object = CreateEnemy(ENEMY_TYPE::SLIME, i);
 			m_enemyObject->push_back(*std::make_unique<EnemyObject>(object));
 		
 		}
@@ -293,8 +297,8 @@ void EnemyManager::ReloadEnemyData()
 
 }
 
-//　Jsonファイルから読み取った情報を元にマシンを製造する
-EnemyObject EnemyManager::GetEnemyStatus(ENEMY_TYPE type,int spawnNumber)
+//　Jsonファイルから読み取った情報を元にエネミーを製造する
+EnemyObject EnemyManager::CreateEnemy(ENEMY_TYPE type,int spawnNumber)
 {
 	ShareJsonData& pSJD = ShareJsonData::GetInstance();
 
@@ -310,7 +314,7 @@ EnemyObject EnemyManager::GetEnemyStatus(ENEMY_TYPE type,int spawnNumber)
 	enemy.Initialize();
 
 	// エネミーのパラメータを入れる
-	enemy.SetEnemyData(enemyData);
+	enemy.SetEnemyData(enemyData,this);
 
 	return enemy;
 }
@@ -338,7 +342,7 @@ EnemyObject EnemyManager::GetRandomEnemy()
 
 	enemy.Initialize();
 
-	enemy.SetEnemyData(enemyData);
+	enemy.SetEnemyData(enemyData,this);
 
 	return enemy;
 }
@@ -358,4 +362,13 @@ void EnemyManager::HitAMObejct(AlchemicalMachineObject* alchemicalMachines)
 int EnemyManager::GetNockDownEnemyExp()
 {
 	return m_falmeTotalEnemyExp;
+}
+
+ICommand_Enemy* EnemyManager::CreateEnemyMoveCommand(const std::string moveName)
+{
+	if (moveName == "Standard")		return new Enemy_StanderMove();
+	if (moveName == "Meandering")	return new Enemy_MeanderingMove();
+	if (moveName == "Hopping")		return new Enemy_HoppingMove();
+
+	return nullptr;
 }

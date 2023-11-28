@@ -51,7 +51,7 @@ public:
 private:
 
 	int			m_baseLv;				//  拠点Lv
-	float		m_hp;					//  拠点Hp
+	float		m_hp;			//  拠点Hp
 	float		m_exp;					//  現在の経験値量
 	bool		m_hitMouseFlag;			//  マウスが当たっているか否か
 	bool		m_lvUpTiming;			//  レベルアップのタイミングフラグ

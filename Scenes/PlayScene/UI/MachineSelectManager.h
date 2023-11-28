@@ -136,6 +136,9 @@ private:
 	bool m_forwardOrderFlag;
 
 	// マシンUIの出現に使用するアニメーション用変数
-	AnimationData m_textAnimation;
+	AnimationData m_textAnim;
+
+	// 錬金ボタン魔法陣の出現に使用するアニメーション用変数
+	AnimationData m_magicCircleAnim;
 
 };

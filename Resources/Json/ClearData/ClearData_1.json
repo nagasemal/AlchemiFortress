@@ -27,8 +27,8 @@
       },
       {
         "ELEMENT": "Nomal",
-        "LV": 1,
-        "NAME": "Defenser",
+        "LV": 0,
+        "NAME": "None",
         "NUMBER": 4
       },
       {
@@ -51,8 +51,8 @@
       },
       {
         "ELEMENT": "Nomal",
-        "LV": 0,
-        "NAME": "None",
+        "LV": 1,
+        "NAME": "Defenser",
         "NUMBER": 8
       },
       {

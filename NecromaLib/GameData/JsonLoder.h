@@ -10,6 +10,7 @@
 
 #pragma once
 #include <string>
+#include <map>
 
 #include "NecromaLib/GameData/CommonStruct.h"
 
@@ -112,23 +113,15 @@ struct Tutorial_Status
 struct Stage_Data
 {
 	std::vector<Stage_Condition>		condition[MISSION_TYPE::MISSION_NUM];			// ステージのクリア条件
-	//std::vector<Stage_Condition>		condition_Alchemi;			// ステージのクリア条件 (マシン錬金条件)
-	//std::vector<Stage_Condition>		condition_Destroy;			// ステージのクリア条件 (マシン破壊条件)
-	//std::vector<Stage_Condition>		condition_Recovery;			// ステージのクリア条件 (マシン修繕条件)
-	//std::vector<Stage_Condition>		condition_LvUP;				// ステージのクリア条件 (マシン強化条件)
-	//std::vector<Stage_Condition>		condition_Enemy;			// ステージのクリア条件 (エネミー討伐)
-	//std::vector<Stage_Condition>		condition_BaseLv;			// ステージのクリア条件 (拠点のLV条件)
-	//std::vector<Stage_Condition>		condition_Time;				// ステージのクリア条件 (生存時間,規定時間)
-	//std::vector<Stage_Condition>		condition_Resource;			// ステージのクリア条件 (リソース群(MP,Crystal))
 
-	std::vector<Enemys_Spawn>			enemys_Spawn;				// エネミーの出現情報			名前がRandomの場合"メタAI"に出現を任せる
+	std::vector<Enemys_Spawn>			enemys_Spawn;				// エネミーの出現情報
 
 	Stage_Resource						resource;					// 初めから所持しているリソース群
 	std::vector<Stage_Machine>			machine;					// 初めから設置されているマシン群
 
 	std::vector<SimpleMath::Vector2>	crystalPos;					// クリスタルの番号
 
-	std::vector<Tutorial_Status>			tutorial;					// チュートリアル番号
+	std::vector<Tutorial_Status>		tutorial;					// チュートリアル番号
 	bool								lastWave		= true;		// 次にステージが控えているか	
 };
 
@@ -139,17 +132,24 @@ struct Stage_ClearData
 	int num			= 0;						// 挑戦回数
 };
 
+struct UI_Data
+{
+	SimpleMath::Vector2 pos;				// ポジション
+	SimpleMath::Vector2 rage;				// 大きさ
+	std::map<std::string,float> option;		// 追加記述の値
+};
+
 struct Game_Parameter
 {
-	float rotateSpeed = 0.5f;			// マシンが拠点を回るスピード
+	float rotateSpeed = 0.5f;		// マシンが拠点を回るスピード
 
-	int stage_Max = 1;			// ステージの最大数
+	int stage_Max = 1;				// ステージの最大数
 
-	int baseLV_MAX = 9;			// 最大LV
+	int baseLV_MAX = 9;				// 最大LV
 
-	int baseHp_Max = 0;			// 拠点HPの最大LVの値
+	int baseHp_Max = 0;				// 拠点HPの最大LVの値
 
-	int mp_Max = 0;				// MPリソースの最大LVの値
+	int mp_Max = 0;					// MPリソースの最大LVの値
 
 	int crystal_Max = 0;			// クリスタルリソースの最大LVの値
 
@@ -175,6 +175,8 @@ namespace Json
 	Stage_ClearData FileLoad_StageClearData(const std::string filePath);
 	// 読み込み：ゲーム内パラメータ情報
 	Game_Parameter FileLoad_GameParameter(const std::string filePath);
+	// 読み込み：UI位置の情報
+	UI_Data FileLoad_UIData(const std::string filePath);
 
 	//  属性変換
 	ELEMENT ChangeElement(const std::string element);

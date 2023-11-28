@@ -36,6 +36,12 @@ public:
 	/// </summary>
 	void CreateEffectModel();
 
+	/// <summary>
+	/// エフェクト用の時間変数を更新します
+	/// </summary>
+	/// <param name="deltaTime"></param>
+	void Update(float deltaTime);
+
 public:
 
 
@@ -171,5 +177,8 @@ private:
 
 	// エフェクト用のジオメトリックプリミティブ
 	std::unique_ptr<DirectX::GeometricPrimitive> m_effectBox;
+
+	// シェーダー用時間変数
+	float m_shaderTimer;
 
 };

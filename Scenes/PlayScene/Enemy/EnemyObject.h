@@ -21,6 +21,7 @@ class Enemy_StanderMove;
 class Enemy_MeanderingMove;
 class ICommand_Enemy;
 struct Enemy_Data;
+class EnemyManager;
 
 class EnemyObject : public GameObjct3D
 {
@@ -80,7 +81,7 @@ public:
 	void SetDethFlag(bool flag) { m_dethFlag = flag; }
 
 	//　ステータスを設定する
-	void SetEnemyData(Enemy_Data data);
+	void SetEnemyData(Enemy_Data data,EnemyManager* manager);
 
 	//　弾に当たった際の処理
 	void HitBullet(SimpleMath::Vector3 vectol,int power);

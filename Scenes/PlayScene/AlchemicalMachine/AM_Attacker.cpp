@@ -27,10 +27,10 @@ void AM_Attacker::Initialize()
 	// Jsonから読み取ったマシンのデータを適応する
 	m_maxHp = m_hp = ShareJsonData::GetInstance().GetMachineData(m_machineID).hp;
 
-	for (int i = 0; i < 4; i++)
-	{
-		m_selectBox[i] = std::make_unique<SelectionBox>(SimpleMath::Vector2(150.f + ((float)i * 60.0f), 660.0f), SimpleMath::Vector2(0.8f, 0.8f));
-	}
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	m_selectBox[i] = std::make_unique<SelectionBox>(SimpleMath::Vector2(150.f + ((float)i * 60.0f), 660.0f), SimpleMath::Vector2(0.8f, 0.8f));
+	//}
 
 	m_color = ShareJsonData::GetInstance().GetElementColor(m_element);
 
@@ -60,28 +60,28 @@ void AM_Attacker::Update()
 void AM_Attacker::SelectUpdate()
 {
 
-	// 選択状態がノーマルの時ならば、属性選択モード
-	if (m_element == NOMAL)
-	{
-		m_selectBox[0]->HitMouse();
-		m_selectBox[1]->HitMouse();
-		m_selectBox[2]->HitMouse();
-		m_selectBox[3]->HitMouse();
-
-		//　　外部ファイルから読み込めるようにしたい
-		//　Nomalを省くために1からスタート
-		for (int i = 1; i < ELEMENT::Num; i++)
-		{
-			if (m_selectBox[i - 1]->ClickMouse())
-			{
-				// 情報更新
-				m_element = (ELEMENT)i;
-				m_color = ShareJsonData::GetInstance().GetElementColor(m_element);
-				m_saveBulletStatus = RecalculationStatus(m_element, m_lv);
-
-			}
-		}
-	}
+	//// 選択状態がノーマルの時ならば、属性選択モード
+	//if (m_element == NOMAL)
+	//{
+	//	m_selectBox[0]->HitMouse();
+	//	m_selectBox[1]->HitMouse();
+	//	m_selectBox[2]->HitMouse();
+	//	m_selectBox[3]->HitMouse();
+	//
+	//	//　　外部ファイルから読み込めるようにしたい
+	//	//　Nomalを省くために1からスタート
+	//	for (int i = 1; i < ELEMENT::Num; i++)
+	//	{
+	//		if (m_selectBox[i - 1]->ClickMouse())
+	//		{
+	//			// 情報更新
+	//			m_element = (ELEMENT)i;
+	//			m_color = ShareJsonData::GetInstance().GetElementColor(m_element);
+	//			m_saveBulletStatus = RecalculationStatus(m_element, m_lv);
+	//
+	//		}
+	//	}
+	//}
 }
 
 void AM_Attacker::Draw()
@@ -170,16 +170,16 @@ Bullet AM_Attacker::GetBulletData()
 void AM_Attacker::RenderUI()
 {
 
-	SpriteLoder& pSL = SpriteLoder::GetInstance();
-	
-	if (m_element != NOMAL) return;
-	
-	for (int i = 0; i < 4; i++)
-	{
-		RECT rect_element = SpriteCutter(64, 64, 2 + i, 0);
-	
-		m_selectBox[i]->DrawUI(pSL.GetSelectBoxTexture(), pSL.GetElementTexture(), rect_element);
-	}
+	//SpriteLoder& pSL = SpriteLoder::GetInstance();
+	//
+	//if (m_element != NOMAL) return;
+	//
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	RECT rect_element = SpriteCutter(64, 64, 2 + i, 0);
+	//
+	//	m_selectBox[i]->DrawUI(pSL.GetSelectBoxTexture(), pSL.GetElementTexture(), rect_element);
+	//}
 
 }
 

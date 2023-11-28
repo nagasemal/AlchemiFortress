@@ -1,73 +1,24 @@
 {
 
   "PLAYSCENE_UI": {
-    "MACHINE_SELECT": [
-      {
-        "MASTER": {
-          "POS_X": 0,
-          "POS_Y": 0
-        },
-        "ATTACKER": {
-          "POS_X": 0,
-          "POS_Y": 0
-        },
-        "DEFFENCER": {
-          "POS_X": 0,
-          "POS_Y": 0
-        },
-        "UPPER": {
-          "POS_X": 0,
-          "POS_Y": 0
-        },
-        "RECOVERY": {
-          "POS_X": 0,
-          "POS_Y": 0
-        },
-        "MINING": {
-          "POS_X": 0,
-          "POS_Y": 0
-        }
+
+    "MACHINE": {
+      "MASTER": {
+        "POS_X": 1200,
+        "POS_Y": 640,
+        "RAGE_X": 1.0,
+        "RAGE_Y": 1.0,
+
+        "OPTION": [
+          {
+            "TAG": "DIRECTION",
+            "VAL": 120.0
+          }
+        ]
       }
-    ],
-    "GAUGE": [
-      {
-        "MASTER": {
-          "POS_X": 0,
-          "POS_Y": 0
-        },
-        "HP": {
-          "POS_X": 0,
-          "POS_Y": 0
-        },
-        "MP": {
-          "POS_X": 0,
-          "POS_Y": 0
-        },
-        "CRYSTAL": {
-          "POS_X": 0,
-          "POS_Y": 0
-        }
-      }
-    ],
-    "TUTOLIAL": {
-      "POS_X": 0,
-      "POS_Y": 0
-    },
-    "LINESET": {
-      "POS_X": 0,
-      "POS_Y": 0
-    },
-    "DOUBLE_SPEED": {
-      "POS_X": 0,
-      "POS_Y": 0
-    },
-    "MISSION": {
-      "POS_X": 0,
-      "POS_Y": 0
-    },
-    "TIMER": {
-      "POS_X": 0,
-      "POS_Y": 0
     }
+
+
+
   }
 }

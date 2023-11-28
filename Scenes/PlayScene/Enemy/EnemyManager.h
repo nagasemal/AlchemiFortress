@@ -19,8 +19,20 @@ public:
 	EnemyManager();
 	~EnemyManager();
 
+	/// <summary>
+	/// 開始,初期化処理
+	/// </summary>
 	void Initialize();
+
+	/// <summary>
+	/// 更新処理
+	/// </summary>
+	/// <param name="basePos">ターゲットとなる地点</param>
 	void Update(SimpleMath::Vector3 basePos);
+
+	/// <summary>
+	/// 描画処理
+	/// </summary>
 	void Render();
 
 	/// <summary>
@@ -28,18 +40,48 @@ public:
 	/// </summary>
 	void RenderUI();
 	
+	/// <summary>
+	/// 終了処理
+	/// </summary>
 	void Finalize();
 
-	// エネミーのデータを再度読み取る
+	/// <summary>
+	/// エネミーのデータを再度読み取る
+	/// </summary>
 	void ReloadEnemyData();
 
-	EnemyObject GetEnemyStatus(ENEMY_TYPE type,int spawnNumber);
+	/// <summary>
+	/// エネミーを生成する
+	/// </summary>
+	/// <param name="type">エネミーの種類</param>
+	/// <param name="spawnNumber">出現順番</param>
+	/// <returns></returns>
+	EnemyObject CreateEnemy(ENEMY_TYPE type,int spawnNumber);
 
+	/// <summary>
+	/// エネミーをランダムで規定数生成する
+	/// </summary>
+	/// <returns></returns>
 	EnemyObject GetRandomEnemy();
 
+	/// <summary>
+	/// マシンと当たった際の処理
+	/// </summary>
+	/// <param name="alchemicalMachines">マシンのポインタ</param>
 	void HitAMObejct(AlchemicalMachineObject* alchemicalMachines);
 
+	/// <summary>
+	/// エネミーが倒された際に得た経験値
+	/// </summary>
+	/// <returns></returns>
 	int GetNockDownEnemyExp();
+
+	/// <summary>
+	/// 動きのコマンドを生成する
+	/// </summary>
+	/// <param name="moveName">動きの名前</param>
+	/// <returns></returns>
+	ICommand_Enemy* CreateEnemyMoveCommand(const std::string moveName);
 
 public:
 

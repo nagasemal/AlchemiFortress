@@ -106,9 +106,10 @@ void Game::Update(DX::StepTimer const& timer)
     DeltaTime* pDeltaT = &DeltaTime::GetInstance();
     InputSupport* pINP = &InputSupport::GetInstance();
 
-    float elapsedTime = float(timer.GetElapsedSeconds());
-    pDeltaT->SetDeltaTime(elapsedTime);
+    pDeltaT->SetDeltaTime(timer);
     pDeltaT->SetDoubleSpeed(1.0f);
+
+    ModelShader::GetInstance().Update(pDeltaT->GetDeltaTime());
 
     //===[ 更新処理 ]===//
         //->　キーボード

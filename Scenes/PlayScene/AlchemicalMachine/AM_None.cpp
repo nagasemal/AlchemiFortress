@@ -20,9 +20,6 @@ void AM_None::Initialize()
 	m_objectName = "None";
 	m_lv = 0;
 
-	ShareData& pSD = ShareData::GetInstance();
-
-
 }
 
 void AM_None::Update()

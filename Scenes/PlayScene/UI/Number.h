@@ -29,6 +29,9 @@ public:
 	// 数字画像描画
 	void Render();
 
+	// スプライトバッチのbegin関数を呼ばない
+	void Render_NoSpriteBatch();
+
 	// Missions
 	void Render_SelectScene(int first,int next);
 

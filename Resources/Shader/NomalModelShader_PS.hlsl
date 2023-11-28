@@ -25,13 +25,13 @@ float4 ApplyLimLight(float3 normal)
 
 }
 
-float4 ApplyPointLight(float3 position, float3 lightPos,float power)
+float4 ApplyPointLight(float3 position, float3 lightPos,float power,float rage)
 {
     // ŒõŒ¹‚Ì•ûŒü
     float3 lightDirection = position - lightPos;
     
     // ŒõŒ¹‚Ü‚Å‚Ì‹——£
-    float lightDistance = length(lightDirection);
+    float lightDistance = length(lightDirection) * rage;
 
     // ŒõŒ¹‚©‚ç‚Ì‹——£‚Ì‰e‹¿
     float atten = saturate(1.0f / (lightDistance * lightDistance));
@@ -75,14 +75,14 @@ float4 main(PSInput input) : SV_TARGET0
     
     color *= texInput;
     
-    color += float4(0.7, 0.7, 0.4, 0.0f) * ApplyPointLight(input.Position.xyz, LightPosition.xyz,1.0f);
+    color += float4(0.7, 0.7, 0.4, 0.0f) * ApplyPointLight(input.Position.xyz, LightPosition.xyz,1.0f,1.0f);
     
     color.w = 1.0f;
     
     // ƒNƒŠƒXƒ^ƒ‹‚ÌŽü•Ó‚ð”­Œõ‚³‚¹‚é
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 3; i++)
     {
-        color += float4(0.7, 0.2, 0.7, 0.0f) * ApplyPointLight(input.Position.xyz, CrystalPosition[i].xyz,2.0f);
+        color += float4(0.7, 0.2, 0.7, 0.0f) * ApplyPointLight(input.Position.xyz, CrystalPosition[i].xyz, 1.0f, 1.5f - cos(Time.w));
     }
     
     

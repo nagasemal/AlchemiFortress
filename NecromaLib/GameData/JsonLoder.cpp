@@ -421,9 +421,9 @@ Stage_Data Json::FileLoad_StageData(const std::string filePath)
 	status.resource = stage_resource;
 
 	// チュートリアル番号取得
-	picojson::array& tutorial = val.get<picojson::object>()["TUTORIAL"].get<picojson::array>();
+	picojson::array& tutorialArray = val.get<picojson::object>()["TUTORIAL"].get<picojson::array>();
 
-	for (picojson::array::iterator it = tutorial.begin(); it != tutorial.end(); it++)
+	for (picojson::array::iterator it = tutorialArray.begin(); it != tutorialArray.end(); it++)
 	{
 		Tutorial_Status tutorial;
 

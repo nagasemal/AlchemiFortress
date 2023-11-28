@@ -49,6 +49,9 @@ public:
 	// クリアデータのjsonファイルを読み込む
 	void LoadingJsonFile_ClearData(int number);
 
+	// 全UIのレイアウトを取得する
+	void LoadingUIData();
+
 public:
 
 	// 属性に対応したバレットのパラメータを渡す
