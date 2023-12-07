@@ -72,17 +72,19 @@ void Game::Initialize(HWND window, int width, int height)
     m_deviceResources->CreateWindowSizeDependentResources();
     CreateWindowSizeDependentResources();
 
-    // 初期設定
+    //　====================[　画像データを取得する　]
     SpriteLoder& pSL = SpriteLoder::GetInstance();
     pSL.Loading();
 
+    //　====================[　シェーダーとエフェクト用モデルを取得する　]
     ModelShader& pMS = ModelShader::GetInstance();
     pMS.CreateModelShader();
     pMS.CreateEffectModel();
 
-    // TODO: Change the timer settings if you want something other than the default variable timestep mode.
-    // e.g. for 60 FPS fixed timestep update logic, call:
+    //　====================[　UIの位置情報を取得する　]
+    ReloadUIData();
     
+    //　====================[　fps60で実行　]
     m_timer.SetFixedTimeStep(true);
     m_timer.SetTargetElapsedSeconds(1.0 / 60);
 
@@ -116,6 +118,11 @@ void Game::Update(DX::StepTimer const& timer)
     auto keyboardState = Keyboard::Get().GetState();
     m_keyboardTracker.Update(keyboardState);
     pINP->SetKeybordState(m_keyboardTracker);
+
+    if (pINP->GetKeybordState().IsKeyPressed(Keyboard::U))
+    {
+        ReloadUIData();
+    }
 
         //->　マウス
     auto mouseState = Mouse::Get().GetState();
@@ -172,7 +179,7 @@ void Game::Render()
 
     m_SceneManager.get()->Render();
 
-    //m_debugFont->Render(m_commonStates.get());
+    m_debugFont->Render(m_commonStates.get());
     m_deviceResources->PIXEndEvent();
 
     // Show the new frame.
@@ -302,6 +309,37 @@ void Game::CreateDeviceDependentResources()
 void Game::CreateWindowSizeDependentResources()
 {
     // TODO: Initialize windows-size dependent objects here.
+}
+
+void Game::ReloadUIData()
+{
+    ShareJsonData& pSJD = ShareJsonData::GetInstance();
+
+    pSJD.LoadingUIData("Machine");
+
+    pSJD.LoadingUIData("AlchemiLeft");
+    pSJD.LoadingUIData("AlchemiMiddle");
+    pSJD.LoadingUIData("AlchemiRight");
+
+    pSJD.LoadingUIData("NumMachine");
+    pSJD.LoadingUIData("NumMP");
+    pSJD.LoadingUIData("NumCrystal");
+
+    pSJD.LoadingUIData("GaugeHP");
+    pSJD.LoadingUIData("GaugeMP");
+    pSJD.LoadingUIData("GaugeCrystal");
+    pSJD.LoadingUIData("GaugeBaseLv");
+    pSJD.LoadingUIData("GaugeOffset");
+
+
+    pSJD.LoadingUIData("ExplanationSpawn");
+    pSJD.LoadingUIData("ExplanationLvUp");
+    pSJD.LoadingUIData("ExplanationRepair");
+    pSJD.LoadingUIData("ExplanationDestory");
+    pSJD.LoadingUIData("ExplanationNext");
+    pSJD.LoadingUIData("ExplanationBack");
+    pSJD.LoadingUIData("ExplanationOffset");
+
 }
 
 void Game::OnDeviceLost()

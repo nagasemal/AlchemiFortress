@@ -39,11 +39,15 @@ public:
 
 	void Render();
 
+	void WriteDepath();
+
 	void DrawUI();
 
 	void Finalize();
 
 	void BillboardRenderUI(int index);
+
+	void DrawMachineExplanationModel();
 
 public:
 
@@ -59,8 +63,6 @@ public:
 
 	const std::unique_ptr<MachineSelectManager>* GetMachineSelect()					const { return &m_selectManager; }
 	const std::unique_ptr<MachineExplanation>* GetMachineExplanation()				const { return &m_machineExplanation;}
-
-	//const std::unique_ptr<DrawVariableNum>* GetVariableNum()						const { return &m_lineVariable;}
 
 	Model* GetSelectModel();
 
@@ -97,8 +99,6 @@ private:
 	void Update_Particle();
 
 	// 専用の更新処理を回す
-	void Update_None(int baseLv);
-
 	void Update_Attacker(int index, EnemyManager* enemyManager);
 
 	void Update_Defenser(int index, EnemyManager* enemyManager);
@@ -162,9 +162,6 @@ private:
 
 	// アルケミカルマシンモデルの受け渡し
 	std::unique_ptr<AlchemicalMachineFilter> m_AMFilter;
-
-	// 現在のラインを示す
-	//std::unique_ptr<DrawVariableNum> m_lineVariable;
 
 	//===後で消すテスト用変数
 	std::unique_ptr<DirectX::GeometricPrimitive> m_testBox;	//  仮置き弾モデル

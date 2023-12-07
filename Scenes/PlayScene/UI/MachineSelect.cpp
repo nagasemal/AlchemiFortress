@@ -42,16 +42,9 @@ void MachineSelect::Initialize()
 
 	m_colorChangeTime = 0;
 
-	//m_selectionAlchemi = std::make_unique<SelectionBox>(SimpleMath::Vector2(m_data.pos.x + ALCHEMI_POS_SHIFT, m_data.pos.y + ALCHEMI_POS_SHIFT),
-	//						 SimpleMath::Vector2(ALCHEMI_RAGE));
-
 	RECT rect = RECT();
 	rect.right = 120;
 	rect.bottom = 120;
-
-	//m_selectionAlchemi->SetRect(rect);
-	//m_selectionAlchemi->SetRage(SimpleMath::Vector2(ALCHEMI_RAGE));
-	//m_selectionAlchemi->SetLayer(1);
 
 }
 
@@ -63,13 +56,20 @@ void MachineSelect::Update()
 
 	m_machineBox->SetSavePos(m_data.pos);
 
-	// 色を変える
+	// 結晶選択時色を変える
 	m_colorChangeTime += deltaTime * 5.0f;
 	m_boxColor.G(0.5f + cosf(m_colorChangeTime) / 2);
 
 	// リストの中から選ばれた
-	m_onMouseFlag = m_machineBox->HitMouse(true);
-	//m_hitMouseFlag = m_machineBox->SelectionMouse();
+	if (m_machineBox->HitMouse(true))
+	{
+		m_boxColor = Colors::Gray;
+	}
+
+	if (m_machineBox->ClickMouse())
+	{
+		m_onMouseFlag = !m_onMouseFlag;
+	}
 
 }
 
@@ -100,8 +100,6 @@ void MachineSelect::DisplayObject()
 	if (m_hitMouseFlag)		color = SimpleMath::Color(0.65f, 0.65f, 0.95f, 0.98f);
 
 	// 内部BOX (オブジェクトを配置する箇所)
-	//pSB->Draw(pSL.GetSelectBoxTexture().Get(), box_Pos, &srcRect, color, 0.0f, DirectX::XMFLOAT2(IMAGE_WIGHT / 2, IMAGE_HEIGHT / 2), 1.5f);
-
 	SpriteLoder::TextureData texData = pSL.GetMachineIconTexture();
 
 	srcRect = SpriteCutter(texData.width / (MACHINE_TYPE::NUM - 1), texData.height, m_selectMachineType - 1, 0);

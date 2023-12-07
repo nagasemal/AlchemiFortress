@@ -34,10 +34,17 @@ public:
 	void AdvanceRender(); // éñëOÇ…í∑Ç¢èàóùÇÕåƒÇÒÇ≈Ç®Ç≠
 
 	void SetWindowSize(const int& width, const int& height)	{ m_windowWidth = width; m_windowHeight = height; };
+
 	void SetScale(SimpleMath::Vector2 scale)				{ m_scale = scale;}
+	SimpleMath::Vector2 GetScale()							{ return m_scale; }
+
 	void SetPosition(SimpleMath::Vector2 position)			{ m_position = position;}
+	SimpleMath::Vector2 GetPosition()						{ return m_position; }
+
 	void SetColor(SimpleMath::Color color)					{ m_color = color; }
+	void SetColor(const DirectX::XMVECTORF32 color)			{ m_color = (SimpleMath::Color)color; }
 	SimpleMath::Color GetColor()							{ return m_color; }
+
 	void SetRotationMatrix(SimpleMath::Matrix matrix)		{ m_rotationMatrix = matrix; }
 
 	static const std::vector<D3D11_INPUT_ELEMENT_DESC> INPUT_LAYOUT;

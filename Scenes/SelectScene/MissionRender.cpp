@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "MissionRender.h"
+#include "Scenes/Commons/MissonAnimation.h"
 
 #include "NecromaLib/Singleton/ShareJsonData.h"
 #include "NecromaLib/Singleton/ShareData.h"
@@ -15,11 +16,11 @@
 MissionRender::MissionRender(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage)
 {
 
-	m_position = pos;
-	m_rage = rage;
+	m_position	= pos;
+	m_rage		= rage;
 	m_lineCount = 0;
 
-
+	//　====================[　現在数,目標数の描画クラス　]
 	m_number = std::make_unique<Number>(pos,SimpleMath::Vector2(0.35f,0.25f));
 
 
@@ -27,10 +28,15 @@ MissionRender::MissionRender(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage)
 	Stage_Data missionData = pSJD.GetStageData();
 
 	m_missionNum = 0;
+
+	//　====================[　全ミッション数を取得する　]
 	for (int i = 0; i < MISSION_TYPE::MISSION_NUM; i++)
 	{
 		m_missionNum += static_cast<int>(missionData.condition[i].size());
 	}
+
+	//　====================[　ミッション内容のアニメーションを行うクラス　]
+	m_missonAnimation = std::make_unique<MissionAnimation>();
 }
 
 MissionRender::~MissionRender()
@@ -58,17 +64,21 @@ void MissionRender::Render(Stage_Data data)
 {
 	m_lineCount = 0;
 
+	//　====================[　マシン系ミッション　]
 	Render_MachineMission(data.condition[MISSION_TYPE::SPAWN]);
 	Render_AlchemiMission(data.condition[MISSION_TYPE::ALCHEMI]);
 	Render_LvUpMission(data.condition[MISSION_TYPE::LVUP]);
 	Render_RepairMission(data.condition[MISSION_TYPE::REPAIR]);
 	Render_DestroyMission(data.condition[MISSION_TYPE::DESTROY]);
 
+	//　====================[　エネミー系ミッション　]
 	Render_EnemyMission(data.condition[MISSION_TYPE::ENEMY_KILL]);
 
+	//　====================[　リソース系ミッション　]
 	Render_BaseLvMission(data.condition[MISSION_TYPE::BASELV]);
 	Render_ResourceMission(data.condition[MISSION_TYPE::RESOURCE]);
 
+	//　====================[　時間系ミッション　]
 	Render_TimerMission(data.condition[MISSION_TYPE::TIMER]);
 
 }

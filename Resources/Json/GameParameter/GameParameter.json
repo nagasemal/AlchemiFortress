@@ -1,7 +1,7 @@
 {
 
   "GAME_PARAMETER": {
-    "ROTATE_SPEED": 1.2,
+    "ROTATE_SPEED": 10.5,
     "MAX_STAGE": 3,
     "MAX_LV": 9,
     "MAX_BASEHP": 420,

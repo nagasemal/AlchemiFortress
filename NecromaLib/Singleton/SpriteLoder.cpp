@@ -186,6 +186,9 @@ void SpriteLoder::Loading()
 		LoadingPngFileData(L"Resources/Textures/UIText/ExcavatorText.png", m_machineUIText[MACHINE_TYPE::MINING]);
 	}
 
+	// アルファベットテクスチャ
+	LoadingPngFileData(L"Resources/Textures/UIText/Alphabet.png", m_alphabet);
+
 	LoadingPngFileData(L"Resources/Textures/UIText/UIText.png", m_uiText);
 
 	LoadingPngFileData(L"Resources/Textures/Gauge_base.png", m_baseGageTex);
@@ -195,6 +198,8 @@ void SpriteLoder::Loading()
 	LoadingPngFileData(L"Resources/Textures/MachineIcons.png", m_machineIconTexture);
 	// マシンの名前文字テクスチャ取得
 	LoadingPngFileData(L"Resources/Textures/MachineNames.png", m_machineNameTextures);
+	// マシンを示す矢印アイコンのテクスチャ取得
+	LoadingPngFileData(L"Resources/Textures/ClickArrow.png", m_machineSelectArrow);
 
 }
 

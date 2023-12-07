@@ -18,8 +18,6 @@ float4 blur(float2 uv)
 	
     for (int i = 0; i < 9;i++)
     {
-		// 何故1引き？
-		//　A.自分(中心位置)の位置を中心にするため。
         output += tex.Sample(samLinear, uv
 		+ float2(((i % 3) - 1) * 0.01f, ((i / 3) - 1) * 0.01f)) * power;
 

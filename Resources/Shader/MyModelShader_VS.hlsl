@@ -1,5 +1,16 @@
 #include "MyModelShader.hlsli"
 
+
+// 頂点シェーダーの入力
+struct VSInput
+{
+    float4 Position : SV_Position;
+    float3 Normal : NORMAL;
+    float4 Tangent : TANGENT;
+    float4 Color : COLOR;
+    float2 TexCoord : TEXCOORD;
+};
+
 struct ColorPair
 {
     float3 Diffuse;
@@ -63,7 +74,7 @@ CommonVSOutput ComputeCommonVSOutputWithLighting(float4 position, float3 normal,
     vout.Specular = lightResult.Specular;
     vout.LightViewPos = mul(pos_ws, LightViewProj);
     vout.Position = pos_ws;
-
+    
     return vout;
 }
 

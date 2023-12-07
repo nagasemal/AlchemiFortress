@@ -206,6 +206,12 @@ public:
 	// UI用のテキスト
 	TextureData GetUIText() { return m_uiText; }
 
+	// マシンを示す下向きの矢印アイコン
+	TextureData GetMachineSelectArrow() { return m_machineSelectArrow; }
+
+	// アルファベットテクスチャを返します
+	TextureData GetAlphabet() { return m_alphabet; }
+
 	// 画像を読み込む
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> LoadingPngFile(const wchar_t* filename, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>& spriteResource);
 
@@ -322,6 +328,9 @@ private:
 	TextureData m_machineNameTextures;
 	// マシンアイコン
 	TextureData m_machineIconTexture;
+	// 選択先を示す矢印アイコン
+	TextureData m_machineSelectArrow;
+
 
 	// 魔法陣のテクスチャ
 	TextureData m_magicCircleTexture[6 + 1];
@@ -337,5 +346,8 @@ private:
 
 	// UIの説明テキスト
 	TextureData m_uiText;
+
+	// アルファベットテクスチャ
+	TextureData m_alphabet;
 
 };

@@ -3,6 +3,7 @@
 Texture2D IceTexture : register(t0);
 Texture2D IceNomal : register(t1);
 
+
 // •X‚ðƒ‚ƒfƒ‹‚É“Z‚í‚¹‚é
 float4 main(PSInput input) : SV_TARGET0
 {

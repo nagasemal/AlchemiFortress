@@ -10,6 +10,7 @@
 #include "Scenes/PlayScene/UI/Number.h"
 
 class SpriteLoder;
+class MissionAnimation;
 struct Stage_Data;
 struct Stage_Condition;
 
@@ -26,7 +27,7 @@ public:
 	// マシン系のミッション内容を描画
 	void Render_MachineMission(std::vector<Stage_Condition> stageData);
 
-	// エネミー系ののミッション内容を描画
+	// エネミー系のミッション内容を描画
 	void Render_EnemyMission(std::vector<Stage_Condition> stageData);
 
 	// 錬金系のミッション内容を描画
@@ -71,6 +72,8 @@ private:
 private:
 
 	std::unique_ptr<Number> m_number;
+
+	std::unique_ptr<MissionAnimation> m_missonAnimation;
 
 	SimpleMath::Vector2 m_position;
 	SimpleMath::Vector2 m_rage;

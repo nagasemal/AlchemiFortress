@@ -2,6 +2,8 @@
 
 #include "NecromaLib/GameData/GameObject2D.h"
 
+class DrawKey;
+
 class SelectionUI : public GameObjct2D
 {
 public:
@@ -53,6 +55,12 @@ public:
 	// 初期位置情報と一緒に位置を上書きします
 	void SetSavePos(SimpleMath::Vector2 pos) { m_saveData.pos = m_data.pos = pos; }
 
+	// 反応するキーを設定する
+	void SetKey(std::vector<Keyboard::Keys> keys) { m_keys = keys; }
+
+	// 反応するキーを返す
+	std::vector<Keyboard::Keys> GetKeys() { return m_keys; }
+
 protected:
 
 	bool m_hitMouseFlag;
@@ -76,5 +84,8 @@ protected:
 
 	// ホールド時間を取得する時間遷移用変数
 	float m_holdTime;
+
+	// 反応するキー群
+	std::vector<Keyboard::Keys> m_keys;
 
 };

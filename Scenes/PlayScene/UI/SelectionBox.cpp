@@ -10,6 +10,8 @@
 #include "NecromaLib/GameData/SpriteCutter.h"
 #include "NecromaLib/GameData/Easing.h"
 
+#include "Scenes/Commons/DrawKey.h"
+
 SelectionBox::SelectionBox(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage)
 {
 
@@ -26,6 +28,8 @@ SelectionBox::SelectionBox(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage)
 
 	m_popUITextTimer = 0.0f;
 
+	m_drawKey = std::make_unique<DrawKey>(this);
+
 }
 
 SelectionBox::~SelectionBox()
@@ -37,6 +41,9 @@ void SelectionBox::Update()
 	m_keySelectFlag = false;
 
 	if (m_selectFlag) SoundData::GetInstance().PlaySystemSE(XACT_WAVEBANK_SYSTEMSE_BUTTONSELECT);
+
+
+	m_drawKey->Update();
 }
 
 void SelectionBox::Draw()
@@ -66,6 +73,8 @@ void SelectionBox::Draw()
 	pSB->Draw(pSL->GetSelectBoxTexture().Get(), box_Pos, &m_rect, colour, 0.0f, DirectX::XMFLOAT2(static_cast<float>(m_rect.right) / 2, static_cast<float>(m_rect.bottom) / 2), m_data.rage);
 
 	pSB->End();
+
+	m_drawKey->Draw();
 
 }
 
@@ -100,6 +109,8 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsT
 
 	pSB->End();
 
+	m_drawKey->Draw();
+
 }
 
 void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture, float rotate)
@@ -124,6 +135,9 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textu
 	pSB->Draw(texture.Get(), box_Pos, &m_rect, colour, rotate, DirectX::XMFLOAT2(static_cast<float>(m_rect.right) / 2.0f, static_cast<float>(m_rect.bottom) / 2.0f), m_data.rage);
 
 	pSB->End();
+
+	m_drawKey->Draw();
+
 }
 
 void SelectionBox::DrawUI(int UInumber)
@@ -182,6 +196,8 @@ void SelectionBox::DrawUI(int UInumber)
 
 	pSB->End();
 
+	m_drawKey->Draw();
+
 
 }
 
@@ -222,6 +238,8 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textu
 	}
 
 	pSB->End();
+
+	m_drawKey->Draw();
 }
 
 void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture, RECT rect, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsTexture, RECT pulsTexRect, SimpleMath::Color pulsTextureCol, SimpleMath::Color nomalColor, SimpleMath::Color onColor, SimpleMath::Color pressdColor)
@@ -252,6 +270,9 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textu
 	}
 
 	pSB->End();
+
+
+	m_drawKey->Draw();
 
 }
 

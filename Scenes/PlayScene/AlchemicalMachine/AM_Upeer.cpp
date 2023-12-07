@@ -85,16 +85,16 @@ void AM_Upper::Finalize()
 void AM_Upper::RenderUI()
 {
 
-	SpriteLoder& pSL = SpriteLoder::GetInstance();
-
-	if (m_element != NOMAL) return;
-
-	for (int i = 0; i < 4; i++)
-	{
-		RECT rect_element = SpriteCutter(64, 64, 2 + i, 0);
-
-		m_selectBox[i]->DrawUI(pSL.GetSelectBoxTexture(), pSL.GetElementTexture(), rect_element);
-	}
+	//SpriteLoder& pSL = SpriteLoder::GetInstance();
+	//
+	//if (m_element != NOMAL) return;
+	//
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	RECT rect_element = SpriteCutter(64, 64, 2 + i, 0);
+	//
+	//	m_selectBox[i]->DrawUI(pSL.GetSelectBoxTexture(), pSL.GetElementTexture(), rect_element);
+	//}
 }
 
 void AM_Upper::HitEnemy(std::list<EnemyObject>* enemy)

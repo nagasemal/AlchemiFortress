@@ -24,8 +24,10 @@ void ApplyFog(inout float4 color, float fogFactor)
 // 視線ベクトルと法線ベクトルが直角に近いほどライトの値を大きくする
 float4 ApplyLimLight(float3 normal)
 {
-	//　リムライト
+	// 注視点
 	float3 invEye = normalize(mul(WorldInverseTranspose, EyePosition));
+	
+	//　リムライト
 	float rim = pow(1.0 - clamp(dot(invEye,normal), 0.0, 1.0), 5.0);
 
 	float3 eyedif = normalize(Eyes.xyz - EyePosition);
@@ -39,31 +41,6 @@ float4 ApplyLimLight(float3 normal)
 	float dotLE_3 = pow(max(dot(eyedif, normalize(LightDirection[2])), 1.0), 30.0);
 
 	return lerp(0, LimLightColor, rim  * dotLE_1 * dotLE_2 * dotLE_3);
-
-}
-
-void Asobi(inout float4 color,float2 uv)
-{
-	float4 col = PaintColor;
-
-	float power = 0.4f;
-	float nanikore = 0.1f;
-
-	//float alphalx = col.a * lerp(1, power, (0 - uv.x));
-	//col.a = saturate(lerp(alphalx, col.a, step(0, uv.x)));
-
-	//float alpharx = col.a * lerp(1, power, (uv.x - 1));
-	//col.a = saturate(lerp(col.a, alpharx, step(1, uv.x)));
-
-	float alphaty = col.a * lerp(1, power, (1 - uv.y));
-	col.a = saturate(lerp(alphaty, col.a, step(1, uv.y)));
-
-	//col.a = saturate(lerp(1.0f, 0.0f, step(1.0f, uv.y)));
-
-	//float alphaby = col.a * lerp(1, power, (uv.y - 0));
-	//col.a = saturate(lerp(col.a, alphaby, step(0, uv.y)));
-
-	color.a = col.a;
 
 }
 
@@ -100,6 +77,8 @@ float4 ApplyPointLight(float3 position, float3 lightPos, float power,float rage)
     return atten * power;
 }
 
+// マッハバンド対策
+#define SHADOW_EPSILON 0.0005f
 
 float4 main(PSInput input) : SV_TARGET0
 {
@@ -109,14 +88,24 @@ float4 main(PSInput input) : SV_TARGET0
 	float3 modelTexture = MachineTexture.Sample(Sampler, input.TexCoord);
 
 	// ライトの計算
-    input.Normal = normalize(input.Normal);
+    input.Normal = normalize(input.Normal); 
+	
+	    // マウス周辺のポイントライト
+    float4 pointLight_mouse = ApplyPointLight(input.Position.xyz, MousePosition.xyz, 1.0f, 1.0f);
+   
+    float4 pointLight_crystal = float4(0.0f, 0.0f, 0.0f, 1.0f);
+    // クリスタルの周辺を発光させる
+    for (int i = 0; i < 3; i++)
+    {
+        pointLight_crystal += ApplyPointLight(input.Position.xyz, CrystalPosition[i].xyz, 1.0f, 1.5f - cos(Time.w));
+    }
 	
 	// ノーマルマップ取得
 	float3 nomalTex = NomalTexture.Sample(Sampler, input.TexCoord);
 
-    float4 diff = pow(dot(nomalTex, input.Diffuse.rgb), 0.5f) + ApplyLimLight(input.Normal);
+    float4 diff = pow(dot(nomalTex, input.Diffuse.rgb + pointLight_crystal.rgb + pointLight_mouse.rgb), 0.5f) + ApplyLimLight(input.Normal);
 
-	float4 color = diff;
+    float4 color = diff;
 
 	// ツヤ消し
 	input.Specular *= SpecularPower;
@@ -124,27 +113,17 @@ float4 main(PSInput input) : SV_TARGET0
 	// スペキュラーを設定する
     AddSpecular(color, pow(clamp(dot(input.Specular, nomalTex), 0.0f, 1.0f), 2.0f));
 
-	//// リムライトを設定する
-	//color.rgb += ApplyLimLight(input.Normal);
-
-	// ポイントライト
-
 	// 徐々に色を塗るルール画像)
-	color.rgb *= (/*modelTexture.rgb * */PaintColor.rgb) * step(texInput, 1 - Time.z);
+	color.rgb *= PaintColor.rgb * step(texInput, 1 - Time.z);
 
+    color += AddScreen(color, float4(0.1, 0.1, 0.0, 1.0f)) * pointLight_mouse;
+    
+    color += AddScreen(color, float4(0.2, 0.0, 0.2, 1.0f)) * pointLight_crystal;
+	
 	// 時間経過で出現させる(ルール画像)
 	color.w = step(texInput, Time.x);
-
-    color.w *= DiffuseColor.w;
 	
-    color += float4(0.7, 0.7, 0.4, 0.0f) * ApplyPointLight(input.Position.xyz, LightPosition.xyz, 1.0f, 1.0f);
+    color.w *= DiffuseColor.w;
 
-	// クリスタルの周辺を発光させる
-    for (int i = 0; i < 3; i++)
-    {
-        color += float4(0.7, 0.2, 0.7, 0.0f) * ApplyPointLight(input.Position.xyz, CrystalPosition[i].xyz, 1.0f, 1.5f - cos(Time.w));
-    }
-
-	// 時間経過で色を付ける
 	return float4(color.xyz, color.w);
 }

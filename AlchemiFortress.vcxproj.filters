@@ -212,6 +212,24 @@
     <Filter Include="Shader\ZoomUI">
       <UniqueIdentifier>{ca213ce8-26ed-442e-9ea2-6dd84714d3ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Json\GameParameterData\Gauge">
+      <UniqueIdentifier>{f6dd3845-1774-4fc1-b06f-04c8d0761473}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Json\GameParameterData\Alchemi">
+      <UniqueIdentifier>{c37ffd09-01b8-4021-91fe-eeab4628894c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Json\GameParameterData\Num">
+      <UniqueIdentifier>{1fac4e4a-d6de-452a-8991-f92accee520d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\PostProcess">
+      <UniqueIdentifier>{637d09ad-c881-4bac-920f-c736d2fa62b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Deapth">
+      <UniqueIdentifier>{2409853c-2763-4a7e-ab8b-7025949c0ddb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Json\GameParameterData\Explanation">
+      <UniqueIdentifier>{c0b1af7a-b504-4280-abb8-ce4ef6240f8c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -556,6 +574,12 @@
     <ClInclude Include="Scenes\PlayScene\UI\RenderMachineUIList.h">
       <Filter>Scene\PlayScene\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Scenes\Commons\MyPostProcess.h">
+      <Filter>Scene\Commons</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Commons\DrawKey.h">
+      <Filter>Scene\Commons</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -855,6 +879,12 @@
     <ClCompile Include="Scenes\PlayScene\Tutorial\CommandPattern\TutorialCommands.cpp">
       <Filter>Scene\PlayScene\Tutorial\command</Filter>
     </ClCompile>
+    <ClCompile Include="Scenes\Commons\MyPostProcess.cpp">
+      <Filter>Scene\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\Commons\DrawKey.cpp">
+      <Filter>Scene\Commons</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -953,7 +983,7 @@
     <None Include="Resources\Json\EnemyData\EnemyData_Retreat.json">
       <Filter>Json\EnemyData</Filter>
     </None>
-    <None Include="Resources\Json\GameParameter\UILayout.json">
+    <None Include="Resources\Json\GameParameter\UILayout_Machine.json">
       <Filter>Json\GameParameterData</Filter>
     </None>
     <None Include="Resources\Json\StageData\Stage_1\StageData_1_1.json">
@@ -1021,6 +1051,66 @@
     </None>
     <None Include="Resources\Shader\3DUI.hlsli">
       <Filter>Shader\UI</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_GaugeCrystal.json">
+      <Filter>Json\GameParameterData\Gauge</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_GaugeHP.json">
+      <Filter>Json\GameParameterData\Gauge</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_GaugeMP.json">
+      <Filter>Json\GameParameterData\Gauge</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_GaugeOffset.json">
+      <Filter>Json\GameParameterData\Gauge</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_AlchemiLeft.json">
+      <Filter>Json\GameParameterData\Alchemi</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_AlchemiMiddle.json">
+      <Filter>Json\GameParameterData\Alchemi</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_AlchemiRight.json">
+      <Filter>Json\GameParameterData\Alchemi</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_NumCrystal.json">
+      <Filter>Json\GameParameterData\Num</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_NumMachine.json">
+      <Filter>Json\GameParameterData\Num</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_NumMP.json">
+      <Filter>Json\GameParameterData\Num</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_GaugeBaseLv.json">
+      <Filter>Json\GameParameterData\Gauge</Filter>
+    </None>
+    <None Include="Resources\Shader\PostProcess.hlsli">
+      <Filter>Shader\PostProcess</Filter>
+    </None>
+    <None Include="Resources\Shader\ShadowDepth.hlsli">
+      <Filter>Shader\Deapth</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_ExplanationOffset.json">
+      <Filter>Json\GameParameterData\Explanation</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_ExplanationBack.json">
+      <Filter>Json\GameParameterData\Explanation</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_ExplanationSpawn.json">
+      <Filter>Json\GameParameterData\Explanation</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_ExplanationNext.json">
+      <Filter>Json\GameParameterData\Explanation</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_ExplanationDestory.json">
+      <Filter>Json\GameParameterData\Explanation</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_ExplanationLvUp.json">
+      <Filter>Json\GameParameterData\Explanation</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_ExplanationRepair.json">
+      <Filter>Json\GameParameterData\Explanation</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1096,9 +1186,6 @@
     <FxCompile Include="Resources\Shader\Button_VS.hlsl">
       <Filter>Shader\Button</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\ModelShadow_PS.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\Shader\MyModelShader_PS.hlsl">
       <Filter>Shader\Model</Filter>
     </FxCompile>
@@ -1151,6 +1238,24 @@
       <Filter>Shader\UI</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shader\NomalModelShader_PS.hlsl">
+      <Filter>Shader\Model</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\PostProcess_GS.hlsl">
+      <Filter>Shader\PostProcess</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\PostProcess_PS.hlsl">
+      <Filter>Shader\PostProcess</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\PostProcess_VS.hlsl">
+      <Filter>Shader\PostProcess</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\ShadowDepth_PS.hlsl">
+      <Filter>Shader\Model</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\ModelShadow_PS.hlsl">
+      <Filter>Shader\Model</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\ModelOutLine_VS.hlsl">
       <Filter>Shader\Model</Filter>
     </FxCompile>
   </ItemGroup>

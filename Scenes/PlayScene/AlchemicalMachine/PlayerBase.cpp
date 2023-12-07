@@ -145,6 +145,35 @@ void PlayerBase::Render(DirectX::Model* model)
 
 }
 
+void PlayerBase::WriteDepth(DirectX::Model* model)
+{
+
+	ShareData& pSD = ShareData::GetInstance();
+	SpriteLoder& pSL = SpriteLoder::GetInstance();
+
+	// ƒ‚ƒfƒ‹î•ñ(ˆÊ’u,‘å‚«‚³)
+	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
+	modelData = SimpleMath::Matrix::CreateScale(m_data.rage);
+	modelData *= SimpleMath::Matrix::CreateRotationY(XMConvertToRadians(180));
+	modelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y - 1.5f, m_data.pos.z);
+
+	m_baseModel_Towor->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(),
+		false, [&]()
+		{
+			ModelShader::GetInstance().ShadowModelDraw(false);
+
+		});
+
+	m_baseModel_Pillar->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(),
+		false, [&]()
+		{
+
+			ModelShader::GetInstance().ShadowModelDraw(false);
+
+		});
+
+}
+
 void PlayerBase::Finalize()
 {
 

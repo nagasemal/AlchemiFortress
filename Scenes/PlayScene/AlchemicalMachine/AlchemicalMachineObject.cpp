@@ -10,27 +10,33 @@
 #include "NecromaLib/GameData/SpriteCutter.h"
 #include "NecromaLib/GameData/Easing.h"
 
-#define AM_RAGE SimpleMath::Vector3(1, 1, 1)
+#define AM_RAGE				SimpleMath::Vector3(1, 1, 1)
 
 // 修理にかかる魔力
-#define REPAIR_HP 30 * m_lv
+#define REPAIR_HP			30 * m_lv
 
-// HPゲージの大きさ
-#define HPGAUGE_RAGE 0.7f
+// 縦揺れ値
+#define PITCHING_VAL		0.2f
 
-// マシンの名前の大きさ
-#define MACHINENAME_RAGE 2.35f
+// サブモデルのY軸回転速度
+#define SUBMODEL_SPEED		1.5f
 
-// Lv表示の大きさ
-#define MACHINELV_RAGE 2.0f
+//　====================[　3DUIにて使用する数値の定義　]
 
-// マシンのアイコンの大きさ
-#define MACHINEICON_RAGE 0.8f
+//　　|=> HPゲージの大きさ
+#define HPGAUGE_RAGE		0.7f
 
-// 魔法陣の大きさ
-#define MAGICCIRCLE_RAGE 0.2f
+//　　|=> マシンの名前の大きさ
+#define MACHINENAME_RAGE	2.35f
 
+//　　|=> Lv表示の大きさ
+#define MACHINELV_RAGE		2.0f
 
+//　　|=> マシンのアイコンの大きさ
+#define MACHINEICON_RAGE	0.8f
+
+//　　|=> 魔法陣の大きさ
+#define MAGICCIRCLE_RAGE	0.2f
 
 AlchemicalMachineObject::AlchemicalMachineObject() :
 	m_hp(1),
@@ -53,7 +59,7 @@ AlchemicalMachineObject::AlchemicalMachineObject() :
 	m_dismantlingFlag(),
 	m_invincibleTime(),
 	m_invincibleFlag(),
-	m_spawnTime(1.0f),
+	m_spawnTime(0.0f),
 	m_difRedioHp(),
 	m_popHPTimer(),
 	m_selectModeTime()
@@ -66,32 +72,35 @@ void AlchemicalMachineObject::Update_Common()
 {
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
 
-	// 無敵時間計測
+	//　====================[　無敵時間計測　]
 	if (m_invincibleFlag)
 	{
 		m_invincibleTime += deltaTime;
 
-		// 既定の時間に達したらフラグをFalseにして無敵状態を解除する
+		// 既定の時間に達する
 		if (m_invincibleTime >= 1.0f)
 		{
+			//　　|=>　無敵時間リセット
 			m_invincibleTime = 0.0f;
+			//　　|=>　無敵時間フラグリセット
 			m_invincibleFlag = false;
 		}
 	}
 
-	// 出現時の演出に使うタイマー
+	//　====================[　演出用時間変数　]
+	//　　|=>　設置時
 	m_spawnTime += deltaTime;
-	// 回転に使用する値
+	//　　|=>　マシンのY軸回転
 	m_rotateAnimation += deltaTime;
+	//　　|=>　HPバー出現
+	m_popHPTimer -= DeltaTime::GetInstance().GetNomalDeltaTime();
 
+	//　====================[　HPの割合計算　]
 	float radio_Hp = (static_cast<float>(GetHP()) / static_cast<float>(GetMAXHP()));
 
-	// 徐々に減るHPの処理
+	//　====================[　徐々に減るHPの処理　]
 	m_difRedioHp -= 0.3f * deltaTime;
 	m_difRedioHp = std::min(std::max(m_difRedioHp, radio_Hp), 1.0f);
-
-	// 触れたら出現するHPバーUI用の時間変数を更新する
-	m_popHPTimer -= DeltaTime::GetInstance().GetNomalDeltaTime();
 
 	// マウスに触れているor選択がされているならばタイマーを加算する
 	if (m_hitMouseFlag || m_selectModeFlag || m_hp <= 0)
@@ -229,24 +238,22 @@ void AlchemicalMachineObject::RenderHP()
 		SimpleMath::Vector2(64 / 2, 64 / 2),
 		MACHINELV_RAGE);
 
-
-
 }
 
 void AlchemicalMachineObject::HitToMouse(MousePointer* pMP)
 {
-
+	//　====================[　フラグリセット　]
 	m_hitMouseFlag = false;
 
-	//InputSupport& pINP = InputSupport::GetInstance();
+	//　====================[　マウス判定を拡大　]
 	Circle mouseWolrdPos = Circle();
 	mouseWolrdPos.p = InputSupport::GetInstance().GetMousePosWolrd();
 	mouseWolrdPos.r = (pMP->GetRage().x + pMP->GetRage().z) / 2;
 
-	// オブジェクトとマウスポインターの当たり判定
+	//　====================[　マシンToマウス　]
 	if (CircleCollider(GetCircle(), mouseWolrdPos))
 	{
-		// マシンに当たったことを知らせる
+		//　　|=>　接触を通知
 		pMP->HitMachine(m_data.pos);
 		m_hitMouseFlag = true;
 	}
@@ -262,37 +269,40 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 {
 	ShareData& pSD = ShareData::GetInstance();
 
-	// モデル情報(位置,大きさ)
+	//　====================[　モデルの行列　]
 	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
 	modelData = SimpleMath::Matrix::CreateScale(m_data.rage);
 
-	// ディフェンサー型は常に拠点の方向を向く
+	//　====================[　ディフェンサーは常に拠点の方向を向く　]
 	if (m_machineID == DEFENSER)
 	{
-		// 拠点との距離
+		//　　|=> 拠点との距離
 		SimpleMath::Vector3 basepos = SimpleMath::Vector3() - m_data.pos;
 
+		//　　|=> 回転アニメーションを打ち消す
 		m_rotateAnimation = 0.0f;
+
+		//　　|=> 角度を合わせるために90度回転させる
 		modelData *= SimpleMath::Matrix::CreateRotationY(DirectX::XMConvertToRadians(90.0f));
+
+		//　　|=> 拠点方向に面を向ける
 		modelData *= SimpleMath::Matrix::CreateFromQuaternion(
 			SimpleMath::Quaternion::FromToRotation(SimpleMath::Vector3::UnitX, basepos));
 	}
 
-	// 常に右回りに回転
+	//　====================[　常に右回りに回転　]
 	modelData *= SimpleMath::Matrix::CreateRotationY(m_rotateAnimation);
 
-	// 常に縦に揺れる
-	modelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y + (sinf(m_rotateAnimation) * 0.2f), m_data.pos.z);
+	//　====================[　常に縦に揺れる　]
+	modelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y + (sinf(m_rotateAnimation) * PITCHING_VAL), m_data.pos.z);
 
-	SimpleMath::Matrix ringData = SimpleMath::Matrix::Identity;
-	ringData = SimpleMath::Matrix::CreateScale(m_data.rage);
-	ringData *= SimpleMath::Matrix::CreateRotationY(-m_rotateAnimation * 1.5f);
-	ringData *= SimpleMath::Matrix::CreateTranslation
-	(m_data.pos.x,
-		m_data.pos.y + (sinf(m_rotateAnimation) * 0.2f),
-		m_data.pos.z);
+	//　====================[　追加パーツの行列　]
+	SimpleMath::Matrix subModelData = SimpleMath::Matrix::Identity;
+	subModelData = SimpleMath::Matrix::CreateScale(m_data.rage);
+	subModelData *= SimpleMath::Matrix::CreateRotationY(-m_rotateAnimation * SUBMODEL_SPEED);
+	subModelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x,m_data.pos.y + (sinf(m_rotateAnimation) * PITCHING_VAL),m_data.pos.z);
 
-	// 追加パーツが存在する場合
+	//　====================[　追加パーツが存在する場合　]
 	if (m_machineID == ATTACKER)
 	{
 		m_subColor = SimpleMath::Color((float)m_powerUPFlag, (float)m_powerUPFlag, 0.0f, 1.0f);
@@ -300,7 +310,6 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 		// エフェクトの設定
 		ring->UpdateEffects([&](IEffect* effect)
 			{
-				// 今回はライトだけ欲しい
 				auto lights = dynamic_cast<IEffectLights*>(effect);
 				// 色変更
 				lights->SetLightDiffuseColor(0,m_subColor);
@@ -311,43 +320,35 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 
 	}
 
-	// エフェクトの設定
+	//　====================[　エフェクトの設定　]
 	model->UpdateEffects([&](IEffect* effect)
 		{
-			// 今回はライトだけ欲しい
 			auto lights = dynamic_cast<IEffectLights*>(effect);
 
-			// 色変更
+			//　====================[　色変更　]
 			lights->SetLightDiffuseColor(0, GetColor());
 			lights->SetLightDiffuseColor(1, GetColor());
 			lights->SetLightDiffuseColor(2, GetColor());
 
 		});
 
-	// シルエット描画
+	//　====================[　シルエット描画　]
 	if (silhouette)
 	{
 		SilhouetteRender(model, modelData);
 		// シェーダーの適応
-		if (ring != nullptr) 		SilhouetteRender(ring, ringData);
+		if (ring != nullptr) 		SilhouetteRender(ring, subModelData);
 
 	}
-	// 通常描画
+	//　====================[　通常描画　]
 	else
 	{
 		NomalRender(model, modelData, m_color);
 		// 通常描画
-		if (ring != nullptr) 		NomalRender(ring, ringData, m_subColor);
+		if (ring != nullptr) 		NomalRender(ring, subModelData, m_subColor);
 	}
 
-	////　====================[　選択時　オーラエフェクトの描画　]
-	//if (m_selectModeFlag)
-	//{
-	//	ModelShader& pMS = ModelShader::GetInstance();
-	//	pMS.DrawAuraEffect(m_selectModeTime, GetPos() + SimpleMath::Vector3(0.0f, 0.0f, 0.0f), GetRage() * SimpleMath::Vector3(10.0f,0.1f,10.0f));
-	//}
-
-	// シェーダーの解除
+	//　====================[　シェーダーの解除　]
 	pSD.GetContext()->PSSetShader(nullptr, nullptr, 0);
 	pSD.GetContext()->OMSetDepthStencilState(nullptr, 0);
 
@@ -448,4 +449,59 @@ void AlchemicalMachineObject::NotShaderRender(DirectX::Model* model, SimpleMath:
 			pSD.GetContext()->OMSetBlendState(blendstate, nullptr, 0xFFFFFFFF);
 
 		});
+}
+
+void AlchemicalMachineObject::WriteDepathRender(DirectX::Model* model, DirectX::Model* secondModel)
+{
+	ShareData& pSD = ShareData::GetInstance();
+
+	//　====================[　モデルの行列　]
+	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
+	modelData = SimpleMath::Matrix::CreateScale(m_data.rage);
+
+	//　====================[　ディフェンサーは常に拠点の方向を向く　]
+	if (m_machineID == DEFENSER)
+	{
+		//　　|=> 拠点との距離
+		SimpleMath::Vector3 basepos = SimpleMath::Vector3() - m_data.pos;
+
+		//　　|=> 回転アニメーションを打ち消す
+		m_rotateAnimation = 0.0f;
+
+		//　　|=> 角度を合わせるために90度回転させる
+		modelData *= SimpleMath::Matrix::CreateRotationY(DirectX::XMConvertToRadians(90.0f));
+
+		//　　|=> 拠点方向に面を向ける
+		modelData *= SimpleMath::Matrix::CreateFromQuaternion(
+			SimpleMath::Quaternion::FromToRotation(SimpleMath::Vector3::UnitX, basepos));
+	}
+
+	//　====================[　常に右回りに回転　]
+	modelData *= SimpleMath::Matrix::CreateRotationY(m_rotateAnimation);
+
+	//　====================[　常に縦に揺れる　]
+	modelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y + (sinf(m_rotateAnimation) * PITCHING_VAL), m_data.pos.z);
+
+	//　====================[　追加パーツの行列　]
+	SimpleMath::Matrix subModelData = SimpleMath::Matrix::Identity;
+	subModelData = SimpleMath::Matrix::CreateScale(m_data.rage);
+	subModelData *= SimpleMath::Matrix::CreateRotationY(-m_rotateAnimation * SUBMODEL_SPEED);
+	subModelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y + (sinf(m_rotateAnimation) * PITCHING_VAL), m_data.pos.z);
+
+
+
+	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false, [&]()
+		{
+
+			ModelShader::GetInstance().ShadowModelDraw();
+		});
+
+	if (secondModel != nullptr)
+	{
+		secondModel->Draw(pSD.GetContext(), *pSD.GetCommonStates(), subModelData, pSD.GetView(), pSD.GetProjection(), false, [&]()
+			{
+
+				ModelShader::GetInstance().ShadowModelDraw();
+			});
+	}
 }

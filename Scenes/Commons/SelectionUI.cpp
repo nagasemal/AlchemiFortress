@@ -19,7 +19,8 @@ SelectionUI::SelectionUI() :
 	m_activeFlag(true),
 	m_rect{ 0,0,64,64 },
 	m_vibrationTime(),
-	m_holdTime()
+	m_holdTime(),
+	m_keys()
 {
 }
 
@@ -29,6 +30,7 @@ SelectionUI::~SelectionUI()
 
 void SelectionUI::Initialize()
 {
+
 }
 
 void SelectionUI::Finalize()
@@ -42,7 +44,14 @@ bool SelectionUI::HitMouse(bool layerCheck)
 	m_hitMouseFlag = HitObject_RageSet(pINP.GetMousePosScreen(), 
 									   static_cast<float>(m_rect.right),
 									   static_cast<float>(m_rect.bottom),
-									   m_data.rage);
+									   m_data.rage) || m_keySelectFlag;
+
+	m_keySelectFlag = false;
+
+	for (auto& key : m_keys)
+	{
+		m_keySelectFlag += pINP.GetKeybordState().IsKeyPressed(key);
+	}
 
 	if (m_hitMouseFlag) pINP.HitUI();
 

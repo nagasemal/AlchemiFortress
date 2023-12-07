@@ -28,6 +28,7 @@ public:
 	void Initialize();
 	void Update(EnemyManager* pEnemyManager);
 	void Draw();
+	void WriteDepath();
 	void Finalize();
 
 public:

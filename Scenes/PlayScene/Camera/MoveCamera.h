@@ -25,13 +25,14 @@ public:
 
 	void SetEyeProsition(SimpleMath::Vector3 eye)			{ m_eye = eye;}
 	void SetTargetProsition(SimpleMath::Vector3 target)		{ m_target = target; }
-	void SetSaveTargetProsition(SimpleMath::Vector3 target) { m_saveTarget = target; }
+
+	void SetCameraMove(SimpleMath::Vector3 position)		{ m_move = position; }
 
 	void SetCameraLock(bool flag) { m_moveLock = flag; }
 	bool GetCameraLock() { return m_moveLock; }
 
-	void TargetChange(SimpleMath::Vector3 targetA, SimpleMath::Vector3 targetB);
-	void ResetTargetChangeTimer() { m_targetChangeTime = 0; }
+	void TargetChange(SimpleMath::Vector3 target);
+	void ResetTargetChangeTimer();
 
 private:
 
@@ -54,8 +55,9 @@ private:
 	// 注視点
 	SimpleMath::Vector3 m_target;
 
-	// 前回の注視点
-	SimpleMath::Vector3 m_saveTarget;
+	// 次の注視点
+	SimpleMath::Vector3 m_nextTarget;
+
 	// 引きで使うタイマー
 	AnimationData m_time;			
 	// ターゲット変更に使うタイマー

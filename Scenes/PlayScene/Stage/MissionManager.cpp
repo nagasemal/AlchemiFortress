@@ -84,7 +84,7 @@ void MissionManager::Initialize()
 	// ステージ失敗成功時のアニメーション用変数
 	m_clearAnimation.max = 2.0f;
 
-	m_closeButton = std::make_unique<DrawArrow>(MISSION_RENDERPOS + MISSION_CLOSEBUTTON,SimpleMath::Vector2(1.0f,1.0),2);
+	m_closeButton = std::make_unique<DrawArrow>(MISSION_RENDERPOS + MISSION_CLOSEBUTTON,SimpleMath::Vector2(0.2f,1.0),2);
 	m_closeButton->Initialize();
 }
 
@@ -105,13 +105,13 @@ void MissionManager::Update(AlchemicalMachineManager* pAlchemicalManager, EnemyM
 
 	if (m_closeButton->SelectionMouse())
 	{
-		m_closeAnimation -= pDeltaT->GetNomalDeltaTime();
-		m_closeButton->SetDirection(4);
+		m_closeButton->SetDirection(2);
+		m_closeAnimation += pDeltaT->GetNomalDeltaTime();
 	}
 	else
 	{
-		m_closeButton->SetDirection(2);
-		m_closeAnimation += pDeltaT->GetNomalDeltaTime();
+		m_closeAnimation -= pDeltaT->GetNomalDeltaTime();
+		m_closeButton->SetDirection(4);
 	}
 
 
@@ -214,8 +214,6 @@ void MissionManager::Render()
 	m_missionRender->Render_ResourceMission (m_missonCondition[MISSION_TYPE::RESOURCE]);
 	m_missionRender->LineReset();
 
-	m_closeButton->Draw();
-
 	// 経過時間の描画
 	m_timeRender->TimerDraw();
 
@@ -238,7 +236,8 @@ void MissionManager::Render()
 
 	pSD.GetSpriteBatch()->End();
 
-	m_nextWaveTexture->Render();
+	m_closeButton		->Draw();
+	m_nextWaveTexture	->Render();
 
 }
 

@@ -126,6 +126,23 @@ void FieldObjectManager::Draw()
 
 }
 
+void FieldObjectManager::WriteDepath()
+{
+	// 床の描画処理
+	m_field->WriteDepth(m_floorModel.get());
+
+	// プレイヤー拠点の描画処理
+	m_playerBase->WriteDepth(m_baseModel_Towor.get());
+
+	// クリスタルの描画処理
+	for (std::list<Crystal>::iterator it = m_crystals->begin(); it != m_crystals->end(); it++)
+	{
+		it->WriteDepth(m_crystalModel.get());
+	}
+
+
+}
+
 void FieldObjectManager::Finalize()
 {
 	// 床の削除処理

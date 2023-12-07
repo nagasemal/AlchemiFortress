@@ -191,7 +191,6 @@ void Tutorial_EnemySpawn::Initialize()
 	auto camera = m_tutorialManager->GetPlayScene()->GetMoveCamrera();
 	auto enemyManager = m_tutorialManager->GetPlayScene()->GetEnemyManager();
 
-	camera->ResetTargetChangeTimer();
 	camera->SetTargetProsition(enemyManager->GetEnemyData()->begin()->GetPos());
 
 	m_initializeFlag = true;

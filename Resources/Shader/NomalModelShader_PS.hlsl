@@ -25,6 +25,12 @@ float4 ApplyLimLight(float3 normal)
 
 }
 
+// フォグの設定
+void ApplyFog(inout float4 color, float fogFactor)
+{
+    color.rgb = lerp(color.rgb, float3(0.5,0.3,0.8) * color.a, fogFactor);
+}
+
 float4 ApplyPointLight(float3 position, float3 lightPos,float power,float rage)
 {
     // 光源の方向
@@ -51,52 +57,46 @@ float4 main(PSInput input) : SV_TARGET0
 
 	// テクスチャ取得
     float3 modelTexture = ModelTexture.Sample(Sampler, input.TexCoord);
-   
-    
+
 	// ライトの計算
     input.Normal = normalize(input.Normal);
+    
+    // マウス周辺のポイントライト
+    float4 pointLight_mouse = ApplyPointLight(input.Position.xyz, MousePosition.xyz, 1.0f, 1.0f);
+   
+    float4 pointLight_crystal = float4(0.0f, 0.0f, 0.0f, 1.0f);
+    // クリスタルの周辺を発光させる
+    for (int i = 0; i < 3; i++)
+    {
+        pointLight_crystal += ApplyPointLight(input.Position.xyz, CrystalPosition[i].xyz, 1.0f, 1.5f - cos(Time.w));
+    }
 	
 	// ノーマルマップ取得
     float3 nomalTex = NomalTexture.Sample(Sampler, input.TexCoord);
 
-    float4 diff = pow(dot(nomalTex, input.Diffuse.rgb), 0.5f) + ApplyLimLight(input.Normal);
+    float4 diff = pow(dot(nomalTex, input.Diffuse.rgb + pointLight_crystal.rgb + pointLight_mouse.rgb), 0.5f) + ApplyLimLight(input.Normal);
 
     float4 color = diff;
     
     color.rgb *= PaintColor.rgb;
 
     // ツヤ消し
-    input.Specular *= 0.2f;
+    input.Specular *= 0.4f;
     
 	// スペキュラーを設定する
     AddSpecular(color, pow(clamp(dot(input.Specular, nomalTex), 0.0f, 1.0f), 1.0f));
     
     color.rgb *= modelTexture.rgb;
     
-    color *= texInput;
+    color *= texInput ;
     
-    color += float4(0.7, 0.7, 0.4, 0.0f) * ApplyPointLight(input.Position.xyz, LightPosition.xyz,1.0f,1.0f);
+    color += AddScreen(color, float4(0.4, 0.4, 0.1, 0.0f)) * pointLight_mouse;
+    
+    color += AddScreen(color, float4(0.4, 0.0, 0.4, 0.0f)) * pointLight_crystal;
     
     color.w = 1.0f;
     
-    // クリスタルの周辺を発光させる
-    for (int i = 0; i < 3; i++)
-    {
-        color += float4(0.7, 0.2, 0.7, 0.0f) * ApplyPointLight(input.Position.xyz, CrystalPosition[i].xyz, 1.0f, 1.5f - cos(Time.w));
-    }
+    //ApplyFog(color, EyePosition);
     
-    
-    
-    // 徐々に色を塗るルール画像)
-
- 
-    //徐々に色を塗るルール画像)
-    //color.rgb *= ( /*modelTexture.rgb * */PaintColor.rgb) * step(texInput, 1);
-    
-    //時間経過で出現させる(ルール画像)
-
-    //color.w = texInput;
-    
-	
     return float4(color.xyz, color.w);
 }

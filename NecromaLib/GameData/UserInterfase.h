@@ -119,25 +119,26 @@ public:
 	void SetWindowSize(const int& width, const int& height);
 
 	void SetScale(SimpleMath::Vector2 scale);
-	SimpleMath::Vector2 GetScale() { return m_scale; }
-	SimpleMath::Vector2 GetBaseScale() { return m_baseScale; }
+	SimpleMath::Vector2 GetScale()					{ return m_scale; }
+	SimpleMath::Vector2 GetBaseScale()				{ return m_baseScale; }
 	void SetPosition(SimpleMath::Vector2 position);
-	SimpleMath::Vector2 GetPosition() { return m_position; }
+	SimpleMath::Vector2 GetPosition()				{ return m_position; }
 	void SetAnchor(ANCHOR anchor);
-	ANCHOR GetAnchor() { return m_anchor; }
+	ANCHOR GetAnchor()								{ return m_anchor; }
 
-	int GetTexture_W() { return m_textureWidth;}
-	int GetTexture_H() { return m_textureHeight; }
+	int GetTexture_W()								{ return m_textureWidth;}
+	int GetTexture_H()								{ return m_textureHeight; }
 
 	// äÑçá
-	void SetRenderRatio(float ratio) { m_renderRatio = ratio; }
-	float GetRenderRatio() { return m_renderRatio; }
+	void SetRenderRatio(float ratio)				{ m_renderRatio = ratio; }
+	float GetRenderRatio()							{ return m_renderRatio; }
 
-	void SetValue(float value) { m_value = value;}
-	float GetValue() { return m_value;}
+	void SetValue(float value)						{ m_value = value;}
+	float GetValue()								{ return m_value;}
 
-	void SetColor(SimpleMath::Color color) { m_color = color;}
-	SimpleMath::Color GetColor()			{ return m_color;}
+	void SetColor(const SimpleMath::Color color)	{ m_color = color;}
+	void SetColor(const DirectX::XMVECTORF32 color) { m_color = (SimpleMath::Color)color; }
+	SimpleMath::Color GetColor()					{ return m_color;}
 
 private:
 

@@ -30,6 +30,9 @@ public:
 	// 選択時、マウス選択可能なUIの表示に使用
 	virtual void RenderUI() = 0;
 
+	//// 深度テクスチャに書き込む用
+	//virtual void WriteDepath() = 0;
+
 	// LvUp専用処理
 	virtual void LvUp() = 0;
 
@@ -56,7 +59,9 @@ public:
 	/// </summary>
 	/// <param name="model">　　　 ベースのモデル　</param>
 	/// <param name="ring">　　　　追加パーツ</param>
-	void ModelRender(DirectX::Model* model,DirectX::Model* ring = nullptr,bool silhouette = false);
+	void ModelRender(DirectX::Model* model,
+					 DirectX::Model* ring = nullptr,
+					 bool silhouette = false);
 
 	// 召喚
 	void SummonAM(SimpleMath::Vector3 pos);
@@ -145,6 +150,9 @@ public:
 
 	// シェーダー無し描画
 	void NotShaderRender(DirectX::Model* model, SimpleMath::Matrix matrix);
+
+	// デプス書き込み描画
+	void WriteDepathRender(DirectX::Model* model,DirectX::Model* secondModel);
 
 private:
 

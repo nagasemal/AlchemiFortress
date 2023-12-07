@@ -54,4 +54,6 @@ private:
 
 	float m_popUITextTimer;
 
+	std::unique_ptr<DrawKey> m_drawKey;
+
 };

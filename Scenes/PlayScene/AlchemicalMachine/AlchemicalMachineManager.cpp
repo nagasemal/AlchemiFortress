@@ -24,6 +24,8 @@
 #define MPPLUSTIME 2.0f
 // 魔力の回復量
 #define MPPLUSNUM  1.0f
+// 魔力を回収しはじめる最低マシン量
+#define MPPUSLMACHINE 8
 
 // 円周の一番小さい場合におけるマシンの最大数
 #define CIRCLE_MAX_MIN  4
@@ -36,6 +38,10 @@
 
 // 魔法陣出現の高さ(大)
 #define MAGICCIRCLE_HEIGHT	0.3f 
+
+// バレットの大きさ
+#define BULLET_RAGE 0.75f
+
 
 AlchemicalMachineManager::AlchemicalMachineManager() :
 	m_allHitObjectToMouse(),
@@ -153,10 +159,13 @@ void AlchemicalMachineManager::Update(
 	EnemyManager* enemys,
 	MoveCamera* moveCamera)
 {
-
 	InputSupport& pINP = InputSupport::GetInstance();
+	auto keybordState = pINP.GetKeybordState();
 	DataManager& pDM = *DataManager::GetInstance();
 	auto pPlayerBase = fieldManager->GetPlayerBase();
+
+
+
 
 	//　====================[　入力関係　]
 	auto mouse			= pINP.GetMouseState();
@@ -174,13 +183,13 @@ void AlchemicalMachineManager::Update(
 
 	//　====================[　マシンの数をカウントする変数　]
 	//　　|=>　全てのマシン
-	int amNum = 0;
+	int amNum			= 0;
 	//　　|=>　Noneマシン
-	int amNum_Nomal = 0;
+	int amNum_Nomal		= 0;
 
 	//　====================[　リソースの取得量のリセット　]
-	m_mpPulsVal = 0;
-	m_crystalPulsVal = 0;
+	m_mpPulsVal			= 0;
+	m_crystalPulsVal	= 0;
 
 	//　====================[　マシンToマウスの判定リセット　]
 	m_allHitObjectToMouse = false;
@@ -188,31 +197,28 @@ void AlchemicalMachineManager::Update(
 	//　====================[　通知系変数のリセット　]
 	m_spawnMachine = m_destroyMachine = m_recoveryMachine = m_lvUpMachine = MACHINE_TYPE::NONE;
 
-	//　====================[　セレクトマネージャーの更新処理　]
-	m_selectManager->Update(fieldManager);
-
 	//　====================[　魔力回復周期　]
 	m_mpPulsTimer += DeltaTime::GetInstance().GetDeltaTime();
 
 	//　====================[　パーティクルの更新　]
 	Update_Particle();
 
+	m_machineExplanation->Update();
+
 	//　====================[　選択状態の解除　]
 	if (leftRelease)
 	{
-
+		// カメラ移動用の時間変数を可能ならばリセットする
 		moveCamera->ResetTargetChangeTimer();
 
 		// 選択されたオブジェクトがない場合の処理
 		if (m_selectNumber != -1)
 		{
 			m_prevSelectMachinePos = m_AMObject[m_selectNumber]->GetPos();
-			moveCamera->SetSaveTargetProsition(m_AMObject[m_selectNumber]->GetPos());
 		}
 		else
 		{
 			m_prevSelectMachinePos = SimpleMath::Vector3();
-			moveCamera->SetSaveTargetProsition(SimpleMath::Vector3());
 		}
 
 		// 選択状態の解除
@@ -222,15 +228,17 @@ void AlchemicalMachineManager::Update(
 		}
 	}
 
+	//　====================[　セレクトマネージャーの更新処理　]
+	m_selectManager->Update(fieldManager);
+
 	//　====================[　選択中のオブジェクトがある場合の処理　]
 	if (m_selectNumber != -1)
 	{
 
 		// 注視点移動
-		moveCamera->TargetChange(m_prevSelectMachinePos, m_AMObject[m_selectNumber]->GetData().pos);
+		moveCamera->TargetChange(m_AMObject[m_selectNumber]->GetData().pos);
 
 		// 説明文のアップデート処理を回す
-		m_machineExplanation->Update();
 		m_machineExplanation->Update_MachineData(m_AMObject[m_selectNumber].get());
 
 		// 選択済みのオブジェクトの選択時アップデートを回す
@@ -252,7 +260,7 @@ void AlchemicalMachineManager::Update(
 		m_magicCircle->DeleteMagicCircle();
 
 		// 注視点移動
-		moveCamera->TargetChange(m_prevSelectMachinePos, { 0,0,0 });
+		moveCamera->TargetChange({ 0,0,0 });
 	}
 
 	//　====================[　登録した影情報を消す　]
@@ -337,13 +345,13 @@ void AlchemicalMachineManager::Update(
 	}
 
 	//　====================[　マシンを召喚する処理　]
-	SpawnAMMachine(leftRelease);
+	SpawnAMMachine((leftRelease && !pINP.GetHitUI() && m_allHitObjectToMouse) || m_machineExplanation->GetSpawnFlag());
 
 	//　====================[　魔力リソースの増加　]
 	if (m_mpPulsTimer >= MPPLUSTIME && !m_rotationStop)
 	{
 		m_mpPulsTimer = 0;
-		m_mpPulsVal += ((int)MPPLUSNUM * ((amNum - amNum_Nomal) / 8));
+		m_mpPulsVal += ((int)MPPLUSNUM * ((amNum - amNum_Nomal) / MPPUSLMACHINE));
 		pDM.SetNowMP(pDM.GetNowMP() + m_mpPulsVal);
 	}
 
@@ -356,6 +364,21 @@ void AlchemicalMachineManager::Update(
 	{
 		m_AMnums[m_selectManager->GetSelectMachineType()]++;
 	}
+
+	//　====================[　次のマシンを選択　]
+	if (m_machineExplanation->GetNextMachineFlag())
+	{
+		m_selectNumber++;
+		if (m_selectNumber > amNum - 1) m_selectNumber = 0;
+	}
+
+	//　====================[　前のマシンを選択　]
+	if (m_machineExplanation->GetBackMachineFlag())
+	{
+		m_selectNumber--;
+		if (m_selectNumber < 0) m_selectNumber = amNum - 1;
+	}
+
 
 	//　====================[　マウスの当たり判定を戻す　]
 	if(leftRelease)  pMP->ReleaseLeftButtom();
@@ -411,7 +434,7 @@ void AlchemicalMachineManager::Render()
 		{
 			// モデルの描画			オブジェクトに割り当てられたIDをもとにモデル配列からデータを取り出す
 			m_AMObject[i]->ModelRender(m_AMFilter->HandOverAMModel(m_AMObject[i]->GetModelID()),
-				m_AMFilter->GetRingModel(m_AMObject[i]->GetModelID()), false);
+									   m_AMFilter->GetRingModel(m_AMObject[i]->GetModelID()), false);
 		
 			m_AMObject[i]->Draw();
 		
@@ -419,9 +442,10 @@ void AlchemicalMachineManager::Render()
 
 	}
 
-	//　====================[　選択されたマシンの魔法陣描画処理　]
+	//　====================[　マシンが選択されている　]
 	if (m_selectNumber != -1)
 	{
+		//　　|=>　マシンの魔法陣描画処理
 		m_magicCircle->CreateWorld();
 		m_magicCircle->Render(m_AMObject[m_selectNumber]->GetModelID());
 	}
@@ -447,6 +471,20 @@ void AlchemicalMachineManager::Render()
 	//　====================[　拠点の魔法陣描画処理　]
 	m_magicCircle_Field->Render(0);
 
+}
+
+void AlchemicalMachineManager::WriteDepath()
+{
+	//　====================[　影描画用ドローコール　]
+	for (int i = 0; i < m_AMObject.size(); i++)
+	{
+		// 存在しているかチェック
+		if (m_AMObject[i]->GetActive())
+		{
+			m_AMObject[i]->WriteDepathRender(m_AMFilter->HandOverAMModel(m_AMObject[i]->GetModelID()),
+											 m_AMFilter->GetRingModel(m_AMObject[i]->GetModelID()));
+		}
+	}
 }
 
 
@@ -492,13 +530,10 @@ void AlchemicalMachineManager::DrawUI()
 	{
 		BillboardRenderUI(m_selectNumber);
 
+		m_machineExplanation->Draw();
+
 		// 選択したモデルのIDがNoneなら表示しない
 		if (m_AMObject[m_selectNumber]->GetModelID() == MACHINE_TYPE::NONE) return;
-
-		m_machineExplanation->Draw();
-		m_machineExplanation->DisplayObject(m_AMFilter->HandOverAMModel(m_AMObject[m_selectNumber]->GetModelID()),
-			m_AMFilter->GetRingModel(m_AMObject[m_selectNumber]->GetModelID()),
-			m_AMObject[m_selectNumber].get());
 
 		m_AMObject[m_selectNumber]->RenderUI();
 		m_AMObject[m_selectNumber]->SelectRenderUI_Common();
@@ -549,7 +584,7 @@ void AlchemicalMachineManager::BillboardRenderUI(int index)
 	auto context = pSD.GetContext();
 
 	//　====================[　ビルボード行列生成　]
-	//　　|=>　スクリーン座標はY軸が＋－逆なので-1
+	//　　|=>　スクリーン座標はY軸が＋－逆なので-1をかける
 	SimpleMath::Matrix invertY = SimpleMath::Matrix::CreateScale(1.0f, -1.0f, 1.0f);
 
 	//　　|=> ビュー行列の回転を打ち消す行列を作成する
@@ -589,6 +624,18 @@ void AlchemicalMachineManager::BillboardRenderUI(int index)
 	pSD.GetSpriteBatch()->End();
 
 
+}
+
+void AlchemicalMachineManager::DrawMachineExplanationModel()
+{
+	//　====================[　マシンが選択されている　]
+	if (m_selectNumber != -1)
+	{
+		//　　|=>　ディスプレイ用マシンの描画処理
+		m_machineExplanation->DisplayObject(m_AMFilter->HandOverAMModel(m_AMObject[m_selectNumber]->GetModelID()),
+			m_AMFilter->GetRingModel(m_AMObject[m_selectNumber]->GetModelID()),
+			m_AMObject[m_selectNumber].get());
+	}
 }
 
 Model* AlchemicalMachineManager::GetSelectModel()
@@ -639,10 +686,10 @@ void AlchemicalMachineManager::Update_Attacker(int index, EnemyManager* enemys)
 
 		// 判定を取る条件(ラインが±1の属性が同じUpperで且つ生存している)
 		bool toUpperflag = (upperMachineLine + 1 >= attackerMachineLine ||
-					 upperMachineLine - 1 >= attackerMachineLine) &&
-					 m_AMObject[j]->GetModelID() == MACHINE_TYPE::UPPER &&
-					 m_AMObject[j]->GetElement() == m_AMObject[index]->GetElement() &&
-					 m_AMObject[j]->GetHP() >= 0;
+							upperMachineLine - 1 >= attackerMachineLine) &&
+							m_AMObject[j]->GetModelID() == MACHINE_TYPE::UPPER &&
+							m_AMObject[j]->GetElement() == m_AMObject[index]->GetElement() &&
+							m_AMObject[j]->GetHP() >= 0;
 
 		if(toUpperflag)	 attacker->AllAlchemicalMachine(m_AMObject[j].get());
 
@@ -718,14 +765,18 @@ void AlchemicalMachineManager::Update_Upper(int index,EnemyManager* enemyManager
 
 void AlchemicalMachineManager::MovingMachine(int number)
 {
-
+	//　====================[　早期リターン　]
+	//　　|=>　回転が停止している
 	if (m_rotationStop) return;
 
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
 
+	//　====================[　回転速度取得　]
+	int rotateSpeed = ShareJsonData::GetInstance().GetGameParameter().rotateSpeed;
+
 	//　====================[　原点を中心に回転移動　]
 	SimpleMath::Matrix matrix = SimpleMath::Matrix::Identity;
-	matrix *= SimpleMath::Matrix::CreateRotationY(XMConvertToRadians(10.0f * deltaTime));
+	matrix *= SimpleMath::Matrix::CreateRotationY(XMConvertToRadians(rotateSpeed * deltaTime));
 	
 	//　　|=>  回転後の座標をマシンに代入
 	m_AMObject[number]->SetPos(SimpleMath::Vector3::Transform(m_AMObject[number]->GetPos(), matrix));
@@ -794,9 +845,7 @@ void AlchemicalMachineManager::SpawnAMMachine(bool leftButtom)
 	//　　|=>　 対象オブジェクトに触れている
 	//　　|=>　 説明UIに触れていない
 	//　　|=>　 左ボタンを離すとオブジェクトを入れ替える
-	if (m_allHitObjectToMouse &&
-		!m_machineExplanation->OnMouse() &&
-		leftButtom)
+	if (leftButtom)
 	{
 		// MachineType::Noneを選択している場合に限り処理を通す
 		if (m_AMObject[m_selectNumber]->GetModelID() != MACHINE_TYPE::NONE) return;

@@ -32,6 +32,8 @@ public:
 
 	void Render(DirectX::Model* model) override;
 
+	void WriteDepth(DirectX::Model* model) override;
+
 	// I—¹ˆ—
 	void Finalize()		override;
 

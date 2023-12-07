@@ -97,19 +97,19 @@ void SceneManager::Update(const DX::StepTimer& timer)
 	//　デバッグ機能
 	{
 		// タイトルシーンへ
-		if (pINP.GetKeybordState().IsKeyReleased(Keyboard::T))		m_NextScene = GAME_SCENE::TITLE;
+		if (pINP.GetKeybordState().IsKeyReleased(Keyboard::D1))		m_NextScene = GAME_SCENE::TITLE;
 
 		//　プレイシーンへ
-		if (pINP.GetKeybordState().IsKeyReleased(Keyboard::P))		m_NextScene = GAME_SCENE::PLAY;
-
-		//　エディットシーンへ
-		if (pINP.GetKeybordState().IsKeyReleased(Keyboard::E))		m_NextScene = GAME_SCENE::EDIT;
+		if (pINP.GetKeybordState().IsKeyReleased(Keyboard::D2))		m_NextScene = GAME_SCENE::PLAY;
 
 		//　リザルトシーン
-		if (pINP.GetKeybordState().IsKeyReleased(Keyboard::R))		m_NextScene = GAME_SCENE::RESULT;
+		if (pINP.GetKeybordState().IsKeyReleased(Keyboard::D3))		m_NextScene = GAME_SCENE::RESULT;
 
 		//　ステージセレクトシーン
-		if (pINP.GetKeybordState().IsKeyReleased(Keyboard::S))		m_NextScene = GAME_SCENE::SELECT;
+		if (pINP.GetKeybordState().IsKeyReleased(Keyboard::D4))		m_NextScene = GAME_SCENE::SELECT;
+
+		//　エディットシーンへ
+		if (pINP.GetKeybordState().IsKeyReleased(Keyboard::D5))		m_NextScene = GAME_SCENE::EDIT;
 	}
 
 }

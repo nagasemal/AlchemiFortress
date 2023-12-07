@@ -62,7 +62,7 @@ void DrawSlider::Render(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture
     m_gauge_Back->Render();
 
     m_gauge_Flont->SetRenderRatio(m_value);
-    m_gauge_Flont->SetColor({1.0f,m_value,1.0f - m_value,1.0f });
+    m_gauge_Flont->SetColor(SimpleMath::Color{1.0f,m_value,1.0f - m_value,1.0f });
     m_gauge_Flont->Render();
 
     m_button->DrawUI(texture, rect,SimpleMath::Color(0.0f,0.0f,0.0f,1.0f));

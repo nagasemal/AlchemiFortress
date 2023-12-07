@@ -61,6 +61,9 @@ private:
     void CreateDeviceDependentResources();
     void CreateWindowSizeDependentResources();
 
+    // UIデータのリロードを行います
+    void ReloadUIData();
+
     // Device resources.
     std::unique_ptr<DX::DeviceResources>    m_deviceResources;
 

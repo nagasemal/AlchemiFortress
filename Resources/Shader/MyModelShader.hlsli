@@ -1,6 +1,11 @@
 Texture2D Texture : register(t0);
 sampler Sampler : register(s0);
 
+// シャドウマップテクスチャ
+Texture2D ShadowMapTexture : register(t3);
+// シャドウマップ用テクスチャサンプラー
+SamplerComparisonState ShadowMapSampler : register(s1);
+
 // 定数バッファ
 cbuffer Parameters : register(b0)
 {
@@ -19,20 +24,18 @@ cbuffer Parameters : register(b0)
     float4 FogVector                : packoffset(c14);	// フォグのかかり具合
 
     float4x4 World                  : packoffset(c15);	// ワールド行列
+    
     float3x3 WorldInverseTranspose  : packoffset(c19);	// ワールド逆転置行列
     float4x4 WorldViewProj          : packoffset(c22);	// ワールド行列 × ビュー行列 × プロジェクション行列
 
 };
 
-// 定数バッファ
-cbuffer Parameters_User : register(b1)
+// 追加する定数バッファ
+cbuffer Parameters : register(b1)
 {
-    // シャドウマップ上の射影空間へ変換する行列
-    float4x4 LightViewProj          : packoffset(c0);
-    float3   LightPosition2          : packoffset(c4);
-    float    MaxDepth               : packoffset(c4.w);
-    float    Offset                 : packoffset(c5);
-    float    VSMFilterEnable        : packoffset(c5.y);
+    float4x4 LightViewProj : packoffset(c0);
+    float4 LightDir : packoffset(c5);
+    float4 LightAmbient : packoffset(c6);
 };
 
 // プログラム側で変化する時間変数を入れる
@@ -43,26 +46,25 @@ cbuffer UserParam : register(b2)
     float4 LimLightColor;
     float4 Eyes;    // 注視点
     float4 LightPosition;
+    float4 MousePosition;
     float4 CrystalPosition[10];
+    
+    float4x4 View; // ビュー行列
+    float4x4 Proj; // プロジェクション行列
 }
 
 struct PSInput
 {
-    float4 PositionPS   : SV_Position;
-    float4 Diffuse      : COLOR0;
-    float3 Specular     : COLOR1;
-    float2 TexCoord     : TEXCOORD0;
+    float4 PositionPS : SV_Position;
+    float4 Diffuse : COLOR0;
+    float3 Specular : COLOR1;
+    float2 TexCoord : TEXCOORD0;
     float4 LightViewPos : TEXCOORD1;
-    float4 Position     : Position;
-    float3 Normal       : NORMAL;
+    float4 Position : Position;
+    float3 Normal : NORMAL;
 };
 
-// 頂点シェーダーの入力
-struct VSInput
+float4 AddScreen(float4 color, float4 screenCol)
 {
-    float4 Position : SV_Position;
-    float3 Normal   : NORMAL;
-    float4 Tangent  : TANGENT;
-    float4 Color    : COLOR;
-    float2 TexCoord : TEXCOORD;
-};
+    return 1 - (1 - color) * (1 - screenCol);
+}

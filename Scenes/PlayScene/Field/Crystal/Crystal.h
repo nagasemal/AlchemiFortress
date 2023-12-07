@@ -33,6 +33,8 @@ public:
 	// モデル描画
 	void Render(Model* model)			override;
 
+	void WriteDepth(DirectX::Model* model) override;
+
 	// 親クラスに消す処理を行わせる
 	bool DeleteRequest();
 

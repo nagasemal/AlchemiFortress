@@ -21,6 +21,9 @@
 #include "Scenes/PlayScene/Tutorial/TutorialManager.h"
 #include "Scenes/PlayScene/Tutorial/Explanation.h"
 
+// 自作ポストプロセス
+#include "Scenes/Commons/MyPostProcess.h"
+
 class PlayScene : public SceneObj
 {
 public:
@@ -38,6 +41,9 @@ public:
 
 	// 描画
 	void Draw() override;
+
+	// 深度描画
+	void DrawShadow();
 
 	// UI系描画
 	void DrawUI() override;
@@ -119,7 +125,8 @@ private:
 
 	// レンダーテクスチャ
 	std::unique_ptr<DX::RenderTexture> m_offscreenRT;
+
 	// ポストプロセス
-	std::unique_ptr<DirectX::BasicPostProcess> m_postProcess;
+	std::unique_ptr<MyPostProcess> m_postProcess;
 
 };

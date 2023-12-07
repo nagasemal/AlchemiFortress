@@ -218,11 +218,13 @@
     <ClInclude Include="Resources\Icon\Icon.h" />
     <ClInclude Include="Scenes\Commons\DrawArrow.h" />
     <ClInclude Include="Scenes\Commons\DrawBox.h" />
+    <ClInclude Include="Scenes\Commons\DrawKey.h" />
     <ClInclude Include="Scenes\Commons\DrawMachine.h" />
     <ClInclude Include="Scenes\Commons\DrawLine.h" />
     <ClInclude Include="Scenes\Commons\DrawSlider.h" />
     <ClInclude Include="Scenes\Commons\DrawTimer.h" />
     <ClInclude Include="Scenes\Commons\DrawVariableNum.h" />
+    <ClInclude Include="Scenes\Commons\MyPostProcess.h" />
     <ClInclude Include="Scenes\Commons\SelectionUI.h" />
     <ClInclude Include="Scenes\Commons\ShaderButton.h" />
     <ClInclude Include="Scenes\Commons\UIKeyControl.h" />
@@ -335,11 +337,13 @@
     <ClCompile Include="RenderTexture.cpp" />
     <ClCompile Include="Scenes\Commons\DrawArrow.cpp" />
     <ClCompile Include="Scenes\Commons\DrawBox.cpp" />
+    <ClCompile Include="Scenes\Commons\DrawKey.cpp" />
     <ClCompile Include="Scenes\Commons\DrawMachine.cpp" />
     <ClCompile Include="Scenes\Commons\DrawLine.cpp" />
     <ClCompile Include="Scenes\Commons\DrawSlider.cpp" />
     <ClCompile Include="Scenes\Commons\DrawTimer.cpp" />
     <ClCompile Include="Scenes\Commons\DrawVariableNum.cpp" />
+    <ClCompile Include="Scenes\Commons\MyPostProcess.cpp" />
     <ClCompile Include="Scenes\Commons\SelectionUI.cpp" />
     <ClCompile Include="Scenes\Commons\ShaderButton.cpp" />
     <ClCompile Include="Scenes\Commons\UIKeyControl.cpp" />
@@ -426,7 +430,25 @@
     <None Include="Resources\Json\EnemyData\EnemyData_Slime.json" />
     <None Include="Resources\Json\EnemyData\EnemyData_Worm.json" />
     <None Include="Resources\Json\GameParameter\GameParameter.json" />
-    <None Include="Resources\Json\GameParameter\UILayout.json" />
+    <None Include="Resources\Json\GameParameter\UILayout_AlchemiLeft.json" />
+    <None Include="Resources\Json\GameParameter\UILayout_AlchemiMiddle.json" />
+    <None Include="Resources\Json\GameParameter\UILayout_AlchemiRight.json" />
+    <None Include="Resources\Json\GameParameter\UILayout_ExplanationDestory.json" />
+    <None Include="Resources\Json\GameParameter\UILayout_ExplanationLvUp.json" />
+    <None Include="Resources\Json\GameParameter\UILayout_ExplanationOffset.json" />
+    <None Include="Resources\Json\GameParameter\UILayout_ExplanationRepair.json" />
+    <None Include="Resources\Json\GameParameter\UILayout_GaugeBaseLv.json" />
+    <None Include="Resources\Json\GameParameter\UILayout_GaugeCrystal.json" />
+    <None Include="Resources\Json\GameParameter\UILayout_GaugeHP.json" />
+    <None Include="Resources\Json\GameParameter\UILayout_GaugeMP.json" />
+    <None Include="Resources\Json\GameParameter\UILayout_GaugeOffset.json" />
+    <None Include="Resources\Json\GameParameter\UILayout_Machine.json" />
+    <None Include="Resources\Json\GameParameter\UILayout_NumCrystal.json" />
+    <None Include="Resources\Json\GameParameter\UILayout_NumMachine.json" />
+    <None Include="Resources\Json\GameParameter\UILayout_NumMP.json" />
+    <None Include="Resources\Json\GameParameter\UILayout_ExplanationBack.json" />
+    <None Include="Resources\Json\GameParameter\UILayout_ExplanationSpawn.json" />
+    <None Include="Resources\Json\GameParameter\UILayout_ExplanationNext.json" />
     <None Include="Resources\Json\MachineData\MachineData_Attacker.json" />
     <None Include="Resources\Json\MachineData\MachineData_Defenser.json" />
     <None Include="Resources\Json\MachineData\MachineData_Mining.json" />
@@ -459,7 +481,9 @@
     <None Include="Resources\Shader\DisplayMagicCircle.hlsli" />
     <None Include="Resources\Shader\MyModelShader.hlsli" />
     <None Include="Resources\Shader\MagicCircle.hlsli" />
+    <None Include="Resources\Shader\PostProcess.hlsli" />
     <None Include="Resources\Shader\Shadow.hlsli" />
+    <None Include="Resources\Shader\ShadowDepth.hlsli" />
     <None Include="Resources\Shader\Transition.hlsli" />
     <None Include="Resources\Shader\TutorialShader.hlsli" />
     <None Include="Resources\Shader\UI.hlsli" />
@@ -607,6 +631,13 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
     </FxCompile>
+    <FxCompile Include="Resources\Shader\ModelOutLine_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
     <FxCompile Include="Resources\Shader\ModelTransparent_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -657,6 +688,40 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0_level_9_3</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\PostProcess_GS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\PostProcess_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\PostProcess_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\ShadowDepth_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0_level_9_3</ShaderModel>
     </FxCompile>
     <FxCompile Include="Resources\Shader\Shadow_GS.hlsl">

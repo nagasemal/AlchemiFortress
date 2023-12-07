@@ -15,6 +15,8 @@
 #include "Scenes/PlayScene/AlchemicalMachine/AlchemicalMachineObject.h"
 #include "Scenes/PlayScene/UI/MachineGauge.h"
 
+class DrawArrow;
+
 class MachineExplanation : public GameObjct2D
 {
 public:
@@ -55,6 +57,15 @@ public:
 	// LvUPされた瞬間を返すフラグ
 	bool GetLvUpFlag();
 
+	// 設置された瞬間を返すフラグ
+	bool GetSpawnFlag();
+
+	// 次のマシンに移行するボタンを押した瞬間を返すフラグ
+	bool GetNextMachineFlag();
+
+	// 前のマシンに移行するボタンを押した瞬間を返すフラグ
+	bool GetBackMachineFlag();
+
 	void ResetMoveTime() { m_moveTime = 0; m_hitFlag = false;}
 
 public:
@@ -70,15 +81,20 @@ private:
 
 	std::unique_ptr<Camera> m_camera;
 
-	// テキストボックスのテクスチャ
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
-
+	// 設置用の選択ボックス
+	std::unique_ptr<SelectionBox> m_spawnBox;
 	// LvUp用の選択ボックス
 	std::unique_ptr<SelectionBox> m_selectLvUpBox;
 	// 修理用の選択ボックス
 	std::unique_ptr<SelectionBox> m_repairBox;
 	// 解体用の選択ボックス
 	std::unique_ptr<SelectionBox> m_dismantlingBox;
+
+	// 次のマシンを選択する矢印
+	std::unique_ptr<DrawArrow> m_nextMachineArrow;
+
+	// 前のマシンを選択する矢印
+	std::unique_ptr<DrawArrow> m_backMachineArrow;
 
 	// マシンのHPゲージ
 	//std::unique_ptr<MachineGauge> m_machineGauge;

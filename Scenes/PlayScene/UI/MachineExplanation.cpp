@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "MachineExplanation.h"
 #include "NecromaLib/Singleton/ShareData.h"
+#include "NecromaLib/Singleton/ShareJsonData.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/ModelShader.h"
@@ -12,18 +13,7 @@
 #include "NecromaLib/Singleton/InputSupport.h"
 #include <WICTextureLoader.h>
 
-#define MAX_RAGE SimpleMath::Vector2(450,300)
-
-#define MINI_BOX_POS SimpleMath::Vector2(-85,-95)
-
-#define BIG_BOX_RAGEPERCENT SimpleMath::Vector2(5.0f,0.5f)
-
-
-// アイコンを設置する箇所
-#define ICON_POS SimpleMath::Vector2(100,600)
-
-// アイコンを並べる間隔
-#define ICON_OFFSET_X 60.0f
+#include "Scenes/Commons/DrawArrow.h"
 
 struct position2D
 {
@@ -44,32 +34,41 @@ MachineExplanation::~MachineExplanation()
 
 void MachineExplanation::Initialize()
 {
-	m_moveTime = 0;
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
 
-	// テクスチャ
-	DirectX::CreateWICTextureFromFile(
-		ShareData::GetInstance().GetDevice(),
-		L"Resources/Textures/Log.png",
-		nullptr,
-		m_texture.ReleaseAndGetAddressOf()
-	);
+	m_moveTime = 0;
 
 	m_camera = std::make_unique<Camera>();
 
-	m_data.pos  = { 150,680};
-	m_data.rage = { 150,150};
+	//　====================[　マシンUIの情報を取得　]
+	UI_Data uiData = pSJD.GetUIData("ExplanationOffset");
 
-	//m_machineGauge = std::make_unique<MachineGauge>();
-	//m_machineGauge->AddHPGauge({m_data.pos.x + 60,m_data.pos.y - 130}, { 0.20,0.20 }, UserInterface::MIDDLE_CENTER);
+	m_data.pos  = uiData.pos;
+	m_data.rage = uiData.rage;
 
-	m_selectLvUpBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(ICON_POS.x + ICON_OFFSET_X, ICON_POS.y),
-		SimpleMath::Vector2(0.8f, 0.8f));
+	uiData = pSJD.GetUIData("ExplanationSpawn");
+	m_spawnBox			= std::make_unique<SelectionBox>(uiData.pos, uiData.rage);
+	m_spawnBox			->SetKey(uiData.key);
 
-	m_repairBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(ICON_POS.x + ICON_OFFSET_X * 2, ICON_POS.y),
-		SimpleMath::Vector2(0.8f, 0.8f));
+	uiData = pSJD.GetUIData("ExplanationLvUp");
+	m_selectLvUpBox		= std::make_unique<SelectionBox>(uiData.pos,uiData.rage);
+	m_selectLvUpBox		->SetKey(uiData.key);
 
-	m_dismantlingBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(ICON_POS.x + ICON_OFFSET_X * 3, ICON_POS.y),
-		SimpleMath::Vector2(0.8f, 0.8f));
+	uiData = pSJD.GetUIData("ExplanationRepair");
+	m_repairBox			= std::make_unique<SelectionBox>(uiData.pos,uiData.rage);
+	m_repairBox			->SetKey(uiData.key);
+
+	uiData = pSJD.GetUIData("ExplanationDestory");
+	m_dismantlingBox	= std::make_unique<SelectionBox>(uiData.pos,uiData.rage);
+	m_dismantlingBox	->SetKey(uiData.key);
+
+	uiData = pSJD.GetUIData("ExplanationNext");
+	m_nextMachineArrow	= std::make_unique<DrawArrow>(uiData.pos, uiData.rage,3);
+	m_nextMachineArrow	->SetKey(uiData.key);
+
+	uiData = pSJD.GetUIData("ExplanationBack");
+	m_backMachineArrow	= std::make_unique<DrawArrow>(uiData.pos, uiData.rage,1);
+	m_backMachineArrow	->SetKey(uiData.key);
 
 }
 
@@ -78,14 +77,30 @@ void MachineExplanation::Update()
 	InputSupport& pINP = InputSupport::GetInstance();
 	DeltaTime& deltaTime = DeltaTime::GetInstance();
 
+	//　====================[　UI表示マシンを回転させる　]
 	m_moveTime += deltaTime.GetDeltaTime();
 
-	m_hitFlag = HitObject_RageSet(pINP.GetMousePosScreen(),64,64, BIG_BOX_RAGEPERCENT);
+	//　====================[　選択ボックスの設定　]
+	//　　|=>　設置
+	m_spawnBox->HitMouse();
+	m_spawnBox->SetActiveFlag(false);
+	//　　|=>　LvUP
+	m_selectLvUpBox->HitMouse();
+	m_selectLvUpBox->SetActiveFlag(false);
 
+	//　　|=>　修繕
+	m_repairBox->HitMouse();
+	m_repairBox->SetActiveFlag(false);
 
+	//　　|=>　破壊
+	m_dismantlingBox->HitMouse();
+	m_dismantlingBox->SetActiveFlag(false);
 
+	// 次のマシンへ
+	m_nextMachineArrow->HitMouse();
 
-
+	// 前のマシンへ
+	m_backMachineArrow->HitMouse();
 
 }
 
@@ -93,20 +108,24 @@ void MachineExplanation::Update_MachineData(AlchemicalMachineObject* object)
 {
 
 	DataManager& pDataM = *DataManager::GetInstance();
-
-	// LvUp用の選択ボックスの設定
-	m_selectLvUpBox->HitMouse();
-
 	// クリスタルを減らす
 	DataManager& pDM = *DataManager::GetInstance();
+
+	// Noneマシンを選択しているときのみ反応する
+	m_spawnBox->SetActiveFlag(object->GetModelID() == MACHINE_TYPE::NONE);
+
+	//　====================[　早期リターン　]
+	//　　|=>　選択中がNoneマシン
+	if (m_spawnBox->GetActiveFlag()) return;
 
 	// Lvが上限または変更後のクリスタルが0以下
 	m_selectLvUpBox->SetActiveFlag(object->GetLv() <= 5 && pDM.GetNowCrystal() - object->GetNextLvCrystal() >= 0);
 
-	if (m_selectLvUpBox->ClickMouse()) 		object->LvUp();
-
+	if (m_selectLvUpBox->ClickMouse())
+	{
+		object->LvUp();
+	}
 	// 修繕用の選択ボックスの設定
-	m_repairBox->HitMouse();
 	m_repairBox->SetActiveFlag(pDataM.GetNowCrystal() - object->GetRepairCrystal() >= 0 && object->GetHP() < object->GetMAXHP());
 
 	// 修繕選択ボックスを押す　現在のCrystal量から修繕に掛かるCrystal量が0以上ならば実行
@@ -117,7 +136,6 @@ void MachineExplanation::Update_MachineData(AlchemicalMachineObject* object)
 	}
 
 	// 破壊用の選択ボックス
-	m_dismantlingBox->HitMouse();
 	m_dismantlingBox->SetActiveFlag(pDataM.GetNowCrystal() + object->GetDismantlingCrystal() <= pDataM.GetNowCrystal_MAX());
 
 	// 破壊選択ボックスを押す　現在のCrystal量から増加するCrystal量が最大値以下ならば実行
@@ -126,38 +144,30 @@ void MachineExplanation::Update_MachineData(AlchemicalMachineObject* object)
 		pDataM.SetNowCrystal(pDataM.GetNowCrystal() + object->GetDismantlingCrystal());
 	}
 
-
 }
 
 void MachineExplanation::Draw()
 {
-	auto pSB = ShareData::GetInstance().GetSpriteBatch();
+	// 設置＆ディスプレイ用UI
+	m_spawnBox		->DrawUI();
 
-	pSB->Begin(DirectX::SpriteSortMode_Deferred, ShareData::GetInstance().GetCommonStates()->NonPremultiplied());
+	//　====================[　マシン干渉計UIの表示　]
+	//　　|=>　設置＆ディスプレイUIのアクティブがTrueであるときはNoneであるため、それ以外であれば表示を行う
+	if (!m_spawnBox->GetActiveFlag())
+	{
+		// LVUP用UI
+		m_selectLvUpBox->DrawUI(SpriteLoder::LVUP);
 
-	// 画像のサイズ
-	RECT srcRect = {0, 0, 64, 64 };
+		// 修繕用UI
+		m_repairBox->DrawUI(SpriteLoder::REPAIR);
 
-	// ログの色
-	SimpleMath::Color colour = SimpleMath::Color(0.8f, 0.8f, 0.8f, 0.8f);
+		// 解体用UI
+		m_dismantlingBox->DrawUI(SpriteLoder::DISMATIONG);
+	}
 
-	// BOX描画
+	m_nextMachineArrow->Draw();
+	m_backMachineArrow->Draw();
 
-	SimpleMath::Vector2 miniBox_pos = { m_data.pos.x + MINI_BOX_POS.x ,m_data.pos.y + MINI_BOX_POS.y };
-
-	// 内部BOX (オブジェクトを配置する箇所)
-	pSB->Draw(m_texture.Get(), miniBox_pos, &srcRect, colour, 0.0f, XMFLOAT2(64 / 2,64 / 2), 1.5f);
-
-	pSB->End();
-
-	// LVUP用UI
-	m_selectLvUpBox->DrawUI(SpriteLoder::LVUP);
-
-	// 修繕用UI
-	m_repairBox->DrawUI(SpriteLoder::REPAIR);
-
-	// 解体用UI
-	m_dismantlingBox->DrawUI(SpriteLoder::DISMATIONG);
 }
 
 void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* secondModel, AlchemicalMachineObject* object)
@@ -168,18 +178,18 @@ void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* se
 
 	// モデル情報(位置,大きさ)
 	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
-	modelData = SimpleMath::Matrix::CreateScale(0.35f,0.35f, 0.35f);
+	modelData = SimpleMath::Matrix::CreateScale(0.3f,0.3f, 0.3f);
 
 	modelData *= SimpleMath::Matrix::CreateRotationX(-20);
 	modelData *= SimpleMath::Matrix::CreateRotationZ(m_moveTime);
 
 	// ワールド座標変換
-	SimpleMath::Vector3 worldPos = CalcScreenToXZN((int)m_data.pos.x - 86,
-															(int)m_data.pos.y,
-															pDR->GetOutputSize().right,
-															pDR->GetOutputSize().bottom,
-															m_camera->GetViewMatrix(),
-															m_camera->GetProjectionMatrix());
+	SimpleMath::Vector3 worldPos = CalcScreenToXZN((int)m_data.pos.x,
+												   (int)m_data.pos.y,
+												   pDR->GetOutputSize().right,
+												   pDR->GetOutputSize().bottom,
+												   m_camera->GetViewMatrix(),
+												   m_camera->GetProjectionMatrix());
 
 	worldPos.z = 4.25f;
 
@@ -220,7 +230,6 @@ bool MachineExplanation::OnMouse()
 
 void MachineExplanation::Finalize()
 {
-	m_texture.Reset();
 	m_camera.reset();
 }
 
@@ -240,6 +249,10 @@ SelectionBox* MachineExplanation::GetMenuButton(int buttonType)
 	case 2:
 		//　　|=>　強化
 		return m_selectLvUpBox.get();
+
+	case 3:
+		//　　|=>　召喚
+		return m_spawnBox.get();
 	}
 
 	// それ以外の場合は修繕を選択する
@@ -261,4 +274,19 @@ bool MachineExplanation::GetRepairFlag()
 bool MachineExplanation::GetLvUpFlag()
 {
 	return m_selectLvUpBox->ClickMouse();
+}
+
+bool MachineExplanation::GetSpawnFlag()
+{
+	return m_spawnBox->ClickMouse();
+}
+
+bool MachineExplanation::GetNextMachineFlag()
+{
+	return m_nextMachineArrow->ClickMouse();
+}
+
+bool MachineExplanation::GetBackMachineFlag()
+{
+	return m_backMachineArrow->ClickMouse();;
 }

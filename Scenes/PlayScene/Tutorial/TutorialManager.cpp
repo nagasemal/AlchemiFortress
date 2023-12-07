@@ -146,11 +146,11 @@ void TutorialManager::Render()
 			  &rect,SimpleMath::Color(1.0f,1.0f,1.0f, transparent), 0.0f,
 			  SimpleMath::Vector2((float)m_texWidth / 2.0f, TEX_H),0.7f);
 
+	pSB->End();
+
 	// –îˆó•`‰æ
 	if (m_leftArrow ->GetActiveFlag()) m_leftArrow	->Draw();
 	if (m_rightArrow->GetActiveFlag()) m_rightArrow	->Draw();
-
-	pSB->End();
 
 	m_machineSelectParticle->Render();
 

@@ -99,9 +99,47 @@ void ShareJsonData::LoadingJsonFile_ClearData(int number)
 	m_clearData = Json::FileLoad_StageClearData(filePath);
 }
 
-void ShareJsonData::LoadingUIData()
+void ShareJsonData::LoadingUIData(std::string tagName)
 {
+	//　====================[　新しく連想配列を生成　]
+	m_uiDatas.insert(std::make_pair(tagName,UI_Data()));
 
+	//　====================[　tagNameに応じたファイルパスを生成　]
+	std::ostringstream oss;
+	oss << tagName;
+	std::string filePath = "Resources/Json/GameParameter/UILayout_" + oss.str() + ".json";
+
+	//　====================[　生成したデータを代入　]
+	m_uiDatas[tagName] = Json::FileLoad_UIData(filePath);
+
+	//　====================[　Offsetが名前に入っている時の処理　]
+	//　　|=>　[変数]　タグを識別する
+	std::string tag = std::string();
+
+	for (size_t i = 0; i < tagName.size(); i++)
+	{
+		//　　|=>　[条件]　入力されたタグのi番目以降の配列がOffset
+		if (tagName.substr(i) == "Offset")
+		{
+			//　　|=>　Offset前のタグ名を取得する
+			tag = tagName.substr(0,i);
+		}
+
+	}
+
+	// タグのサイズが0ならば処理を行う必要はない
+	if (tag.size() == 0) return;
+
+	for (auto it = m_uiDatas.begin(); it != m_uiDatas.end(); it++)
+	{
+		//　　|=>　抜き出したタグ名と同値のタグ名を検出
+		if (it->first.substr(0, tag.size()) == tag)
+		{
+			//　　|=>　位置,大きさの情報を加算する
+			it->second.pos	+= m_uiDatas[tagName].pos;
+			it->second.rage += m_uiDatas[tagName].rage;
+		}
+	}
 
 
 }
@@ -134,6 +172,17 @@ const Stage_ClearData ShareJsonData::GetClearData()
 const Game_Parameter ShareJsonData::GetGameParameter()
 {
 	return m_gameParam;
+}
+
+const UI_Data ShareJsonData::GetUIData(std::string tagName)
+{
+
+	if (&m_uiDatas[tagName] == nullptr)
+	{
+		assert("存在していないUIデータを参照しています");
+	}
+
+	return m_uiDatas[tagName];
 }
 
 void ShareJsonData::StageDataCleanUP()

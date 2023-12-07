@@ -42,13 +42,11 @@ AlchemicalMachineFilter::AlchemicalMachineFilter():
 			// 今回はライトだけ欲しい
 			auto lights = dynamic_cast<IEffectLights*>(effect);
 			// 色変更
-			lights->SetLightDiffuseColor(0, SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
-			lights->SetLightDiffuseColor(1, SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
-			lights->SetLightDiffuseColor(2, SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
+			lights->SetLightDiffuseColor(0,	Colors::White);
+			lights->SetLightDiffuseColor(1, Colors::White);
+			lights->SetLightDiffuseColor(2, Colors::White);
 
 		});
-
-
 
 }
 
@@ -56,16 +54,6 @@ AlchemicalMachineFilter::~AlchemicalMachineFilter()
 {
 
 }
-
-//AlchemicalMachineObject* alchemicalMachine[AlchemicalMachineObject::MACHINE_TYPE::NUM]
-//{
-//	new AM_None,
-//	new AM_Attacker,
-//	new AM_Defenser,
-//	new AM_Mining,
-//	new AM_Recovery,
-//	new AM_Upper,
-//};
 
 Model* AlchemicalMachineFilter::HandOverAMModel(MACHINE_TYPE type)
 {
@@ -104,15 +92,10 @@ void AlchemicalMachineFilter::Finalize()
 {
 	// リソースの解放
 	m_model[MACHINE_TYPE::NONE].reset();
-
 	m_model[MACHINE_TYPE::ATTACKER].reset();
-
 	m_model[MACHINE_TYPE::DEFENSER].reset();
-
 	m_model[MACHINE_TYPE::MINING].reset();
-
 	m_model[MACHINE_TYPE::RECOVERY].reset();
-
 	m_model[MACHINE_TYPE::UPPER].reset();
 	
 	m_model->reset();

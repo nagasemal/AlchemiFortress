@@ -927,3 +927,62 @@ Game_Parameter Json::FileLoad_GameParameter(const std::string filePath)
 
 	return data;
 }
+
+UI_Data Json::FileLoad_UIData(const std::string filePath)
+{
+	//	読み込み用変数
+	std::ifstream ifs;
+
+	//	ファイル読み込み
+	ifs.open(filePath, std::ios::binary);
+
+	//	読み込みチェック
+	//	ifs変数にデータがなければエラー
+	assert(ifs);
+
+	//	Picojsonへ読み込む
+	picojson::value val;
+	ifs >> val;
+
+	//	ifs変数はもう使わないので閉じる
+	ifs.close();
+
+	UI_Data uiData = UI_Data();
+
+	//　====================[　階層を辿る　]
+	picojson::object layout = val.get<picojson::object>()["UILAYOUT"].get<picojson::object>();
+	picojson::object master = layout["MASTER"].get<picojson::object>();
+
+	//　====================[　取得した値を入力　]
+	uiData.pos.x = master["POS_X"].get<double>();
+	uiData.pos.y = master["POS_Y"].get<double>();
+
+	uiData.rage.x = master["RAGE_X"].get<double>();
+	uiData.rage.y = master["RAGE_Y"].get<double>();
+
+	picojson::array optionVals = master["OPTION"].get<picojson::array>();
+
+	//　====================[　配列から追加要素を得る　]
+	//　　|=>　追加要素
+	for (picojson::array::iterator it = optionVals.begin(); it != optionVals.end(); it++)
+	{
+		std::string tagName = it->get<picojson::object>()["TAG"].get<std::string>();
+		float val = it->get<picojson::object>()["VAL"].get<double>();
+
+		uiData.option.insert(std::make_pair(tagName, val));
+	}
+
+	picojson::array keys = master["KEYS"].get<picojson::array>();
+
+	//　　|=>　キー設定
+	for (picojson::array::iterator it = keys.begin(); it != keys.end(); it++)
+	{
+		//　　|=>　文字列で取得した16進数を10進数に変換
+		int num = strtol(it->get<picojson::object>()["CODE"].get<std::string>().c_str(), NULL, 16);
+		//　　|=>　Keys型に変換
+		uiData.key.push_back((Keyboard::Keys)static_cast<unsigned char>(num));
+	}
+
+
+	return uiData;
+}

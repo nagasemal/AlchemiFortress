@@ -64,6 +64,26 @@ void Crystal::Render(Model* model)
 
 }
 
+void Crystal::WriteDepth(DirectX::Model* model)
+{
+	ShareData& pSD = ShareData::GetInstance();
+
+	// ƒ‚ƒfƒ‹î•ñ(ˆÊ’u,‘å‚«‚³)
+	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
+	modelData = SimpleMath::Matrix::CreateScale(m_data.rage);
+	modelData *= SimpleMath::Matrix::CreateRotationY(m_rotateY);
+	modelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y, m_data.pos.z);
+
+	;
+
+	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false, [&]()
+		{
+
+			ModelShader::GetInstance().ShadowModelDraw(false);
+
+		});
+}
+
 bool Crystal::DeleteRequest()
 {
 	return false;

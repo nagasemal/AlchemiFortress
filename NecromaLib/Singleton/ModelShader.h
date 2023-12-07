@@ -85,7 +85,7 @@ public:
 	/// モデル描画設定に使用するヴァーテックスシェーダーを返します
 	/// </summary>
 	/// <returns></returns>
-	Microsoft::WRL::ComPtr<ID3D11VertexShader> GetModelMyShader_VS() { return m_modelMyShader_VS; }
+	Microsoft::WRL::ComPtr<ID3D11VertexShader> GetModelMyShader_VS() { return m_modelMyShader_VS; }	
 
 	DirectX::Model* GetMagicTrauabgukarPyram() { return m_magicTrauabgukarPyram.get(); }
 	
@@ -133,6 +133,19 @@ public:
 	/// <param name="color">色情報</param>
 	void DrawAuraEffect(float time,SimpleMath::Vector3 pos, SimpleMath::Vector3 rage,SimpleMath::Color color = SimpleMath::Color(1.0f,1.0f,1.0f,1.0f));
 
+public:
+
+	/// <summary>
+	/// 影描画の描画設定
+	/// </summary>
+	void ShadowModelDraw(bool outlineFlag = true);
+
+	// シャドウマップ用（レンダーテクスチャ）
+	DX::RenderTexture* GetShadowMap() { return m_shadowMapRT.get(); }
+	// 深度バッファ用テクスチャ
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> GetDepathTexture2D() { return m_depathTexture2D; }
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> GetDepthStencilView() { return m_depathStencilView; }
+
 private:
 
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_depthStencilState_Base;
@@ -150,10 +163,17 @@ private:
 		SimpleMath::Color LimLightColor;	// リムライトのカラー
 		SimpleMath::Vector4 eyes;			// 注視点(4の倍数しか受け取れない為、Vector4とする)
 
+
+		SimpleMath::Vector4 LightPos;
+
 		SimpleMath::Vector4 mousePos;		// ポイントライトの位置
 
 		SimpleMath::Vector4 crystalPos[10];		// クリスタルの位置
+
+		SimpleMath::Matrix view;			// ビュー行列
+		SimpleMath::Matrix proj;			// プロジェクション行列
 	};
+
 
 	// マシンモデルに使用するシェーダー
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_machineModelShader_PS;
@@ -161,10 +181,16 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_modelMyShader_PS;
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> m_modelMyShader_VS;
 
+	//　====================[　アウトライン描画に使用　]
+	Microsoft::WRL::ComPtr<ID3D11VertexShader> m_modelOutLineShader_VS;
+	// インプットレイアウト(アウトライン用)
+	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputOutlineLayout;
+
+
 	// モデルを用いたエフェクトに用いるシェーダー
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_modelEffect_PS;
 
-	// インプットレイアウト
+	// インプットレイアウト(通常描画用)
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
 
 	// 受け渡し用のコンスタントバッファ
@@ -180,5 +206,25 @@ private:
 
 	// シェーダー用時間変数
 	float m_shaderTimer;
+
+	SimpleMath::Vector4 m_lightPos;
+
+private:
+
+	// 定数バッファへのポインタ
+	Microsoft::WRL::ComPtr<ID3D11Buffer> m_shadowConstantBuffer;
+
+	// 影描画(深度テクスチャに書き込むために)使用するシェーダー
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_depathShadowShader_PS;
+	Microsoft::WRL::ComPtr<ID3D11VertexShader> m_depathShadowShader_VS;
+
+	// シャドウマップ用（レンダーテクスチャ）
+	std::unique_ptr<DX::RenderTexture>					m_shadowMapRT;
+	// 深度バッファ用テクスチャ
+	Microsoft::WRL::ComPtr<ID3D11Texture2D>				m_depathTexture2D;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>      m_depathStencilView;
+
+	// サンプラー
+	Microsoft::WRL::ComPtr<ID3D11SamplerState>			m_shadowMapSampler;
 
 };

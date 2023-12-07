@@ -49,8 +49,8 @@ public:
 	// クリアデータのjsonファイルを読み込む
 	void LoadingJsonFile_ClearData(int number);
 
-	// 全UIのレイアウトを取得する
-	void LoadingUIData();
+	// UIのレイアウトを取得する
+	void LoadingUIData(std::string tagName);
 
 public:
 
@@ -71,6 +71,9 @@ public:
 
 	// ゲーム内のパラメータを渡す
 	const Game_Parameter GetGameParameter();
+
+	// UIの配置を渡す
+	const UI_Data GetUIData(std::string tagName);
 
 	// ステージデータの中身を全て消す(メモリ領域の圧迫を防ぐため)
 	void StageDataCleanUP();
@@ -100,5 +103,8 @@ private:
 
 	// ゲーム内パラメータ
 	Game_Parameter m_gameParam;
+
+	// UIの位置大きさその他情報を持った配列
+	std::unordered_map<std::string, UI_Data> m_uiDatas;
 
 };

@@ -65,6 +65,25 @@ void Field::Render(DirectX::Model* model)
 		});
 }
 
+void Field::WriteDepth(DirectX::Model* model)
+{
+
+	ShareData& pSD = ShareData::GetInstance();
+
+	//　====================[　位置や大きさの行列を生成　]
+	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
+	modelData = SimpleMath::Matrix::CreateScale(m_data.rage);
+	modelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y, m_data.pos.z);
+
+	//　====================[　床を描画　]
+	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false, [&]()
+		{
+
+			ModelShader::GetInstance().ShadowModelDraw(false);
+
+		});
+}
+
 void Field::Finalize()
 {
 }

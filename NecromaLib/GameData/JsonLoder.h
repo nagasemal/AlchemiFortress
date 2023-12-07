@@ -10,7 +10,7 @@
 
 #pragma once
 #include <string>
-#include <map>
+#include <unordered_map>
 
 #include "NecromaLib/GameData/CommonStruct.h"
 
@@ -134,9 +134,10 @@ struct Stage_ClearData
 
 struct UI_Data
 {
-	SimpleMath::Vector2 pos;				// ポジション
-	SimpleMath::Vector2 rage;				// 大きさ
-	std::map<std::string,float> option;		// 追加記述の値
+	SimpleMath::Vector2 pos;							// ポジション
+	SimpleMath::Vector2 rage;							// 大きさ
+	std::unordered_map<std::string,float> option;		// 追加記述の値
+	std::vector<Keyboard::Keys> key;						// キーコード
 };
 
 struct Game_Parameter

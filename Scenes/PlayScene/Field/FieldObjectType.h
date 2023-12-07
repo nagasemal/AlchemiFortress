@@ -16,6 +16,8 @@ public:
 
 	virtual void Render(DirectX::Model* model) = 0;
 
+	virtual void WriteDepth(DirectX::Model* model) = 0;
+
 protected:
 
 };

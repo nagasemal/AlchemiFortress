@@ -2,6 +2,7 @@
 #include "BaseLv.h"
 
 #include "NecromaLib/Singleton/ShareData.h"
+#include "NecromaLib/Singleton/ShareJsonData.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
 
 #include "Scenes/PlayScene/UI/Number.h"
@@ -13,6 +14,9 @@ BaseLv::BaseLv()
 {
 	auto device = ShareData::GetInstance().GetDevice();
 
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
+
+
 	//シェーダーにデータを渡すためのコンスタントバッファ生成
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
@@ -22,16 +26,14 @@ BaseLv::BaseLv()
 	bd.CPUAccessFlags = 0;
 	device->CreateBuffer(&bd, nullptr, &m_cBuffer);
 
+	//　====================[　マシンUIの情報を取得　]
+	UI_Data uiData = pSJD.GetUIData("GaugeBaseLv");
 
 	auto windowSize = ShareData::GetInstance().GetDeviceResources()->GetOutputSize();
 	Create(L"Resources/Textures/MagicCircle/Attacker.png");
 	LoadShaderFile(L"BaseLv");
-	SetWindowSize(windowSize.right, windowSize.bottom);
-	SetColor(SimpleMath::Color(1.0f,1.0f,1.0f,1.0f));
-	SetPosition(SimpleMath::Vector2(70.0f, 70.0f));
-	SetScale(SimpleMath::Vector2(0.15f, 0.15f));
 
-	m_baseLvRender = std::make_unique<Number>(m_position,m_scale * 3.5f);
+	m_baseLvRender = std::make_unique<Number>(uiData.pos, uiData.rage * uiData.option["NUMBER_RAGE"]);
 
 	m_expRedio = 0.0f;
 }
@@ -56,6 +58,11 @@ void BaseLv::Render()
 {
 
 	auto context = ShareData::GetInstance().GetContext();
+	auto windowSize = ShareData::GetInstance().GetDeviceResources()->GetOutputSize();
+
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
+	UI_Data uiData = pSJD.GetUIData("GaugeBaseLv");
+
 	// 頂点情報
 	// Position.xy	:拡縮用スケール
 	// Position.z	:アンカータイプ(0～8)の整数で指定
@@ -63,16 +70,16 @@ void BaseLv::Render()
 	// Color.zw		:画像サイズ
 	// Tex.xy		:ウィンドウサイズ（バッファも同じ。こちらは未使用）
 	VertexPositionColorTexture vertex[1] = {
-		VertexPositionColorTexture(SimpleMath::Vector3(m_scale.x, m_scale.y, static_cast<float>(MIDDLE_CENTER))
-		, SimpleMath::Vector4(70.0f, 70.0f, static_cast<float>(m_textureWidth), static_cast<float>(m_textureHeight))
+		VertexPositionColorTexture(SimpleMath::Vector3(uiData.rage.x, uiData.rage.y, static_cast<float>(MIDDLE_CENTER))
+		, SimpleMath::Vector4(uiData.pos.x,uiData.pos.y, static_cast<float>(m_textureWidth), static_cast<float>(m_textureHeight))
 		, SimpleMath::Vector2(m_expRedio,0.8f))
 	};
 
 	//シェーダーに渡す追加のバッファを作成する。(ConstBuffer）
 	ConstBuffer cbuff;
-	cbuff.windowSize = SimpleMath::Vector4(static_cast<float>(m_windowWidth), static_cast<float>(m_windowHeight), 1, 1);
-	cbuff.base_color = m_color;
-	cbuff.second_color = SECOND_COLOR;
+	cbuff.windowSize = SimpleMath::Vector4(static_cast<float>(windowSize.right), static_cast<float>(windowSize.bottom), 1, 1);
+	cbuff.base_color = Colors::Gray;
+	cbuff.second_color = Colors::Aqua;
 
 	//受け渡し用バッファの内容更新(ConstBufferからID3D11Bufferへの変換）
 	context->UpdateSubresource(m_cBuffer.Get(), 0, NULL, &cbuff, 0, 0);
@@ -101,6 +108,8 @@ void BaseLv::Render()
 	context->PSSetShader(nullptr, nullptr, 0);
 
 	// 拠点Lvの描画
+	m_baseLvRender->SetPosition(uiData.pos);
+	m_baseLvRender->SetRage(uiData.rage * uiData.option["NUMBER_RAGE"]);
 	m_baseLvRender->Render();
 
 }

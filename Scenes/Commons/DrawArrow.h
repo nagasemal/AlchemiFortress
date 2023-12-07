@@ -24,8 +24,12 @@ public:
 
 	void SetDirection(int direction) { m_direction = direction; }
 
+	DrawKey* GetDrawKey() { return m_drawKey.get(); }
+
 private:
 
 	int m_direction;
+
+	std::unique_ptr<DrawKey> m_drawKey;
 
 };

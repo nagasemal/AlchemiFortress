@@ -3,6 +3,8 @@
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
 
+#include "Scenes/Commons/DrawKey.h"
+
 DrawArrow::DrawArrow(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage,int direction)
 {
 	m_saveData.pos = m_data.pos = pos;
@@ -10,6 +12,8 @@ DrawArrow::DrawArrow(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage,int direc
 	m_direction = direction;
 
 	m_boxColor = { 1.0f,1.0f,1.0f,1.0f };
+
+	m_drawKey = std::make_unique<DrawKey>(this);
 
 }
 
@@ -20,12 +24,16 @@ DrawArrow::~DrawArrow()
 void DrawArrow::Update()
 {
 	m_keySelectFlag = false;
+
+
+	m_drawKey->Update();
+
 }
 
 void DrawArrow::Draw()
 {
-	auto pSB = ShareData::GetInstance().GetSpriteBatch();
-
+	ShareData& pSD = ShareData::GetInstance();
+	auto pSB = pSD.GetSpriteBatch();
 	auto pSL = &SpriteLoder::GetInstance();
 
 	// 画像のサイズ
@@ -38,6 +46,9 @@ void DrawArrow::Draw()
 
 	if (HoldMouse()) colour = { 0.7f, 0.7f, 0.7f, 1.0f };
 
+
+	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
+
 	// 選択BOX
 	pSB->Draw(pSL->GetUIArrow().Get(),
 		m_data.pos,
@@ -46,6 +57,11 @@ void DrawArrow::Draw()
 		XMConvertToRadians(90.0f * m_direction),
 		DirectX::XMFLOAT2(64 / 2, 64 / 2),
 		m_data.rage);
+
+	pSB->End();
+
+	m_drawKey->Draw();
+
 }
 
 

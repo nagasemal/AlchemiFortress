@@ -20,7 +20,7 @@ MoveCamera::MoveCamera()
 	, m_view(SimpleMath::Matrix::Identity)
 	, m_eye(0.0f, 0.0f, 0.0f)
 	, m_target{ 0.f }
-	, m_saveTarget{ 0.f }
+	, m_nextTarget{ 0.f }
 	, m_moveLock()
 	, m_time()
 	, m_targetChangeTime()
@@ -62,7 +62,10 @@ void MoveCamera::Update(bool scroll, bool move)
 	m_move.y = m_time * 1.2f;
 	m_move.z = m_time * 1.3f;
 
+
 	m_targetChangeTime += DeltaTime::GetInstance().GetDeltaTime() * 1.15f;
+
+	//m_target = SimpleMath::Vector3::Lerp(m_target,m_saveTarget, m_targetChangeTime);
 
 	// カメラ移動をするか否か
 	if (move)
@@ -73,46 +76,42 @@ void MoveCamera::Update(bool scroll, bool move)
 			DraggedDistance(state.x, state.y);
 		}
 
-	// マウスの座標を前回の値として保存
-	m_prevX = state.x;
-	m_prevY = state.y;
+		// マウスの座標を前回の値として保存
+		m_prevX = state.x;
+		m_prevY = state.y;
 
 	}
 
-	// スクロールをするか否か
-	//if (scroll)
-	//{
-		int value = state.scrollWheelValue - m_prevWheelValue;
-		int newValue = m_scrollWheelValue + value;
+	int value = state.scrollWheelValue - m_prevWheelValue;
+	int newValue = m_scrollWheelValue + value;
 
-		// 上限下限設定(clamp)
-		if (newValue <= MAX_SAVEWHELL) newValue = MAX_SAVEWHELL;
-		if (newValue > 0) newValue = 0;
+	// 上限下限設定(clamp)
+	if (newValue <= MAX_SAVEWHELL) newValue = MAX_SAVEWHELL;
+	if (newValue > 0) newValue = 0;
 
-		if (newValue != 0 && newValue != MAX_SAVEWHELL)
-		{
-			m_scrollWheelValue = newValue;
-		}
-		else
-		{
-			value = 0;
-		}
+	if (newValue != 0 && newValue != MAX_SAVEWHELL)
+	{
+		m_scrollWheelValue = newValue;
+	}
+	else
+	{
+		value = 0;
+	}
 
-		if (m_scrollWheelValue == MAX_SAVEWHELL && value > 0)
-		{
-			m_scrollWheelValue -= value;
-		}
-		else if (m_scrollWheelValue == 0 && value < 0)
-		{
-			m_scrollWheelValue -= value;
-		}
+	if (m_scrollWheelValue == MAX_SAVEWHELL && value > 0)
+	{
+		m_scrollWheelValue -= value;
+	}
+	else if (m_scrollWheelValue == 0 && value < 0)
+	{
+		m_scrollWheelValue -= value;
+	}
 
-		if (m_scrollWheelValue > 0)
-		{
-			m_scrollWheelValue = 0;
-			DirectX::Mouse::Get().ResetScrollWheelValue();
-		}
-	//}
+	if (m_scrollWheelValue > 0)
+	{
+		m_scrollWheelValue = 0;
+		DirectX::Mouse::Get().ResetScrollWheelValue();
+	}
 
 	// 前回の値を保存
 	m_prevWheelValue = state.scrollWheelValue;
@@ -126,17 +125,24 @@ bool MoveCamera::GetStopCameraFlag()
 	return m_time.MaxCheck();
 }
 
-void MoveCamera::TargetChange(SimpleMath::Vector3 targetA, SimpleMath::Vector3 targetB)
+void MoveCamera::TargetChange(SimpleMath::Vector3 target)
 {
 
 	// カメラの動きを行わないようにする
 	if (m_moveLock) return;
 
-	SimpleMath::Vector3 diffpos = targetA - targetB;
+	m_nextTarget = target;
 
-	m_target.x = Easing::EaseOutQuint(m_saveTarget.x, m_saveTarget.x - diffpos.x, m_targetChangeTime);
-	m_target.y = Easing::EaseOutBounce(m_saveTarget.y, m_saveTarget.y - diffpos.y, m_targetChangeTime);
-	m_target.z = Easing::EaseOutQuint(m_saveTarget.z, m_saveTarget.z - diffpos.z, m_targetChangeTime);
+}
+
+void MoveCamera::ResetTargetChangeTimer()
+{
+
+	if (m_targetChangeTime.MaxCheck())
+	{
+		m_targetChangeTime = 0.0f;
+	}
+
 }
 
 void MoveCamera::DraggedDistance(int x, int y)
@@ -167,7 +173,6 @@ void MoveCamera::CalculateViewMatrix()
 	SimpleMath::Matrix rt = rotY * rotX;
 
 	SimpleMath::Vector3    eye(m_move.x, m_move.y, m_move.z);
-	SimpleMath::Vector3 target(0.0f, 0.0f, 0.0f);
 	SimpleMath::Vector3     up(0.0f, 1.0f, 0.0f);
 
 	eye = SimpleMath::Vector3::Transform(eye, rt.Invert());
@@ -175,6 +180,6 @@ void MoveCamera::CalculateViewMatrix()
 	up = SimpleMath::Vector3::Transform(up, rt.Invert());
 
 	m_eye		= eye;
-	m_target	= target;
-	m_view		= SimpleMath::Matrix::CreateLookAt(eye, target, up);
+	m_target	+= (m_nextTarget - m_target) * 0.05;
+	m_view		= SimpleMath::Matrix::CreateLookAt(eye, m_target, up);
 }
