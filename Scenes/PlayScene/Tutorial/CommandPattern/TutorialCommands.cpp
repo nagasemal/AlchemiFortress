@@ -773,3 +773,42 @@ void Tutorial_TextArrow::Finalize()
 void Tutorial_TextArrow::Reset()
 {
 }
+
+Tutorial_LockAlchemi::Tutorial_LockAlchemi(bool activeFlag):
+m_activeFlag(activeFlag)
+{
+	Reset();
+}
+
+Tutorial_LockAlchemi::~Tutorial_LockAlchemi()
+{
+}
+
+void Tutorial_LockAlchemi::Initialize()
+{
+	if (m_initializeFlag) return;
+
+	// ¶‰EUIˆÚ“®‚ð‚³‚¹‚È‚­‚·‚é
+	m_tutorialManager->GetPlayScene()->
+	GetAlchemicalMachineManager()->
+	GetMachineSelect()->get()->
+	GetAlchemiButton()->SetActiveFlag(m_activeFlag);
+
+	m_initializeFlag = true;
+	m_completion = true;
+
+}
+
+void Tutorial_LockAlchemi::Execute()
+{
+	if (m_completion) return;
+	m_completion = true;
+}
+
+void Tutorial_LockAlchemi::Finalize()
+{
+}
+
+void Tutorial_LockAlchemi::Reset()
+{
+}

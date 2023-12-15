@@ -49,19 +49,21 @@ MissionManager::~MissionManager()
 void MissionManager::Initialize()
 {
 
-	// デバイスと画面サイズの確保
+	//　====================[　デバイスと画面サイズの確保　]
 	auto device = ShareData::GetInstance().GetDeviceResources();
 	int width	= device->GetOutputSize().right;
 	int height	= device->GetOutputSize().bottom;
 
-	// ステージ情報の再度読み込み
+	//　====================[　ステージ情報の再度読み込み　]
 	ReloadWave();
 
+	//　====================[　時間描画クラスの設定　]
 	m_timeRender = std::make_unique<DrawTimer>(SimpleMath::Vector2{ 140.0f,160.0f }, SimpleMath::Vector2{ 0.6f,0.6f });
 
+	//　====================[　ミッションクラスの設定　]
 	m_missionRender = std::make_unique<MissionRender>(MISSION_RENDERPOS, SimpleMath::Vector2{ 1.0f,1.0f });
 
-	// クリア時演出の生成
+	//　====================[　ステージクリア時演出クラスの設定　]
 	m_backVeil = std::make_unique<Veil>(3);
 	m_backVeil->Create(L"Resources/Textures/Fade.png");
 	m_backVeil->LoadShaderFile(L"Veil");
@@ -70,7 +72,7 @@ void MissionManager::Initialize()
 	m_backVeil->SetScale(SimpleMath::Vector2((float)width, (float)height / 5.0f));
 	m_backVeil->SetPosition(SimpleMath::Vector2(0.0f, height / 2.5f));
 
-	// Waveクリア時選出の生成
+	//　====================[　Waveクリア時演出クラスの設定　]
 	m_nextWaveTexture = std::make_unique<UserInterface>();
 	m_nextWaveTexture->Create(device,
 							  L"Resources/Textures/NextWave.png",
@@ -81,9 +83,10 @@ void MissionManager::Initialize()
 	m_nextWaveTexture->SetColor(SimpleMath::Color(0.0f, 0.6f, 1.0f, 1.0f));
 
 
-	// ステージ失敗成功時のアニメーション用変数
+	//　====================[　ステージ失敗成功時のアニメーション用変数　]
 	m_clearAnimation.max = 2.0f;
 
+	//　====================[　ミッションの開閉を行う矢印クラスの設定　]
 	m_closeButton = std::make_unique<DrawArrow>(MISSION_RENDERPOS + MISSION_CLOSEBUTTON,SimpleMath::Vector2(0.2f,1.0),2);
 	m_closeButton->Initialize();
 }
@@ -100,6 +103,7 @@ void MissionManager::Update(AlchemicalMachineManager* pAlchemicalManager, EnemyM
 	SimpleMath::Vector2 missionPos = SimpleMath::Vector2(MISSION_RENDERPOS.x - Easing::EaseInCubic(0, MISSION_CLOSEBUTTON.x, m_closeAnimation), MISSION_RENDERPOS.y);
 
 	m_missionRender->SetPos(missionPos);
+
 	m_closeButton->SetSavePos(missionPos + (MISSION_CLOSEBUTTON * 1.2f));
 	m_closeButton->HitMouse();
 
@@ -115,29 +119,29 @@ void MissionManager::Update(AlchemicalMachineManager* pAlchemicalManager, EnemyM
 	}
 
 
-	// None以外ならば通す マシンが設置された際の処理
-	if (pAlchemicalManager->SpawnMachineNotification() != MACHINE_TYPE::NONE) 							MachineMission(pAlchemicalManager);
+	//　====================[　マシンが設置された際の処理　]
+	if (pAlchemicalManager->SpawnMachineNotification()		!= MACHINE_TYPE::NONE) 						MachineMission(pAlchemicalManager);
 
-	// 錬金時に通す
+	//　====================[　マシンが錬金された　]
 	if (pAlchemicalManager->GetMachineSelect()->get()->GetManufacturingFlag() != MACHINE_TYPE::NONE)	AlchemiMission(pAlchemicalManager);
 
-	// マシンが解体されたときに通す
-	if (pAlchemicalManager->DestroyMachineNotification() != MACHINE_TYPE::NONE)							DestroyMission(pAlchemicalManager);
+	//　====================[　マシンが解体された　]
+	if (pAlchemicalManager->DestroyMachineNotification()	!= MACHINE_TYPE::NONE)						DestroyMission(pAlchemicalManager);
 
-	// マシンが修繕されたときに通す
-	if (pAlchemicalManager->RepairBoxMachineNotification() != MACHINE_TYPE::NONE)						RecoveryMission(pAlchemicalManager);
+	//　====================[　マシンが修繕された　]
+	if (pAlchemicalManager->RepairBoxMachineNotification()	!= MACHINE_TYPE::NONE)						RecoveryMission(pAlchemicalManager);
 
-	// マシンがLvUpされたときに通す
-	if (pAlchemicalManager->LvUpMachineNotification() != MACHINE_TYPE::NONE)							LvUPMission(pAlchemicalManager);
+	//　====================[　マシンがLvUPされた　]
+	if (pAlchemicalManager->LvUpMachineNotification()		!= MACHINE_TYPE::NONE)						LvUPMission(pAlchemicalManager);
 
-	// Enemyが倒された際に通す
-	if (pEnemyManager->GetKnokDownEnemyType() != ENEMY_TYPE::ENMEY_NONE) 								EnemyMission(pEnemyManager);
+	//　====================[　エネミーが倒された　]
+	if (pEnemyManager->GetKnokDownEnemyType()				!= ENEMY_TYPE::ENMEY_NONE) 					EnemyMission(pEnemyManager);
 
 	// 拠点Lvの処理
-	if (m_missonCondition[MISSION_TYPE::RESOURCE].size() > 0)																	BaseLvMission(pFieldManager->GetPlayerBase()->GetBaseLv());
+	if (m_missonCondition[MISSION_TYPE::RESOURCE].size() > 0)											BaseLvMission(pFieldManager->GetPlayerBase()->GetBaseLv());
 
 	// 時間制限の処理
-	if (m_missonCondition[MISSION_TYPE::TIMER].size() > 0)																		TimerMission();
+	if (m_missonCondition[MISSION_TYPE::TIMER].size() > 0)												TimerMission();
 
 	// リソースに変化があった際に通す
 	if (pAlchemicalManager->GetPulsMpVal() > 0.0f)		ResourceMission(pAlchemicalManager);
@@ -212,6 +216,7 @@ void MissionManager::Render()
 	m_missionRender->Render_BaseLvMission	(m_missonCondition[MISSION_TYPE::BASELV]);
 	m_missionRender->Render_TimerMission	(m_missonCondition[MISSION_TYPE::TIMER]);
 	m_missionRender->Render_ResourceMission (m_missonCondition[MISSION_TYPE::RESOURCE]);
+
 	m_missionRender->LineReset();
 
 	// 経過時間の描画
@@ -254,18 +259,8 @@ void MissionManager::ReloadWave()
 	{
 		m_missonCondition[i] = pSJD->GetStageData().condition[i];
 
-		//m_missionNum += m_missonCondition[i].size();
-
 		if (m_missonCondition[i][0].value <= 0)		m_missionSituation++;
 	}
-	//m_alchemiCondition	= pSJD->GetStageData().condition_Alchemi;
-	//m_destroyCondition	= pSJD->GetStageData().condition_Destroy;
-	//m_recoveryCondition = pSJD->GetStageData().condition_Recovery;
-	//m_lvUpCondition		= pSJD->GetStageData().condition_LvUP;
-	//m_enemyCondition	= pSJD->GetStageData().condition_Enemy;
-	//m_baseLvCondition	= pSJD->GetStageData().condition_BaseLv;
-	//m_timeCondition		= pSJD->GetStageData().condition_Time;
-	//m_resourceCondition = pSJD->GetStageData().condition_Resource;
 
 	// それぞれの内容の合計値を得る
 	m_missionNum = 
@@ -358,7 +353,6 @@ void MissionManager::AlchemiMission(AlchemicalMachineManager* alchemicalManager)
 			}
 		}
 	}
-
 
 }
 

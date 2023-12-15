@@ -165,7 +165,11 @@ void SpriteLoder::Loading()
 
 	LoadingPngFile(L"Resources/Textures/TitleText.png", m_pleaseMouseButtonText);
 
-	// マシン魔法陣
+	LoadingPngFile(L"Resources/Textures/SkySphereTexture.png", m_skySphereTexture);
+
+	LoadingPngFile(L"Resources/Textures/RampTexture.png", m_rampTexture);
+
+	//　====================[　マシンの魔法陣　]
 	{
 		LoadingPngFileData(L"Resources/Textures/MagicCircle/MajicCircle.png", m_magicCircleTexture[MACHINE_TYPE::NONE]);
 		LoadingPngFileData(L"Resources/Textures/MagicCircle/Attacker.png", m_magicCircleTexture[MACHINE_TYPE::ATTACKER]);
@@ -176,7 +180,7 @@ void SpriteLoder::Loading()
 		LoadingPngFileData(L"Resources/Textures/MagicCircle/EnemySpawn.png", m_magicCircleTexture[6]);
 	}
 
-	// マシンUIのテキスト
+	//　====================[　マシンUIのテキスト　]
 	{
 		LoadingPngFileData(L"Resources/Textures/UIText/AttackerText.png", m_machineUIText[MACHINE_TYPE::NONE]);
 		LoadingPngFileData(L"Resources/Textures/UIText/AttackerText.png", m_machineUIText[MACHINE_TYPE::ATTACKER]);
@@ -186,19 +190,25 @@ void SpriteLoder::Loading()
 		LoadingPngFileData(L"Resources/Textures/UIText/ExcavatorText.png", m_machineUIText[MACHINE_TYPE::MINING]);
 	}
 
-	// アルファベットテクスチャ
+	//　====================[　アルファベットのテクスチャ　]
 	LoadingPngFileData(L"Resources/Textures/UIText/Alphabet.png", m_alphabet);
 
+	//　====================[　UIテクスチャ　]
 	LoadingPngFileData(L"Resources/Textures/UIText/UIText.png", m_uiText);
 
+	//　====================[　ゲージ　]
+	//　　|=>　背景
 	LoadingPngFileData(L"Resources/Textures/Gauge_base.png", m_baseGageTex);
+	//　　|=>　中身
 	LoadingPngFileData(L"Resources/Textures/Gauge_main.png", m_mainGageTex);
 
-	// マシンアイコン取得
+	//　====================[　マシンUIアイコン　]
 	LoadingPngFileData(L"Resources/Textures/MachineIcons.png", m_machineIconTexture);
-	// マシンの名前文字テクスチャ取得
+
+	//　====================[　マシン名前テクスチャ　]
 	LoadingPngFileData(L"Resources/Textures/MachineNames.png", m_machineNameTextures);
-	// マシンを示す矢印アイコンのテクスチャ取得
+
+	//　====================[　矢印アイコン　]
 	LoadingPngFileData(L"Resources/Textures/ClickArrow.png", m_machineSelectArrow);
 
 }

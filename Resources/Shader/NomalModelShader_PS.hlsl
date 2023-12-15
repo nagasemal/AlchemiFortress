@@ -74,7 +74,7 @@ float4 main(PSInput input) : SV_TARGET0
 	// ノーマルマップ取得
     float3 nomalTex = NomalTexture.Sample(Sampler, input.TexCoord);
 
-    float4 diff = pow(dot(nomalTex, input.Diffuse.rgb + pointLight_crystal.rgb + pointLight_mouse.rgb), 0.5f) + ApplyLimLight(input.Normal);
+    float4 diff = pow(dot(nomalTex, input.Diffuse.rgb + pointLight_crystal.rgb + pointLight_mouse.rgb), 0.5f); /*+ ApplyLimLight(input.Normal)*/
 
     float4 color = diff;
     
@@ -90,6 +90,7 @@ float4 main(PSInput input) : SV_TARGET0
     
     color *= texInput ;
     
+    // ポイントライト加算
     color += AddScreen(color, float4(0.4, 0.4, 0.1, 0.0f)) * pointLight_mouse;
     
     color += AddScreen(color, float4(0.4, 0.0, 0.4, 0.0f)) * pointLight_crystal;

@@ -11,6 +11,7 @@
 
 class SpriteLoder;
 class MissionAnimation;
+class DrawMissionLabel;
 struct Stage_Data;
 struct Stage_Condition;
 
@@ -21,7 +22,7 @@ public:
 	MissionRender(SimpleMath::Vector2 pos,SimpleMath::Vector2 rage);
 	~MissionRender();
 
-	void Render();
+	void Update();
 	void Render(Stage_Data data);
 
 	// マシン系のミッション内容を描画
@@ -72,8 +73,6 @@ private:
 private:
 
 	std::unique_ptr<Number> m_number;
-
-	std::unique_ptr<MissionAnimation> m_missonAnimation;
 
 	SimpleMath::Vector2 m_position;
 	SimpleMath::Vector2 m_rage;

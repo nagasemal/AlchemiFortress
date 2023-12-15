@@ -361,6 +361,38 @@ private:
 };
 
 /// <summary>
+/// 錬金ボタンの錬金ロックを行う
+/// </summary>
+class Tutorial_LockAlchemi : public ICommand_Tutorial
+{
+public:
+	/// <summary>
+	/// 錬金ボタンのロックを行う
+	/// </summary>
+	Tutorial_LockAlchemi(bool activeFlag);
+	~Tutorial_LockAlchemi();
+
+	// 処理が開始した際に通す処理
+	void Initialize() override;
+	// 処理実行関数
+	void Execute() override;
+	// 処理が終了した際に通す処理
+	void Finalize() override;
+	// 初期化の内容を記述
+	void Reset() override;
+
+	void SetTutorialManagerPtr(TutorialManager* object) override { m_tutorialManager = object; }
+
+private:
+
+	// 対象のポインター
+	TutorialManager* m_tutorialManager;
+
+	bool m_activeFlag;
+
+};
+
+/// <summary>
 /// チュートリアルのテキストを進める矢印を作ります
 /// </summary>
 class Tutorial_TextArrow : public ICommand_Tutorial

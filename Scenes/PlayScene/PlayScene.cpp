@@ -14,6 +14,9 @@
 
 #define MAX_SPEED 4
 
+//
+#define SKYDORM_LIGHTCOLOR SimpleMath::Color(0.2f, 0.5f,3.3f, 1.0f)
+
 PlayScene::PlayScene()
 {
 	m_stageNumber = DataManager::GetInstance()->GetStageNum();
@@ -85,16 +88,16 @@ void PlayScene::Initialize()
 	ShareData& pSD = ShareData::GetInstance();
 	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
 	fx->SetDirectory(L"Resources/Models");
-	m_skySphere = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/SkySphere.cmo", *fx);
+	m_skySphere = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/SkyDome.cmo", *fx);
 
 	// 天球モデルのロード
 	m_skySphere->UpdateEffects([&](IEffect* effect)
 		{
-			// 今回はライトだけ欲しい
+			// ライトの取得
 			auto lights = dynamic_cast<IEffectLights*>(effect);
 
-			// 光の当たり方変更
-			lights->SetAmbientLightColor(SimpleMath::Color(0.7f, 0.7f, 1.f, 0.8f));
+			// 当たる光の色を変更
+			lights->SetAmbientLightColor(SKYDORM_LIGHTCOLOR);
 		});
 
 	// チュートリアルクラスの生成
@@ -157,7 +160,7 @@ GAME_SCENE PlayScene::Update()
 
 		m_AM_Manager->ReloadResource();
 		m_enemyManager->ReloadEnemyData();
-		m_operationInstructions->RelodeTutorial(stageData.tutorial, this);
+		//m_operationInstructions->RelodeTutorial(stageData.tutorial, this);
 		m_missionManager->ReloadWave();
 		m_tutorialManager->ChangeWave(m_missionManager->GetWave());
 
@@ -176,24 +179,24 @@ GAME_SCENE PlayScene::Update()
 	// チュートリアル中ならば以下の処理を通さない
 	if (operationNow) 		return GAME_SCENE();
 
-	m_moveCamera->Update(!m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven(), true);
+	m_moveCamera		->Update(!m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven(), true);
 
-	m_fieldManager->Update(m_enemyManager.get());
-	m_mousePointer->Update();
+	m_fieldManager		->Update(m_enemyManager.get());
+	m_mousePointer		->Update();
 
 	// ユニット(マシン)マネージャーのアップデート
-	m_AM_Manager->Update(m_fieldManager.get(),
-		m_mousePointer.get(),
-		m_enemyManager.get(),
-		m_moveCamera.get());
+	m_AM_Manager		->Update(m_fieldManager.get(),
+								 m_mousePointer.get(),
+								 m_enemyManager.get(),
+								 m_moveCamera.get());
 
-	m_missionManager->TimerUpdate();
+	m_missionManager	->TimerUpdate();
 
-	m_enemyManager->Update(m_fieldManager->GetPlayerBase()->GetPos());
+	m_enemyManager		->Update(m_fieldManager->GetPlayerBase()->GetPos());
 
-	m_resourceGauge->Update();
+	m_resourceGauge		->Update();
 
-	m_baseLv->Update(m_fieldManager.get());
+	m_baseLv			->Update(m_fieldManager.get());
 
 	bool enemyActivs = !m_enemyManager->GetEnemyData()->empty();
 
@@ -273,8 +276,8 @@ void PlayScene::Draw()
 	pSD.GetSpriteBatch()->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
 	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
-	modelData = SimpleMath::Matrix::CreateScale({ 1.8f,1.8f,1.8f });
-	modelData = SimpleMath::Matrix::CreateTranslation({ 0.0f,70.0f,0.0f });
+	modelData = SimpleMath::Matrix::CreateScale({ 1.0f,1.0f,1.0f });
+	modelData *= SimpleMath::Matrix::CreateTranslation({ 0.0f,10.0f,0.0f });
 
 	// 天球描画
 	m_skySphere->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false, [&]()
@@ -344,6 +347,16 @@ void PlayScene::DrawShadow()
 	D3D11_VIEWPORT vp = { 0.0f, 0.0f, 1280, 720, 0.0f, 1.0f };
 	context->RSSetViewports(1, &vp);
 
+	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
+	modelData = SimpleMath::Matrix::CreateScale({ 1.0f,1.0f,1.0f });
+	modelData *= SimpleMath::Matrix::CreateTranslation({ 0.0f,10.0f,0.0f });
+
+	// 天球描画
+	m_skySphere->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false, [&]()
+		{
+			ModelShader::GetInstance().ShadowModelDraw(false);
+		});
+
 	m_fieldManager->WriteDepath();
 
 	m_AM_Manager->WriteDepath();
@@ -387,12 +400,6 @@ void PlayScene::DrawUI()
 	m_operationInstructions->Render_Layer2();
 
 	m_tutorialManager->Render_Layer2();
-
-	//SimpleMath::Vector2 origin = SimpleMath::Vector2(1280, 1280);
-	//RECT rect = { 0,0,origin.x,origin.y };
-	//pSB->Begin();
-	//pSB->Draw(pSL->GetMagicCircleTexture(0).Get(), SimpleMath::Vector2(), &rect, Colors::White, 0.0f, origin / 2, 0.3f);
-	//pSB->End();
 
 }
 

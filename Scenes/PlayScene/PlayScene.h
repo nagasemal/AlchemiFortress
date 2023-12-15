@@ -114,7 +114,7 @@ private:
 	std::unique_ptr<Explanation>				m_explanation;
 
 	// 天球モデル
-	std::unique_ptr<DirectX::Model>				m_skySphere;
+	std::unique_ptr<Model>						m_skySphere;
 
 	// 倍速ボタン
 	std::unique_ptr<SelectionBox>				m_doubleSpeedButton; 

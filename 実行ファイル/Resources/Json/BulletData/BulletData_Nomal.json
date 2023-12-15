@@ -1,0 +1,10 @@
+{
+  "Status": {
+    "ELEMENT": "Nomal",
+    "STR": 20.0,
+    "SPEED": 8.0,
+    "SPAN": 7.5,
+    "LIFE": 11.0,
+    "LOSSMP": 25.0
+  }
+}

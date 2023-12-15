@@ -320,26 +320,27 @@ void AlchemicalMachineManager::Update(
 		Update_Recovery(i,enemys);
 	}
 
-	// 配列外参照を避けるために-1を弾く
+	//　====================[　マシンに変化が起こった際の処理　]
+	//　　|=> 配列外参照を避けるために-1を弾く
 	if (m_selectNumber != -1)
 	{
 
-		// 解体された通知を受け取る
+		// 解体された通知(マシン)を受け取る
 		if (m_machineExplanation->GetDismantlingFlag())
 		{
 			Dismantling(m_selectNumber);
 		}
 
-		// 修繕された通知を受け取る
+		// 修繕された通知(マシン)を受け取る
 		if (m_machineExplanation->GetRepairFlag())
 		{
-			m_recoveryMachine = m_AMObject[m_selectNumber]->GetModelID();
+			m_recoveryMachine = m_AMObject[m_selectNumber]	->GetModelID();
 		}
 
-		// LvUpされた通知を受け取る
+		// LvUpされた通知(マシン)を受け取る
 		if (m_machineExplanation->GetLvUpFlag())
 		{
-			m_lvUpMachine = m_AMObject[m_selectNumber]->GetModelID();
+			m_lvUpMachine = m_AMObject[m_selectNumber]		->GetModelID();
 		}
 
 	}
@@ -348,10 +349,11 @@ void AlchemicalMachineManager::Update(
 	SpawnAMMachine((leftRelease && !pINP.GetHitUI() && m_allHitObjectToMouse) || m_machineExplanation->GetSpawnFlag());
 
 	//　====================[　魔力リソースの増加　]
+	//　　|=>　周期が来る　回転が止まっていない
 	if (m_mpPulsTimer >= MPPLUSTIME && !m_rotationStop)
 	{
-		m_mpPulsTimer = 0;
-		m_mpPulsVal += ((int)MPPLUSNUM * ((amNum - amNum_Nomal) / MPPUSLMACHINE));
+		m_mpPulsTimer	= 0;
+		m_mpPulsVal		+= ((int)MPPLUSNUM * ((amNum - amNum_Nomal) / MPPUSLMACHINE));
 		pDM.SetNowMP(pDM.GetNowMP() + m_mpPulsVal);
 	}
 

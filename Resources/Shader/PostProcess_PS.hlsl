@@ -1,7 +1,8 @@
 #include "PostProcess.hlsli"
 
-Texture2D tex : register(t0);
-Texture2D dTex : register(t1);
+Texture2D tex       : register(t0);
+Texture2D dTex      : register(t1);
+Texture2D rampTex   : register(t2);
 
 SamplerState samLinear : register(s0);
 
@@ -26,7 +27,7 @@ float AddOutLine(float power, float2 uv, float offset)
     
     lineflag -= 8 * step(offset, dTex.Sample(samLinear, float2(uv.x, uv.y)).g);
     
-    // 上のテクスチャ
+    // 下のテクスチャ
     lineflag += step(offset, dTex.Sample(samLinear, float2(uv.x, uv.y - power)).g);
     
     // 左のテクスチャ
@@ -77,18 +78,21 @@ float4 AddScreen(float4 color,float4 screenCol)
     return 1 - (1 - color) * (1 - screenCol);
 }
 
-float4 AddOverLay(float4 color,float4 overLayCol)
+float4 AddOverLay(float4 color, float4 overLayCol)
 {
-    
-    half4 ovly_mul = 2 * color * overLayCol;
-    half4 ovly_scr = 1 - 2 * (1 - color) * (1 - overLayCol);
+    // オーバーレイの計算に使用する変数を宣言
+    half4 ovly_mul = 2 * color * overLayCol; // カラーとオーバーレイの乗算
+    half4 ovly_scr = 1 - 2 * (1 - color) * (1 - overLayCol); // スクリーン合成の計算
+
+    // オーバーレイの結果を計算
     half4 ovly = step(color, 0.5) * ovly_mul + (1 - step(color, 0.5)) * ovly_scr;
-    half4 hdlgt = step(overLayCol, 0.5) * ovly_mul + (1 - step(overLayCol,0.5)) * ovly_scr;
 
+    // ハイライトの計算（オーバーレイの色が0.5より大きい場合はオーバーレイの結果を使い、そうでない場合は元の色を使う）
+    half4 hdlgt = step(overLayCol, 0.5) * ovly_mul + (1 - step(overLayCol, 0.5)) * ovly_scr;
+
+    // ハイライトの色を返す
     return hdlgt;
-
 }
-
 float4 main(PS_INPUT input) : SV_TARGET
 {   
     // 注視点との距離を算出
@@ -96,23 +100,34 @@ float4 main(PS_INPUT input) : SV_TARGET
     
     float4 depthTex     = dTex.Sample(samLinear, input.Tex);
     
-    // 大ボケテクスチャ
+    // 色収差テクスチャ
     float4 bigBlurTex = chromaticAberration(0.0055 - depthTex.r * 0.0055, input.Tex);
+    
+    // 
+    
     
     // 明度算出
     float v = max(bigBlurTex.r, max(bigBlurTex.g, bigBlurTex.b));
     
-    // 明るい位置に赤み(ややオレンジ)をオーバーレイ
-    bigBlurTex += AddOverLay(bigBlurTex, float4(0.5, 0.35, 0.0, 0.2f)) * step(0.925 , v );
+    // 暗度算出
+    float v_2 = min(bigBlurTex.r, min(bigBlurTex.g, bigBlurTex.b));
     
-    // 暗い位置に青み(やや紫)をオーバーレイ
-    bigBlurTex += AddOverLay(bigBlurTex, float4(0.2, 0.0, 0.5, 0.2f)) * step(v , 0.125);
+    //// 彩度落とし
+    //bigBlurTex = saturate(bigBlurTex) * 0.85f;
     
-    // 光の当たる位置に赤みをオーバーレイ
-    //bigBlurTex += AddScreen(bigBlurTex, float4(0.8, 0.65, 0.0, 0.2f)) * depthTex.g;
+    // オーバーレイ：明るい位置に赤み(ややオレンジ)
+    bigBlurTex += AddOverLay(bigBlurTex, float4(0.2, 0.25, 0.0, 0.2f)) * step(0.875, v);
     
-    float outlineFlag = step(AddOutLine(0.0025f, input.Tex, 1.0f), 1.0f);
+    // オーバーレイ：暗い位置に青み(やや紫)
+    bigBlurTex += AddOverLay(bigBlurTex, float4(0.2, 0.0, 0.25, 0.2f)) * step(v_2, 0.1);
     
+    // フォグ
+    bigBlurTex += (float4) 0.35f * depthTex.b;
+    
+    // 輪郭の抽出を行う
+    float outlineFlag = step(AddOutLine(0.002f, input.Tex, 1.0f), 1.0f);
+    
+    // 輪郭が存在する場合はテクスチャに乗算する
     bigBlurTex *= outlineFlag;
 
     return float4(bigBlurTex.xyz,1.0f);

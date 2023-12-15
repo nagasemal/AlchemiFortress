@@ -3,7 +3,10 @@
 
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
+#include "NecromaLib/Singleton/InputSupport.h"
+
 #include "NecromaLib/GameData/SpriteCutter.h"
+
 
 #define SHIFT_POSITION SimpleMath::Vector2(30,30)
 
@@ -36,7 +39,8 @@ void DrawKey::Draw()
 	// アルファベット表記
 	int keyCord = m_parent->GetKeys()[0] - 0x41;
 
-	if (keyCord <= Keyboard::Z)
+	//　====================[　アルファベット最後尾以内　]
+	if (keyCord <= Keyboard::Z && InputSupport::GetInstance().GetKeybordState().GetLastState().IsKeyDown(Keyboard::Tab))
 	{
 		DrawAlphabetKey(keyCord);
 

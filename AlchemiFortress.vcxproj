@@ -224,6 +224,7 @@
     <ClInclude Include="Scenes\Commons\DrawSlider.h" />
     <ClInclude Include="Scenes\Commons\DrawTimer.h" />
     <ClInclude Include="Scenes\Commons\DrawVariableNum.h" />
+    <ClInclude Include="Scenes\Commons\MissonAnimation.h" />
     <ClInclude Include="Scenes\Commons\MyPostProcess.h" />
     <ClInclude Include="Scenes\Commons\SelectionUI.h" />
     <ClInclude Include="Scenes\Commons\ShaderButton.h" />
@@ -343,6 +344,7 @@
     <ClCompile Include="Scenes\Commons\DrawSlider.cpp" />
     <ClCompile Include="Scenes\Commons\DrawTimer.cpp" />
     <ClCompile Include="Scenes\Commons\DrawVariableNum.cpp" />
+    <ClCompile Include="Scenes\Commons\MissonAnimation.cpp" />
     <ClCompile Include="Scenes\Commons\MyPostProcess.cpp" />
     <ClCompile Include="Scenes\Commons\SelectionUI.cpp" />
     <ClCompile Include="Scenes\Commons\ShaderButton.cpp" />
@@ -891,4 +893,9 @@
     <Error Condition="!Exists('packages\Microsoft.XAudio2.Redist.1.2.11\build\native\Microsoft.XAudio2.Redist.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.XAudio2.Redist.1.2.11\build\native\Microsoft.XAudio2.Redist.targets'))" />
     <Error Condition="!Exists('packages\directxtk_desktop_2019.2023.4.28.1\build\native\directxtk_desktop_2019.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\directxtk_desktop_2019.2023.4.28.1\build\native\directxtk_desktop_2019.targets'))" />
   </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

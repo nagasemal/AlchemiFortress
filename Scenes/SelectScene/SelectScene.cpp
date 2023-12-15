@@ -5,6 +5,7 @@
 #include "NecromaLib/Singleton/ShareJsonData.h"
 #include "NecromaLib/Singleton/SoundData.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
+#include "NecromaLib/Singleton/ModelShader.h"
 
 #include "Scenes/Commons/DrawArrow.h"
 #include "Scenes/Commons/UIKeyControl.h"
@@ -153,13 +154,28 @@ void SelectScene::Draw()
 	modelData = SimpleMath::Matrix::CreateScale({ 1.8f,1.8f,1.8f });
 	modelData = SimpleMath::Matrix::CreateTranslation({ 0.0f,70.0f,0.0f });
 
-	m_skySphere->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(),true);
+	// 天球描画
+	m_skySphere->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false, [&]()
+		{
+
+			ModelShader::GetInstance().ModelDrawShader(
+				SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f),
+				SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f), SpriteLoder::GetInstance().GetMachineTextuer(3));
+
+			pSD.GetContext()->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetMachineTextuer(3).GetAddressOf());
+			pSD.GetContext()->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetNormalMap(3).GetAddressOf());
+
+			//　====================[　深度ステンシルステートの設定　]
+			pSD.GetContext()->OMSetDepthStencilState(pSD.GetCommonStates()->DepthDefault(), 0);
+
+
+		});
 
 
 	pSB->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
 	m_machineDraw->Render();
-	m_missionDraw->Render();
+	m_missionDraw->Render(ShareJsonData::GetInstance().GetStageData());
 	
 	pSB->End();
 
@@ -176,13 +192,14 @@ void SelectScene::DrawUI()
 	m_stageNumber->SetColor(SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
 	m_stageNumber->Render();
 
-	pSB->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
+
 
 	if (m_arrowDraw[0]->GetActiveFlag()) m_arrowDraw[0]->Draw();
 	if (m_arrowDraw[1]->GetActiveFlag()) m_arrowDraw[1]->Draw();
 
-	RECT rect = { 0,0,256,64 };
+	pSB->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
+	RECT rect = { 0,0,256,64 };
 	pSB->Draw(SpriteLoder::GetInstance().GetGameStartTexture().Get(), m_nextSceneBox->GetPos(),&rect,Colors::White,0.0f,SimpleMath::Vector2((float)rect.right / 2.0f, (float)rect.bottom / 2.0f));
 
 	pSB->End();

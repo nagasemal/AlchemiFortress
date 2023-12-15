@@ -7,7 +7,7 @@
 
 #include "NecromaLib/Singleton/SpriteLoder.h"
 
-#define RAGE 100.f
+#define RAGE 120.f
 
 Field::Field():
 	m_hitMouseFlag()

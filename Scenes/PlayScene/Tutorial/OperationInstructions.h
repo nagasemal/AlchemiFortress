@@ -69,15 +69,15 @@ public:
 	void Render_Layer2(); // 表示の関係上もう一つ関数が必要であったため
 	void Finalize();
 
-	void RelodeTutorial(std::vector<Tutorial_Status> tutorialNumber, PlayScene* pPlayScene);
+	//void RelodeTutorial(std::vector<Tutorial_Status> tutorialNumber, PlayScene* pPlayScene);
 	void CreateInterfase();
 	
 	bool GetExplanationFlag() { return m_explanationFlag; }
 
 	// 現在の選択状況からどこにラインを引くか決めます
-	void LinePosSet(PlayScene* pPlayScene,int number);
+	//void LinePosSet(PlayScene* pPlayScene,int number);
 	
-	void NextTutorial(PlayScene* pPlayScene);
+	//void NextTutorial(PlayScene* pPlayScene);
 
 	SelectionBox* GetTitleSceneButton() { return m_titleSceneBox.get(); }
 	SelectionBox* GetSelectSceneButton() { return m_selectSceneBox.get(); }
@@ -85,7 +85,7 @@ public:
 private:
 
 	// NoneTypeを探し出し、その位置にカーソルボックスを出現させます。
-	void NonePosSearch(PlayScene* pPlayScene);
+	//void NonePosSearch(PlayScene* pPlayScene);
 
 private:
 
@@ -97,21 +97,16 @@ private:
 	std::unique_ptr<SelectionBox> m_explanationButton;
 	// チュートリアルモードを解除するボタン
 	std::unique_ptr<SelectionBox> m_tutorialExitButton;
-	// 何処を指しているのかを明確にする選択ボックス
-	std::unique_ptr<DrawBox>  m_showBox;
 
 	// タイトルに戻る選択ボックス
-	std::unique_ptr<SelectionBox>  m_titleSceneBox;
+	std::unique_ptr<SelectionBox>	m_titleSceneBox;
 	// セレクトシーンに戻る選択ボックス
-	std::unique_ptr<SelectionBox>  m_selectSceneBox;
+	std::unique_ptr<SelectionBox>	m_selectSceneBox;
 	// あきらめてリザルトシーンに移行する選択ボックス
-	std::unique_ptr<SelectionBox>  m_resultSceneBox;
+	std::unique_ptr<SelectionBox>	m_resultSceneBox;
 
-	std::unique_ptr<UserInterface> m_backFlame;
-	std::unique_ptr<UserInterface> m_textTexture;
-
-	std::unique_ptr<AlchemicalMachineObject> m_amMachine;
-	std::unique_ptr<MachineExplanation> m_machineExplanation;
+	std::unique_ptr<UserInterface>	m_backFlame;
+	std::unique_ptr<UserInterface>	m_textTexture;
 
 	// 説明モードに入っているか否か
 	bool m_explanationFlag;
@@ -123,16 +118,7 @@ private:
 	AnimationData m_tutorialTime;
 
 	int m_selectNumber;
-	// 0 何もない ウェーブのチュートリアル番号が格納されている
-	std::vector<Tutorial_Status> m_tutorialNumber;
 
 	int m_maxSelectVal;
-
-	// particleの出現を制御する変数
-	float m_particleTime;
-
-	std::unique_ptr<Particle> m_particle_Select;
-
-	//std::unique_ptr<TutorialStateContext> m_tutorialState;
 
 };

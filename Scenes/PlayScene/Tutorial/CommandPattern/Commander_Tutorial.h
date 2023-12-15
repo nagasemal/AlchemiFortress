@@ -37,6 +37,9 @@ public:
 		REPAIR_MACHINE,				// マシンを修繕する
 
 		TEXT_ARROW,					// チュートリアルのテキストを流す
+
+		ALCHEMI_LOCK				// 錬金ボタンをロック/解除する
+
 	};
 
 public:

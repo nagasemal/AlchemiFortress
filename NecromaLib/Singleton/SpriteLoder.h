@@ -168,6 +168,9 @@ public:
 	// 塔[柱]のテクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetTowerPillarTexture() { return m_towerPillarTexture; }
 
+	// ランプテクスチャ(諧調)
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetRampTexture() { return m_rampTexture; }
+
 
 	// 0~3
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetMagicRule(int index) { return m_transition[index]; }
@@ -177,16 +180,18 @@ public:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetAuraBase() { return m_auraBaseTexture; }
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetAuraMask() { return m_auraMaskTexture; }
 
+	// スカイスフィア
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetSkySphereTexture() { return m_skySphereTexture; }
 
-	// ゲージ(背景)を返す
+	// ゲージ:背景
 	TextureData GetBaseGage() { return m_baseGageTex; }
 
-	// ゲージ(中身)を返す
+	// ゲージ:中身
 	TextureData GetMainGage() { return m_mainGageTex; }
 
-	// マシンアイコンを渡す
+	// マシン:UIアイコン
 	TextureData GetMachineIconTexture() { return m_machineIconTexture; }
-	// マシンの名前を渡す
+	// マシン:名前
 	TextureData GetMachineNameTexture() { return m_machineNameTextures; }
 
 	/// <summary>
@@ -301,6 +306,9 @@ private:
 	// マシンテクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_machineTexture[5];
 
+	// 諧調テクスチャ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_rampTexture;
+
 	// 床のノーマルマップ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_fieldNormalMap;
 	// 床のテクスチャ
@@ -316,7 +324,8 @@ private:
 	// 塔[柱]のテクスチャ
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_towerPillarTexture;
 
-
+	// スカイスフィアのテクスチャ
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_skySphereTexture;
 
 	// エフェクト用のテクスチャ(オーラ表現)
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_auraBaseTexture;

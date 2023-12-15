@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "MissionRender.h"
-#include "Scenes/Commons/MissonAnimation.h"
 
 #include "NecromaLib/Singleton/ShareJsonData.h"
 #include "NecromaLib/Singleton/ShareData.h"
@@ -34,9 +33,6 @@ MissionRender::MissionRender(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage)
 	{
 		m_missionNum += static_cast<int>(missionData.condition[i].size());
 	}
-
-	//　====================[　ミッション内容のアニメーションを行うクラス　]
-	m_missonAnimation = std::make_unique<MissionAnimation>();
 }
 
 MissionRender::~MissionRender()
@@ -44,25 +40,16 @@ MissionRender::~MissionRender()
 }
 
 
-void MissionRender::Render()
-{
-	m_lineCount = 0;
-
-	ShareJsonData& pSJD = ShareJsonData::GetInstance();
-
-	Stage_Data missionData = pSJD.GetStageData();
-
-	Render_MachineMission(missionData.condition[MISSION_TYPE::SPAWN]);
-	Render_AlchemiMission(missionData.condition[MISSION_TYPE::ALCHEMI]);
-	Render_EnemyMission(missionData.condition[MISSION_TYPE::ENEMY_KILL]);
-	Render_BaseLvMission(missionData.condition[MISSION_TYPE::BASELV]);
-	Render_TimerMission(missionData.condition[MISSION_TYPE::TIMER]);
-}
-
-
 void MissionRender::Render(Stage_Data data)
 {
 	m_lineCount = 0;
+
+	SpriteLoder& pSL = SpriteLoder::GetInstance();
+
+	//for (int i = 0; i < 8; i++)
+	//{
+	//	ContentDraw(data.condition[i], pSL.GetMachineNameTexture().tex.Get(), MISSION_TYPE(i));
+	//}
 
 	//　====================[　マシン系ミッション　]
 	Render_MachineMission(data.condition[MISSION_TYPE::SPAWN]);
@@ -88,7 +75,7 @@ void MissionRender::Render_MachineMission(std::vector<Stage_Condition> stageData
 
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
 
-	ContentDraw(stageData, pSL.GetMachineNameTexture().tex.Get(), 0);
+	ContentDraw(stageData, pSL.GetMachineNameTexture().tex.Get(), MISSION_TYPE::SPAWN);
 
 }
 

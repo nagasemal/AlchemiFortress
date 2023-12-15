@@ -1,0 +1,119 @@
+{
+  "CRYSTAL_SPAWN": {
+    "CRYSTALS": []
+  },
+  "Conditions_Enemy": {
+    "ENEMY_KNOCKDOWN": [
+      {
+        "TYPE": "All",
+        "VALUE": -1
+      }
+    ]
+  },
+  "Conditions_Machine": {
+    "MACHINE_SPAWN": [
+      {
+        "TYPE": "Upper",
+        "VALUE": 1
+      }
+    ]
+  },
+  "Conditions_Alchemi": {
+    "MACHINE_ALCHEMI": [
+      {
+        "TYPE": "Upper",
+        "VALUE": 1
+      }
+    ]
+  },
+  "Conditions_Destroy": {
+    "MACHINE_DESTROY": [
+      {
+        "TYPE": "Attacker",
+        "VALUE": -1
+      }
+    ]
+  },
+  "Conditions_Recovery": {
+    "MACHINE_RECOVERY": [
+      {
+        "TYPE": "Attacker",
+        "VALUE": -1
+      }
+    ]
+  },
+  "Conditions_LvUp": {
+    "MACHINE_LVUP": [
+      {
+        "TYPE": "Attacker",
+        "VALUE": -1
+      }
+    ]
+  },
+  "Conditions_BaseLv": {
+    "BASE_LV": [
+      {
+        "TYPE": "Standerd",
+        "VALUE": -1
+      }
+    ]
+  },
+  "Conditions_Time": {
+    "TIME": [
+      {
+        "TYPE": "True",
+        "VALUE": -1
+      }
+    ]
+  },
+  "Conditions_Resource": {
+    "RESOURCE": [
+      {
+        "TYPE": "MP",
+        "VALUE": -1
+      }
+    ]
+  },
+  "ENEMY_SPAWNTIME": {
+    "ENEMYS": []
+  },
+  "MACHINE_DEFAULET": {
+    "MACHINES": []
+  },
+  "RESOURCE_DEFAULET": {
+    "ATTACKER": 0,
+    "CRYSTAL": 0,
+    "DEFFENCER": 0,
+    "LV": 1,
+    "HP": 500,
+    "MINING": 0,
+    "MP": 0,
+    "RECOVERY": 0,
+    "UPPER": 0
+  },
+  "TUTORIAL": [
+    {
+      "NUMBER": 19,
+      "VAL": 1
+    },
+    {
+      "NUMBER": 3,
+      "VAL": 1
+    },
+    {
+      "NUMBER": 6,
+      "VAL": 1
+    },
+    {
+      "NUMBER": 15,
+      "VAL": 1
+    },
+    {
+      "NUMBER": 0,
+      "VAL": 0
+    }
+  ],
+  "LastWave": false,
+  "EnemyLv": 1
+}
+// アッパーマシンを使うとアタッカーマシンを強化できることを知るチュートリアル

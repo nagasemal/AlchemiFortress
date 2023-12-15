@@ -172,10 +172,10 @@ void Game::Render()
     // TODO: Add your rendering code here.
     context;
 
-    /*===[ デバッグ文字描画 ]===*/
-    std::wostringstream oss;
-    oss << "fps:" << m_timer.GetFramesPerSecond();
-    m_debugFont->AddString(oss.str().c_str(), SimpleMath::Vector2(0.f, 0.f));
+    ///*===[ デバッグ文字描画 ]===*/
+    //std::wostringstream oss;
+    //oss << "fps:" << m_timer.GetFramesPerSecond();
+    //m_debugFont->AddString(oss.str().c_str(), SimpleMath::Vector2(0.f, 0.f));
 
     m_SceneManager.get()->Render();
 

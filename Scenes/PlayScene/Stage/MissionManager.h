@@ -64,26 +64,25 @@ private:
 
 	//// マシン錬金の条件
 	//std::vector<Stage_Condition> m_alchemiCondition;
-
+	//
 	//// マシン破壊の条件
 	//std::vector<Stage_Condition> m_destroyCondition;
-
+	//
 	//// マシン修繕の条件
 	//std::vector<Stage_Condition> m_recoveryCondition;
-
+	//
 	//// マシン強化の条件
 	//std::vector<Stage_Condition> m_lvUpCondition;
-
+	//
 	//// 取得リソースの条件
 	//std::vector<Stage_Condition> m_resourceCondition;
-
-
+	//
 	//// エネミー関連の条件
 	//std::vector<Stage_Condition> m_enemyCondition;
-
+	//
 	//// 拠点LV関連の条件
 	//std::vector<Stage_Condition> m_baseLvCondition;
-
+	// 
 	//// 時間関連の条件
 	//std::vector<Stage_Condition> m_timeCondition;
 

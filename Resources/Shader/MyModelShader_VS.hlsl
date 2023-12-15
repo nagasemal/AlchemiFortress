@@ -59,6 +59,19 @@ ColorPair ComputeLights(float3 eyeVector, float3 worldNormal, uniform int numLig
     return result;
 }
 
+// フレネル反射を計算する関数
+float3 CalculateFresnel(float3 viewDir, float3 normal, float fresnelPower, float fresnelIntensity)
+{
+    // 視線ベクトルと法線ベクトルの内積を計算
+    float cosTheta = dot(viewDir, normal);
+
+    // フレネル反射の強度を計算
+    float fresnel = fresnelIntensity * pow(1.0 - saturate(cosTheta), fresnelPower);
+
+    // フレネル反射の色を返す（ここでは白色）
+    return float3(1.0, 1.0, 1.0) * fresnel;
+}
+
 CommonVSOutput ComputeCommonVSOutputWithLighting(float4 position, float3 normal, uniform int numLights)
 {
     CommonVSOutput vout;
@@ -102,6 +115,7 @@ PSInput main(VSInput vin)
     vout.TexCoord       = vin.TexCoord;
     vout.Position       = cout.Position;
     vout.Normal         = vin.Normal;
+   
     
     return vout;
 }

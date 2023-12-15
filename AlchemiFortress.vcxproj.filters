@@ -580,6 +580,9 @@
     <ClInclude Include="Scenes\Commons\DrawKey.h">
       <Filter>Scene\Commons</Filter>
     </ClInclude>
+    <ClInclude Include="Scenes\Commons\MissonAnimation.h">
+      <Filter>Scene\Commons\Mission</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -884,6 +887,9 @@
     </ClCompile>
     <ClCompile Include="Scenes\Commons\DrawKey.cpp">
       <Filter>Scene\Commons</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\Commons\MissonAnimation.cpp">
+      <Filter>Scene\Commons\Mission</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

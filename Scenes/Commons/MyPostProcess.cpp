@@ -3,6 +3,7 @@
 
 #include "NecromaLib/GameData/BinaryFile.h"
 #include "NecromaLib/Singleton/ShareData.h"
+#include "NecromaLib/Singleton/SpriteLoder.h"
 
 #include <stdio.h>
 #include <wchar.h>
@@ -148,6 +149,8 @@ void MyPostProcess::Render(ID3D11ShaderResourceView* const* offscreenTex, ID3D11
 	context->PSSetShaderResources(0, 1, offscreenTex);
 
 	context->PSSetShaderResources(1, 1, depthTex);
+
+	context->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetRampTexture().GetAddressOf());
 
 	//　====================[　インプットレイアウトの登録　]
 	context->IASetInputLayout(m_inputLayout.Get());
