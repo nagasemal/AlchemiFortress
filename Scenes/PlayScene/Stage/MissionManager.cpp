@@ -5,6 +5,8 @@
 #include "Scenes/PlayScene/Enemy/EnemyManager.h"
 #include "Scenes/PlayScene/Field/FieldObjectManager.h"
 #include "Scenes/PlayScene/UI/Number.h"
+#include "Scenes/PlayScene/UI/SelectionBox.h"
+
 #include "Scenes/Commons/DrawArrow.h"
 
 #include "Scenes/SelectScene/MissionRender.h"
@@ -22,14 +24,12 @@
 #include "NecromaLib/GameData/SpriteCutter.h"
 #include "NecromaLib/GameData/Easing.h"
 
-#define MISSION_RENDERPOS SimpleMath::Vector2(100.0f,260.0f)
-#define MISSION_CLOSEBUTTON SimpleMath::Vector2(260.0f,10.0f)
-
 MissionManager::MissionManager() :
 	m_allClearFlag(),
 	m_missionNum(),
 	m_missionSituation(),
-	m_timer(),
+	m_gameTimer(),
+	m_uiTransparentTime(),
 	m_failureFlag(),
 	m_baseHP(),
 	m_lastWave(),
@@ -54,14 +54,30 @@ void MissionManager::Initialize()
 	int width	= device->GetOutputSize().right;
 	int height	= device->GetOutputSize().bottom;
 
+	UI_Data ui_data = ShareJsonData::GetInstance().GetUIData("MissionOffset");
+
+	//　====================[　マウスが周辺に位置するかを取得　]
+	m_collider = std::make_unique<SelectionBox>(ui_data.pos, SimpleMath::Vector2(ui_data.option["COLLIDER_X"], ui_data.option["COLLIDER_Y"]));
+	m_collider->Initialize();
+	m_collider->SetRect(RECT{ 0,0,1,1 });
+
 	//　====================[　ステージ情報の再度読み込み　]
 	ReloadWave();
 
 	//　====================[　時間描画クラスの設定　]
-	m_timeRender = std::make_unique<DrawTimer>(SimpleMath::Vector2{ 140.0f,160.0f }, SimpleMath::Vector2{ 0.6f,0.6f });
+	ui_data = ShareJsonData::GetInstance().GetUIData("MissionTimer");
+	m_timeRender = std::make_unique<DrawTimer>(ui_data.pos, ui_data.rage);
 
 	//　====================[　ミッションクラスの設定　]
-	m_missionRender = std::make_unique<MissionRender>(MISSION_RENDERPOS, SimpleMath::Vector2{ 1.0f,1.0f });
+	ui_data = ShareJsonData::GetInstance().GetUIData("MissionText");
+	m_missionRender = std::make_unique<MissionRender>(ui_data.pos, ui_data.rage);
+	//　　|=>　位置の再登録
+	m_collider->SetSavePos(ui_data.pos);
+
+	//　====================[　ミッションの開閉を行う矢印クラスの設定　]
+	ui_data = ShareJsonData::GetInstance().GetUIData("MissionArrow");
+	m_closeButton = std::make_unique<DrawArrow>(ui_data.pos, ui_data.rage, (int)ui_data.option["Open"]);
+	m_closeButton->Initialize();
 
 	//　====================[　ステージクリア時演出クラスの設定　]
 	m_backVeil = std::make_unique<Veil>(3);
@@ -85,37 +101,58 @@ void MissionManager::Initialize()
 
 	//　====================[　ステージ失敗成功時のアニメーション用変数　]
 	m_clearAnimation.max = 2.0f;
-
-	//　====================[　ミッションの開閉を行う矢印クラスの設定　]
-	m_closeButton = std::make_unique<DrawArrow>(MISSION_RENDERPOS + MISSION_CLOSEBUTTON,SimpleMath::Vector2(0.2f,1.0),2);
-	m_closeButton->Initialize();
 }
 
 void MissionManager::Update(AlchemicalMachineManager* pAlchemicalManager, EnemyManager* pEnemyManager, FieldObjectManager* pFieldManager)
 {
 	auto pDeltaT = &DeltaTime::GetInstance();
-	m_lastWave = ShareJsonData::GetInstance().GetStageData().lastWave;
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
 
-	// 拠点のHPを取得する
+	//　====================[　UI半透明化　]
+	m_uiTransparentTime += pDeltaT->GetNomalDeltaTime();
+	//　　|=>　指定フレーム後に半透明化
+	if (m_uiTransparentTime >= pSJD.GetGameParameter().transparent_time)
+	{
+		TransparentUI(pSJD.GetGameParameter().transparent_val);
+	}
+	//　　|=>　UI周辺にマウスが接触したら透明度リセット
+	if (m_collider->HitMouse())
+	{
+		m_uiTransparentTime = 0.0f;
+		TransparentUI(1.0f);
+	}
+
+	//　====================[　最終ウェーブであるか否かを取得　]
+	m_lastWave = pSJD.GetStageData().lastWave;
+
+	//　　|=>　拠点のHPを取得する
 	m_baseHP = (int)DataManager::GetInstance()->GetNowBaseHP();
 
-	// 位置を決定する
-	SimpleMath::Vector2 missionPos = SimpleMath::Vector2(MISSION_RENDERPOS.x - Easing::EaseInCubic(0, MISSION_CLOSEBUTTON.x, m_closeAnimation), MISSION_RENDERPOS.y);
+	//　====================[　UIの位置を決定　]
+	UI_Data ui_dataText	 = pSJD.GetUIData("MissionText");
+	UI_Data ui_dataArrow = pSJD.GetUIData("MissionArrow");
+	UI_Data ui_dataTimer = pSJD.GetUIData("MissionTimer");
+	SimpleMath::Vector2 missionPos = SimpleMath::Vector2(ui_dataText.pos.x - Easing::EaseInCubic(0, ui_dataText.option["CloseVal"], m_closeAnimation),
+														 ui_dataText.pos.y);
 
-	m_missionRender->SetPos(missionPos);
+	//　====================[　UIの移動処理　]
+	m_missionRender	->SetPos(missionPos);
+	m_timeRender	->SetPos(SimpleMath::Vector2(missionPos.x + ui_dataTimer.pos.x, ui_dataTimer.pos.y));
+	m_closeButton	->SetSavePos(SimpleMath::Vector2(missionPos.x + (ui_dataArrow.pos.x * 1.5f), ui_dataArrow.pos.y));
 
-	m_closeButton->SetSavePos(missionPos + (MISSION_CLOSEBUTTON * 1.2f));
+	//　====================[　開閉矢印の更新　]
 	m_closeButton->HitMouse();
 
+	//　====================[　開閉矢印の向きを変える処理　]
 	if (m_closeButton->SelectionMouse())
 	{
-		m_closeButton->SetDirection(2);
+		m_closeButton->SetDirection((int)ui_dataArrow.option["Close"]);
 		m_closeAnimation += pDeltaT->GetNomalDeltaTime();
 	}
 	else
 	{
 		m_closeAnimation -= pDeltaT->GetNomalDeltaTime();
-		m_closeButton->SetDirection(4);
+		m_closeButton->SetDirection((int)ui_dataArrow.option["Open"]);
 	}
 
 
@@ -180,7 +217,6 @@ void MissionManager::Update(AlchemicalMachineManager* pAlchemicalManager, EnemyM
 			// 次のWaveを読み込む
 			ShareJsonData::GetInstance().LoadingJsonFile_Stage(DataManager::GetInstance()->GetStageNum(), m_wave);
 		}
-
 	}
 	else
 	{
@@ -194,8 +230,8 @@ void MissionManager::Update(AlchemicalMachineManager* pAlchemicalManager, EnemyM
 void MissionManager::TimerUpdate()
 {
 	auto pDeltaT = &DeltaTime::GetInstance();
-	m_timer += pDeltaT->GetDeltaTime();
-	m_timeRender->Update(m_timer);
+	m_gameTimer += pDeltaT->GetDeltaTime();
+	m_timeRender->Update(m_gameTimer);
 
 }
 
@@ -274,21 +310,6 @@ void MissionManager::ReloadWave()
 		(int)m_missonCondition[MISSION_TYPE::BASELV].size()		+
 		(int)m_missonCondition[MISSION_TYPE::TIMER].size();
 
-
-
-
-	// クリア出来ないものはミッション完了したことにする
-
-	//if (m_baseLvCondition	[0].value <= 0)		m_missionSituation++;
-	//if (m_machineCondition	[0].value <= 0)		m_missionSituation++;
-	//if (m_enemyCondition	[0].value <= 0)		m_missionSituation++;
-	//if (m_timeCondition		[0].value <= 0)		m_missionSituation++;
-	//if (m_destroyCondition	[0].value <= 0)		m_missionSituation++;
-	//if (m_recoveryCondition	[0].value <= 0)		m_missionSituation++;
-	//if (m_lvUpCondition		[0].value <= 0)		m_missionSituation++;
-	//if (m_resourceCondition	[0].value <= 0)		m_missionSituation++;
-
-
 	// ミッションを全てクリアしたフラグを元に戻す
 	m_allClearFlag = false;
 
@@ -309,6 +330,15 @@ bool MissionManager::MissionmFailure()
 int MissionManager::GetStartTimer()
 {
 	return m_missonCondition[MISSION_TYPE::TIMER][0].progress;
+}
+
+void MissionManager::TransparentUI(float transparentVal)
+{
+
+	m_missionRender->SetAlpha(transparentVal);
+	m_closeButton->SetColor(SimpleMath::Color(m_closeButton->GetColorRGB(), transparentVal));
+	m_timeRender->SetColor(SimpleMath::Color(m_timeRender->GetColorRGB(), transparentVal));
+
 }
 
 void MissionManager::MachineMission(AlchemicalMachineManager* alchemicalManager)
@@ -501,7 +531,7 @@ void MissionManager::TimerMission()
 	if (m_missonCondition[MISSION_TYPE::TIMER][0].progress < m_missonCondition[MISSION_TYPE::TIMER][0].value)
 	{
 		// 毎秒進行度を上げる
-		m_missonCondition[MISSION_TYPE::TIMER][0].progress = (int)m_timer;
+		m_missonCondition[MISSION_TYPE::TIMER][0].progress = (int)m_gameTimer;
 
 		if (m_missonCondition[MISSION_TYPE::TIMER][0].progress >= m_missonCondition[MISSION_TYPE::TIMER][0].value)
 		{

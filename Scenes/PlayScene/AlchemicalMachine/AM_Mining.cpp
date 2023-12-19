@@ -39,15 +39,8 @@ void AM_Mining::Initialize()
 
 void AM_Mining::Update()
 {
-	// Jsonから読み取ったマシンのデータを適応する
-	ShareJsonData& pSJD = ShareJsonData::GetInstance();
-
-	m_magicCircle.p = m_data.pos;
-	// 効果範囲を決定する
-	m_magicCircle.r = (float)pSJD.GetMachineData(m_machineID).effect_rage + (float)(m_lv / 2.0f);
-
 	m_timer += DeltaTime::GetInstance().GetDeltaTime();
-	m_color = SimpleMath::Color(1, 1, 1, 1);
+	m_color = Colors::White;
 }
 
 void AM_Mining::SelectUpdate()
@@ -72,9 +65,11 @@ int AM_Mining::AllFieldObject(FieldObjectManager* fieldManager)
 	{
 		if (CircleCollider(it->GetCircle(), m_magicCircle))
 		{
-			m_color = SimpleMath::Color(1, 0, 1, 1);
+			//　====================[　色を変更する　]
+			m_color = SimpleMath::Color(sinf(m_timer), 0, sinf(m_timer), 1);
 
-			// 回収開始
+			//　====================[　回収開始　]
+			//　　|=>　回収する時間がスパンを超えたら
 			if (m_timer >= m_span)
 			{
 				m_timer = 0.0f;
@@ -90,21 +85,22 @@ int AM_Mining::AllFieldObject(FieldObjectManager* fieldManager)
 void AM_Mining::HitEnemy(std::list<EnemyObject>* enemy)
 {
 
+	//　====================[　早期リターン　]
+	//　　|=>　無敵時間中
 	if (m_invincibleFlag) return;
 
-	//　現存存在するエネミー分回す
-//	効果範囲toエネミー
 	for (std::list<EnemyObject>::iterator it = enemy->begin(); it != enemy->end(); it++)
 	{
 
-		// ダウンキャストを行い、GameObject3D型に変換し判定の処理を得る
+		//　====================[　効果範囲Toエネミー　]
 		bool hitMachine = CircleCollider(GetObject3D(), it->GetObject3D());
 
 		if (hitMachine)
 		{
-				// 体力減少
-				m_hp -= (int)it->GetPower();
-				m_invincibleFlag = true;
+			// 体力減少
+			m_hp -= (int)it->GetPower();
+			// 無敵状態に変更
+			m_invincibleFlag = true;
 
 		}
 	}
@@ -119,30 +115,25 @@ bool AM_Mining::GetCrystalFlag()
 
 void AM_Mining::RenderUI()
 {
-	//SpriteLoder& pSL = SpriteLoder::GetInstance();
-	//RECT rect_lv = SpriteCutter(64, 64, m_lv, 0);
-	//m_selectLvUpBox->DrawUI(texture, pSL.GetNumberTexture(), rect_lv);
-	//m_dismantlingBox->DrawUI(texture);
 }
 
 void AM_Mining::LvUp()
 {
-
-	// クリスタルを減らす
 	DataManager& pDM = *DataManager::GetInstance();
-	// Jsonから読み取ったマシンのデータを適応する
 	ShareJsonData& pSJD = ShareJsonData::GetInstance();
 
-	// Lvが上限または変更後のクリスタルが0以下
+	//　====================[　早期リターン　]
+	//　　|=>　Lvが上限または変更後のクリスタルが0以下
 	if (m_lv >= MAX_LV || pDM.GetNowCrystal() - GetNextLvCrystal() <= 0) return;
 
+	//　====================[　結晶の総量を減らす　]
 	pDM.SetNowCrystal(pDM.GetNowCrystal() - GetNextLvCrystal());
 
+	//　====================[　LVUP　]
 	m_lv++;
 
-	// HP強化
+	//　====================[　HP強化/回復　]
 	m_maxHp = (int)(pSJD.GetMachineData(m_machineID).hp * (pSJD.GetMachineData(m_machineID).multiplier_hp * m_lv));
-	// HP回復
-	m_hp = m_maxHp;
+	m_hp	= m_maxHp;
 
 }

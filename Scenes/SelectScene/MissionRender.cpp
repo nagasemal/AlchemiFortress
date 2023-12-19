@@ -15,16 +15,18 @@
 MissionRender::MissionRender(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage)
 {
 
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
+	Stage_Data missionData = pSJD.GetStageData();
+
 	m_position	= pos;
 	m_rage		= rage;
 	m_lineCount = 0;
 
+	UI_Data data = pSJD.GetUIData("MissionText");
+	m_alpha = data.option["MaxAlpha"];
+
 	//　====================[　現在数,目標数の描画クラス　]
 	m_number = std::make_unique<Number>(pos,SimpleMath::Vector2(0.35f,0.25f));
-
-
-	ShareJsonData& pSJD = ShareJsonData::GetInstance();
-	Stage_Data missionData = pSJD.GetStageData();
 
 	m_missionNum = 0;
 
@@ -44,12 +46,13 @@ void MissionRender::Render(Stage_Data data)
 {
 	m_lineCount = 0;
 
-	SpriteLoder& pSL = SpriteLoder::GetInstance();
-
-	//for (int i = 0; i < 8; i++)
-	//{
-	//	ContentDraw(data.condition[i], pSL.GetMachineNameTexture().tex.Get(), MISSION_TYPE(i));
-	//}
+	// 透明度の上限設定
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
+	UI_Data ui_data = pSJD.GetUIData("MissionText");
+	if (ui_data.option["MaxAlpha"] <= m_alpha)
+	{
+		m_alpha = ui_data.option["MaxAlpha"];
+	}
 
 	//　====================[　マシン系ミッション　]
 	Render_MachineMission(data.condition[MISSION_TYPE::SPAWN]);
@@ -195,9 +198,9 @@ void MissionRender::ContentDraw(std::vector<Stage_Condition> stageData, ID3D11Sh
 
 		pos.y += m_lineCount * KERNING_Y;
 
-		SimpleMath::Color color = TEXT_COLOR;
+		SimpleMath::Color color = SimpleMath::Color(1.0f,1.0f,1.0f,m_alpha);
 
-		if (stageData[i].progress >= stageData[i].value) color = CLEAR_COLOR;
+		if (stageData[i].progress >= stageData[i].value) color = SimpleMath::Color(1.0f, 0.0f, 0.0f, m_alpha);
 
 		// 背面に描画するテクスチャ
 		LabelDraw(pos);
@@ -272,7 +275,7 @@ void MissionRender::LabelDraw(SimpleMath::Vector2 pos)
 	pSB->Draw(pSL.GetMissionLabelTexture().Get(),
 		pos,
 		&labelRect,
-		TEXT_COLOR,
+		SimpleMath::Color(1.0f,1.0f,1.0f,m_alpha),
 		0.0f,
 		DirectX::XMFLOAT2(180 / 2, 48 / 2),
 		m_rage);

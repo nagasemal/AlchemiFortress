@@ -44,48 +44,53 @@ public:
 	SimpleMath::Vector2 GetMPGaugePos();
 	SimpleMath::Vector2 GetCrystalGaugePos();
 
+	// UI群を透明化させる
+	void TransparentUI(float transparentTime);
+
+	// ゲージが出現しているか否か
+	bool GaugeActive();
+
 private:
 
 	// MP
 	// 減増する用
-	std::unique_ptr<UserInterface> m_gauge_Mp;
+	std::unique_ptr<UserInterface>	m_gauge_Mp;
 	// 背景用
-	std::unique_ptr<UserInterface> m_base_Mp;
+	std::unique_ptr<UserInterface>	m_base_Mp;
 	// 減る際の遷移用
-	std::unique_ptr<UserInterface> m_back_Mp;
+	std::unique_ptr<UserInterface>	m_back_Mp;
 
 	// 詳細な数を描画
-	std::unique_ptr<Number> m_resourceRenderMP;
-	//// 前Fの魔力量
-	//float m_prevMP;
+	std::unique_ptr<Number>			m_resourceRenderMP;
 
 	// Mpの画像表示
-	std::unique_ptr<SelectionBox> m_box_mp;
+	std::unique_ptr<SelectionBox>	m_box_mp;
 
 	// クリスタル
-	std::unique_ptr<UserInterface> m_gauge_Crystal;
-	std::unique_ptr<UserInterface> m_base_Crystal;
-	std::unique_ptr<UserInterface> m_back_Crystal;
+	std::unique_ptr<UserInterface>	m_gauge_Crystal;
+	std::unique_ptr<UserInterface>	m_base_Crystal;
+	std::unique_ptr<UserInterface>	m_back_Crystal;
 
-	std::unique_ptr<SelectionBox> m_box_Crystal;
+	std::unique_ptr<SelectionBox>	m_box_Crystal;
 
 	// 詳細な数を描画
-	std::unique_ptr<Number> m_resourceRenderCrystal;
+	std::unique_ptr<Number>			m_resourceRenderCrystal;
 	//// 前Fの結晶量
 	//float m_prevCrystal;
 
 
 	// HP
-	std::unique_ptr<UserInterface> m_gauge_Hp;
-	std::unique_ptr<UserInterface> m_base_Hp;
-	std::unique_ptr<UserInterface> m_back_Hp;
+	std::unique_ptr<UserInterface>	m_gauge_Hp;
+	std::unique_ptr<UserInterface>	m_base_Hp;
+	std::unique_ptr<UserInterface>	m_back_Hp;
 
-	std::unique_ptr<SelectionBox> m_box_Hp;
+	std::unique_ptr<SelectionBox>	m_box_Hp;
+
+	// マウスが範囲に入っているか否かを検出する当たり判定クラス
+	std::unique_ptr<SelectionBox>	m_collider;
 
 	// 詳細な数を描画
-	std::unique_ptr<Number> m_resourceRenderHP;
-	//// 前FのHP量
-	//float m_prevHP;
+	std::unique_ptr<Number>			m_resourceRenderHP;
 
 	// 前FのHP割合を保持
 	float m_difRedioHp;
@@ -96,4 +101,6 @@ private:
 	// 前Fのクリスタル割合を保持
 	float m_difRedioCrystal;
 
+	// UIが半透明化するまでの時間
+	float m_uiTransparentTime;
 };

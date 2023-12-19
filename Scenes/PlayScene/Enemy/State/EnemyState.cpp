@@ -200,9 +200,7 @@ Enemy_KnockBackState::Enemy_KnockBackState(SimpleMath::Vector3 direction, float 
 	m_state = ENEMY_STATE::Idoling;
 
 	m_knockBackVec = direction;
-	m_knockBackVec.y = 1.0f;
-
-	m_knockBackPower = power / 4.0f;
+	m_knockBackVec.y = power / 5.0f;
 
 	m_knockBackVec.Normalize();
 
@@ -216,7 +214,7 @@ void Enemy_KnockBackState::Update(EnemyObject* object)
 	// 当たり判定をとらない
 	object->SetColliderActive(false);
 
-	object->SetAccele(m_knockBackVec * m_knockBackPower);
+	object->AddAccele(m_knockBackVec);
 
 	// ターゲット方向に身体を向ける
 	SimpleMath::Vector3 length = object->GetLengthVec();

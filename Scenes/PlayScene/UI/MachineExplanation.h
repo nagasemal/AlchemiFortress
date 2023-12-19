@@ -66,7 +66,11 @@ public:
 	// 前のマシンに移行するボタンを押した瞬間を返すフラグ
 	bool GetBackMachineFlag();
 
+	// アニメーション変数のリセット
 	void ResetMoveTime() { m_moveTime = 0; m_hitFlag = false;}
+
+	// UI群を透明化させる
+	void TransparentUI(float transparentTime);
 
 public:
 
@@ -90,15 +94,18 @@ private:
 	// 解体用の選択ボックス
 	std::unique_ptr<SelectionBox> m_dismantlingBox;
 
+	// マウスが範囲に入っているか否かを検出する当たり判定クラス
+	std::unique_ptr<SelectionBox> m_collider;
+
 	// 次のマシンを選択する矢印
 	std::unique_ptr<DrawArrow> m_nextMachineArrow;
 
 	// 前のマシンを選択する矢印
 	std::unique_ptr<DrawArrow> m_backMachineArrow;
 
-	// マシンのHPゲージ
-	//std::unique_ptr<MachineGauge> m_machineGauge;
-
+	// 
 	bool m_hitFlag;
 
+	// UIが半透明化するまでの時間
+	float m_uiTransparentTime;
 };

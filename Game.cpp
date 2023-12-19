@@ -315,22 +315,20 @@ void Game::ReloadUIData()
 {
     ShareJsonData& pSJD = ShareJsonData::GetInstance();
 
-    pSJD.LoadingUIData("Machine");
-
+    pSJD.LoadingUIData("AlchemiMachineIcon");
     pSJD.LoadingUIData("AlchemiLeft");
     pSJD.LoadingUIData("AlchemiMiddle");
     pSJD.LoadingUIData("AlchemiRight");
-
-    pSJD.LoadingUIData("NumMachine");
-    pSJD.LoadingUIData("NumMP");
-    pSJD.LoadingUIData("NumCrystal");
+    pSJD.LoadingUIData("AlchemiNum");
+    pSJD.LoadingUIData("AlchemiMP");
+    pSJD.LoadingUIData("AlchemiCrystal");
+    pSJD.LoadingUIData("AlchemiOffset");
 
     pSJD.LoadingUIData("GaugeHP");
     pSJD.LoadingUIData("GaugeMP");
     pSJD.LoadingUIData("GaugeCrystal");
     pSJD.LoadingUIData("GaugeBaseLv");
     pSJD.LoadingUIData("GaugeOffset");
-
 
     pSJD.LoadingUIData("ExplanationSpawn");
     pSJD.LoadingUIData("ExplanationLvUp");
@@ -339,6 +337,11 @@ void Game::ReloadUIData()
     pSJD.LoadingUIData("ExplanationNext");
     pSJD.LoadingUIData("ExplanationBack");
     pSJD.LoadingUIData("ExplanationOffset");
+
+    pSJD.LoadingUIData("MissionTimer");
+    pSJD.LoadingUIData("MissionArrow");
+    pSJD.LoadingUIData("MissionText");
+    pSJD.LoadingUIData("MissionOffset");
 
 }
 

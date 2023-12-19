@@ -17,10 +17,10 @@ float4 main(PS_INPUT input) : SV_TARGET
     //outputw.rgb *= colors * lerp(0.0f, 1.0f, step(input.tex.y, input.color.a));
 
 	// EXP表示の色を塗る
-    outputw.rgb = secondColors * lerp(1.0f, 0.0f, step(input.tex.y, 1 - input.color.a));
+    outputw.rgb = secondColors.rgb * lerp(1.0f, 0.0f, step(input.tex.y, 1 - input.color.a));
 	
 	// ベースの色を塗る
-    outputw.rgb += colors * lerp(0.0f, 1.0f, step(input.tex.y, 1 - input.color.a));
+    outputw.rgb += colors.rgb * lerp(0.0f, 1.0f, step(input.tex.y, 1 - input.color.a));
 	
 	return outputw;
 }

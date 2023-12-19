@@ -8,9 +8,12 @@
 
 DrawTimer::DrawTimer(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage)
 {
+	m_flame		= 0.0f;
+	m_seconds	= 0.0f;
 
 	m_pos = pos;
 	m_rage = rage;
+	m_color = (SimpleMath::Color)Colors::White;
 
 }
 
@@ -72,7 +75,7 @@ void DrawTimer::TimerDraw()
 		if (i < 2) pulsX = 20;
 
 		DirectX::SimpleMath::Vector2 pos(m_pos.x - m_rage.x - (i * (TEXTURE_RAGE / 2)) + pulsX, m_pos.y);
-		pSB->Draw(pSL.GetNumberTexture().Get(), pos, &TenFirst[i]);
+		pSB->Draw(pSL.GetNumberTexture().Get(), pos, &TenFirst[i], m_color);
 	}
 
 }

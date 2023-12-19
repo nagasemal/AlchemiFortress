@@ -21,6 +21,9 @@
 // サブモデルのY軸回転速度
 #define SUBMODEL_SPEED		1.5f
 
+// 数字画像の縦横大きさ
+#define SPRITE_RAGE			64.0f
+
 //　====================[　3DUIにて使用する数値の定義　]
 
 //　　|=> HPゲージの大きさ
@@ -110,15 +113,19 @@ void AlchemicalMachineObject::Update_Common()
 
 	m_popHPTimer = std::min(std::max(0.0f, m_popHPTimer), 1.0f);
 
+
+	ShareJsonData& pSJD = ShareJsonData::GetInstance();
+
+	//　====================[　効果範囲位置/範囲の更新　]
+	m_magicCircle.p = m_data.pos;
+	m_magicCircle.r = (float)pSJD.GetMachineData(m_machineID).effect_rage + (float)(m_lv / pSJD.GetMachineData(m_machineID).effect_rage_rate);
+
 }
 
 void AlchemicalMachineObject::SelectUpdate_Common()
 {
 
 	m_dismantlingFlag = false;
-
-
-
 	m_selectModeTime += DeltaTime::GetInstance().GetDeltaTime();
 
 }
@@ -229,13 +236,13 @@ void AlchemicalMachineObject::RenderHP()
 
 
 	//　====================[　マシンのLv描画　]
-	rect = SpriteCutter(64, 64, m_lv , 0);
+	rect = SpriteCutter((int)SPRITE_RAGE, (int)SPRITE_RAGE, m_lv , 0);
 	pSB->Draw(SpriteLoder::GetInstance().GetNumberTexture().Get(),
 		billboardUIPosition + SimpleMath::Vector3(-gaugeWidthHalf * HPGAUGE_RAGE, 0.0f, 0.0f),
 		&rect,
 		Colors::Black * color,
 		0.0f,
-		SimpleMath::Vector2(64 / 2, 64 / 2),
+		SimpleMath::Vector2(SPRITE_RAGE / 2, SPRITE_RAGE / 2),
 		MACHINELV_RAGE);
 
 }
@@ -354,7 +361,7 @@ void AlchemicalMachineObject::ModelRender(DirectX::Model* model, DirectX::Model*
 
 }
 
-// 召喚時に呼ばれる関数
+//　====================[　召喚時に呼ばれる関数　]
 void AlchemicalMachineObject::SummonAM(SimpleMath::Vector3 pos)
 {
 	m_data.rage = AM_RAGE;
@@ -363,6 +370,7 @@ void AlchemicalMachineObject::SummonAM(SimpleMath::Vector3 pos)
 	m_spawnTime = 0.0f;
 }
 
+//　====================[　次のレベルアップに必要な結晶量　]
 const int AlchemicalMachineObject::GetNextLvCrystal()
 {
 	auto pSJD = &ShareJsonData::GetInstance();
@@ -370,6 +378,7 @@ const int AlchemicalMachineObject::GetNextLvCrystal()
 	return m_lv * (int)pSJD->GetMachineData(m_machineID).lvUp_crystal;
 }
 
+//　====================[　修繕に必要な結晶量　]
 const int AlchemicalMachineObject::GetRepairCrystal()
 {
 	auto pSJD = &ShareJsonData::GetInstance();
@@ -377,6 +386,7 @@ const int AlchemicalMachineObject::GetRepairCrystal()
 	return m_lv * (int)pSJD->GetMachineData(m_machineID).repea_crystal;
 }
 
+//　====================[　破壊時手に入る結晶量　]
 const int AlchemicalMachineObject::GetDismantlingCrystal()
 {
 	auto pSJD = &ShareJsonData::GetInstance();
@@ -384,15 +394,14 @@ const int AlchemicalMachineObject::GetDismantlingCrystal()
 	return m_lv * (int)pSJD->GetMachineData(m_machineID).dismantling_crystal;
 }
 
+//　====================[　シルエット描画　]
 void AlchemicalMachineObject::SilhouetteRender(DirectX::Model* model, SimpleMath::Matrix matrix)
 {
-	// 出現時演出が終わるまで処理をしない
+	//　====================[　出現時演出が終わるまで処理をしない　]
 	if (m_spawnTime <= 1.0f) return;
 
 	ShareData& pSD = ShareData::GetInstance();
 
-	// 重なった際、影を描画
-	// モデルは弾くので、枠描画にも使用
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), matrix, pSD.GetView(), pSD.GetProjection(), false, [&]
 		{
 			ModelShader::GetInstance().SilhouetteShader();
@@ -400,6 +409,7 @@ void AlchemicalMachineObject::SilhouetteRender(DirectX::Model* model, SimpleMath
 
 }
 
+//　====================[　通常描画　]
 void AlchemicalMachineObject::NomalRender(DirectX::Model* model, SimpleMath::Matrix matrix, SimpleMath::Color color)
 {
 	ShareData& pSD = ShareData::GetInstance();
@@ -423,6 +433,7 @@ void AlchemicalMachineObject::NomalRender(DirectX::Model* model, SimpleMath::Mat
 
 }
 
+//　====================[　半透明描画　]
 void AlchemicalMachineObject::TransparentRender(DirectX::Model* model, SimpleMath::Matrix matrix)
 {
 
@@ -436,6 +447,7 @@ void AlchemicalMachineObject::TransparentRender(DirectX::Model* model, SimpleMat
 
 }
 
+//　====================[　カスタムシェーダー無し描画　]
 void AlchemicalMachineObject::NotShaderRender(DirectX::Model* model, SimpleMath::Matrix matrix)
 {
 	ShareData& pSD = ShareData::GetInstance();
@@ -451,6 +463,7 @@ void AlchemicalMachineObject::NotShaderRender(DirectX::Model* model, SimpleMath:
 		});
 }
 
+//　====================[　ツーパスレンダリングに用いる描画　]
 void AlchemicalMachineObject::WriteDepathRender(DirectX::Model* model, DirectX::Model* secondModel)
 {
 	ShareData& pSD = ShareData::GetInstance();
@@ -489,18 +502,18 @@ void AlchemicalMachineObject::WriteDepathRender(DirectX::Model* model, DirectX::
 	subModelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y + (sinf(m_rotateAnimation) * PITCHING_VAL), m_data.pos.z);
 
 
-
+	//　====================[　モデルの描画　]
+	//　　|=>　本体
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false, [&]()
 		{
-
 			ModelShader::GetInstance().ShadowModelDraw();
 		});
 
+	//　　|=>　サブモデル
 	if (secondModel != nullptr)
 	{
 		secondModel->Draw(pSD.GetContext(), *pSD.GetCommonStates(), subModelData, pSD.GetView(), pSD.GetProjection(), false, [&]()
 			{
-
 				ModelShader::GetInstance().ShadowModelDraw();
 			});
 	}

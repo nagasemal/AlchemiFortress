@@ -2,6 +2,13 @@
 
 class TutorialManager;
 
+enum UI_TYPE : int
+{
+	UI_ALCHEMI,
+	UI_GAUGE,
+	UI_EXPLANATION
+};
+
 class ICommand_Tutorial
 {
 protected:

@@ -138,7 +138,10 @@ public:
 
 	void SetColor(const SimpleMath::Color color)	{ m_color = color;}
 	void SetColor(const DirectX::XMVECTORF32 color) { m_color = (SimpleMath::Color)color; }
+	void SetColor(const SimpleMath::Vector3 color, const float alpha) { m_color.R(color.x); m_color.G(color.y); m_color.B(color.z); m_color.A(alpha);}
+
 	SimpleMath::Color GetColor()					{ return m_color;}
+	SimpleMath::Vector3 GetColorRGB() { return SimpleMath::Vector3(m_color.R(), m_color.G(), m_color.B()); }
 
 private:
 

@@ -14,6 +14,7 @@ class DrawTimer;
 class Veil;
 class UserInterface;
 class DrawArrow;
+class SelectionBox;
 
 class MissionManager
 {
@@ -43,6 +44,9 @@ public:
 
 	int GetWave() { return m_wave; }
 
+	// UI群のアルファ値を変え、無効化する
+	void TransparentUI(float transparentVal);
+
 private:
 
 	void MachineMission(AlchemicalMachineManager* alchemicalManager);
@@ -62,30 +66,6 @@ private:
 	// ミッション条件
 	std::vector<Stage_Condition> m_missonCondition[MISSION_TYPE::MISSION_NUM];
 
-	//// マシン錬金の条件
-	//std::vector<Stage_Condition> m_alchemiCondition;
-	//
-	//// マシン破壊の条件
-	//std::vector<Stage_Condition> m_destroyCondition;
-	//
-	//// マシン修繕の条件
-	//std::vector<Stage_Condition> m_recoveryCondition;
-	//
-	//// マシン強化の条件
-	//std::vector<Stage_Condition> m_lvUpCondition;
-	//
-	//// 取得リソースの条件
-	//std::vector<Stage_Condition> m_resourceCondition;
-	//
-	//// エネミー関連の条件
-	//std::vector<Stage_Condition> m_enemyCondition;
-	//
-	//// 拠点LV関連の条件
-	//std::vector<Stage_Condition> m_baseLvCondition;
-	// 
-	//// 時間関連の条件
-	//std::vector<Stage_Condition> m_timeCondition;
-
 	// タイマー計測
 	std::unique_ptr<DrawTimer> m_timeRender;
 
@@ -100,13 +80,19 @@ private:
 	// NextWaveの文字描画
 	std::unique_ptr<UserInterface> m_nextWaveTexture;
 
-	float m_timer;
+	// 時間経過記録変数
+	float m_gameTimer;
+
+	// マウスが範囲に入っているか否かを検出する当たり判定クラス
+	std::unique_ptr<SelectionBox> m_collider;
+
+	// UI半透明化時間変数
+	float m_uiTransparentTime;
 
 	// ステージクリアした際に流すアニメーション用変数
 	AnimationData m_clearAnimation;
 	// WAVEクリアした際に流すアニメーション用変数
 	AnimationData m_waveAnimation;
-
 
 	// 全ての条件を満たしたことを示すフラグ
 	bool m_allClearFlag;
@@ -134,6 +120,7 @@ private:
 
 	// ミッションの表示を畳む
 	bool m_closeMission;
+
 	// 畳む際のアニメーション用変数
 	AnimationData m_closeAnimation;
 

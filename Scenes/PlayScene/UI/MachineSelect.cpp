@@ -24,7 +24,6 @@ MachineSelect::MachineSelect():
 	m_manufacturingFlag(),
 	m_selectMachineType(MACHINE_TYPE::NONE),
 	m_changeColorFlag(),
-	m_boxColor{1.0f,1.0f,1.0f,1.0f},
 	m_colorChangeTime()
 {
 }
@@ -39,6 +38,7 @@ void MachineSelect::Initialize()
 
 	m_machineBox = std::make_unique<SelectionBox>(m_data.pos, m_data.rage);
 	m_machineBox->Initialize();
+	m_machineBox->SetColor((SimpleMath::Color)Colors::White);
 
 	m_colorChangeTime = 0;
 
@@ -56,15 +56,8 @@ void MachineSelect::Update()
 
 	m_machineBox->SetSavePos(m_data.pos);
 
-	// 結晶選択時色を変える
-	m_colorChangeTime += deltaTime * 5.0f;
-	m_boxColor.G(0.5f + cosf(m_colorChangeTime) / 2);
-
 	// リストの中から選ばれた
-	if (m_machineBox->HitMouse(true))
-	{
-		m_boxColor = Colors::Gray;
-	}
+	m_machineBox->HitMouse(true);
 
 	if (m_machineBox->ClickMouse())
 	{
@@ -93,13 +86,9 @@ void MachineSelect::DisplayObject()
 	RECT srcRect = { 0, 0, IMAGE_WIGHT, IMAGE_HEIGHT };
 
 	// ログの色
-	SimpleMath::Color color = SimpleMath::Color(0.8f, 0.8f, 0.8f, 0.8f);
+	SimpleMath::Color color = m_machineBox->GetColor();
 
-	if (m_changeColorFlag)	color = m_boxColor;
-	if (m_onMouseFlag)		color = SimpleMath::Color(0.9f, 0.95f, 0.8f, 0.9f);
-	if (m_hitMouseFlag)		color = SimpleMath::Color(0.65f, 0.65f, 0.95f, 0.98f);
-
-	// 内部BOX (オブジェクトを配置する箇所)
+	// 内部BOX (マシンUIを配置する箇所)
 	SpriteLoder::TextureData texData = pSL.GetMachineIconTexture();
 
 	srcRect = SpriteCutter(texData.width / (MACHINE_TYPE::NUM - 1), texData.height, m_selectMachineType - 1, 0);
@@ -114,12 +103,6 @@ void MachineSelect::DisplayObject()
 
 bool MachineSelect::SelectUIFlag()
 {
-
-	bool flag = false;
-	
-	flag = m_data.pos.x <= 1095.0f && m_data.pos.y <= 600.0f;
-
-	return flag;
-
+	return m_onMouseFlag;
 }
 

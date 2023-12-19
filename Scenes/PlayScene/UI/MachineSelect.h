@@ -68,8 +68,6 @@ private:
 	// 選択ボックス(マシン)
 	std::unique_ptr<SelectionBox> m_machineBox;
 
-	// ボックスの色味
-	SimpleMath::Color m_boxColor;
 	bool m_changeColorFlag;
 
 	// 色を変化させる時間変数

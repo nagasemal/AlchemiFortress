@@ -85,7 +85,7 @@ float4 main(PSInput input) : SV_TARGET0
 	float texInput = Texture.Sample(Sampler, input.TexCoord);
 
 	// テクスチャ取得
-	float3 modelTexture = MachineTexture.Sample(Sampler, input.TexCoord);
+	float3 modelTexture = MachineTexture.Sample(Sampler, input.TexCoord).rgb;
 
 	// ライトの計算
     input.Normal = normalize(input.Normal); 
@@ -102,7 +102,7 @@ float4 main(PSInput input) : SV_TARGET0
     }
 	
 	// ノーマルマップ取得
-	float3 nomalTex = NomalTexture.Sample(Sampler, input.TexCoord);
+	float3 nomalTex = NomalTexture.Sample(Sampler, input.TexCoord).rgb;
 
     float4 diff = pow(dot(nomalTex, input.Diffuse.rgb + pointLight_crystal.rgb + pointLight_mouse.rgb), 0.5f) + ApplyLimLight(input.Normal);
 

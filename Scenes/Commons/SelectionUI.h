@@ -33,6 +33,10 @@ public:
 
 	// 現在触れる状態か
 	bool GetActiveFlag() { return m_activeFlag; }
+	// 色情報を返す
+	SimpleMath::Color GetColor() { return m_boxColor; }
+	// 色情報(RGB)を返す
+	SimpleMath::Vector3 GetColorRGB() { return SimpleMath::Vector3(m_boxColor.R(), m_boxColor.G(), m_boxColor.B()); }
 
 	// 触れる状態/触れない状態への遷移
 	void SetActiveFlag(bool flag) { m_activeFlag = flag; }
@@ -45,7 +49,7 @@ public:
 	void SetKeySelectFlag(bool flag) { m_keySelectFlag = flag;}
 
 	// 色を自由に変えられます。(ボックスを強調したい際などに使用)
-	void SetLuminousColor(SimpleMath::Color color) { m_boxColor = color; }
+	void SetColor(SimpleMath::Color color) { m_boxColor = color; }
 	void SetLuminousFlag(bool flag) { m_luminousFlag = flag; };
 
 	void SetRect(RECT rect) { m_rect = rect; }

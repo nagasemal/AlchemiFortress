@@ -14,7 +14,7 @@ float4 main(PSInput input) : SV_TARGET0
 	float3 invEye = normalize(mul(WorldInverseTranspose, EyePosition));
 	float rim = pow(1.0 - clamp(dot(input.Normal, invEye), 0.0, 1.0), 2.0);
 
-	color.rgb += lerp(0,float4(0.8f,0.8f,0.8f,1.0f), rim);
+	color.rgb += lerp(0,float4(0.8f,0.8f,0.8f,1.0f), rim).rgb;
 
 	return color;
 }

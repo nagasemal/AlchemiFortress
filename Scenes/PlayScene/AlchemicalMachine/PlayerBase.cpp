@@ -103,6 +103,8 @@ void PlayerBase::Draw()
 
 void PlayerBase::Render(DirectX::Model* model)
 {
+	model;
+
 	ShareData& pSD = ShareData::GetInstance();
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
 
@@ -147,9 +149,8 @@ void PlayerBase::Render(DirectX::Model* model)
 
 void PlayerBase::WriteDepth(DirectX::Model* model)
 {
-
+	model;
 	ShareData& pSD = ShareData::GetInstance();
-	SpriteLoder& pSL = SpriteLoder::GetInstance();
 
 	// ƒ‚ƒfƒ‹î•ñ(ˆÊ’u,‘å‚«‚³)
 	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;

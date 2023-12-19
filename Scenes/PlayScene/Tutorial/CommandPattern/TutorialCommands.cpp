@@ -812,3 +812,122 @@ void Tutorial_LockAlchemi::Finalize()
 void Tutorial_LockAlchemi::Reset()
 {
 }
+
+
+Tutorial_TransparentStart::Tutorial_TransparentStart(UI_TYPE type):
+	m_type(type),
+	m_transparentTime()
+{
+	Reset();
+}
+
+Tutorial_TransparentStart::~Tutorial_TransparentStart()
+{
+}
+
+void Tutorial_TransparentStart::Initialize()
+{
+	if (m_initializeFlag) return;
+
+	m_transparentTime = 1.0f;
+
+	m_initializeFlag = true;
+}
+
+void Tutorial_TransparentStart::Execute()
+{
+	if (m_completion) return;
+
+	m_transparentTime -= DeltaTime::GetInstance().GetDeltaTime();
+
+	PlayScene* pScene = m_tutorialManager->GetPlayScene();
+
+	//　====================[　UIのアルファ値を減らす　] 
+	switch (m_type)
+	{
+	case UI_ALCHEMI:
+		pScene->GetAlchemicalMachineManager()->GetMachineSelect()->get()->TransparentUI(m_transparentTime);
+		break;
+	case UI_GAUGE:
+		pScene->GetGauge()->TransparentUI(m_transparentTime);
+		break;
+	case UI_EXPLANATION:
+		pScene->GetAlchemicalMachineManager()->GetMachineExplanation()->get()->TransparentUI(m_transparentTime);
+		break;
+	default:
+		break;
+	}
+
+	m_completion = m_transparentTime <= 0.0f;
+}
+
+void Tutorial_TransparentStart::Finalize()
+{
+}
+
+void Tutorial_TransparentStart::Reset()
+{
+}
+
+
+
+Tutorial_TransparentEnd::Tutorial_TransparentEnd(UI_TYPE type):
+	m_type(type),
+	m_transparentTime()
+{
+	Reset();
+}
+
+Tutorial_TransparentEnd::~Tutorial_TransparentEnd()
+{
+}
+
+void Tutorial_TransparentEnd::Initialize()
+{
+	if (m_initializeFlag) return;
+
+	m_transparentTime = 0.1f;
+
+	m_initializeFlag = true;
+}
+
+void Tutorial_TransparentEnd::Execute()
+{
+	if (m_completion) return;
+
+	m_transparentTime += DeltaTime::GetInstance().GetDeltaTime();
+
+	PlayScene* pScene = m_tutorialManager->GetPlayScene();
+
+	//　====================[　UIのアルファ値を増やす　]
+	switch (m_type)
+	{
+	case UI_ALCHEMI:
+
+		pScene->GetAlchemicalMachineManager()->GetMachineSelect()->get()->TransparentUI(m_transparentTime);
+
+		break;
+	case UI_GAUGE:
+
+		pScene->GetGauge()->TransparentUI(m_transparentTime);
+
+		break;
+	case UI_EXPLANATION:
+
+		pScene->GetAlchemicalMachineManager()->GetMachineExplanation()->get()->TransparentUI(m_transparentTime);
+
+		break;
+	default:
+		break;
+	}
+
+	m_completion = m_transparentTime > 1.0f;
+}
+
+void Tutorial_TransparentEnd::Finalize()
+{
+}
+
+void Tutorial_TransparentEnd::Reset()
+{
+}

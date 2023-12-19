@@ -38,13 +38,13 @@ void DrawArrow::Draw()
 
 	// ‰æ‘œ‚ÌƒTƒCƒY
 	RECT srcRect = { 0, 0, 64, 64 };
-	SimpleMath::Color colour = { 1.0f,1.0f,1.0f,1.0f };
+	SimpleMath::Color colour = { 1.0f,1.0f,1.0f,m_boxColor.A()};
 
 	if (m_luminousFlag) colour = m_boxColor;
 
-	if (m_hitMouseFlag) colour = { 0.9f,0.9f,0.9f,1.0f };
+	if (m_hitMouseFlag) colour = { 0.9f,0.9f,0.9f,m_boxColor.A() };
 
-	if (HoldMouse()) colour = { 0.7f, 0.7f, 0.7f, 1.0f };
+	if (HoldMouse()) colour = { 0.7f, 0.7f, 0.7f, m_boxColor.A() };
 
 
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());

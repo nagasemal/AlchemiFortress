@@ -9,6 +9,18 @@
       "RAGE_Y": 0.0,
 
       "OPTION": [
+        {
+          "TAG": "COLLIDER_X",
+          "VAL": 5000.0
+        },
+        {
+          "TAG": "COLLIDER_Y",
+          "VAL": 1400.0
+        },
+        {
+          "TAG": "NUMRENDER_RATE",
+          "VAL": 2.2
+        }
       ],
       "KEYS": [
       ]

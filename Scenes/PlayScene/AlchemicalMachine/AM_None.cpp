@@ -24,9 +24,7 @@ void AM_None::Initialize()
 
 void AM_None::Update()
 {
-	m_magicCircle.p = m_data.pos;
-
-	m_color = SimpleMath::Color(0.0f,0.0f,0.0f,1.0f);
+	m_color = Colors::Black;
 
 	// 選択モード時、色を変える
 	if (m_selectModeFlag)
@@ -45,7 +43,7 @@ void AM_None::Update()
 	// マウスが触れている間、色を変える
 	if (m_hitMouseFlag)
 	{
-		m_color = SimpleMath::Color(1, 1, 1, 1);
+		m_color = Colors::White;
 	}
 }
 

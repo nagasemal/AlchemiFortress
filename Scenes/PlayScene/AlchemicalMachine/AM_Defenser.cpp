@@ -32,15 +32,7 @@ void AM_Defenser::Initialize()
 
 void AM_Defenser::Update()
 {
-	// Jsonから読み取ったマシンのデータを適応する
-	float effectRage = ShareJsonData::GetInstance().GetMachineData(m_machineID).effect_rage;
-
 	m_data.pos.y = 0.0f;
-
-	m_magicCircle.p = m_data.pos;
-
-	// 効果範囲を決定する
-	m_magicCircle.r = effectRage;
 }
 
 void AM_Defenser::SelectUpdate()

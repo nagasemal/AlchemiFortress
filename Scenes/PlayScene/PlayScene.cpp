@@ -37,49 +37,50 @@ PlayScene::~PlayScene()
 void PlayScene::Initialize()
 {
 	// 画面の縦横値の取得
-	auto device = ShareData::GetInstance().GetDeviceResources();
-	int width = device->GetOutputSize().right;
-	int height = device->GetOutputSize().bottom;
+	auto device			= ShareData::GetInstance().GetDeviceResources();
+	int width			= device->GetOutputSize().right;
+	int height			= device->GetOutputSize().bottom;
 
 	// ポストプロセスの生成
-	m_postProcess = std::make_unique<MyPostProcess>();
-	m_postProcess->CreateShader();
+	m_postProcess		= std::make_unique<MyPostProcess>();
+	m_postProcess		->CreateShader();
 
 	// フィールドマネージャークラスの生成
-	m_fieldManager = std::make_unique<FieldObjectManager>();
-	m_fieldManager->Initialize();
+	m_fieldManager		= std::make_unique<FieldObjectManager>();
+	m_fieldManager		->Initialize();
 
 	// マウスポインタークラスの生成
-	m_mousePointer = std::make_unique<MousePointer>();
-	m_mousePointer->Initialize();
+	m_mousePointer		= std::make_unique<MousePointer>();
+	m_mousePointer		->Initialize();
 
 	// ユニット(マシン)マネージャークラスの生成
-	m_AM_Manager = std::make_unique<AlchemicalMachineManager>();
-	m_AM_Manager->Initialize();
+	m_AM_Manager		= std::make_unique<AlchemicalMachineManager>();
+	m_AM_Manager		->Initialize();
 
 	// カメラを動かすクラスの生成
-	m_moveCamera = std::make_unique<MoveCamera>();
-	m_moveCamera->Initialize();
+	m_moveCamera		= std::make_unique<MoveCamera>();
+	m_moveCamera		->Initialize();
 
 	// エネミーマネージャークラスの生成
-	m_enemyManager = std::make_unique<EnemyManager>();
-	m_enemyManager->Initialize();
+	m_enemyManager		= std::make_unique<EnemyManager>();
+	m_enemyManager		->Initialize();
 
 	// リソースを示すゲージクラスの生成
-	m_resourceGauge = std::make_unique<Gauge>();
-	m_resourceGauge->Initialize();
+	m_resourceGauge		= std::make_unique<Gauge>();
+	m_resourceGauge		->Initialize();
 
 	// 拠点のLvを示すクラスの生成
-	m_baseLv = std::make_unique<BaseLv>();
-	m_baseLv->SetPosition(SimpleMath::Vector2(40.0f, 40.0f));
-	m_baseLv->SetScale(SimpleMath::Vector2(0.1f, 0.1f));
+	UI_Data uiData		= ShareJsonData::GetInstance().GetUIData("GaugeBaseLv");
+	m_baseLv			= std::make_unique<BaseLv>();
+	m_baseLv			->SetPosition(uiData.pos);
+	m_baseLv			->SetScale(uiData.rage);
 
 	// ミッションマネージャークラスの生成
-	m_missionManager = std::make_unique<MissionManager>();
-	m_missionManager->Initialize();
+	m_missionManager	= std::make_unique<MissionManager>();
+	m_missionManager	->Initialize();
 
 	// 操作方法クラスの生成
-	m_explanation = std::make_unique<Explanation>();
+	m_explanation		= std::make_unique<Explanation>();
 
 	// 倍速ボタンの生成
 	m_doubleSpeedButton = std::make_unique<SelectionBox>(SimpleMath::Vector2(width / 1.05f, height / 1.6f), SimpleMath::Vector2(1.0f, 1.0f));
@@ -330,7 +331,6 @@ void PlayScene::DrawShadow()
 
 	//　====================[　新しいレンダーターゲット　]
 	auto rtv = pMS.GetShadowMap()->GetRenderTargetView();
-	auto srv = pMS.GetShadowMap()->GetShaderResourceView();
 
 	auto dsv = pMS.GetDepthStencilView().Get();
 
@@ -387,7 +387,10 @@ void PlayScene::DrawUI()
 
 	m_resourceGauge->Render();
 
-	m_baseLv->Render();
+	if (m_resourceGauge->GaugeActive())
+	{
+		m_baseLv->Render();
+	}
 
 	m_missionManager->Render();
 
@@ -423,20 +426,6 @@ void PlayScene::Finalize()
 
 void PlayScene::EnemyToAMMachine()
 {
-	//for (std::list<EnemyObject>::iterator enemyIt = m_enemyManager->GetEnemyData()->begin(); enemyIt != m_enemyManager->GetEnemyData()->end(); enemyIt++)
-	//{
-	//	for (int i = 0; i < m_AM_Manager->GetAlchemicalMachineObject().size();i++)
-	//	{
-	//		AlchemicalMachineObject* object = m_AM_Manager->GetAlchemicalMachineObject(i)->get();
-	//		bool hitEnemy = false;
-	//		// 当たり判定処理
-	//		if (hitEnemy = CircleCollider(object->GetCircle(), enemyIt->GetCircle())
-	//		&&  object->GetModelID() == AlchemicalMachineObject::DEFENSER)
-	//		{
-	//			enemyIt->HitMachine(hitEnemy);
-	//		}
-	//	}
-	//}
 }
 
 void PlayScene::EnemyToPlayerBase()

@@ -15,16 +15,15 @@
 
 #include "Scenes/Commons/DrawArrow.h"
 
-struct position2D
-{
-	double x;
-	double y;
-};
+#define MODEL_SCALE		0.3f		// 描画するモデルの大きさ
+#define MODEL_ROTATE_X	-20.0f		// 描画するモデルのX軸の傾き
+#define MODEL_POS_Z		4.25f		// 描画するモデルのZ座標
 
 MachineExplanation::MachineExplanation():
 	m_moveTime(),
 	m_modelPos(),
-	m_hitFlag()
+	m_hitFlag(),
+	m_uiTransparentTime()
 {
 }
 
@@ -46,27 +45,32 @@ void MachineExplanation::Initialize()
 	m_data.pos  = uiData.pos;
 	m_data.rage = uiData.rage;
 
-	uiData = pSJD.GetUIData("ExplanationSpawn");
+	//　====================[　マウスが周辺に位置するかの判定処理を取得　]
+	m_collider = std::make_unique<SelectionBox>(uiData.pos, SimpleMath::Vector2(uiData.option["COLLIDER_X"], uiData.option["COLLIDER_Y"]));
+	m_collider->Initialize();
+	m_collider->SetRect(RECT{ 0,0,1,1 });
+
+	uiData				= pSJD.GetUIData("ExplanationSpawn");
 	m_spawnBox			= std::make_unique<SelectionBox>(uiData.pos, uiData.rage);
 	m_spawnBox			->SetKey(uiData.key);
 
-	uiData = pSJD.GetUIData("ExplanationLvUp");
+	uiData				= pSJD.GetUIData("ExplanationLvUp");
 	m_selectLvUpBox		= std::make_unique<SelectionBox>(uiData.pos,uiData.rage);
 	m_selectLvUpBox		->SetKey(uiData.key);
 
-	uiData = pSJD.GetUIData("ExplanationRepair");
+	uiData				= pSJD.GetUIData("ExplanationRepair");
 	m_repairBox			= std::make_unique<SelectionBox>(uiData.pos,uiData.rage);
 	m_repairBox			->SetKey(uiData.key);
 
-	uiData = pSJD.GetUIData("ExplanationDestory");
+	uiData				= pSJD.GetUIData("ExplanationDestory");
 	m_dismantlingBox	= std::make_unique<SelectionBox>(uiData.pos,uiData.rage);
 	m_dismantlingBox	->SetKey(uiData.key);
 
-	uiData = pSJD.GetUIData("ExplanationNext");
+	uiData				= pSJD.GetUIData("ExplanationNext");
 	m_nextMachineArrow	= std::make_unique<DrawArrow>(uiData.pos, uiData.rage,3);
 	m_nextMachineArrow	->SetKey(uiData.key);
 
-	uiData = pSJD.GetUIData("ExplanationBack");
+	uiData				= pSJD.GetUIData("ExplanationBack");
 	m_backMachineArrow	= std::make_unique<DrawArrow>(uiData.pos, uiData.rage,1);
 	m_backMachineArrow	->SetKey(uiData.key);
 
@@ -74,32 +78,46 @@ void MachineExplanation::Initialize()
 
 void MachineExplanation::Update()
 {
-	InputSupport& pINP = InputSupport::GetInstance();
+
 	DeltaTime& deltaTime = DeltaTime::GetInstance();
+	auto pSJD = &ShareJsonData::GetInstance();
 
 	//　====================[　UI表示マシンを回転させる　]
 	m_moveTime += deltaTime.GetDeltaTime();
 
-	//　====================[　選択ボックスの設定　]
+	//　====================[　UIが半透明化するまでの時間処理　]
+	if (m_spawnBox->GetColor().A() >= pSJD->GetGameParameter().transparent_val)
+	{
+		m_uiTransparentTime += deltaTime.GetNomalDeltaTime();
+		//　　|=>　指定フレーム後に半透明化
+		if (m_uiTransparentTime >= pSJD->GetGameParameter().transparent_time)
+		{
+			TransparentUI(pSJD->GetGameParameter().transparent_val);
+		}
+		//　　|=>　UI周辺にマウスが接触したら透明度,時間変数リセット
+		if (m_collider->HitMouse())
+		{
+			m_uiTransparentTime = 0.0f;
+			TransparentUI(1.0f);
+		}
+	}
+
+	//　====================[　選択ボックスの更新　]
 	//　　|=>　設置
-	m_spawnBox->HitMouse();
-	m_spawnBox->SetActiveFlag(false);
+	m_spawnBox		->HitMouse();
+	m_spawnBox		->SetActiveFlag(false);
 	//　　|=>　LvUP
-	m_selectLvUpBox->HitMouse();
-	m_selectLvUpBox->SetActiveFlag(false);
-
+	m_selectLvUpBox	->HitMouse();
+	m_selectLvUpBox	->SetActiveFlag(false);
 	//　　|=>　修繕
-	m_repairBox->HitMouse();
-	m_repairBox->SetActiveFlag(false);
-
+	m_repairBox		->HitMouse();
+	m_repairBox		->SetActiveFlag(false);
 	//　　|=>　破壊
 	m_dismantlingBox->HitMouse();
 	m_dismantlingBox->SetActiveFlag(false);
-
-	// 次のマシンへ
+	//　　|=> 次のマシンへ
 	m_nextMachineArrow->HitMouse();
-
-	// 前のマシンへ
+	//　　|=> 前のマシンへ
 	m_backMachineArrow->HitMouse();
 
 }
@@ -108,7 +126,6 @@ void MachineExplanation::Update_MachineData(AlchemicalMachineObject* object)
 {
 
 	DataManager& pDataM = *DataManager::GetInstance();
-	// クリスタルを減らす
 	DataManager& pDM = *DataManager::GetInstance();
 
 	// Noneマシンを選択しているときのみ反応する
@@ -125,6 +142,7 @@ void MachineExplanation::Update_MachineData(AlchemicalMachineObject* object)
 	{
 		object->LvUp();
 	}
+
 	// 修繕用の選択ボックスの設定
 	m_repairBox->SetActiveFlag(pDataM.GetNowCrystal() - object->GetRepairCrystal() >= 0 && object->GetHP() < object->GetMAXHP());
 
@@ -156,10 +174,10 @@ void MachineExplanation::Draw()
 	if (!m_spawnBox->GetActiveFlag())
 	{
 		// LVUP用UI
-		m_selectLvUpBox->DrawUI(SpriteLoder::LVUP);
+		m_selectLvUpBox	->DrawUI(SpriteLoder::LVUP);
 
 		// 修繕用UI
-		m_repairBox->DrawUI(SpriteLoder::REPAIR);
+		m_repairBox		->DrawUI(SpriteLoder::REPAIR);
 
 		// 解体用UI
 		m_dismantlingBox->DrawUI(SpriteLoder::DISMATIONG);
@@ -173,14 +191,16 @@ void MachineExplanation::Draw()
 void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* secondModel, AlchemicalMachineObject* object)
 {
 
+	if (m_spawnBox->GetColor().A() <= 0.0f) return;
+
 	ShareData& pSD = ShareData::GetInstance();
 	DX::DeviceResources* pDR = pSD.GetDeviceResources();
 
 	// モデル情報(位置,大きさ)
 	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
-	modelData = SimpleMath::Matrix::CreateScale(0.3f,0.3f, 0.3f);
+	modelData = SimpleMath::Matrix::CreateScale(MODEL_SCALE);
 
-	modelData *= SimpleMath::Matrix::CreateRotationX(-20);
+	modelData *= SimpleMath::Matrix::CreateRotationX(MODEL_ROTATE_X);
 	modelData *= SimpleMath::Matrix::CreateRotationZ(m_moveTime);
 
 	// ワールド座標変換
@@ -191,7 +211,7 @@ void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* se
 												   m_camera->GetViewMatrix(),
 												   m_camera->GetProjectionMatrix());
 
-	worldPos.z = 4.25f;
+	worldPos.z = MODEL_POS_Z;
 
 	modelData *= SimpleMath::Matrix::CreateTranslation(worldPos);
 
@@ -208,6 +228,7 @@ void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* se
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix(), false,[&]
 		{
 
+			// 出現時に使う時間変数は既に終わっているものとする
 			ModelShader::GetInstance().MachineDrawShader(object->GetColor(), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f), SpriteLoder::GetInstance().GetRule());
 
 			pSD.GetContext()->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetMachineTextuer(object->GetElement()).GetAddressOf());
@@ -220,6 +241,18 @@ void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* se
 	{
 		secondModel->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
 	}
+
+}
+
+void MachineExplanation::TransparentUI(float transparentVal)
+{
+	m_spawnBox			->SetColor(SimpleMath::Color(m_spawnBox			->GetColorRGB(), transparentVal));
+	m_selectLvUpBox		->SetColor(SimpleMath::Color(m_selectLvUpBox	->GetColorRGB(), transparentVal));
+	m_repairBox			->SetColor(SimpleMath::Color(m_repairBox		->GetColorRGB(), transparentVal));
+	m_dismantlingBox	->SetColor(SimpleMath::Color(m_dismantlingBox	->GetColorRGB(), transparentVal));
+
+	m_nextMachineArrow	->SetColor(SimpleMath::Color(m_nextMachineArrow	->GetColorRGB(), transparentVal));
+	m_backMachineArrow	->SetColor(SimpleMath::Color(m_backMachineArrow	->GetColorRGB(), transparentVal));
 
 }
 

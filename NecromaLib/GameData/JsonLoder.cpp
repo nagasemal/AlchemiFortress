@@ -105,6 +105,10 @@ Machine_Data Json::FileLoad_MachineData(const std::string filePath)
 		["Status"].get<picojson::object>()
 		["AREAEFFECT"].get<double>();
 
+	status.effect_rage_rate = (float)val.get<picojson::object>()
+		["Status"].get<picojson::object>()
+		["LVUP_AREAEFFECT_RATE"].get<double>();
+
 	status.multiplier_effect = (float)val.get<picojson::object>()
 		["Status"].get<picojson::object>()
 		["MULTIPLIER_EFFECT"].get<double>();
@@ -258,109 +262,6 @@ Stage_Data Json::FileLoad_StageData(const std::string filePath)
 
 	// リソース獲得
 	createCondition("Conditions_Resource", "RESOURCE", status.condition[MISSION_TYPE::RESOURCE]);
-
-	//	読み込んだデータを構造体に代入
-	// クリア条件
-	// stageDataからMACHINE_SPAWNの配列の中身を得る
-	//picojson::object& stageData_Machine = val.get<picojson::object>()["Conditions_Machine"].get<picojson::object>();
-	//picojson::array& stageCondition_Machine = stageData_Machine["MACHINE_SPAWN"].get<picojson::array>();
-	//
-	//// 要素分回す
-	//for (picojson::array::iterator it = stageCondition_Machine.begin(); it != stageCondition_Machine.end(); it++) {
-	//
-	//	Stage_Condition condition;
-	//	condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
-	//	condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
-	//
-	//	if (condition.condition != "False")
-	//	{
-	//		status.condition_Machine.push_back(condition);
-	//	}
-	//}
-	//
-	//// 錬金条件を得る
-	//picojson::object& stageData_Alchemi = val.get<picojson::object>()["Conditions_Alchemi"].get<picojson::object>();
-	//picojson::array& stageCondition_Alchemi = stageData_Alchemi["MACHINE_ALCHEMI"].get<picojson::array>();
-	//
-	//// 要素分回す
-	//for (picojson::array::iterator it = stageCondition_Alchemi.begin(); it != stageCondition_Alchemi.end(); it++) {
-	//
-	//	Stage_Condition condition;
-	//	condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
-	//	condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
-	//
-	//	if (condition.condition != "False")
-	//	{
-	//		status.condition_Alchemi.push_back(condition);
-	//	}
-	//}
-	//
-	//// 拠点のLVの達成条件を得る
-	//picojson::object& stageData_Lv = val.get<picojson::object>()["Conditions_BaseLv"].get<picojson::object>();
-	//picojson::array& stageCondition_Lv = stageData_Lv["BASE_LV"].get<picojson::array>();
-	//
-	//// 要素分回す
-	//for (picojson::array::iterator it = stageCondition_Lv.begin(); it != stageCondition_Lv.end(); it++) {
-	//
-	//	Stage_Condition condition;
-	//	condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
-	//	condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
-	//
-	//	if (condition.condition != "False")
-	//	{
-	//		status.condition_BaseLv.push_back(condition);
-	//	}
-	//}
-	//
-	//// stageDataからENEMY_KNOCKDOWNの配列の中身を得る
-	//picojson::object& stageData_Enemy = val.get<picojson::object>()["Conditions_Enemy"].get<picojson::object>();
-	//picojson::array& stageCondition_Enemy = stageData_Enemy["ENEMY_KNOCKDOWN"].get<picojson::array>();
-	//
-	//for (picojson::array::iterator it = stageCondition_Enemy.begin(); it != stageCondition_Enemy.end(); it++) {
-	//
-	//	Stage_Condition condition;
-	//	condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
-	//	condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
-	//
-	//	if (condition.condition != "False")
-	//	{
-	//		status.condition_Enemy.push_back(condition);
-	//	}
-	//
-	//}
-	//
-	//// stageDataからTimeの配列の中身を得る
-	//picojson::object& stageData_Time = val.get<picojson::object>()["Conditions_Time"].get<picojson::object>();
-	//picojson::array& stageCondition_Time = stageData_Time["TIME"].get<picojson::array>();
-	//
-	//for (picojson::array::iterator it = stageCondition_Time.begin(); it != stageCondition_Time.end(); it++) {
-	//
-	//	Stage_Condition condition;
-	//	condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
-	//	condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
-	//
-	//	if (condition.condition != "False")
-	//	{
-	//		status.condition_Time.push_back(condition);
-	//	}
-	//}
-//
-	//// stageDataからクリアまでのリソースの中身を得る
-	//picojson::object& stageData_Resource = val.get<picojson::object>()["Conditions_Resource"].get<picojson::object>();
-	//picojson::array& stageCondition_Resource = stageData_Resource["RESOURCE"].get<picojson::array>();
-	//
-	//for (picojson::array::iterator it = stageCondition_Resource.begin(); it != stageCondition_Resource.end(); it++)
-	//{
-	//	Stage_Condition condition;
-	//	condition.condition = it->get<picojson::object>()["TYPE"].get<std::string>();
-	//	condition.value = (int)it->get<picojson::object>()["VALUE"].get<double>();
-	//
-	//	if (condition.condition != "False")
-	//	{
-	//		status.condition_Resource.push_back(condition);
-	//	}
-	//}
-
 
 	// エネミーのスポーンタイミングと種類、場所を得る
 	picojson::object& enemy_span = val.get<picojson::object>()["ENEMY_SPAWNTIME"].get<picojson::object>();
@@ -917,6 +818,8 @@ Game_Parameter Json::FileLoad_GameParameter(const std::string filePath)
 	picojson::object status = val.get<picojson::object>()["GAME_PARAMETER"].get<picojson::object>();
 
 	data.rotateSpeed		= (float)status["ROTATE_SPEED"].get<double>();
+	data.transparent_time	= (float)status["UI_TRANSPARENT_TIME"].get<double>();
+	data.transparent_val	= (float)status["UI_TRANSPARENT_VAL"].get<double>();
 	data.stage_Max			= (int)status["MAX_STAGE"].get<double>();
 	data.baseLV_MAX			= (int)status["MAX_LV"].get<double>();
 	data.baseHp_Max			= (int)status["MAX_BASEHP"].get<double>();
@@ -954,11 +857,11 @@ UI_Data Json::FileLoad_UIData(const std::string filePath)
 	picojson::object master = layout["MASTER"].get<picojson::object>();
 
 	//　====================[　取得した値を入力　]
-	uiData.pos.x = master["POS_X"].get<double>();
-	uiData.pos.y = master["POS_Y"].get<double>();
+	uiData.pos.x = (float)master["POS_X"].get<double>();
+	uiData.pos.y = (float)master["POS_Y"].get<double>();
 
-	uiData.rage.x = master["RAGE_X"].get<double>();
-	uiData.rage.y = master["RAGE_Y"].get<double>();
+	uiData.rage.x = (float)master["RAGE_X"].get<double>();
+	uiData.rage.y = (float)master["RAGE_Y"].get<double>();
 
 	picojson::array optionVals = master["OPTION"].get<picojson::array>();
 
@@ -967,7 +870,7 @@ UI_Data Json::FileLoad_UIData(const std::string filePath)
 	for (picojson::array::iterator it = optionVals.begin(); it != optionVals.end(); it++)
 	{
 		std::string tagName = it->get<picojson::object>()["TAG"].get<std::string>();
-		float val = it->get<picojson::object>()["VAL"].get<double>();
+		float val = (float)it->get<picojson::object>()["VAL"].get<double>();
 
 		uiData.option.insert(std::make_pair(tagName, val));
 	}

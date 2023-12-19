@@ -218,9 +218,6 @@
     <Filter Include="Json\GameParameterData\Alchemi">
       <UniqueIdentifier>{c37ffd09-01b8-4021-91fe-eeab4628894c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Json\GameParameterData\Num">
-      <UniqueIdentifier>{1fac4e4a-d6de-452a-8991-f92accee520d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shader\PostProcess">
       <UniqueIdentifier>{637d09ad-c881-4bac-920f-c736d2fa62b4}</UniqueIdentifier>
     </Filter>
@@ -229,6 +226,9 @@
     </Filter>
     <Filter Include="Json\GameParameterData\Explanation">
       <UniqueIdentifier>{c0b1af7a-b504-4280-abb8-ce4ef6240f8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Json\GameParameterData\Mission">
+      <UniqueIdentifier>{1fac4e4a-d6de-452a-8991-f92accee520d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -989,9 +989,6 @@
     <None Include="Resources\Json\EnemyData\EnemyData_Retreat.json">
       <Filter>Json\EnemyData</Filter>
     </None>
-    <None Include="Resources\Json\GameParameter\UILayout_Machine.json">
-      <Filter>Json\GameParameterData</Filter>
-    </None>
     <None Include="Resources\Json\StageData\Stage_1\StageData_1_1.json">
       <Filter>Json\StageData\Stage1</Filter>
     </None>
@@ -1079,15 +1076,6 @@
     <None Include="Resources\Json\GameParameter\UILayout_AlchemiRight.json">
       <Filter>Json\GameParameterData\Alchemi</Filter>
     </None>
-    <None Include="Resources\Json\GameParameter\UILayout_NumCrystal.json">
-      <Filter>Json\GameParameterData\Num</Filter>
-    </None>
-    <None Include="Resources\Json\GameParameter\UILayout_NumMachine.json">
-      <Filter>Json\GameParameterData\Num</Filter>
-    </None>
-    <None Include="Resources\Json\GameParameter\UILayout_NumMP.json">
-      <Filter>Json\GameParameterData\Num</Filter>
-    </None>
     <None Include="Resources\Json\GameParameter\UILayout_GaugeBaseLv.json">
       <Filter>Json\GameParameterData\Gauge</Filter>
     </None>
@@ -1117,6 +1105,33 @@
     </None>
     <None Include="Resources\Json\GameParameter\UILayout_ExplanationRepair.json">
       <Filter>Json\GameParameterData\Explanation</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_AlchemiOffset.json">
+      <Filter>Json\GameParameterData\Alchemi</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_AlchemiCrystal.json">
+      <Filter>Json\GameParameterData\Alchemi</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_AlchemiNum.json">
+      <Filter>Json\GameParameterData\Alchemi</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_AlchemiMP.json">
+      <Filter>Json\GameParameterData\Alchemi</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_AlchemiMachineIcon.json">
+      <Filter>Json\GameParameterData\Alchemi</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_MissionTimer.json">
+      <Filter>Json\GameParameterData\Mission</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_MissionOffset.json">
+      <Filter>Json\GameParameterData\Mission</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_MissionText.json">
+      <Filter>Json\GameParameterData\Mission</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\UILayout_MissionArrow.json">
+      <Filter>Json\GameParameterData\Mission</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1252,9 +1267,6 @@
     <FxCompile Include="Resources\Shader\PostProcess_PS.hlsl">
       <Filter>Shader\PostProcess</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\PostProcess_VS.hlsl">
-      <Filter>Shader\PostProcess</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\Shader\ShadowDepth_PS.hlsl">
       <Filter>Shader\Model</Filter>
     </FxCompile>
@@ -1263,6 +1275,9 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\ModelOutLine_VS.hlsl">
       <Filter>Shader\Model</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shader\PostProcess_VS.hlsl">
+      <Filter>Shader\PostProcess</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

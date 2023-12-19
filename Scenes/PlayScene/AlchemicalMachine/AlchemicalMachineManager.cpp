@@ -774,12 +774,11 @@ void AlchemicalMachineManager::MovingMachine(int number)
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
 
 	//　====================[　回転速度取得　]
-	int rotateSpeed = ShareJsonData::GetInstance().GetGameParameter().rotateSpeed;
+	int rotateSpeed = (int)ShareJsonData::GetInstance().GetGameParameter().rotateSpeed;
 
 	//　====================[　原点を中心に回転移動　]
 	SimpleMath::Matrix matrix = SimpleMath::Matrix::Identity;
 	matrix *= SimpleMath::Matrix::CreateRotationY(XMConvertToRadians(rotateSpeed * deltaTime));
-	
 	//　　|=>  回転後の座標をマシンに代入
 	m_AMObject[number]->SetPos(SimpleMath::Vector3::Transform(m_AMObject[number]->GetPos(), matrix));
 

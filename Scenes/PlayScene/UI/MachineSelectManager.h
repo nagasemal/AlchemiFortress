@@ -54,6 +54,9 @@ public:
 	// マシンUIを動かすボタンのアクティブフラグを変更する
 	void LRButtonLock(bool flag);
 
+	// UI群のアルファ値を変え、無効化する
+	void TransparentUI(float transparentVal);
+
 public:
 
 	void SetSelectNoneFlag(bool flag) { m_selectNoneFlag = flag; }
@@ -117,6 +120,9 @@ private:
 	// 選択ボックス(UI選択用)
 	std::unique_ptr<SelectionBox> m_selectionLeft,m_selectionRight;
 
+	// マウスが範囲に入っているか否かを検出する当たり判定クラス
+	std::unique_ptr<SelectionBox> m_collider;
+
 	//画面に大きく出現させる魔法陣
 	std::unique_ptr<DisplayMagicCircle>			m_displayMagicCircle;
 
@@ -134,6 +140,9 @@ private:
 
 	// UI回転が順転か否か
 	bool m_forwardOrderFlag;
+
+	// UIが半透明化するまでの時間
+	float m_uiTransparentTime;
 
 	// マシンUIの出現に使用するアニメーション用変数
 	AnimationData m_textAnim;

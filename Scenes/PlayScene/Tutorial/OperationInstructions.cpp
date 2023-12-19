@@ -80,7 +80,7 @@ OperationInstructions::~OperationInstructions()
 
 void OperationInstructions::Initialize(std::vector<Tutorial_Status> tutorialNumber, PlayScene* pPlayScene)
 {
-
+	pPlayScene;
 	auto device = ShareData::GetInstance().GetDeviceResources();
 	int width = device->GetOutputSize().right;
 	int height = device->GetOutputSize().bottom;
@@ -104,7 +104,7 @@ void OperationInstructions::Initialize(std::vector<Tutorial_Status> tutorialNumb
 
 void OperationInstructions::Update(PlayScene* pPlayScene, bool stopFlag)
 {
-
+	pPlayScene;
 	m_cameraFlag = stopFlag;
 
 	// 説明モード移行ボタン

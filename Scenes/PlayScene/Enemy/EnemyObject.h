@@ -65,7 +65,7 @@ public:
 	// ターゲット
 	void SetTargetPos(SimpleMath::Vector3 targetPos)	{ m_targetPos = targetPos; }
 
-	// 目的地までの距離
+	//　目的地までの距離
 	void SetLengthVec(SimpleMath::Vector3 lengthVec)	{ m_lengthVec = lengthVec; }
 
 	//　止まる処理
@@ -76,8 +76,13 @@ public:
 	//　加速度
 	void SetAccele(SimpleMath::Vector3 accele)			{ m_accele = accele; }
 
+	//　加速度加算
+	void AddAccele(SimpleMath::Vector3 accele)			{ m_accele += accele; }
+
+	//　回転設定
 	void SetRotate(SimpleMath::Quaternion rotation)		{ m_rotation = rotation; }
 
+	//　死亡フラグ
 	void SetDethFlag(bool flag) { m_dethFlag = flag; }
 
 	//　ステータスを設定する

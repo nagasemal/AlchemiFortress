@@ -37,13 +37,6 @@ void AM_Upper::Initialize()
 
 void AM_Upper::Update()
 {
-	// Jsonから読み取ったマシンのデータを適応する
-	ShareJsonData& pSJD = ShareJsonData::GetInstance();
-
-	m_magicCircle.p = m_data.pos;
-	// 効果範囲を決定する
-	m_magicCircle.r = (float)pSJD.GetMachineData(m_machineID).effect_rage + (float)(m_lv / 2.0f);
-
 }
 
 void AM_Upper::SelectUpdate()

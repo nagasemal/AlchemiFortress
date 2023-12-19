@@ -35,7 +35,13 @@ public:
 	// Missions
 	void Render_SelectScene(int first,int next);
 
+	// “ü‚ê‚ç‚ê‚½”š‚ğæ“¾‚·‚é
 	int GetNumber() { return m_num; }
+
+	// Fî•ñ‚ğ•Ô‚·
+	SimpleMath::Color GetColor() { return m_color; }
+	// Fî•ñ(RGB)‚ğ•Ô‚·
+	SimpleMath::Vector3 GetColorRGB() { return SimpleMath::Vector3(m_color.R(), m_color.G(), m_color.B()); }
 
 private:
 

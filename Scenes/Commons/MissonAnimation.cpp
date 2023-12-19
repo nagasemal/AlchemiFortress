@@ -39,13 +39,9 @@ void MissionAnimation::Update()
 
 void MissionAnimation::Render()
 {
-	SpriteLoder& pSL = SpriteLoder::GetInstance();
 	ShareData& pSD = ShareData::GetInstance();
 	auto pSB = pSD.GetSpriteBatch();
 
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
-
-
-
 	pSB->End();
 }

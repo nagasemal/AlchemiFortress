@@ -32,6 +32,7 @@ struct Machine_Data
 	int hp					= 0;		// Hp
 	float multiplier_hp		= 0.0f;		// レベルアップ時のHPの上昇幅
 	float effect_rage		= 0.0f;		// 効果範囲
+	float effect_rage_rate  = 0.0f;		// レベルアップ時の効果範囲上昇幅
 	float multiplier_effect = 0.0f;		// レベルアップ時の効果範囲の上昇幅
 	int alchemi_mp			= 0;		// 製造時に使うMPの量
 	int alchemi_crystal		= 0;		// 製造時に使う魔力の量
@@ -142,20 +143,23 @@ struct UI_Data
 
 struct Game_Parameter
 {
-	float rotateSpeed = 0.5f;		// マシンが拠点を回るスピード
+	float rotateSpeed		= 0.5f;		// マシンが拠点を回るスピード
 
-	int stage_Max = 1;				// ステージの最大数
+	int stage_Max			= 1;		// ステージの最大数
 
-	int baseLV_MAX = 9;				// 最大LV
+	int baseLV_MAX			= 9;		// 最大LV
 
-	int baseHp_Max = 0;				// 拠点HPの最大LVの値
+	int baseHp_Max			= 0;		// 拠点HPの最大LVの値
 
-	int mp_Max = 0;					// MPリソースの最大LVの値
+	int mp_Max				= 0;		// MPリソースの最大LVの値
 
-	int crystal_Max = 0;			// クリスタルリソースの最大LVの値
+	int crystal_Max			= 0;		// クリスタルリソースの最大LVの値
 
-	int needExp = 0;				// 必要な経験値の量
-	int needExp_Growthrate  = 0;	// 必要な経験値の量の上がり幅
+	int needExp				= 0;		// 必要な経験値の量
+	int needExp_Growthrate  = 0;		// 必要な経験値の量の上がり幅
+
+	float transparent_time	= 0;		// 半透明化を開始する秒数
+	float transparent_val	= 0;			// 半透明化の数値
 };
 
 // 書き込み

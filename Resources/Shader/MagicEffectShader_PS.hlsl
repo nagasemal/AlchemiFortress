@@ -11,7 +11,7 @@ float4 main(PSInput input) : SV_TARGET0
 
 	float4 maskTex = MaskTexture.Sample(Sampler, input.TexCoord);
 
-	float color = auraTex * maskTex/*smoothstep(maskTex,auraTex,0.0)*/;
+    float color = mul(auraTex, maskTex);
 
 	float4 col = color * PaintColor;
 

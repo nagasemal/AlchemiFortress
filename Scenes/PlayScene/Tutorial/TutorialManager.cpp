@@ -292,8 +292,20 @@ ICommand_Tutorial* TutorialManager::GenerateCommand(Tutorial_Status type)
 
 	case TutorialCommander::TEXT_ARROW:
 
-
 		return new Tutorial_TextArrow((MACHINE_TYPE)type.val);
+
+	case TutorialCommander::ALCHEMI_LOCK:
+
+		return new Tutorial_LockAlchemi((bool)type.val);
+
+	case TutorialCommander::TRANSPARENT_START_UI:
+
+		return new Tutorial_TransparentStart((UI_TYPE)type.val);
+
+	case TutorialCommander::TRANSPARENT_END_UI:
+
+		return new Tutorial_TransparentEnd((UI_TYPE)type.val);
+
 
 	default:
 		break;

@@ -29,7 +29,8 @@ MachineSelectManager::MachineSelectManager() :
 	m_rotateTime(),
 	m_selectNumber(1),
 	m_cursorMachineNumber(),
-	m_prevSelectNumber()
+	m_prevSelectNumber(),
+	m_uiTransparentTime()
 {
 }
 
@@ -49,7 +50,7 @@ void MachineSelectManager::Initialize()
 	float radians = (deg * XM_PI) / 360.0f;
 
 	//　====================[　マシンUIの情報を取得　]
-	UI_Data uiData = pSJD.GetUIData("Machine");
+	UI_Data uiData = pSJD.GetUIData("AlchemiMachineIcon");
 
 	// Noneを省くために1スタート
 	for (int i = 1; i < MACHINE_TYPE::NUM; i++)
@@ -76,42 +77,46 @@ void MachineSelectManager::Initialize()
 	m_displayMagicCircle = std::make_unique<DisplayMagicCircle>();
 
 	//　====================[　マシンの名前の情報を取得　]
-	m_machineName = std::make_unique<SelectionBox>(SimpleMath::Vector2(), SimpleMath::Vector2(1.0f, 1.0f));
-	m_machineName->Initialize();
+	m_machineName		= std::make_unique<SelectionBox>(SimpleMath::Vector2(), SimpleMath::Vector2(1.0f, 1.0f));
+	m_machineName		->Initialize();
 
 	//　====================[　錬金ボタンの情報を取得　]
 	uiData = pSJD.GetUIData("AlchemiMiddle");
-	m_selectionAlchemi = std::make_unique<SelectionBox>(uiData.pos, uiData.rage);
-	m_selectionAlchemi->Initialize();
-	m_selectionAlchemi->SetLayer(uiData.option["LAYER"]);
-	m_selectionAlchemi->SetKey(uiData.key);
+	m_selectionAlchemi	= std::make_unique<SelectionBox>(uiData.pos, uiData.rage);
+	m_selectionAlchemi	->Initialize();
+	m_selectionAlchemi	->SetLayer((int)uiData.option["LAYER"]);
+	m_selectionAlchemi	->SetKey(uiData.key);
+	m_selectionAlchemi  ->SetRect(RECT{ 0,0,120,120 });
 
-	Keyboard::Keys::Space;
+	//　====================[　マウスが周辺に位置するかを取得　]
+	m_collider			= std::make_unique<SelectionBox>(uiData.pos,SimpleMath::Vector2(uiData.option["COLLIDER"], uiData.option["COLLIDER"]));
+	m_collider			->Initialize();
+	m_collider			->SetRect(RECT{ 0,0,1,1});
 
 	//　====================[　マシンUI移動(左)の情報を取得　]
 	uiData = pSJD.GetUIData("AlchemiLeft");
-	m_selectionLeft = std::make_unique<SelectionBox>(uiData.pos, uiData.rage);
-	m_selectionLeft->Initialize();
-	m_selectionLeft->SetLayer(uiData.option["LAYER"]);
-	m_selectionLeft->SetKey(uiData.key);
+	m_selectionLeft		= std::make_unique<SelectionBox>(uiData.pos, uiData.rage);
+	m_selectionLeft		->Initialize();
+	m_selectionLeft		->SetLayer((int)uiData.option["LAYER"]);
+	m_selectionLeft		->SetKey(uiData.key);
 
 	//　====================[　マシンUI移動(右)の情報を取得　]
 	uiData = pSJD.GetUIData("AlchemiRight");
-	m_selectionRight = std::make_unique<SelectionBox>(uiData.pos, uiData.rage);
-	m_selectionRight->Initialize();
-	m_selectionRight->SetLayer(uiData.option["LAYER"]);
-	m_selectionRight->SetKey(uiData.key);
+	m_selectionRight	= std::make_unique<SelectionBox>(uiData.pos, uiData.rage);
+	m_selectionRight	->Initialize();
+	m_selectionRight	->SetLayer((int)uiData.option["LAYER"]);
+	m_selectionRight	->SetKey(uiData.key);
 
 	//　====================[　錬金ボタン内の所持数描画を取得　]
-	uiData = pSJD.GetUIData("NumMachine");
+	uiData = pSJD.GetUIData("AlchemiNum");
 	m_machineNumRender	= std::make_unique<Number>(uiData.pos, uiData.rage);
 
 	//　====================[　錬金ボタン内の必要魔力量描画を取得　]
-	uiData = pSJD.GetUIData("NumMP");
+	uiData = pSJD.GetUIData("AlchemiMP");
 	m_mpNumRender		= std::make_unique<Number>(uiData.pos, uiData.rage);
 
 	//　====================[　錬金ボタン内の必要クリスタル描画を取得　]
-	uiData = pSJD.GetUIData("NumCrystal");
+	uiData = pSJD.GetUIData("AlchemiCrystal");
 	m_crystalRender		= std::make_unique<Number>(uiData.pos, uiData.rage);
 
 }
@@ -119,16 +124,33 @@ void MachineSelectManager::Initialize()
 void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
 {
 
-	m_selectBoxAll		= false;
-	m_manufacturingFlag = false;
-
-	//m_selectMachineType = MACHINE_TYPE::NONE;
-
 	auto datas = DataManager::GetInstance();
 	auto pSJD = &ShareJsonData::GetInstance();
 	auto pINP = &InputSupport::GetInstance();
 
 	float deltaTime = DeltaTime::GetInstance().GetNomalDeltaTime();
+
+	//　====================[　UIが半透明化するまでの時間処理　]
+	if (m_selectionAlchemi->GetColor().A() >= pSJD->GetGameParameter().transparent_val)
+	{
+
+		m_uiTransparentTime += deltaTime;
+		//　　|=>　指定フレーム後に半透明化
+		if (m_uiTransparentTime >= pSJD->GetGameParameter().transparent_time)
+		{
+			TransparentUI(pSJD->GetGameParameter().transparent_val);
+		}
+		//　　|=>　UI周辺にマウスが接触したら透明度リセット
+		if (m_collider->HitMouse())
+		{
+			m_uiTransparentTime = 0.0f;
+			TransparentUI(1.0f);
+		}
+	}
+
+	//　====================[　メンバ変数のリセット　]
+	m_selectBoxAll		= false;
+	m_manufacturingFlag = false;
 
 	//　====================[　UIの更新　]
 	m_selectionLeft		->HitMouse(true);
@@ -142,24 +164,23 @@ void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
 	else 	m_textAnim -= deltaTime;
 
 	//　====================[　錬金ボタンに触れた際の処理　]
-	if (m_selectionAlchemi->HitMouse(true)) 	m_magicCircleAnim += deltaTime;
+	if (m_selectionAlchemi->HitMouse(true)) 					m_magicCircleAnim += deltaTime;
 	else 	m_magicCircleAnim -= deltaTime;
-
 
 	//　====================[　フィールドのクリスタル選択時　]
 	//　　|=>　エクスカベーターUIの色を変える
 	m_machineSelect[MACHINE_TYPE::MINING]->SetChangeColorFlag(fieldObjectManager->GetCrystalToMouse());
-
 	//　　|=>　更新
 	m_displayMagicCircle->Update();
 	m_displayMagicCircle->TransparentUpdate(m_selectBoxAll);
 
-
+	//　====================[　マウス周辺に選択中のマシンの名前描画　]
 	m_machineName->SetSavePos(pINP->GetMousePosScreen() - MACHINE_NAME_POS_SHIFT);
 
 	RotationMachineList();
 
-	if (m_selectionRight->ClickMouse() && m_rotateTime >= 1.0f)
+	//　====================[　次のマシンUIを表示　]
+	if (m_selectionRight	->ClickMouse() && m_rotateTime >= 1.0f)
 	{
 		m_rotateTime = 0.0f;
 
@@ -171,7 +192,8 @@ void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
 		if (m_selectNumber >= MACHINE_TYPE::NUM) m_selectNumber = 1;
 	}
 
-	if (m_selectionLeft->ClickMouse() && m_rotateTime >= 1.0f)
+	//　====================[　前のマシンUIを表示　]
+	if (m_selectionLeft		->ClickMouse() && m_rotateTime >= 1.0f)
 	{
 		m_rotateTime = 0.0f;
 
@@ -182,7 +204,6 @@ void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
 
 		if (m_selectNumber <= 0) m_selectNumber = 5;
 	}
-
 
 	// マシンUIが選択されているならば対象のIDを入力
 	// 選択されていない状態ならば規定位置に存在するマシンUIのIDを入力
@@ -215,17 +236,11 @@ void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
 
 void MachineSelectManager::Render()
 {
-	SpriteLoder& pSL = SpriteLoder::GetInstance();
 	auto pSB = ShareData::GetInstance().GetSpriteBatch();
 	ShareData& pSD = ShareData::GetInstance();
 
 
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
-
-	//　====================[　選択中のマシンUIの位置を知らせるUIの描画　]
-	RECT rect = { 0,0,84,84 };
-	pSB->Draw(pSL.GetMachineUICursorTexture().Get(), SimpleMath::Vector2(1120, 560), &rect, Colors::White, 0.0f, SimpleMath::Vector2(84 / 2, 84 / 2));
-
 	pSB->End();
 
 }
@@ -243,14 +258,16 @@ void MachineSelectManager::RenderUI(int machineNum[])
 	//　====================[　魔法陣を回転させる変数　]
 	float easingValRotate = Easing::EaseOutQuint(0.0f, XMConvertToRadians(360.0f), m_magicCircleAnim);
 
+	//　====================[　画像切り取り変数の定義　]
+	RECT rect = RECT();
+
 	//　====================[　UI移動ボタンの描画　]
-	m_selectionLeft->Draw();
-	m_selectionRight->Draw();
+	m_selectionLeft		->Draw();
+	m_selectionRight	->Draw();
+	m_selectionAlchemi	->DrawUI(pSL.GetAlchemiButtonTexture().Get(),0.0f);
+
 
 	//　====================[　錬金ボタンの描画　]
-	RECT rect = { 0,0,120,120 };
-	m_selectionAlchemi->DrawUI(pSL.GetAlchemiButtonTexture().Get(), rect, nullptr);
-
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
 	//　====================[　マウス周辺に描画　]
@@ -276,22 +293,27 @@ void MachineSelectManager::RenderUI(int machineNum[])
 			&rect, name_color, 0.0f,
 			DirectX::XMFLOAT2(static_cast<float>((texData.width / (MACHINE_TYPE::NUM - 1)) / 2),
 				static_cast<float>(texData.height / 2)), 0.3f);
-
-		//　====================[　所持数を描画(マウス周辺)　]
-
 	}
 
+	// 透明度付加
+	SimpleMath::Color alphaColor = SimpleMath::Color(1.0f, 1.0f, 1.0f, m_selectionAlchemi->GetColor().A());
+
+	//　====================[　選択中のマシンUIの位置を知らせるUIの描画　]
+	rect = { 0,0,84,84 };
+	pSB->Draw(pSL.GetMachineUICursorTexture().Get(), SimpleMath::Vector2(1120, 560), &rect, alphaColor, 0.0f, SimpleMath::Vector2(84 / 2, 84 / 2));
+
 	//　====================[　魔力アイコンを描画　]
-	uiData = pSJD.GetUIData("NumMP");
+	uiData = pSJD.GetUIData("AlchemiMP");
 	rect = SpriteCutter(64,64,0,0);
 	pSB->Draw(pSL.GetElementTexture().Get(), uiData.pos - SimpleMath::Vector2(uiData.option["ICON_SHIFT"],0.0f),
-		&rect, Colors::White,0.0f, SimpleMath::Vector2(64.0f / 2.0f, 64.0f / 2.0f), uiData.option["ICON_RAGE"]);
+		&rect, alphaColor,
+		0.0f, SimpleMath::Vector2(64.0f / 2.0f, 64.0f / 2.0f), uiData.option["ICON_RAGE"]);
 
 	//　====================[　結晶アイコンを描画　]
-	uiData = pSJD.GetUIData("NumCrystal");
+	uiData = pSJD.GetUIData("AlchemiCrystal");
 	rect = SpriteCutter(64, 64, 1, 0);
 	pSB->Draw(pSL.GetElementTexture().Get(), uiData.pos - SimpleMath::Vector2(uiData.option["ICON_SHIFT"], 0.0f),
-		&rect, Colors::White, 0.0f, SimpleMath::Vector2(64.0f / 2.0f, 64.0f / 2.0f), uiData.option["ICON_RAGE"]);
+		&rect, alphaColor, 0.0f, SimpleMath::Vector2(64.0f / 2.0f, 64.0f / 2.0f), uiData.option["ICON_RAGE"]);
 
 	//　====================[　マシン説明テキストの描画　]
 	SpriteLoder::TextureData textureData = pSL.GetMachineUIText(m_selectNumber);
@@ -306,7 +328,6 @@ void MachineSelectManager::RenderUI(int machineNum[])
 	pSB->Draw(textureData.tex.Get(), m_selectionAlchemi->GetPos(),
 		&rect, SimpleMath::Color(1.0f, 1.0f, 1.0f, m_magicCircleAnim * 0.5f), easingValRotate,
 		SimpleMath::Vector2(textureData.width / 2.0f, textureData.height / 2.0f), m_magicCircleAnim * 0.2f);
-
 
 	pSB->End();
 
@@ -380,7 +401,7 @@ void MachineSelectManager::RotationMachineList()
 
 	else				   rotateAngle = Easing::EaseInOutQuint((float)m_selectNumber + 1.0f, (float)m_selectNumber + 2.0f, 1.0f - m_rotateTime);
 
-	uiData = pSJD.GetUIData("Machine");
+	uiData = pSJD.GetUIData("AlchemiMachineIcon");
 
 	for (int i = -1; i < MACHINE_TYPE::NUM - 2; i++)
 	{
@@ -395,4 +416,24 @@ void MachineSelectManager::LRButtonLock(bool flag)
 {
 	m_selectionLeft->SetActiveFlag(flag);
 	m_selectionRight->SetActiveFlag(flag);
+}
+
+void MachineSelectManager::TransparentUI(float transparentVal)
+{
+	SimpleMath::Color transparentColor = SimpleMath::Color(1.0f, 1.0f, 1.0f, transparentVal);
+
+	//　====================[　透明化を行う　]
+	m_selectionLeft		->SetColor(SimpleMath::Color(m_selectionLeft	->GetColorRGB(), transparentVal));
+	m_selectionRight	->SetColor(SimpleMath::Color(m_selectionRight	->GetColorRGB(), transparentVal));
+	m_selectionAlchemi	->SetColor(SimpleMath::Color(m_selectionAlchemi	->GetColorRGB(), transparentVal));
+
+	m_machineNumRender	->SetColor(SimpleMath::Color(m_machineNumRender	->GetColorRGB(), transparentVal));
+	m_mpNumRender		->SetColor(SimpleMath::Color(m_mpNumRender		->GetColorRGB(), transparentVal));
+	m_crystalRender		->SetColor(SimpleMath::Color(m_crystalRender	->GetColorRGB(), transparentVal));
+
+	// Noneを省くために1スタート
+	for (int i = 1; i < MACHINE_TYPE::NUM; i++)
+	{
+		m_machineSelect[i]->GetMachineBox()->SetColor(SimpleMath::Color(m_machineSelect[i]->GetMachineBox()->GetColorRGB(), transparentVal));
+	}
 }

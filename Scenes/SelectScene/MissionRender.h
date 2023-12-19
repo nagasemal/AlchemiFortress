@@ -22,7 +22,6 @@ public:
 	MissionRender(SimpleMath::Vector2 pos,SimpleMath::Vector2 rage);
 	~MissionRender();
 
-	void Update();
 	void Render(Stage_Data data);
 
 	// マシン系のミッション内容を描画
@@ -64,6 +63,10 @@ public:
 	void SetPos(SimpleMath::Vector2 pos) { m_position = pos; }
 	void SetRage(SimpleMath::Vector2 rage) { m_rage = rage; }
 
+	// 透明度を設定する
+	void SetAlpha(float newAlpha) { m_alpha = newAlpha; }
+	// 透明度を返す
+	const float GetAlpha() { return m_alpha; }
 
 private:
 
@@ -76,6 +79,8 @@ private:
 
 	SimpleMath::Vector2 m_position;
 	SimpleMath::Vector2 m_rage;
+
+	float m_alpha;
 
 	int m_lineCount;
 	int m_missionNum;

@@ -424,3 +424,80 @@ private:
 	int m_type;
 
 };
+
+/// <summary>
+/// UIの透明化を行う
+/// </summary>
+class Tutorial_TransparentStart : public ICommand_Tutorial
+{
+public:	
+
+	/// <summary>
+	/// 指定のUI表示を透明化 & 無効化させる
+	/// </summary>
+	/// <param name="type">透明化させるUI群</param>
+	Tutorial_TransparentStart(UI_TYPE type);
+	~Tutorial_TransparentStart();
+
+	// 処理が開始した際に通す処理
+	void Initialize() override;
+	// 処理実行関数
+	void Execute() override;
+	// 処理が終了した際に通す処理
+	void Finalize() override;
+	// 初期化の内容を記述
+	void Reset() override;
+
+	void SetTutorialManagerPtr(TutorialManager* object) override { m_tutorialManager = object; }
+
+private:
+
+	// 対象のポインター
+	TutorialManager* m_tutorialManager;
+
+	// どのような処理を行うか
+	UI_TYPE m_type;
+
+	// 透明化遷移変数
+	float m_transparentTime;
+
+};
+
+
+/// <summary>
+/// UIの透明化を解除する
+/// </summary>
+class Tutorial_TransparentEnd : public ICommand_Tutorial
+{
+public:
+
+	/// <summary>
+	/// 指定のUI表示を透明化 & 無効化させる
+	/// </summary>
+	/// <param name="type">透明化させるUI群</param>
+	Tutorial_TransparentEnd(UI_TYPE type);
+	~Tutorial_TransparentEnd();
+
+	// 処理が開始した際に通す処理
+	void Initialize() override;
+	// 処理実行関数
+	void Execute() override;
+	// 処理が終了した際に通す処理
+	void Finalize() override;
+	// 初期化の内容を記述
+	void Reset() override;
+
+	void SetTutorialManagerPtr(TutorialManager* object) override { m_tutorialManager = object; }
+
+private:
+
+	// 対象のポインター
+	TutorialManager* m_tutorialManager;
+
+	// どのような処理を行うか
+	UI_TYPE m_type;
+
+	// 透明化遷移変数
+	float m_transparentTime;
+
+};

@@ -30,7 +30,7 @@ SelectionUI::~SelectionUI()
 
 void SelectionUI::Initialize()
 {
-
+	m_boxColor = Colors::White;
 }
 
 void SelectionUI::Finalize()
@@ -41,6 +41,14 @@ bool SelectionUI::HitMouse(bool layerCheck)
 {
 	InputSupport& pINP = InputSupport::GetInstance();
 
+	// ìßñæ(å©Ç¶Ç»Ç¢)èÍçáÇÕfalseÇï‘Ç∑
+	if (m_boxColor.A() < 0.0f)
+	{
+		m_hitMouseFlag = false;
+		return false;
+	}
+
+	// îªíËÇéÊìæÇ∑ÇÈ
 	m_hitMouseFlag = HitObject_RageSet(pINP.GetMousePosScreen(), 
 									   static_cast<float>(m_rect.right),
 									   static_cast<float>(m_rect.bottom),

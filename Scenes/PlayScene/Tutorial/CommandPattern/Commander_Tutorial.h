@@ -38,7 +38,10 @@ public:
 
 		TEXT_ARROW,					// チュートリアルのテキストを流す
 
-		ALCHEMI_LOCK				// 錬金ボタンをロック/解除する
+		ALCHEMI_LOCK,				// 錬金ボタンをロック/解除する
+
+		TRANSPARENT_START_UI,		// UI群を透明化
+		TRANSPARENT_END_UI,			// UI群の透明化解除
 
 	};
 
