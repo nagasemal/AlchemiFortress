@@ -50,7 +50,7 @@ public:
 	void LoadingJsonFile_ClearData(int number);
 
 	// UIのレイアウトを取得する
-	void LoadingUIData(std::string tagName);
+	void LoadingUIData(std::string pathName,std::string tagName);
 
 public:
 

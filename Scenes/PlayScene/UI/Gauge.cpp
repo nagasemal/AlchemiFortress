@@ -14,7 +14,7 @@
 #include <math.h>
 
 #define REDUCE 0.05f
-#define TEX_RAGE 64.0f // 使用するアイコンテクスチャの縦横大きさ
+#define TEX_RAGE 64 // 使用するアイコンテクスチャの縦横大きさ
 
 Gauge::Gauge():
     m_difRedioHp(1.0f),
@@ -79,6 +79,7 @@ void Gauge::Initialize()
 
     m_resourceRenderCrystal = std::make_unique<Number>(numberPos, SimpleMath::Vector2(uiData.option["NUMBER_RAGE"]));
     m_resourceRenderCrystal->SetColor(SimpleMath::Color(Colors::White));
+
 }
 
 void Gauge::Update()
@@ -89,22 +90,6 @@ void Gauge::Update()
 
     float deltaTime   = DeltaTime::GetInstance().GetNomalDeltaTime();
 
-    //　====================[　UIが半透明化するまでの時間処理　]
-    if (m_gauge_Hp->GetColor().A() >= pSJD.GetGameParameter().transparent_val)
-    {
-        m_uiTransparentTime += deltaTime;
-        //　　|=>　指定フレーム後に半透明化
-        if (m_uiTransparentTime >= pSJD.GetGameParameter().transparent_time)
-        {
-            TransparentUI(pSJD.GetGameParameter().transparent_val);
-        }
-        //　　|=>　UI周辺にマウスが接触したら透明度リセット
-        if (m_collider->HitMouse())
-        {
-            m_uiTransparentTime = 0.0f;
-            TransparentUI(1.0f);
-        }
-    }
     //　====================[　HPゲージの処理　]
     //　　|=>　割合計算
     float radio_Hp    = (static_cast<float>(pDataM.GetNowBaseHP()) / static_cast<float>(pDataM.GetNowBaseHP_MAX()));
@@ -131,6 +116,24 @@ void Gauge::Update()
     m_difRedioCrystal -= REDUCE * deltaTime;
     m_difRedioCrystal = std::min(std::max(m_difRedioCrystal, radio_Crystal), 1.0f);
     m_back_Crystal    ->SetRenderRatio(m_difRedioCrystal);
+
+
+    //　====================[　UIが半透明化するまでの時間処理　]
+    if (m_gauge_Hp->GetColor().A() >= pSJD.GetGameParameter().transparent_val)
+    {
+        m_uiTransparentTime += deltaTime;
+        //　　|=>　指定フレーム後に半透明化
+        if (m_uiTransparentTime >= pSJD.GetGameParameter().transparent_time)
+        {
+            TransparentUI(pSJD.GetGameParameter().transparent_val);
+        }
+        //　　|=>  透明度リセット UI周辺にマウスが接触 or HP割合が半分
+        if (m_collider->HitMouse() || radio_Hp <= 0.5f)
+        {
+            m_uiTransparentTime = 0.0f;
+            TransparentUI(1.0f);
+        }
+    }
 
 
 }
@@ -341,4 +344,9 @@ void Gauge::TransparentUI(float transparentVal)
 bool Gauge::GaugeActive()
 {
     return m_gauge_Hp->GetColor().A() > 0.0f;
+}
+
+float Gauge::GetColorAlpha()
+{
+    return m_gauge_Hp->GetColor().A();
 }

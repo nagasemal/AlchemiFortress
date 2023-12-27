@@ -35,7 +35,10 @@ public:
 	void ReloadWave();
 
 	bool MissionComplete();
-	bool MissionmFailure();
+	// ミッションが失敗した際のフラグ
+	bool MissionFailure();
+	// ミッションが進行不能になった際のフラグ
+	bool MissionUnable();
 
 	// 次のWAVEに進んだことを知らせるフラグ
 	bool NextWaveFlag() { return m_nextWaveFlag && m_waveAnimation.MaxCheck(); }
@@ -80,8 +83,10 @@ private:
 	// NextWaveの文字描画
 	std::unique_ptr<UserInterface> m_nextWaveTexture;
 
-	// 時間経過記録変数
+	// 時間経過記録変数 ゲーム全体
 	float m_gameTimer;
+	// 時間経過記録変数 ウェーブ内
+	float m_waveTimer;
 
 	// マウスが範囲に入っているか否かを検出する当たり判定クラス
 	std::unique_ptr<SelectionBox> m_collider;

@@ -25,6 +25,9 @@ private:
 
 	bool m_hitUIFlag;
 
+	// キー表示を見れるようにする
+	bool m_keyDisplayMode;
+
 public:
 	~InputSupport() = default;
 
@@ -112,6 +115,9 @@ public:
 	bool MiddleButton_Release();
 	// マウスホイールが押され続けている
 	bool MiddleButton_Held();
+
+	// キー表示モードになっている
+	bool GetKeyDisplayMode();
 
 	// マウス座標(ワールド空間)
 	SimpleMath::Vector3 GetMousePosWolrd();

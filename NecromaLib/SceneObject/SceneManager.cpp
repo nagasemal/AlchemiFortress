@@ -51,6 +51,8 @@ void SceneManager::Initialize()
 
 	// ÉVÅ[ÉìçÏê¨
 	CreateScene();
+
+	m_NextScene = GAME_SCENE::TITLE;
 }
 
 //-------------------------------------------------------------------

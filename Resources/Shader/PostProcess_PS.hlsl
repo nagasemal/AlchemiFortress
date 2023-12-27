@@ -29,36 +29,15 @@ float AddOutLine(float power, float2 uv, float offset)
 {
     float lineflag = 0.0f;
     
-    lineflag -= 8 * step(offset, dTex.Sample(samLinear, float2(uv.x, uv.y)).g);
+    lineflag -= 8.0f * step(offset, dTex.Sample(samLinear, float2(uv.x, uv.y)).g);
     
+    // 八方向サンプリング
     for (int i = 0; i < 9; i++)
     {
-        lineflag += step(offset, dTex.Sample(samLinear, uv + float2(((i % 3) - 1) * power, ((i / 3) - 1) * power)).g);
-    }
-   
-    //// 下のテクスチャ
-    //lineflag += step(offset, dTex.Sample(samLinear, float2(uv.x, uv.y - power)).g);
-    
-    //// 左のテクスチャ
-    //lineflag += step(offset, dTex.Sample(samLinear, float2(uv.x - power, uv.y)).g);
-    
-    //// 右のテクスチャ
-    //lineflag += step(offset, dTex.Sample(samLinear, float2(uv.x + power, uv.y)).g);
+        float judgement = dTex.Sample(samLinear, uv + float2((((float) i % 3) - 1), (((float)i / 3) -1)) * power).g;
         
-    //// 上のテクスチャ
-    //lineflag += step(offset, dTex.Sample(samLinear, float2(uv.x, uv.y + power)).g);
-    
-    //// 斜め左上のテクスチャ
-    //lineflag += step(offset, dTex.Sample(samLinear, float2(uv.x - power, uv.y - power)).g);
-    
-    //// 斜め右上のテクスチャ
-    //lineflag += step(offset, dTex.Sample(samLinear, float2(uv.x + power, uv.y - power)).g);
-    
-    //// 斜め左下のテクスチャ
-    //lineflag += step(offset, dTex.Sample(samLinear, float2(uv.x - power, uv.y + power)).g);
-    
-    //// 斜め右下のテクスチャ
-    //lineflag += step(offset, dTex.Sample(samLinear, float2(uv.x + power, uv.y + power)).g);
+        lineflag += step(offset, judgement);
+    }
     
     return lineflag;
 }
@@ -110,7 +89,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     float4 depthTex = dTex.Sample(samLinear, input.Tex);
     
     // 色収差テクスチャ
-    float4 bigBlurTex = chromaticAberration(0.0055 - depthTex.r * 0.0055, input.Tex);
+    float4 bigBlurTex = chromaticAberration(0.0075 - depthTex.r * 0.0075, input.Tex);
     
     // 明度算出
     float v = max(bigBlurTex.r, max(bigBlurTex.g, bigBlurTex.b));
@@ -128,16 +107,16 @@ float4 main(PS_INPUT input) : SV_TARGET
     bigBlurTex += AddOverLay(bigBlurTex, float4(0.2, 0.0, 0.25, 0.2f)) * step(v_2, 0.1);
     
     // 乗算           :    青み(やや紫)を乗算
-    bigBlurTex = bigBlurTex * (float4(0.98, 1.0, 0.97, 0.2f));
+    bigBlurTex = bigBlurTex * (float4(0.97, 1.0, 0.96, 0.2f));
     
-    // フォグ
-    bigBlurTex += (float4) 0.25f * depthTex.b;
+    // 距離フォグ
+    bigBlurTex += float4(0.25f, 0.25f, 0.3f, 0.5f) * depthTex.b;
     
     // 輪郭の抽出を行う
     float outlineFlag = step(AddOutLine(0.002f, input.Tex, 1.0f), 1.0f);
     
     // 輪郭が存在する場合はテクスチャに乗算する
-    bigBlurTex *= (float4)outlineFlag;    
+    bigBlurTex *= (float4)outlineFlag;
 
     return float4(bigBlurTex.xyz,1.0f);
     

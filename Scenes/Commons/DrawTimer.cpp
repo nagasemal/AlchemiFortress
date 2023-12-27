@@ -8,8 +8,8 @@
 
 DrawTimer::DrawTimer(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage)
 {
-	m_flame		= 0.0f;
-	m_seconds	= 0.0f;
+	m_flame		= 0;
+	m_seconds	= 0;
 
 	m_pos = pos;
 	m_rage = rage;
@@ -48,7 +48,7 @@ void DrawTimer::TimerDraw()
 	minuts = m_seconds / 60 % 10;
 	minuts2 = m_seconds / 60 / 10;
 
-	RECT TenFirst[4];
+	RECT TenFirst[4] = { RECT(),RECT(),RECT(),RECT() };
 	TenFirst[0].left = TEXTURE_RAGE * seconds;
 	TenFirst[0].top = 0;
 	TenFirst[0].right = TEXTURE_RAGE + TEXTURE_RAGE * seconds;

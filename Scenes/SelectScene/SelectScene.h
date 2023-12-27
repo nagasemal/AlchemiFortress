@@ -67,6 +67,4 @@ private:
 
 	bool m_changeMachine;							// マシンが変更されたことを知らせるフラグ
 
-	std::unique_ptr<UIKeyControl> m_uiKeyControl;
-
 };

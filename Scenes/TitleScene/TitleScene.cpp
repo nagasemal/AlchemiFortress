@@ -8,12 +8,23 @@
 #include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/ShareData.h"
 #include "NecromaLib/Singleton/InputSupport.h"
-
+#include "NecromaLib/Singleton/DeltaTime.h"
 #include "NecromaLib/Singleton/ShareJsonData.h"
 #include "NecromaLib/Singleton/SoundData.h"
 
-#define COLOR SimpleMath::Color(1.0f, 1.0f, 1.0f, 0.55f)
-#define MAGIC_CIRCLE_RAGE 30
+#define ALPHA_VAL 0.55f			// 右上魔法陣の透明度
+#define ROTATE_VAL 0.5f			// 右上魔法陣の回転角度
+
+#define MAGIC_CIRCLE_RAGE 30	// 3D空間上の魔法陣の大きさ
+
+#define START_PROCESSING 0.75f	// 処理を開始するまでの時間
+
+#define SKY_SPHERE_SCALE 2.0f	// 天球モデルの大きさ
+#define SKY_SPHERE_POS_Y 70.0f	// 天球モデルの位置
+#define SKY_SPHERE_LIGHTCOLOR	SimpleMath::Color(0.5f, 0.7f, 1.f, 0.8f)	// 天球モデルのアンビエントカラー
+#define SKY_SPHERE_ROTATION		SimpleMath::Vector3(20.0f, 15.0f, 0.0f)		// 天球モデルの回転角度
+
+#define VEIL_COLOR SimpleMath::Color(0.4f, 0.4f, 0.4f, 0.5f)	// 幕の色
 
 TitleScene::TitleScene():
 	m_nextType(ButtonType::Num),
@@ -58,25 +69,27 @@ void TitleScene::Initialize()
 			auto lights = dynamic_cast<IEffectLights*>(effect);
 
 			// 当たる光の色を変更
-			lights->SetAmbientLightColor(SimpleMath::Color(0.5f, 0.7f, 1.f, 0.8f));
+			lights->SetAmbientLightColor(SKY_SPHERE_LIGHTCOLOR);
 
 		});
 
 	//　====================[　タイトルロゴの設定　]
+	UI_Data ui_data = ShareJsonData::GetInstance().GetUIData("TitleLogo");
 	m_titleLogo = std::make_unique<TitleLogo>();
 	m_titleLogo->Create(pSL.GetTitleLogoPath());
 	m_titleLogo->SetWindowSize(width, height);
-	m_titleLogo->SetColor(SimpleMath::Color(0.4f, 0.4f, 0.6f, 1.0f));
-	m_titleLogo->SetPosition(SimpleMath::Vector2(width / 1.3f, height / 1.2f));
+	m_titleLogo->SetColor(SimpleMath::Color(Colors::BlueViolet));
+	m_titleLogo->SetPosition(ui_data.pos);
 
 	//　====================[　画面右側の幕の設定　]
+	ui_data = ShareJsonData::GetInstance().GetUIData("TitleVeil");
 	m_veil = std::make_unique<Veil>(0);
 	m_veil->Create(L"Resources/Textures/TitleText.png");
 	m_veil->LoadShaderFile(L"Veil");
 	m_veil->SetWindowSize(width, height);
-	m_veil->SetColor(SimpleMath::Color(0.4f, 0.4f, 0.4f, 0.5f));
-	m_veil->SetScale(SimpleMath::Vector2(width / 1.5f, (float)height));
-	m_veil->SetPosition(SimpleMath::Vector2(width / 1.95f, 0.0f));
+	m_veil->SetColor(VEIL_COLOR);
+	m_veil->SetScale(ui_data.rage);
+	m_veil->SetPosition(ui_data.pos);
 
 	//　====================[　キーボード上でUIを操作するクラスの生成　]
 	m_uiKeyControl = std::make_unique<UIKeyControl>();
@@ -86,10 +99,10 @@ void TitleScene::Initialize()
 
 
 	//　====================[　UIを生成,登録　]
+	ui_data = ShareJsonData::GetInstance().GetUIData("TitleButton");
 	for (int i = 0; i < ButtonType::Num; i++)
 	{
-		m_selectionButton[i] = std::make_unique<DrawLine>(SimpleMath::Vector2(width / 1.4f, 30 + (i * 120.0f)),
-														SimpleMath::Vector2(150,60));
+		m_selectionButton[i] = std::make_unique<DrawLine>(SimpleMath::Vector2(ui_data.pos.x, ui_data.pos.y + (i * ui_data.option["SHIFT_Y"])),ui_data.rage);
 
 		m_uiKeyControl->AddUI(m_selectionButton[i].get());
 	}
@@ -123,7 +136,7 @@ GAME_SCENE TitleScene::Update()
 	m_magicCircle->Update();
 
 	//　====================[　一定時間経過で処理の追加　]
-	if (m_titleCamera->GetAnimTime() >= 0.75f)
+	if (m_titleCamera->GetAnimTime() >= START_PROCESSING)
 	{
 		// タイトルロゴの更新
 		m_titleLogo->Update();
@@ -148,7 +161,7 @@ GAME_SCENE TitleScene::Update()
 	pSD.GetCamera()->SetEyePosition(m_titleCamera->GetEyePosition());
 
 	//　====================[　魔法陣展開　]
-	m_magicCircle->CreateMagicCircle(SimpleMath::Vector3{ 0,0,0 }, MAGIC_CIRCLE_RAGE);
+	m_magicCircle->CreateMagicCircle(SimpleMath::Vector3::Zero, MAGIC_CIRCLE_RAGE);
 
 	//　====================[　左クリックをした際の処理　]
 	//　　|=>　変数のリセット
@@ -161,7 +174,7 @@ GAME_SCENE TitleScene::Update()
 	//　====================[　マシンを動かす　]
 	if (m_rotateNowFlag)
 	{
-		m_animationData += 0.05f;
+		m_animationData += DeltaTime::GetInstance().GetDeltaTime();
 		m_animationData.anim = Easing::EaseInOutCubic(0.0f, XMConvertToRadians(90.0f), m_animationData);
 
 		// 右上の魔法陣の回転が終わったらシーン遷移を開始するため
@@ -219,9 +232,9 @@ void TitleScene::Draw()
 
 	//　====================[　天球の行列設定　]
 	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
-	modelData = SimpleMath::Matrix::CreateTranslation({ 0.0f,70.0f,0.0f });
-	modelData *= SimpleMath::Matrix::CreateScale(2.0f, 2.0f, 2.0f);
-	modelData *= SimpleMath::Matrix::CreateFromYawPitchRoll(8.0f, 7.0f, 90.0f);
+	modelData = SimpleMath::Matrix::CreateTranslation({ 0.0f,SKY_SPHERE_POS_Y,0.0f });
+	modelData *= SimpleMath::Matrix::CreateFromYawPitchRoll(SKY_SPHERE_ROTATION);
+	modelData *= SimpleMath::Matrix::CreateScale(SKY_SPHERE_SCALE);
 
 	//　====================[　天球の描画　]
 	m_skySphere->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection());
@@ -263,7 +276,7 @@ void TitleScene::DrawUI()
 	pSB->Draw(texData.tex.Get(),
 			  box_Pos,
 			  &rect_circle,
-			  COLOR,
+			  SimpleMath::Color(1.0f,1.0f,1.0f, ALPHA_VAL),
 			  m_animationData.anim,
 			  DirectX::XMFLOAT2(static_cast<float>(texData.width / 2), static_cast<float>(texData.height / 2)),
 			  0.5f);

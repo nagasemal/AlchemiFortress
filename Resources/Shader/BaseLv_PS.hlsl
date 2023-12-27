@@ -14,13 +14,13 @@ float4 main(PS_INPUT input) : SV_TARGET
 	// 板ポリゴンに任意の色を付ける
     float4 outputw = output;
 
-    //outputw.rgb *= colors * lerp(0.0f, 1.0f, step(input.tex.y, input.color.a));
-
 	// EXP表示の色を塗る
     outputw.rgb = secondColors.rgb * lerp(1.0f, 0.0f, step(input.tex.y, 1 - input.color.a));
 	
 	// ベースの色を塗る
     outputw.rgb += colors.rgb * lerp(0.0f, 1.0f, step(input.tex.y, 1 - input.color.a));
+	
+    outputw.w = colors.w * step(1.0f, outputw.w);
 	
 	return outputw;
 }

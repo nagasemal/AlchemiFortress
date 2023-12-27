@@ -21,6 +21,12 @@
 
 #define TEX_RAGE 2.0f
 
+// oŒ»—\ŽžŠÔ
+#define SPAWN_TIME 5.0f
+
+// oŒ»—\–‚–@wƒTƒCƒY
+#define MAGICCIRCLE_SIZE 1.0f
+
 Enemy_IdlingState::Enemy_IdlingState()
 {
 
@@ -41,9 +47,9 @@ void Enemy_IdlingState::Update(EnemyObject* object)
 	m_magicCircle->Update();
 
 	// 5•b‘O‚É–‚–@w‚ð“WŠJ‚·‚é
-	if (object->GetAliveTimer() <= 5.0f)
+	if (object->GetAliveTimer() <= SPAWN_TIME)
 	{
-		m_magicCircle->CreateMagicCircle(object->GetData().pos, 1.0f,SimpleMath::Color(0.0f,0.0f,0.0f,1.0));
+		m_magicCircle->CreateMagicCircle(object->GetData().pos, MAGICCIRCLE_SIZE,SimpleMath::Color(Colors::Black));
 	}
 
 	//  ¶‘¶ŽžŠÔ‚ª0.0f‚É‚È‚Á‚½‚ç¢Š«‚·‚é
@@ -72,7 +78,7 @@ void Enemy_IdlingState::RenderIcon(EnemyObject* object)
 	auto pSD = &ShareData::GetInstance();
 
 	// oŒ»ŽžŠÔ‚ð•`‰æ‚·‚é
-	if (object->GetAliveTimer() <= 5.0f)
+	if (object->GetAliveTimer() <= SPAWN_TIME)
 	{
 
 		RECT rect = RECT{ TEX_W * (int)object->GetAliveTimer() + 1 ,0,TEX_W + TEX_H * (int)object->GetAliveTimer() + 1,TEX_H};

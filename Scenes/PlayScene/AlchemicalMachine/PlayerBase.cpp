@@ -31,7 +31,7 @@ void PlayerBase::Initialize()
 	m_exp = 0;
 	m_hp = (float)DataManager::GetInstance()->GetNowBaseHP();
 
-	m_data.pos  = SimpleMath::Vector3(0,0,0);
+	m_data.pos  = SimpleMath::Vector3::Zero;
 	m_data.rage = RAGE;
 
 	auto pDataM = DataManager::GetInstance();

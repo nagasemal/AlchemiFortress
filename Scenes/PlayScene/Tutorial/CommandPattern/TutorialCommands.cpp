@@ -788,11 +788,10 @@ void Tutorial_LockAlchemi::Initialize()
 {
 	if (m_initializeFlag) return;
 
-	// ¶‰EUIˆÚ“®‚ð‚³‚¹‚È‚­‚·‚é
+	// ˜B‹à‚ð‚³‚¹‚È‚­‚·‚é
 	m_tutorialManager->GetPlayScene()->
 	GetAlchemicalMachineManager()->
-	GetMachineSelect()->get()->
-	GetAlchemiButton()->SetActiveFlag(m_activeFlag);
+	GetMachineSelect()->get()->AlchemiButtonLock(m_activeFlag);
 
 	m_initializeFlag = true;
 	m_completion = true;
@@ -814,6 +813,7 @@ void Tutorial_LockAlchemi::Reset()
 }
 
 
+#define TIME_SPEED 3.0f
 Tutorial_TransparentStart::Tutorial_TransparentStart(UI_TYPE type):
 	m_type(type),
 	m_transparentTime()
@@ -838,7 +838,7 @@ void Tutorial_TransparentStart::Execute()
 {
 	if (m_completion) return;
 
-	m_transparentTime -= DeltaTime::GetInstance().GetDeltaTime();
+	m_transparentTime -= DeltaTime::GetInstance().GetDeltaTime() * TIME_SPEED;
 
 	PlayScene* pScene = m_tutorialManager->GetPlayScene();
 
@@ -895,7 +895,7 @@ void Tutorial_TransparentEnd::Execute()
 {
 	if (m_completion) return;
 
-	m_transparentTime += DeltaTime::GetInstance().GetDeltaTime();
+	m_transparentTime += DeltaTime::GetInstance().GetDeltaTime() * TIME_SPEED;
 
 	PlayScene* pScene = m_tutorialManager->GetPlayScene();
 

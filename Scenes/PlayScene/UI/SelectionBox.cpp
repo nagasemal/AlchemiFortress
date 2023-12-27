@@ -22,7 +22,6 @@ SelectionBox::SelectionBox(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage)
 	m_selectFlag = false;
 
 	m_boxColor = Colors::White;
-	m_luminousFlag = false;
 
 	m_rect = { 0, 0, 64, 64 };
 
@@ -42,7 +41,6 @@ void SelectionBox::Update()
 
 	if (m_selectFlag) SoundData::GetInstance().PlaySystemSE(XACT_WAVEBANK_SYSTEMSE_BUTTONSELECT);
 
-
 	m_drawKey->Update();
 }
 
@@ -55,13 +53,11 @@ void SelectionBox::Draw()
 
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
-	SimpleMath::Color color = { 1.0f,1.0f,1.0f,m_boxColor.A()};
+	SimpleMath::Color color		= m_boxColor;
 
-	if (m_luminousFlag) color =  m_boxColor;
+	if (m_hitMouseFlag) color	= m_boxColor * Colors::LightGray;
 
-	if (m_hitMouseFlag) color = { 0.9f,0.9f,0.9f,m_boxColor.A()};
-
-	if (HoldMouse()) color = { 0.7f, 0.7f, 0.7f, m_boxColor.A()};
+	if (HoldMouse()) color		= m_boxColor * Colors::Gray;
 
 	SimpleMath::Vector2 box_Pos = { m_data.pos.x,m_data.pos.y };
 
@@ -83,13 +79,11 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsT
 
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
-	SimpleMath::Color color		= { 1.0f,1.0f,1.0f,m_boxColor.A() };
+	SimpleMath::Color color		= m_boxColor;
 
-	if (m_luminousFlag) color	= m_boxColor;
+	if (m_hitMouseFlag) color = m_boxColor * Colors::LightGray;
 
-	if (m_hitMouseFlag) color	= { 0.9f,0.9f,0.9f,m_boxColor.A() };
-
-	if (HoldMouse()) color		= { 0.7f, 0.7f, 0.7f, m_boxColor.A() };
+	if (HoldMouse()) color = m_boxColor * Colors::Gray;
 
 	SimpleMath::Vector2 box_Pos = { m_data.pos.x,m_data.pos.y };
 
@@ -116,13 +110,11 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textu
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
 	// ログの色
-	SimpleMath::Color	color = { 1.0f,1.0f,1.0f,m_boxColor.A() };
+	SimpleMath::Color	color = m_boxColor;
 
-	if (m_luminousFlag) color = m_boxColor;
+	if (m_hitMouseFlag) color = m_boxColor * Colors::LightGray;
 
-	if (m_hitMouseFlag) color = { 0.9f,0.9f,0.9f,m_boxColor.A() };
-
-	if (HoldMouse())	color = { 0.7f, 0.7f, 0.7f, m_boxColor.A() };
+	if (HoldMouse()) color = m_boxColor * Colors::Gray;
 	SimpleMath::Vector2 box_Pos = { m_data.pos.x,m_data.pos.y };
 
 	// 選択BOX
@@ -144,13 +136,11 @@ void SelectionBox::DrawUI(int UInumber)
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
 		// ログの色
-	SimpleMath::Color color = { 1.0f,1.0f,1.0f,m_boxColor.A() };
-
-	if (m_luminousFlag) color = m_boxColor;
+	SimpleMath::Color color = m_boxColor;
 
 	if (m_hitMouseFlag)
 	{
-		color = { 0.9f,0.9f,0.9f,m_boxColor.A() };
+		color = m_boxColor * Colors::LightGray;
 
 		m_popUITextTimer += DeltaTime::GetInstance().GetNomalDeltaTime();
 
@@ -160,7 +150,7 @@ void SelectionBox::DrawUI(int UInumber)
 		m_popUITextTimer -= DeltaTime::GetInstance().GetNomalDeltaTime();
 	}
 
-	if (HoldMouse()) color = { 0.7f, 0.7f, 0.7f, m_boxColor.A() };
+	if (HoldMouse()) color = m_boxColor * Colors::Gray;
 
 
 	m_popUITextTimer = std::min(std::max(0.0f, m_popUITextTimer),1.0f);
@@ -214,8 +204,6 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textu
 	// ログの色
 	SimpleMath::Color colour = nomalColor;
 
-	if (m_luminousFlag) colour = nomalColor + m_boxColor;
-
 	if (m_hitMouseFlag) colour = onColor;
 
 	if (HoldMouse()) colour = pressdColor;
@@ -245,8 +233,6 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textu
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 	// ログの色
 	SimpleMath::Color colour	= nomalColor;
-
-	if (m_luminousFlag) colour	= nomalColor + m_boxColor;
 
 	if (m_hitMouseFlag) colour	= onColor;
 

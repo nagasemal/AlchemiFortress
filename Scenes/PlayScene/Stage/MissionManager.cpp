@@ -38,7 +38,8 @@ MissionManager::MissionManager() :
 	m_nextWaveFlag(),
 	m_closeAnimation(),
 	m_closeMission(false),
-	m_closeButton()
+	m_closeButton(),
+	m_waveTimer()
 {
 }
 
@@ -186,14 +187,11 @@ void MissionManager::Update(AlchemicalMachineManager* pAlchemicalManager, EnemyM
 	// クリスタルリソースに変化があった際に通す
 	if (pAlchemicalManager->GetPulsCrystalVal() > 0.0f)	ResourceMission(pAlchemicalManager);
 
-	// 拠点のHPが0になったことを知らせるフラグ
-	m_failureFlag = m_baseHP <= 0;
-
 	// クリア、または失敗時にアニメーションを回す
-	if ((m_missionNum <= m_missionSituation) || m_failureFlag)
+	if ((m_missionNum <= m_missionSituation) || MissionUnable())
 	{
 		// 最後のWaveか失敗ならばシーン遷移開始とする
-		if (m_lastWave || m_failureFlag)
+		if (m_lastWave || MissionUnable())
 		{
 			m_backVeil->Update();
 			m_clearAnimation += 0.02f;
@@ -231,6 +229,9 @@ void MissionManager::TimerUpdate()
 {
 	auto pDeltaT = &DeltaTime::GetInstance();
 	m_gameTimer += pDeltaT->GetDeltaTime();
+
+	m_waveTimer += pDeltaT->GetDeltaTime();
+
 	m_timeRender->Update(m_gameTimer);
 
 }
@@ -258,13 +259,13 @@ void MissionManager::Render()
 	// 経過時間の描画
 	m_timeRender->TimerDraw();
 
-	if ((m_missionNum <= m_missionSituation) || m_failureFlag)
+	if ((m_missionNum <= m_missionSituation) || MissionUnable())
 	{
 		m_backVeil->Render();
 
 		SpriteLoder& pSL = SpriteLoder::GetInstance();
 
-		int filed = (int)m_failureFlag;
+		int filed = (int)MissionUnable();
 
 		RECT rect = SpriteCutter(320, 48, filed, 0);
 
@@ -290,6 +291,9 @@ void MissionManager::ReloadWave()
 	// ミッションの達成度
 	m_missionSituation = 0;
 
+	// ウェーブ内の時間をリセットする
+	m_waveTimer = 0;
+
 	// 取得した情報をコピーする
 	for (int i = 0; i < MISSION_TYPE::MISSION_NUM; i++)
 	{
@@ -313,7 +317,7 @@ void MissionManager::ReloadWave()
 	// ミッションを全てクリアしたフラグを元に戻す
 	m_allClearFlag = false;
 
-	// 
+	// ウェーブが進んだため、要求をfalseにする
 	m_nextWaveFlag = false;
 }
 
@@ -322,9 +326,14 @@ bool MissionManager::MissionComplete()
 	return (m_missionNum <= m_missionSituation) && m_clearAnimation.MaxCheck();
 }
 
-bool MissionManager::MissionmFailure()
+bool MissionManager::MissionUnable()
 {
-	return m_failureFlag && m_clearAnimation.MaxCheck();
+	return m_failureFlag || m_baseHP <= 0;
+}
+
+bool MissionManager::MissionFailure()
+{
+	return MissionUnable() && m_clearAnimation.MaxCheck();
 }
 
 int MissionManager::GetStartTimer()
@@ -531,7 +540,7 @@ void MissionManager::TimerMission()
 	if (m_missonCondition[MISSION_TYPE::TIMER][0].progress < m_missonCondition[MISSION_TYPE::TIMER][0].value)
 	{
 		// 毎秒進行度を上げる
-		m_missonCondition[MISSION_TYPE::TIMER][0].progress = (int)m_gameTimer;
+		m_missonCondition[MISSION_TYPE::TIMER][0].progress = (int)m_waveTimer;
 
 		if (m_missonCondition[MISSION_TYPE::TIMER][0].progress >= m_missonCondition[MISSION_TYPE::TIMER][0].value)
 		{

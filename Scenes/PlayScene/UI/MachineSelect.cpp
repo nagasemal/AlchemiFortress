@@ -50,8 +50,6 @@ void MachineSelect::Initialize()
 
 void MachineSelect::Update()
 {
-	float deltaTime = DeltaTime::GetInstance().GetDeltaTime();
-
 	m_manufacturingFlag = false;
 
 	m_machineBox->SetSavePos(m_data.pos);

@@ -160,12 +160,8 @@ void AlchemicalMachineManager::Update(
 	MoveCamera* moveCamera)
 {
 	InputSupport& pINP = InputSupport::GetInstance();
-	auto keybordState = pINP.GetKeybordState();
 	DataManager& pDM = *DataManager::GetInstance();
-	auto pPlayerBase = fieldManager->GetPlayerBase();
-
-
-
+	PlayerBase* pPlayerBase = fieldManager->GetPlayerBase();
 
 	//　====================[　入力関係　]
 	auto mouse			= pINP.GetMouseState();
@@ -203,6 +199,7 @@ void AlchemicalMachineManager::Update(
 	//　====================[　パーティクルの更新　]
 	Update_Particle();
 
+	//　====================[　マシンのLvUP,修繕,破壊を行うクラスの更新　]
 	m_machineExplanation->Update();
 
 	//　====================[　選択状態の解除　]
@@ -235,17 +232,17 @@ void AlchemicalMachineManager::Update(
 	if (m_selectNumber != -1)
 	{
 
-		// 注視点移動
+		//　注視点移動
 		moveCamera->TargetChange(m_AMObject[m_selectNumber]->GetData().pos);
 
-		// 説明文のアップデート処理を回す
+		//　説明文のアップデート処理を回す
 		m_machineExplanation->Update_MachineData(m_AMObject[m_selectNumber].get());
 
-		// 選択済みのオブジェクトの選択時アップデートを回す
+		//　選択済みのオブジェクトの選択時アップデートを回す
 		m_AMObject[m_selectNumber]->SelectUpdate();
 		m_AMObject[m_selectNumber]->SelectUpdate_Common();
 
-		// 選択オブジェクトに魔法陣展開
+		//　選択オブジェクトに魔法陣展開
 		m_magicCircle->CreateMagicCircle(
 			m_AMObject[m_selectNumber]->GetPos(),
 			m_AMObject[m_selectNumber]->GetMagicCircle().r,
@@ -255,12 +252,12 @@ void AlchemicalMachineManager::Update(
 	//　====================[　選択中のオブジェクトがない場合の処理　]
 	else
 	{
-
 		m_machineExplanation->ResetMoveTime();
-		m_magicCircle->DeleteMagicCircle();
+		m_magicCircle		->DeleteMagicCircle();
 
-		// 注視点移動
+		//　注視点移動
 		moveCamera->TargetChange({ 0,0,0 });
+
 	}
 
 	//　====================[　登録した影情報を消す　]

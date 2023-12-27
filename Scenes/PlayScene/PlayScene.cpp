@@ -28,6 +28,8 @@ PlayScene::PlayScene()
 
 	// 等倍速に設定
 	m_doubleSpeedNum = 1;
+
+	m_uiTransparentTime = 0.0f;
 }
 
 PlayScene::~PlayScene()
@@ -36,62 +38,64 @@ PlayScene::~PlayScene()
 
 void PlayScene::Initialize()
 {
-	// 画面の縦横値の取得
-	auto device			= ShareData::GetInstance().GetDeviceResources();
-	int width			= device->GetOutputSize().right;
-	int height			= device->GetOutputSize().bottom;
-
-	// ポストプロセスの生成
+	//　====================[　ポストプロセスの生成　]
 	m_postProcess		= std::make_unique<MyPostProcess>();
 	m_postProcess		->CreateShader();
 
-	// フィールドマネージャークラスの生成
+	//　====================[　フィールドマネージャークラスの生成　]
 	m_fieldManager		= std::make_unique<FieldObjectManager>();
 	m_fieldManager		->Initialize();
 
-	// マウスポインタークラスの生成
+	//　====================[　マウスポインタークラスの生成　] 
 	m_mousePointer		= std::make_unique<MousePointer>();
 	m_mousePointer		->Initialize();
 
-	// ユニット(マシン)マネージャークラスの生成
+	//　====================[　ユニット(マシン)マネージャークラスの生成　] 
 	m_AM_Manager		= std::make_unique<AlchemicalMachineManager>();
 	m_AM_Manager		->Initialize();
 
-	// カメラを動かすクラスの生成
+	//　====================[　カメラを動かすクラスの生成　]
 	m_moveCamera		= std::make_unique<MoveCamera>();
 	m_moveCamera		->Initialize();
 
-	// エネミーマネージャークラスの生成
+	//　====================[　エネミーマネージャークラスの生成　]
 	m_enemyManager		= std::make_unique<EnemyManager>();
 	m_enemyManager		->Initialize();
 
-	// リソースを示すゲージクラスの生成
+	//　====================[　リソースを示すゲージクラスの生成　]
 	m_resourceGauge		= std::make_unique<Gauge>();
 	m_resourceGauge		->Initialize();
 
-	// 拠点のLvを示すクラスの生成
+	//　====================[　拠点のLvを示すクラスの生成　]
 	UI_Data uiData		= ShareJsonData::GetInstance().GetUIData("GaugeBaseLv");
 	m_baseLv			= std::make_unique<BaseLv>();
 	m_baseLv			->SetPosition(uiData.pos);
 	m_baseLv			->SetScale(uiData.rage);
 
-	// ミッションマネージャークラスの生成
+	//　====================[　ミッションマネージャークラスの生成　]
 	m_missionManager	= std::make_unique<MissionManager>();
 	m_missionManager	->Initialize();
 
-	// 操作方法クラスの生成
+	//　====================[　操作方法クラスの生成　]
 	m_explanation		= std::make_unique<Explanation>();
 
-	// 倍速ボタンの生成
-	m_doubleSpeedButton = std::make_unique<SelectionBox>(SimpleMath::Vector2(width / 1.05f, height / 1.6f), SimpleMath::Vector2(1.0f, 1.0f));
+	//　====================[　倍速ボタンの生成　]
+	uiData = ShareJsonData::GetInstance().GetUIData("OptionDouble");
+	m_doubleSpeedButton = std::make_unique<SelectionBox>(uiData.pos, uiData.rage);
 
-	// 天球モデルのロード
+	UI_Data uiData_offset = ShareJsonData::GetInstance().GetUIData("OptionOffset");
+
+	//　====================[　マウスが周辺に位置するかの判定処理を取得　]
+	m_collider = std::make_unique<SelectionBox>(uiData.pos, SimpleMath::Vector2(uiData_offset.option["COLLIDER_X"], uiData_offset.option["COLLIDER_Y"]));
+	m_collider->Initialize();
+	m_collider->SetRect(RECT{ 0,0,1,1 });
+
+	//　====================[　天球モデルの読み込み　]
 	ShareData& pSD = ShareData::GetInstance();
 	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
 	fx->SetDirectory(L"Resources/Models");
 	m_skySphere = DirectX::Model::CreateFromCMO(pSD.GetDevice(), L"Resources/Models/SkyDome.cmo", *fx);
 
-	// 天球モデルのロード
 	m_skySphere->UpdateEffects([&](IEffect* effect)
 		{
 			// ライトの取得
@@ -101,14 +105,15 @@ void PlayScene::Initialize()
 			lights->SetAmbientLightColor(SKYDORM_LIGHTCOLOR);
 		});
 
-	// チュートリアルクラスの生成
+	//　====================[　用語説明クラスの生成　]
 	m_operationInstructions = std::make_unique<OperationInstructions>();
 	m_operationInstructions->Initialize(ShareJsonData::GetInstance().GetStageData().tutorial, this);
 
+	//　====================[　チュートリアルクラスの生成　]
 	m_tutorialManager = std::make_unique<TutorialManager>(this);
 	m_tutorialManager->ChangeWave(1);
 
-	// レンダーテクスチャの作成（シーン全体）
+	//　====================[　レンダーテクスチャの作成　]
 	m_offscreenRT = std::make_unique<DX::RenderTexture>(DXGI_FORMAT_B8G8R8A8_UNORM);
 	m_offscreenRT->SetDevice(pSD.GetDevice());
 	RECT rect = pSD.GetDeviceResources()->GetOutputSize();
@@ -128,103 +133,114 @@ GAME_SCENE PlayScene::Update()
 
 	pSound.PlayBGM(XACT_WAVEBANK_BGMS_BGM_PLAY, false);
 
-	// 倍速ボタンの更新処理
-	m_doubleSpeedButton->HitMouse();
-	m_doubleSpeedNum += m_doubleSpeedButton->ClickMouse();
+	//　====================[　倍速ボタンの更新　]
+	m_doubleSpeedButton		->HitMouse();
+	m_doubleSpeedNum		+= m_doubleSpeedButton->ClickMouse();
+	//　　|=>　上限を超えたら等速から
 	if (m_doubleSpeedNum > MAX_SPEED) m_doubleSpeedNum = 1;
+	//　　|=>　倍速にする
+	pDelta.SetDoubleSpeed((float)m_doubleSpeedNum);
 
-	if (m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven())
-	{
-		// 低減
-		pDelta.SetDoubleSpeed((float)m_doubleSpeedNum / 1.5f);
-	}
-	else
-	{
-		// 倍速にする
-		pDelta.SetDoubleSpeed((float)m_doubleSpeedNum);
-	}
+	//　====================[　用語説明クラスの更新　]
+	m_operationInstructions	->Update(this, m_moveCamera->GetStopCameraFlag());
 
-	m_operationInstructions->Update(this, m_moveCamera->GetStopCameraFlag());
+	//　====================[　ミッションクラスの更新　]
+	m_missionManager		->Update(m_AM_Manager.get(), m_enemyManager.get(), m_fieldManager.get());
 
-	m_missionManager->Update(m_AM_Manager.get(), m_enemyManager.get(), m_fieldManager.get());
+	//　====================[　チュートリアルクラスの更新　]
+	m_tutorialManager		->Update(m_missionManager->NextWaveFlag());
 
-	m_tutorialManager->Update(m_missionManager->NextWaveFlag());
+	//　====================[　マウス操作クラスの更新　]
+	m_explanation			->Update();
 
-	m_explanation->Update();
-
-	//　次のWaveに進んだことを知らせる
+	//　====================[　次のウェーブに進んだ際のリロード処理　]
 	if (m_missionManager->NextWaveFlag())
 	{
 		DataManager* pDM = DataManager::GetInstance();
 		ShareJsonData& pSJD = ShareJsonData::GetInstance();
 		Stage_Data stageData = pSJD.GetStageData();
 
-		m_AM_Manager->ReloadResource();
-		m_enemyManager->ReloadEnemyData();
-		//m_operationInstructions->RelodeTutorial(stageData.tutorial, this);
-		m_missionManager->ReloadWave();
-		m_tutorialManager->ChangeWave(m_missionManager->GetWave());
+		//　　|=>　ウェーブ情報を再度取得する
+		m_AM_Manager		->ReloadResource();
+		m_enemyManager		->ReloadEnemyData();
+		m_missionManager	->ReloadWave();
+		m_tutorialManager	->ChangeWave(m_missionManager->GetWave());
 
-		// リソース群を追加する
-		pDM->SetNowBaseHP(pDM->GetNowBaseHP() + stageData.resource.hp);
-		pDM->SetNowCrystal(pDM->GetNowCrystal() + stageData.resource.crystal);
-		pDM->SetNowMP(pDM->GetNowMP() + stageData.resource.mp);
+		//　　|=>　リソース群を追加する
+		pDM->SetNowBaseHP	(pDM->GetNowBaseHP() + stageData.resource.hp);
+		pDM->SetNowCrystal	(pDM->GetNowCrystal() + stageData.resource.crystal);
+		pDM->SetNowMP		(pDM->GetNowMP() + stageData.resource.mp);
 
 	}
 
-	// タイトル移行ボタンが押されたらタイトルシーンに向かう
+	//　====================[　シーン遷移　]
+	//　　|=>　タイトル
 	if (m_operationInstructions->GetTitleSceneButton()->ClickMouse())	return GAME_SCENE::TITLE;
-	// セレクト移行ボタンが押されたらセレクトシーンに向かう
+	//　　|=>　ステージセレクト
 	if (m_operationInstructions->GetSelectSceneButton()->ClickMouse())	return GAME_SCENE::SELECT;
 
-	// チュートリアル中ならば以下の処理を通さない
+	//　====================[　チュートリアル中ならば以下の処理を行わない　]
 	if (operationNow) 		return GAME_SCENE();
 
+	//　====================[　UIの半透明化を進める処理　]
+	m_uiTransparentTime += pDelta.GetNomalDeltaTime();
+	//　　|=>　指定フレーム後に半透明化
+	if (m_uiTransparentTime >= ShareJsonData::GetInstance().GetGameParameter().transparent_time)
+	{
+		TransparentUI(ShareJsonData::GetInstance().GetGameParameter().transparent_val);
+	}
+	//　　|=>　UI周辺にマウスが接触したら透明度,時間変数リセット
+	if (m_collider->HitMouse())
+	{
+		m_uiTransparentTime = 0.0f;
+		TransparentUI(1.0f);
+	}
+
+	//　====================[　カメラクラスの更新　]
 	m_moveCamera		->Update(!m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven(), true);
 
+	//　====================[　フィールドマネージャークラスの更新　]
 	m_fieldManager		->Update(m_enemyManager.get());
+	
+	//　====================[　マウスポインタークラスの更新　]
 	m_mousePointer		->Update();
 
-	// ユニット(マシン)マネージャーのアップデート
+	//　====================[　ユニットマネージャーの更新　]
 	m_AM_Manager		->Update(m_fieldManager.get(),
 								 m_mousePointer.get(),
 								 m_enemyManager.get(),
 								 m_moveCamera.get());
 
+	//　====================[　ミッションの時間更新　]
 	m_missionManager	->TimerUpdate();
 
+	//　====================[　エネミーマネージャークラスの更新　]
 	m_enemyManager		->Update(m_fieldManager->GetPlayerBase()->GetPos());
 
+	//　====================[　リソースゲージ描画クラスの更新　]
 	m_resourceGauge		->Update();
 
+	//　====================[　拠点レベル描画クラスの更新　]
 	m_baseLv			->Update(m_fieldManager.get());
 
+	//　====================[　エネミーが本ウェーブ上に存在するかチェック　]
 	bool enemyActivs = !m_enemyManager->GetEnemyData()->empty();
 
-	// エネミーToバレット
-	// ダングリング対策
+	//　====================[　エネミーToバレット　]
 	if (!m_AM_Manager->GetBullet()->empty() && enemyActivs) EnemyToBullet();
 
-	// エネミーToプレイヤーベース(当たり判定)
+	//　====================[　エネミーTo拠点　]
 	if (enemyActivs)	  EnemyToPlayerBase();
 
-
-	InputSupport* pINP = &InputSupport::GetInstance();
-
-	if (pINP->GetKeybordState().IsKeyReleased(Keyboard::C))
-	{
-		m_moveCamera->SetTargetProsition(SimpleMath::Vector3(0.0f,15.0f,0.0f));
-	}
-
-	// カメラを動かす
+	//　====================[　カメラクラスを元にカメラを動かす　]
 	pSD.GetCamera()->SetViewMatrix(m_moveCamera->GetViewMatrix());
 	pSD.GetCamera()->SetTargetPosition(m_moveCamera->GetTargetPosition());
 	pSD.GetCamera()->SetEyePosition(m_moveCamera->GetEyePosition());
 
-	// 拠点のHPが0になる、ミッションの内容的にクリアが不可能になった場合リザルトへ切り替える
-	if (m_missionManager->MissionmFailure())		return GAME_SCENE::RESULT;
+	//　====================[　敗北時　]
+	if (m_missionManager->MissionFailure())		return GAME_SCENE::RESULT;
 
-	// ミッションを全て達成したらリザルトへ切り替える
+	//　====================[　ステージクリア時　]
 	if (m_missionManager->MissionComplete())
 	{
 		// ステージ攻略情報を得る
@@ -235,7 +251,8 @@ GAME_SCENE PlayScene::Update()
 		return GAME_SCENE::RESULT;
 	}
 
-	// マシンのデータ再読み込み
+	//　====================[　マシンのデータ再読み込み　]
+	InputSupport* pINP = &InputSupport::GetInstance();
 	if (pINP->GetKeybordState().IsKeyReleased(Keyboard::M))
 	{
 		ModelShader::GetInstance().CreateModelShader();
@@ -310,9 +327,10 @@ void PlayScene::Draw()
 	ID3D11ShaderResourceView* nullsrv[] = { nullptr };
 	context->PSSetShaderResources(1, 1, nullsrv);
 
-	//// ポストプロセスを適応させる
+	// ポストプロセスを適応させる
 	m_postProcess->Render(&offscreenSRV, &srv);
 
+	// ==== 1パス目を描画する
 	//pSD.GetSpriteBatch()->Begin();
 	//pSD.GetSpriteBatch()->Draw(srv, SimpleMath::Vector2::Zero);
 	//pSD.GetSpriteBatch()->End();
@@ -324,85 +342,84 @@ void PlayScene::Draw()
 
 void PlayScene::DrawShadow()
 {
-	ShareData& pSD = ShareData::GetInstance();
-	auto context = pSD.GetContext();
-
-	ModelShader& pMS = ModelShader::GetInstance();
+	ShareData& pSD		= ShareData::GetInstance();
+	ModelShader& pMS	= ModelShader::GetInstance();
+	auto device			= ShareData::GetInstance().GetDeviceResources();
+	auto context		= pSD.GetContext();
 
 	//　====================[　新しいレンダーターゲット　]
 	auto rtv = pMS.GetShadowMap()->GetRenderTargetView();
-
 	auto dsv = pMS.GetDepthStencilView().Get();
 
 	//　====================[　元に戻すためのレンダーターゲット　]
-	auto renderTarget = pSD.GetDeviceResources()->GetRenderTargetView();
-	auto depthStencil = pSD.GetDeviceResources()->GetDepthStencilView();
+	auto renderTarget = device->GetRenderTargetView();
+	auto depthStencil = device->GetDepthStencilView();
 
-	// レンダーターゲットを変更（shadowMapRT）
+	//　====================[　レンダーターゲットを変更　]
 	context->ClearRenderTargetView(pMS.GetShadowMap()->GetRenderTargetView(), Colors::Black);
 	context->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	context->OMSetRenderTargets(1, &rtv, dsv);
 
-	// ビューポートを設定
-	D3D11_VIEWPORT vp = { 0.0f, 0.0f, 1280, 720, 0.0f, 1.0f };
+	//　====================[　ビューポートを設定　]
+	int width	= device->GetOutputSize().right;
+	int height	= device->GetOutputSize().bottom;
+
+	D3D11_VIEWPORT vp = { 0.0f, 0.0f, (float)width, (float)height, 0.0f, 1.0f };
 	context->RSSetViewports(1, &vp);
 
+	//　====================[　モデル描画　]
 	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
 	modelData = SimpleMath::Matrix::CreateScale({ 1.0f,1.0f,1.0f });
 	modelData *= SimpleMath::Matrix::CreateTranslation({ 0.0f,10.0f,0.0f });
 
-	// 天球描画
 	m_skySphere->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false, [&]()
 		{
 			ModelShader::GetInstance().ShadowModelDraw(false);
 		});
 
-	m_fieldManager->WriteDepath();
+	m_fieldManager	->WriteDepath();
 
-	m_AM_Manager->WriteDepath();
+	m_AM_Manager	->WriteDepath();
 
 	// -------------------------------------------------------------------------- //
-// レンダーターゲットとビューポートを元に戻す
-// -------------------------------------------------------------------------- //
+	// レンダーターゲットとビューポートを元に戻す
+	// -------------------------------------------------------------------------- //
 	context->ClearRenderTargetView(renderTarget, Colors::White);
 	context->ClearDepthStencilView(depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	context->OMSetRenderTargets(1, &renderTarget, depthStencil);
-	auto const viewport = pSD.GetDeviceResources()->GetScreenViewport();
+	auto const viewport = device->GetScreenViewport();
 	context->RSSetViewports(1, &viewport);
 	// -------------------------------------------------------------------------- //
 }
 
 void PlayScene::DrawUI()
 {
+	
+	//　====================[　UIの描画処理　]
 
-	m_operationInstructions->Render();
+	m_operationInstructions	->Render();
 
-	m_tutorialManager->Render();
+	m_tutorialManager		->Render();
 
-	m_AM_Manager->DrawUI();
-	m_AM_Manager->DrawMachineExplanationModel();
+	m_AM_Manager			->DrawUI();
+	m_AM_Manager			->DrawMachineExplanationModel();
 
+	m_enemyManager			->RenderUI();
 
-	m_enemyManager->RenderUI();
+	m_resourceGauge			->Render();
 
-	m_resourceGauge->Render();
+	m_baseLv				->Render(m_resourceGauge->GetColorAlpha());
 
-	if (m_resourceGauge->GaugeActive())
-	{
-		m_baseLv->Render();
-	}
+	m_missionManager		->Render();
 
-	m_missionManager->Render();
+	//　　|=>　倍速アイコンから描画を行う
+	m_doubleSpeedButton		->DrawUI(SpriteLoder::UIICON_TYPE::DISMATIONG + m_doubleSpeedNum);
 
-	// 倍速ボタン
-	m_doubleSpeedButton->DrawUI(10 + m_doubleSpeedNum);
+	m_explanation			->Render(m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven(), m_AM_Manager->GetRotateStopFlag());
 
-	// 操作説明描画
-	m_explanation->Render(m_AM_Manager->GetMachineSelect()->get()->GetHitMouseToSelectBoxEven(), m_AM_Manager->GetRotateStopFlag());
-
-	m_operationInstructions->Render_Layer2();
-
-	m_tutorialManager->Render_Layer2();
+	//　　|=>　描画順の関係により、最後に描画を行う
+	m_operationInstructions	->Render_Layer2();
+	m_tutorialManager		->Render_Layer2();
 
 }
 
@@ -475,5 +492,13 @@ void PlayScene::EnemyToBullet()
 			}
 		}
 	}
+}
+
+void PlayScene::TransparentUI(float transparentVal)
+{
+	m_doubleSpeedButton->SetColor(SimpleMath::Color(m_doubleSpeedButton->GetColorRGB(), transparentVal));
+
+	SelectionBox* explanationButton = m_operationInstructions->GetExplanationButton();
+	explanationButton->SetColor(SimpleMath::Color(explanationButton->GetColorRGB(), transparentVal));
 
 }

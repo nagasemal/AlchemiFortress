@@ -32,8 +32,11 @@ void Enemy_MeanderingMove::Execute()
 	// ‘¬“x‚ÌŒvŽZ
 	SimpleMath::Vector3 accele = SimpleMath::Vector3();
 
-	accele.x = (cosf(m_time) + sinf(m_time)) * m_param.value;//Map(cosf(m_time), -1.0f, 1.0f, 0.0f, 1.0f);
-	accele.z = (sinf(m_time) + cosf(m_time)) * m_param.value;//Map(sinf(m_time), -1.0f, 1.0f, 0.0f, 1.0f);
+	accele.x = sinf(m_time);
+	accele.z = cosf(m_time);
+	accele.Normalize();
+
+	accele *= m_param.value;
 
 	m_enemyPtr->SetAccele(m_enemyPtr->GetAccele() + accele);
 

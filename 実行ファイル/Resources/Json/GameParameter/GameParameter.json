@@ -8,7 +8,21 @@
     "MAX_MP": 1000,
     "MAX_CRYSTAL": 800,
     "NEED_EXP": 40,
-    "GROWTHRATE_EXP": 130
+    "GROWTHRATE_EXP": 130,
+    "UI_TRANSPARENT_TIME": 10.0,
+    "UI_TRANSPARENT_VAL": 0.25
   }
 
 }
+/*
+  マシン回転速度
+  最大ステージ数
+  拠点最大レベル
+  拠点最大HP
+  最大魔力量
+  最大結晶量
+  レベルアップに必要な経験値量
+  レベルアップ時加算される経験値量
+  UIが半透明になるまでの時間
+  半透明になったUIのアルファ値
+*/

@@ -7,7 +7,11 @@
 
 #include "NecromaLib/Singleton/SpriteLoder.h"
 
+#define POS_Y -1.5f
+
 #define RAGE 120.f
+
+#define RAGE_Y 3.0f
 
 Field::Field():
 	m_hitMouseFlag()
@@ -20,8 +24,8 @@ Field::~Field()
 
 void Field::Initialize()
 {
-	m_data.pos		= SimpleMath::Vector3(0,-1.5f,0);
-	m_data.rage		= SimpleMath::Vector3(RAGE,3,RAGE);
+	m_data.pos		= SimpleMath::Vector3(0,-POS_Y,0);
+	m_data.rage		= SimpleMath::Vector3(RAGE, RAGE_Y,RAGE);
 }
 
 void Field::Update()
@@ -30,7 +34,7 @@ void Field::Update()
 
 	SimpleMath::Vector3 mouseWolrdPos = InputSupport::GetInstance().GetMousePosWolrd();
 
-	Circle objectData = Circle(m_data.pos, RAGE * 1.5f);
+	Circle objectData = Circle(m_data.pos, RAGE * (RAGE_Y / 2.0f));
 
 	//　====================[　フィールドToマウスポインター　]
 	if (PointerToCircle(objectData,mouseWolrdPos)) m_hitMouseFlag = true;

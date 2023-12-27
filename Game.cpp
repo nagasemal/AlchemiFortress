@@ -315,33 +315,59 @@ void Game::ReloadUIData()
 {
     ShareJsonData& pSJD = ShareJsonData::GetInstance();
 
-    pSJD.LoadingUIData("AlchemiMachineIcon");
-    pSJD.LoadingUIData("AlchemiLeft");
-    pSJD.LoadingUIData("AlchemiMiddle");
-    pSJD.LoadingUIData("AlchemiRight");
-    pSJD.LoadingUIData("AlchemiNum");
-    pSJD.LoadingUIData("AlchemiMP");
-    pSJD.LoadingUIData("AlchemiCrystal");
-    pSJD.LoadingUIData("AlchemiOffset");
+    //　====================[　タイトルUI　]
+    pSJD.LoadingUIData("Title", "Button");
+    pSJD.LoadingUIData("Title", "Logo");
+    pSJD.LoadingUIData("Title", "Veil");
 
-    pSJD.LoadingUIData("GaugeHP");
-    pSJD.LoadingUIData("GaugeMP");
-    pSJD.LoadingUIData("GaugeCrystal");
-    pSJD.LoadingUIData("GaugeBaseLv");
-    pSJD.LoadingUIData("GaugeOffset");
+    //　====================[　セレクトUI　]
+    pSJD.LoadingUIData("Select", "Left");
+    pSJD.LoadingUIData("Select", "Right");
+    pSJD.LoadingUIData("Select", "Middle");
+    pSJD.LoadingUIData("Select", "Mission");
+    pSJD.LoadingUIData("Select", "Number");
 
-    pSJD.LoadingUIData("ExplanationSpawn");
-    pSJD.LoadingUIData("ExplanationLvUp");
-    pSJD.LoadingUIData("ExplanationRepair");
-    pSJD.LoadingUIData("ExplanationDestory");
-    pSJD.LoadingUIData("ExplanationNext");
-    pSJD.LoadingUIData("ExplanationBack");
-    pSJD.LoadingUIData("ExplanationOffset");
+    //　====================[　リザルトUI　]
+    pSJD.LoadingUIData("Result", "Select");
+    pSJD.LoadingUIData("Result", "Retry");
+    pSJD.LoadingUIData("Result", "Next");
 
-    pSJD.LoadingUIData("MissionTimer");
-    pSJD.LoadingUIData("MissionArrow");
-    pSJD.LoadingUIData("MissionText");
-    pSJD.LoadingUIData("MissionOffset");
+    //　====================[　錬金系UI　]
+    pSJD.LoadingUIData("Alchemi","MachineIcon");
+    pSJD.LoadingUIData("Alchemi", "Left");
+    pSJD.LoadingUIData("Alchemi", "Middle");
+    pSJD.LoadingUIData("Alchemi", "Right");
+    pSJD.LoadingUIData("Alchemi", "Num");
+    pSJD.LoadingUIData("Alchemi", "MP");
+    pSJD.LoadingUIData("Alchemi", "Crystal");
+    pSJD.LoadingUIData("Alchemi", "Offset");
+
+    //　====================[　ゲージ系UI　]
+    pSJD.LoadingUIData("Gauge", "HP");
+    pSJD.LoadingUIData("Gauge", "MP");
+    pSJD.LoadingUIData("Gauge", "Crystal");
+    pSJD.LoadingUIData("Gauge", "BaseLv");
+    pSJD.LoadingUIData("Gauge", "Offset");
+
+    //　====================[　マシン編集系UI　]
+    pSJD.LoadingUIData("Explanation", "Spawn");
+    pSJD.LoadingUIData("Explanation", "LvUp");
+    pSJD.LoadingUIData("Explanation", "Repair");
+    pSJD.LoadingUIData("Explanation", "Destory");
+    pSJD.LoadingUIData("Explanation", "Next");
+    pSJD.LoadingUIData("Explanation", "Back");
+    pSJD.LoadingUIData("Explanation", "Offset");
+
+    //　====================[　ミッション系UI　]
+    pSJD.LoadingUIData("Mission","Timer");
+    pSJD.LoadingUIData("Mission","Arrow");
+    pSJD.LoadingUIData("Mission","Text");
+    pSJD.LoadingUIData("Mission","Offset");
+
+    //　====================[　その他UI　]
+    pSJD.LoadingUIData("Option","Double");
+    pSJD.LoadingUIData("Option","Explanation");
+    pSJD.LoadingUIData("Option","Offset");
 
 }
 

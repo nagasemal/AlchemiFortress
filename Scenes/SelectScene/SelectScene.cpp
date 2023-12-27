@@ -14,14 +14,13 @@
 #include "Scenes/PlayScene/UI/SelectionBox.h"
 #include "Scenes/PlayScene/UI/Number.h"
 
-#define MAX_STAGE 10
-#define MIN_STAGE 1
+#define START_PROCESSING 0.35f	// 処理を開始するまでの時間
 
-#define MISSION_POS SimpleMath::Vector2			{545,720 / 2}
-#define NEXTBOTTOM_POS SimpleMath::Vector2		{1280.0f / 2.0f,720.0f / 1.15f}
-#define NUMBER_POS SimpleMath::Vector2			{1280.0f / 2.0f,100}
-#define ARROW_POS_L SimpleMath::Vector2			{200,500}
-#define ARROW_POS_R SimpleMath::Vector2			{1080,500}
+//　====================[　天球の情報　]
+#define SKY_ROTATION	SimpleMath::Vector3{8.0f, 7.0f, 90.0f}
+#define SKY_SCALE	1.5f
+#define SKY_POS_Y	70.0f
+#define SKY_LIGHT SimpleMath::Color(0.2f, 0.2f, 0.4f, 0.8f)
 
 SelectScene::SelectScene():
 	m_selectStageNumber(1),
@@ -48,22 +47,19 @@ void SelectScene::Initialize()
 	m_machineDraw = std::make_unique<DrawMachine>();
 	m_machineDraw->Initialize(m_selectStageNumber);
 
-	m_missionDraw = std::make_unique<MissionRender>(MISSION_POS, SimpleMath::Vector2{1,1});
+	UI_Data ui_data = ShareJsonData::GetInstance().GetUIData("SelectMission");
+	m_missionDraw = std::make_unique<MissionRender>(ui_data.pos, ui_data.rage);
 
-	m_arrowDraw[0] = std::make_unique<DrawArrow>(ARROW_POS_L, SimpleMath::Vector2{1,1},0);
-	m_arrowDraw[1] = std::make_unique<DrawArrow>(ARROW_POS_R, SimpleMath::Vector2{1,1},2);
+	ui_data = ShareJsonData::GetInstance().GetUIData("SelectLeft");
+	m_arrowDraw[0] = std::make_unique<DrawArrow>(ui_data.pos, ui_data.rage,0);
+	ui_data = ShareJsonData::GetInstance().GetUIData("SelectRight");
+	m_arrowDraw[1] = std::make_unique<DrawArrow>(ui_data.pos, ui_data.rage,2);
+	ui_data = ShareJsonData::GetInstance().GetUIData("SelectMiddle");
+	m_nextSceneBox = std::make_unique<SelectionBox>(ui_data.pos, ui_data.rage);
 
-	m_nextSceneBox = std::make_unique<SelectionBox>(NEXTBOTTOM_POS, SimpleMath::Vector2{5,1});
-
-	m_uiKeyControl = std::make_unique<UIKeyControl>();
-	m_uiKeyControl->AddUI(m_arrowDraw[0].get());
-	m_uiKeyControl->AddUI(m_arrowDraw[1].get());
-	m_uiKeyControl->AddUI(m_nextSceneBox.get());
-
-	m_stageNumber = std::make_unique<Number>(NUMBER_POS, SimpleMath::Vector2{ 2.0f,2.0f});
+	ui_data = ShareJsonData::GetInstance().GetUIData("SelectNumber");
+	m_stageNumber = std::make_unique<Number>(ui_data.pos, ui_data.rage);
 	m_stageNumber->SetNumber(m_selectStageNumber);
-
-
 
 	ShareData& pSD = ShareData::GetInstance();
 	std::unique_ptr<EffectFactory> fx = std::make_unique<EffectFactory>(pSD.GetDevice());
@@ -76,7 +72,7 @@ void SelectScene::Initialize()
 			// 今回はライトだけ欲しい
 			auto lights = dynamic_cast<IEffectLights*>(effect);
 			// 光の当たり方変更
-			lights->SetAmbientLightColor(SimpleMath::Color(0.8f, 0.7f, 0.4f, 0.8f));
+			lights->SetAmbientLightColor(SKY_LIGHT);
 
 		});
 
@@ -92,12 +88,13 @@ GAME_SCENE SelectScene::Update()
 	m_selectCamera->Update();
 	m_machineDraw->Update();
 
-	// カメラを動かす
+	//　====================[　カメラを動かす　]
 	pSD.GetCamera()->SetViewMatrix(m_selectCamera->GetViewMatrix());
 	pSD.GetCamera()->SetTargetPosition(m_selectCamera->GetTargetPosition());
 	pSD.GetCamera()->SetEyePosition(m_selectCamera->GetEyePosition());
  
-	// 右側の矢印更新処理
+	//　====================[　UI更新処理　]
+	//　　|=>　右側矢印
 	m_arrowDraw[0]->HitMouse();
 	m_arrowDraw[0]->SetActiveFlag(m_selectStageNumber > 1);
 	if (m_arrowDraw[0]->ClickMouse())
@@ -106,8 +103,7 @@ GAME_SCENE SelectScene::Update()
 		m_changeMachine = false;
 		m_selectCamera->AnimationReset();
 	}
-
-	// 左側の矢印更新処理
+	//　　|=>　左側矢印
 	m_arrowDraw[1]->HitMouse();
 	m_arrowDraw[1]->SetActiveFlag(m_selectStageNumber < ShareJsonData::GetInstance().GetGameParameter().stage_Max);
 
@@ -118,7 +114,8 @@ GAME_SCENE SelectScene::Update()
 		m_selectCamera->AnimationReset();
 	}
 
-	if (m_selectCamera->GetAnimationTimer() >= 0.35f && !m_changeMachine)
+	//　====================[　ステージ情報読み込み　]
+	if (m_selectCamera->GetAnimationTimer() >= START_PROCESSING && !m_changeMachine)
 	{
 		// 読み込み
 		ShareJsonData::GetInstance().LoadingJsonFile_ClearData(m_selectStageNumber);
@@ -129,10 +126,7 @@ GAME_SCENE SelectScene::Update()
 		m_changeMachine = true;
 	}
 
-	// Update処理;
 	m_nextSceneBox->HitMouse();
-
-	m_uiKeyControl->Update();
 
 	//　プレイシーンに遷移 (ボタンを押した時)
 	if (m_nextSceneBox->ClickMouse())
@@ -160,14 +154,13 @@ void SelectScene::Draw()
 
 			ModelShader::GetInstance().ModelDrawShader(
 				SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f),
-				SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f), SpriteLoder::GetInstance().GetMachineTextuer(3));
+				SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f), SpriteLoder::GetInstance().GetMachineTextuer(4));
 
-			pSD.GetContext()->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetMachineTextuer(3).GetAddressOf());
-			pSD.GetContext()->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetNormalMap(3).GetAddressOf());
+			pSD.GetContext()->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetMachineTextuer(4).GetAddressOf());
+			pSD.GetContext()->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetNormalMap(0).GetAddressOf());
 
 			//　====================[　深度ステンシルステートの設定　]
 			pSD.GetContext()->OMSetDepthStencilState(pSD.GetCommonStates()->DepthDefault(), 0);
-
 
 		});
 
@@ -189,10 +182,8 @@ void SelectScene::DrawUI()
 
 	m_nextSceneBox->Draw();
 
-	m_stageNumber->SetColor(SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
+	m_stageNumber->SetColor(SimpleMath::Color(Colors::White));
 	m_stageNumber->Render();
-
-
 
 	if (m_arrowDraw[0]->GetActiveFlag()) m_arrowDraw[0]->Draw();
 	if (m_arrowDraw[1]->GetActiveFlag()) m_arrowDraw[1]->Draw();

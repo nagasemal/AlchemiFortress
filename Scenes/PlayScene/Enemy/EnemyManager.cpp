@@ -14,6 +14,11 @@
 #include "Scenes/PlayScene/Enemy/EnemyList/Enemy_MeanderingMove.h"
 #include "Scenes/PlayScene/Enemy/EnemyList/Enemy_HoppingMove.h"
 
+// 拠点からスポーン地点までの最低距離
+#define SPAWN_MIN 20
+// 拠点からスポーン地点までの最大距離
+#define SPAWN_MAX 40
+
 EnemyManager::EnemyManager() :
 	m_timer(),
 	m_totalTimer(),
@@ -332,7 +337,7 @@ EnemyObject EnemyManager::GetRandomEnemy()
 	// 円周上のどこに設置するかを決める
 	std::uniform_real_distribution<> dist(0, XM_2PI);
 	// 拠点からの距離を取得
-	std::uniform_int_distribution<> dist2(20,40);
+	std::uniform_int_distribution<> dist2(SPAWN_MIN, SPAWN_MAX);
 	std::mt19937 gen(rd());
 	float rand = static_cast<float>(dist(engine));
 	float rand2 = static_cast<float>(dist2(gen));

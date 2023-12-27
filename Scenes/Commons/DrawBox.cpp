@@ -6,6 +6,9 @@
 #include "NecromaLib/Singleton/DeltaTime.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
 
+#define MAX_SIZE 50.0f
+#define MIN_SIZE 3.0f
+
 DrawBox::DrawBox(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage, float lineRage)
 {
 
@@ -43,10 +46,10 @@ void DrawBox::Update()
 	HitMouse();
 
 	// ˜g‚ð“®‚©‚· ˆê’iŠK–Ú
-	m_data.rage.x = Easing::EaseInOutCirc(m_data.rage.x * 50.0f, m_saveData.rage.x,m_animationData_First);
-	m_data.rage.y = Easing::EaseInOutCirc(m_data.rage.y * 50.0f, m_saveData.rage.y,m_animationData_First);
+	m_data.rage.x = Easing::EaseInOutCirc(m_data.rage.x * MAX_SIZE, m_saveData.rage.x,m_animationData_First);
+	m_data.rage.y = Easing::EaseInOutCirc(m_data.rage.y * MAX_SIZE, m_saveData.rage.y,m_animationData_First);
 
-	m_lineRage_Vertical.x = m_lineRage_Beside.y = Easing::EaseInOutCirc(50.0f, 3.0f, m_animationData_First);
+	m_lineRage_Vertical.x = m_lineRage_Beside.y = Easing::EaseInOutCirc(MAX_SIZE, MIN_SIZE, m_animationData_First);
 
 	m_lineRage_Vertical.y = m_data.rage.y * 2.0f;
 	m_lineRage_Beside.x	  = m_data.rage.x * 2.0f;
@@ -115,18 +118,6 @@ void DrawBox::Draw()
 		0.0f,
 		SimpleMath::Vector2(0, 0),
 		m_lineRage_Beside);
-
-	//// ‰‰o—p‚ÌŽlŠpŒ`•`‰æ
-	//popPos = SimpleMath::Vector2(m_data.pos.x - m_data.rage.x - 5, m_data.pos.y + m_data.rage.y);
-	//rect = RECT{ 0,0,5,5 };
-	//pSB->Draw(pSL.GetMissionLabelTexture().Get(),
-	//	popPos + m_boxPos,
-	//	&rect,
-	//	m_color,
-	//	0.0f,
-	//	SimpleMath::Vector2(0, 0));
-
-
 }
 
 void DrawBox::SetPosRage(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage)

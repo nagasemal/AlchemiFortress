@@ -39,10 +39,6 @@ void DrawSlider::Update()
 
     bool hitSliderToMouse = PointerToBox(mousePos, m_minPos, m_maxPos);
 
-    //if (hitSliderToMouse && pINP.GetMouseState().leftButton == Mouse::ButtonStateTracker::PRESSED)
-    //{
-    //    SoundData::GetInstance().PlaySystemSE_Auto(XACT_WAVEBANK_SYSTEMSE_BUTTOMPUSH);
-    //}
 
     if (hitSliderToMouse && pINP.LeftButton_Held())
     {
@@ -87,8 +83,6 @@ void DrawSlider::CreateBar(SimpleMath::Vector2 position, SimpleMath::Vector2 sca
         , scale
         , UserInterface::ANCHOR::MIDDLE_CENTER);
     m_gauge_Flont->SetWindowSize(width, height);
-    //m_gauge_Flont->SetRenderRatio(m_value);
-    //m_gauge_Flont->SetColor(SimpleMath::Color(m_value, 0.0f, 0.5f, 1.0f));
 
 
     m_gauge_Back = std::make_unique<UserInterface>();

@@ -82,7 +82,7 @@ float4 ApplyPointLight(float3 position, float3 lightPos, float power,float rage)
 
 float4 main(PSInput input) : SV_TARGET0
 {
-	float texInput = Texture.Sample(Sampler, input.TexCoord);
+    float texInput = (float)Texture.Sample(Sampler, input.TexCoord);
 
 	// テクスチャ取得
 	float3 modelTexture = MachineTexture.Sample(Sampler, input.TexCoord).rgb;
@@ -125,6 +125,8 @@ float4 main(PSInput input) : SV_TARGET0
 	color.w = step(texInput, Time.x);
 	
     color.w *= DiffuseColor.w;
+	
+    color.w *= PaintColor.w;
 
 	return float4(color.xyz, color.w);
 }

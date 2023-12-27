@@ -50,6 +50,9 @@ public:
 	// ゲージが出現しているか否か
 	bool GaugeActive();
 
+	// 現在の透明度を返す
+	float GetColorAlpha();
+
 private:
 
 	// MP

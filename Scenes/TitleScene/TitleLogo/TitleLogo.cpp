@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "TitleLogo.h"
 
 #include <WICTextureLoader.h>
@@ -7,7 +7,6 @@
 #include "NecromaLib/Singleton/SpriteLoder.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
 #include "NecromaLib/GameData/Easing.h"
-
 
 const std::vector<D3D11_INPUT_ELEMENT_DESC> TitleLogo::INPUT_LAYOUT =
 {

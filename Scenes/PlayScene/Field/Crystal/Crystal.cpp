@@ -6,10 +6,16 @@
 #include "NecromaLib/Singleton/ModelShader.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
 
+// ƒ‚ƒfƒ‹‚Ì‘å‚«‚³
+#define RAGE 0.8f
+
+// “–‚½‚è”»’è‚Ì‘å‚«‚³
+#define COLLIDER_RAGE 1.2f
+
 Crystal::Crystal(SimpleMath::Vector3 pos, float rotateY)
 {
 	m_data.pos = pos;
-	m_data.rage = SimpleMath::Vector3(0.8f, 0.8f, 0.8f);
+	m_data.rage = SimpleMath::Vector3(RAGE);
 	m_rotateY = rotateY;
 
 	m_type = CRYSTAL;
@@ -74,8 +80,6 @@ void Crystal::WriteDepth(DirectX::Model* model)
 	modelData *= SimpleMath::Matrix::CreateRotationY(m_rotateY);
 	modelData *= SimpleMath::Matrix::CreateTranslation(m_data.pos.x, m_data.pos.y, m_data.pos.z);
 
-	;
-
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false, [&]()
 		{
 
@@ -93,7 +97,7 @@ bool Crystal::GetHitMouse()
 {
 	SimpleMath::Vector3 mouseWolrdPos = InputSupport::GetInstance().GetMousePosWolrd();
 
-	Circle mouseCircle(mouseWolrdPos, 1.2f);
+	Circle mouseCircle(mouseWolrdPos, COLLIDER_RAGE);
 
 	InputSupport& pINP = InputSupport::GetInstance();
 	auto mouse = pINP.GetMouseState();

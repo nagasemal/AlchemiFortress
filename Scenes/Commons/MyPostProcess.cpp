@@ -89,6 +89,9 @@ void MyPostProcess::CreateShader()
 void MyPostProcess::Render(ID3D11ShaderResourceView* const* offscreenTex, ID3D11ShaderResourceView* const* depthTex)
 {
 	auto context = ShareData::GetInstance().GetContext();
+	auto device = ShareData::GetInstance().GetDeviceResources();
+	int width = device->GetOutputSize().right;
+	int height = device->GetOutputSize().bottom;
 
 	// 頂点情報(板ポリゴンの４頂点の座標情報）
 	VertexPositionColorTexture vertex[4] =
@@ -101,7 +104,7 @@ void MyPostProcess::Render(ID3D11ShaderResourceView* const* offscreenTex, ID3D11
 	cbuff.matView = SimpleMath::Matrix::Identity;
 	cbuff.matProj = SimpleMath::Matrix::Identity;
 	cbuff.matWorld = SimpleMath::Matrix::Identity;
-	cbuff.Diffuse = SimpleMath::Vector4(1280.0f, 720.0f, 1.0f, 1.0f);
+	cbuff.Diffuse = SimpleMath::Vector4((float)width, (float)height, 1.0f, 1.0f);
 
 	ShareData::GetInstance().GetCamera()->GetViewMatrix();
 

@@ -34,7 +34,7 @@ BaseLv::BaseLv()
 	LoadShaderFile(L"BaseLv");
 
 	m_baseLvRender	= std::make_unique<Number>(uiData.pos, uiData.rage * uiData.option["NUMBER_RAGE"]);
-	m_baseLvRender	->SetColor(SimpleMath::Color(Colors::White));
+	m_baseLvRender	->SetColor(SimpleMath::Color(Colors::Black));
 
 	m_expRedio = 0.0f;
 }
@@ -56,7 +56,7 @@ void BaseLv::Update(FieldObjectManager* pFieldObjectManager)
 
 }
 
-void BaseLv::Render()
+void BaseLv::Render(float alphaVal)
 {
 
 	auto context = ShareData::GetInstance().GetContext();
@@ -80,8 +80,8 @@ void BaseLv::Render()
 	//シェーダーに渡す追加のバッファを作成する。(ConstBuffer）
 	ConstBuffer cbuff;
 	cbuff.windowSize	= SimpleMath::Vector4(static_cast<float>(windowSize.right), static_cast<float>(windowSize.bottom), 1, 1);
-	cbuff.base_color	= Colors::Black;
-	cbuff.second_color	= Colors::Aqua;
+	cbuff.base_color	= SimpleMath::Color(1.0f, 1.0f, 1.0f, alphaVal);
+	cbuff.second_color	= SimpleMath::Color(0.0f, 1.0f, 1.0f, alphaVal);
 
 	//受け渡し用バッファの内容更新(ConstBufferからID3D11Bufferへの変換）
 	context			->UpdateSubresource(m_cBuffer.Get(), 0, NULL, &cbuff, 0, 0);
@@ -111,6 +111,7 @@ void BaseLv::Render()
 	// 拠点Lvの描画
 	m_baseLvRender	->SetPosition(uiData.pos);
 	m_baseLvRender	->SetRage(uiData.rage * uiData.option["NUMBER_RAGE"]);
+	m_baseLvRender	->SetColor(SimpleMath::Color(m_baseLvRender->GetColorRGB(), alphaVal));
 	m_baseLvRender	->Render();
 
 }

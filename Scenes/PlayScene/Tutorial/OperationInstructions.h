@@ -69,18 +69,16 @@ public:
 	void Render_Layer2(); // 表示の関係上もう一つ関数が必要であったため
 	void Finalize();
 
-	//void RelodeTutorial(std::vector<Tutorial_Status> tutorialNumber, PlayScene* pPlayScene);
 	void CreateInterfase();
 	
 	bool GetExplanationFlag() { return m_explanationFlag; }
 
-	// 現在の選択状況からどこにラインを引くか決めます
-	//void LinePosSet(PlayScene* pPlayScene,int number);
-	
-	//void NextTutorial(PlayScene* pPlayScene);
-
+	// タイトルシーンへ向かうためのボタン取得
 	SelectionBox* GetTitleSceneButton() { return m_titleSceneBox.get(); }
+	// セレクトシーンへ向かうためのボタン取得
 	SelectionBox* GetSelectSceneButton() { return m_selectSceneBox.get(); }
+	// 説明モードに移行するためのボタン取得
+	SelectionBox* GetExplanationButton() { return m_explanationButton.get();}
 
 private:
 

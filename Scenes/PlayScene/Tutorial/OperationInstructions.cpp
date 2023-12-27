@@ -89,7 +89,8 @@ void OperationInstructions::Initialize(std::vector<Tutorial_Status> tutorialNumb
 	m_arrowL = std::make_unique<DrawArrow>(SimpleMath::Vector2((width / 2) + ARROW_POS_X + TUTORIAL_TEXT_POS.x, height / 2.2f + TUTORIAL_TEXT_POS.y), SimpleMath::Vector2(1.0f, 1.0f),2);
 	m_arrowR = std::make_unique<DrawArrow>(SimpleMath::Vector2((width / 2) - ARROW_POS_X + TUTORIAL_TEXT_POS.x, height / 2.2f + TUTORIAL_TEXT_POS.y), SimpleMath::Vector2(1.0f, 1.0f),4);
 
-	m_explanationButton  = std::make_unique<SelectionBox>(TUTORIAL_EXIT_BUTTON, SimpleMath::Vector2(1.0f, 1.0f));
+	UI_Data uiData = ShareJsonData::GetInstance().GetUIData("OptionExplanation");
+	m_explanationButton  = std::make_unique<SelectionBox>(uiData.pos, uiData.rage);
 
 	m_titleSceneBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(width / TITLESCENE_BUTTON.x,height / TITLESCENE_BUTTON.y),SimpleMath::Vector2(2.0f,1.0f));
 	m_selectSceneBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(width / SELECTSCENE_BUTTON.x, height / SELECTSCENE_BUTTON.y), SimpleMath::Vector2(2.0f, 1.0f));
@@ -194,29 +195,18 @@ void OperationInstructions::Render()
 }
 
 void OperationInstructions::Render_Layer2()
-{
-	ShareData& pSD = ShareData::GetInstance();
-	
+{	
 	if ( m_explanationFlag )
 	{
 		// テキスト描画
 		m_backFlame		->Render();
 		m_textTexture	->Render();
 	
-		pSD.GetSpriteBatch()->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
-	
-		// 示す先の線と矢印UI描画
-		// 対象を明確にする
-		//m_showBox->Draw();
-
-		pSD.GetSpriteBatch()->End();
-	
 		// 選択移動矢印の描画　(上限下限に達したら描画を切る)
 		if (m_selectNumber < m_maxSelectVal)	m_arrowL->Draw();
 		if (m_selectNumber > 0)					m_arrowR->Draw();
 
 	}
-
 }
 
 void OperationInstructions::Finalize()

@@ -41,6 +41,9 @@
 //　　|=> 魔法陣の大きさ
 #define MAGICCIRCLE_RAGE	0.2f
 
+//　　|=> UIの透明度
+#define UI_ALPHAVAL			0.5f
+
 AlchemicalMachineObject::AlchemicalMachineObject() :
 	m_hp(1),
 	m_maxHp(1),
@@ -214,7 +217,7 @@ void AlchemicalMachineObject::RenderHP()
 	pSB->Draw(texData.tex.Get(),
 		billboardUIPosition + SimpleMath::Vector3(-gaugeWidthHalf * HPGAUGE_RAGE, 0.0f, 0.0f),
 		&rect,
-		SimpleMath::Color(1.0f, 1.0f, 1.0f, 0.7f) * color,
+		SimpleMath::Color(1.0f, 1.0f, 1.0f, UI_ALPHAVAL) * color,
 		easingValRotate,
 		SimpleMath::Vector2(static_cast<float>(texData.width / 2),
 							static_cast<float>(texData.height / 2)),
@@ -228,7 +231,7 @@ void AlchemicalMachineObject::RenderHP()
 	pSB->Draw(texData.tex.Get(),
 		billboardUIPosition + SimpleMath::Vector3(-gaugeWidthHalf * HPGAUGE_RAGE, 0.0f, 0.0f),
 		&rect,
-		SimpleMath::Color(1.0f,1.0f,1.0f,0.6f) * color,
+		SimpleMath::Color(1.0f,1.0f,1.0f, UI_ALPHAVAL) * color,
 		0.0f,
 		SimpleMath::Vector2(static_cast<float>(texData.width / (MACHINE_TYPE::NUM - 1 ) / 2),
 							static_cast<float>(texData.height / 2)),
@@ -245,6 +248,19 @@ void AlchemicalMachineObject::RenderHP()
 		SimpleMath::Vector2(SPRITE_RAGE / 2, SPRITE_RAGE / 2),
 		MACHINELV_RAGE);
 
+	//if (m_popHPTimer < 1.0f)
+	//{
+	//	texData = SpriteLoder::GetInstance().GetMachineSelectArrow();
+	//	rect = { 0,0, texData.width,texData.height };
+	//
+	//	pSB->Draw(texData.tex.Get(),
+	//		billboardUIPosition + SimpleMath::Vector3(0.0f, texData.width, 0.0f),
+	//		&rect,
+	//		SimpleMath::Color(1.0f,1.0f,1.0f, m_popHPTimer),
+	//		0.0f,
+	//		SimpleMath::Vector2(texData.width / 2, texData.height / 2),
+	//		2.0f);
+	//}
 }
 
 void AlchemicalMachineObject::HitToMouse(MousePointer* pMP)

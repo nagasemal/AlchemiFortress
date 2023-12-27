@@ -16,7 +16,13 @@
 #include "Scenes/PlayScene/Enemy/State/IEnemyState.h"
 #include "Scenes/PlayScene/Enemy/State/EnemyState.h"
 
+// Ç©Ç©ÇÈèdóÕ
 #define GRAVITY 1.2f
+
+// êLèkÅFè¨
+#define ELASTICITY_MIN 0.25f
+// êLèkÅFëÂ
+#define ELASTICITY_MAX 0.3f
 
 EnemyObject::EnemyObject(ENEMY_TYPE type, SimpleMath::Vector3 startPos, int lv, float spawnTime) :
 	m_power(1),
@@ -38,7 +44,7 @@ EnemyObject::EnemyObject(ENEMY_TYPE type, SimpleMath::Vector3 startPos, int lv, 
 {
 
 	m_data.pos = startPos;
-	m_data.rage = SimpleMath::Vector3(0.25f, 0.25f, 0.25f);
+	m_data.rage = SimpleMath::Vector3(ELASTICITY_MIN);
 	
 }
 

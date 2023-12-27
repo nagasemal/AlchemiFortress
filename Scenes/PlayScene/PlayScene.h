@@ -80,6 +80,11 @@ public:
 
 private:
 
+	// 特定のUI群のアルファ値を変え、無効化する
+	void TransparentUI(float transparentVal);
+
+private:
+
 	// フィールドに存在するオブジェクトを管理
 	std::unique_ptr<FieldObjectManager>			m_fieldManager;
 
@@ -118,6 +123,12 @@ private:
 
 	// 倍速ボタン
 	std::unique_ptr<SelectionBox>				m_doubleSpeedButton; 
+
+	// マウスが範囲に入っているか否かを検出する当たり判定クラス
+	std::unique_ptr<SelectionBox> m_collider;
+	// UIが半透明化するまでの時間
+	float m_uiTransparentTime;
+
 	// ステージ番号
 	int m_stageNumber;
 	// 倍速倍率

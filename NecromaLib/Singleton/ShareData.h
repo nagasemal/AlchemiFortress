@@ -63,12 +63,6 @@ public:
 	// Projections—ñ
 	SimpleMath::Matrix GetProjection()			{ return m_camera->GetProjectionMatrix(); }
 
-
-
-	//void CreateStencilData();
-
-	//void MachineDrawSetting(SimpleMath::Color color, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> ruleTex);
-
 private:
 	ShareData();
 	static ShareData*				instance;

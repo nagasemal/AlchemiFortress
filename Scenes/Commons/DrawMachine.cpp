@@ -13,6 +13,9 @@
 // ライン同士の間隔
 #define CIRCLE_LINE_DISTANCE 5.5f
 
+// マシン回転速度
+#define ROTATION_SPEED 0.1f
+
 DrawMachine::DrawMachine()
 {
 }
@@ -49,6 +52,9 @@ void DrawMachine::Render()
 {
 	for (int i = 0; i < m_AMobjects.size(); i++)
 	{
+		// Nonenマシンの描画を行わない
+		if (m_AMobjects[i]->GetModelID() == MACHINE_TYPE::NONE) continue;
+
 		// モデルの描画			オブジェクトに割り当てられたIDをもとにモデル配列からデータを取り出す
 		m_AMobjects[i]->ModelRender(
 			m_AMFilter->HandOverAMModel(m_AMobjects[i]->GetModelID()),
@@ -69,13 +75,10 @@ void DrawMachine::MovingMachine(int number)
 
 	// 0,0,0を中心に回転移動
 	SimpleMath::Matrix matrix = SimpleMath::Matrix::Identity;
-
-	matrix *= SimpleMath::Matrix::CreateRotationY(XMConvertToRadians(0.1f)) * deltaTime;
+	matrix *= SimpleMath::Matrix::CreateRotationY(XMConvertToRadians(ROTATION_SPEED)) * deltaTime;
 
 	// 回転後の座標を代入
   	m_AMobjects[number]->SetPos(SimpleMath::Vector3::Transform(m_AMobjects[number]->GetPos(), matrix));
-
-	//m_AMobjects[number]->SetColor(SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
 
 	m_AMobjects[number]->Update_Common();
 
@@ -100,7 +103,6 @@ void DrawMachine::SettingAMMachine_Title()
 			m_AMobjects[counter]->SetLine(i);
 			m_AMobjects[counter]->SummonAM(SetVelocityCircle(j, CIRCLE_MAX_MIN * i, i * CIRCLE_LINE_DISTANCE));
 
-			//m_AMobjects[counter]->SetColor(SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
 			counter++;
 		}
 	}
@@ -132,8 +134,6 @@ void DrawMachine::SettingAMMachine_Select(int number)
 			// 存在するライン決め
 			m_AMobjects[counter]->SetLine(i);
 			m_AMobjects[counter]->SummonAM(SetVelocityCircle(j, CIRCLE_MAX_MIN * i, i * CIRCLE_LINE_DISTANCE));
-
-			//m_AMobjects[counter]->SetColor(SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f));
 
 			counter++;
 		}

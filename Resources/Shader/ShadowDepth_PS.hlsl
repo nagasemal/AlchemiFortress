@@ -9,10 +9,10 @@ float4 main(PSInput pin) : SV_TARGET0
     float d = distance(Eyes.xyz, EyePosition);
     
     // ’‹“_‚Ü‚Å‚Ì‹——£
-    float Distance = length(Direction) / (d * 0.35);
+    float Distance = length(Direction) / (d * 0.25);
     // ’‹“_‚©‚ç‚Ì‹——£‚Ì‰e‹¿
     float fixationAtten = saturate(1.0f / (Distance * Distance));
-    float power = 1.25;
+    float power = 1.05;
     
     fixationAtten *= power;
            

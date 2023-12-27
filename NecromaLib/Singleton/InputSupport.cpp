@@ -8,7 +8,8 @@ InputSupport* InputSupport::instance = nullptr;
 InputSupport::InputSupport() :
 	m_WorldScreenMouse(),
 	m_nowLayer(),
-	m_hitUIFlag()
+	m_hitUIFlag(),
+	m_keyDisplayMode()
 {
 }
 
@@ -43,7 +44,6 @@ void InputSupport::Update()
 	//　====================[　UIに触れていない　]
 	else
 	{
-
 		// ワールド空間座標に変換
 		m_WorldScreenMouse = CalcScreenToXZN(m_mouseTracker.GetLastState().x,
 			m_mouseTracker.GetLastState().y,
@@ -57,6 +57,12 @@ void InputSupport::Update()
 
 	//　====================[　現在のレイヤー番号を戻す　]
 	m_nowLayer = 0;
+
+	//　====================[　キー表示を有効/無効にする　]
+	if (GetKeybordState().IsKeyReleased(Keyboard::Tab))
+	{
+		m_keyDisplayMode = !m_keyDisplayMode;
+	}
 
 }
 
@@ -108,6 +114,11 @@ bool InputSupport::MiddleButton_Release()
 bool InputSupport::MiddleButton_Held()
 {
 	return m_mouseTracker.middleButton == Mouse::ButtonStateTracker::HELD;
+}
+
+bool InputSupport::GetKeyDisplayMode()
+{
+	return m_keyDisplayMode;
 }
 
 SimpleMath::Vector3 InputSupport::GetMousePosWolrd()

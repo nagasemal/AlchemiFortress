@@ -82,7 +82,7 @@
   },
   "RESOURCE_DEFAULET": {
     "ATTACKER": 0,
-    "CRYSTAL": 10,
+    "CRYSTAL": 25,
     "DEFFENCER": 0,
     "LV": 1,
     "HP": 500,
@@ -94,7 +94,19 @@
 
   "TUTORIAL": [
     {
+      "NUMBER": 20,
+      "VAL": 0
+    },
+    {
+      "NUMBER": 22,
+      "VAL": 0
+    },
+    {
       "NUMBER": 19,
+      "VAL": 1
+    },
+    {
+      "NUMBER": 20,
       "VAL": 1
     },
     {

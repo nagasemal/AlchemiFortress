@@ -20,7 +20,7 @@ public:
 	~BaseLv();
 
 	void Update(FieldObjectManager* pFieldObjectManager);
-	void Render();
+	void Render(float alphaVal);
 
 private:
 

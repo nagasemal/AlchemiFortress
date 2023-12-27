@@ -53,7 +53,7 @@ void AddSpecular(inout float4 color, float3 specular)
 float4 main(PSInput input) : SV_TARGET0
 {    
     // テクスチャ取得
-    float texInput = Texture.Sample(Sampler, input.TexCoord);
+    float texInput = (float)Texture.Sample(Sampler, input.TexCoord);
 
 	// テクスチャ取得
     float3 modelTexture = ModelTexture.Sample(Sampler, input.TexCoord).rgb;
@@ -96,8 +96,6 @@ float4 main(PSInput input) : SV_TARGET0
     color += AddScreen(color, float4(0.4, 0.0, 0.4, 0.0f)) * pointLight_crystal;
     
     color.w = 1.0f;
-    
-    //ApplyFog(color, EyePosition);
-    
+        
     return float4(color.xyz, color.w);
 }

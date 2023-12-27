@@ -99,30 +99,38 @@ void ShareJsonData::LoadingJsonFile_ClearData(int number)
 	m_clearData = Json::FileLoad_StageClearData(filePath);
 }
 
-void ShareJsonData::LoadingUIData(std::string tagName)
+void ShareJsonData::LoadingUIData(std::string pathName,std::string tagName)
 {
+	std::string tagPath = pathName + tagName;
+
 	//　====================[　新しく連想配列を生成　]
-	m_uiDatas.insert(std::make_pair(tagName,UI_Data()));
+	m_uiDatas.insert(std::make_pair(tagPath,UI_Data()));
 
 	//　====================[　tagNameに応じたファイルパスを生成　]
-	std::ostringstream oss;
-	oss << tagName;
-	std::string filePath = "Resources/Json/GameParameter/UILayout_" + oss.str() + ".json";
+	std::ostringstream ossPath;
+	ossPath << pathName;
+
+	std::ostringstream ossName;
+	ossName << tagName;
+
+	std::string filePath = "Resources/Json/GameParameter/" + ossPath.str() + "/UILayout_" + ossPath.str() + ossName.str() + ".json";
+
+
 
 	//　====================[　生成したデータを代入　]
-	m_uiDatas[tagName] = Json::FileLoad_UIData(filePath);
+	m_uiDatas[tagPath] = Json::FileLoad_UIData(filePath);
 
 	//　====================[　Offsetが名前に入っている時の処理　]
 	//　　|=>　[変数]　タグを識別する
 	std::string tag = std::string();
 
-	for (size_t i = 0; i < tagName.size(); i++)
+	for (size_t i = 0; i < tagPath.size(); i++)
 	{
 		//　　|=>　[条件]　入力されたタグのi番目以降の配列がOffset
-		if (tagName.substr(i) == "Offset")
+		if (tagPath.substr(i) == "Offset")
 		{
 			//　　|=>　Offset前のタグ名を取得する
-			tag = tagName.substr(0,i);
+			tag = tagPath.substr(0,i);
 		}
 
 	}
@@ -136,8 +144,8 @@ void ShareJsonData::LoadingUIData(std::string tagName)
 		if (it->first.substr(0, tag.size()) == tag)
 		{
 			//　　|=>　位置,大きさの情報を加算する
-			it->second.pos	+= m_uiDatas[tagName].pos;
-			it->second.rage += m_uiDatas[tagName].rage;
+			it->second.pos	+= m_uiDatas[tagPath].pos;
+			it->second.rage += m_uiDatas[tagPath].rage;
 		}
 	}
 

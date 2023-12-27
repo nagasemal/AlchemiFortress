@@ -30,7 +30,8 @@ MachineSelectManager::MachineSelectManager() :
 	m_selectNumber(1),
 	m_cursorMachineNumber(),
 	m_prevSelectNumber(),
-	m_uiTransparentTime()
+	m_uiTransparentTime(),
+	m_alchemiActiveFlag()
 {
 }
 
@@ -211,8 +212,8 @@ void MachineSelectManager::Update(FieldObjectManager* fieldObjectManager)
 
 	// 要素から製造ボタンが押された判定を受け取る リソースが足りない場合は弾く
 	m_selectionAlchemi->SetActiveFlag(
-		datas->GetNowMP()		- pSJD->GetMachineData(machineType).alchemi_mp >= 0 &&
-		datas->GetNowCrystal()	- pSJD->GetMachineData(machineType).alchemi_crystal >= 0);
+		(datas->GetNowMP()		- pSJD->GetMachineData(machineType).alchemi_mp >= 0 &&
+		datas->GetNowCrystal()	- pSJD->GetMachineData(machineType).alchemi_crystal >= 0) && m_alchemiActiveFlag);
 
 	m_mpNumRender	->	SetNumber(pSJD->GetMachineData(machineType).alchemi_mp);
 	m_crystalRender	->	SetNumber(pSJD->GetMachineData(machineType).alchemi_crystal);
@@ -297,10 +298,6 @@ void MachineSelectManager::RenderUI(int machineNum[])
 
 	// 透明度付加
 	SimpleMath::Color alphaColor = SimpleMath::Color(1.0f, 1.0f, 1.0f, m_selectionAlchemi->GetColor().A());
-
-	//　====================[　選択中のマシンUIの位置を知らせるUIの描画　]
-	rect = { 0,0,84,84 };
-	pSB->Draw(pSL.GetMachineUICursorTexture().Get(), SimpleMath::Vector2(1120, 560), &rect, alphaColor, 0.0f, SimpleMath::Vector2(84 / 2, 84 / 2));
 
 	//　====================[　魔力アイコンを描画　]
 	uiData = pSJD.GetUIData("AlchemiMP");
@@ -416,6 +413,11 @@ void MachineSelectManager::LRButtonLock(bool flag)
 {
 	m_selectionLeft->SetActiveFlag(flag);
 	m_selectionRight->SetActiveFlag(flag);
+}
+
+void MachineSelectManager::AlchemiButtonLock(bool flag)
+{
+	m_alchemiActiveFlag = flag;
 }
 
 void MachineSelectManager::TransparentUI(float transparentVal)

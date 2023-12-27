@@ -6,13 +6,14 @@
 #include "NecromaLib/Singleton/DeltaTime.h"
 #include "NecromaLib/Singleton/SpriteLoder.h"
 
+#define LINE_SPEED 1.2f
+
 DrawLine::DrawLine(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage, float lineRage)
 {
 	m_animationData = AnimationData();
 
-	m_saveData.pos = m_data.pos  = pos;
+	m_saveData.pos	= m_data.pos  = pos;
 	m_saveData.rage = m_data.rage = rage;
-	//m_maxRage = maxRage * 2;
 	m_lineRage = SimpleMath::Vector2();
 
 	m_color = Colors::Black;
@@ -37,8 +38,8 @@ void DrawLine::Update()
 	m_popPos = m_data.pos + m_data.rage;
 
 	// ŽžŠÔŒv‘ª
-	if (m_hitMouseFlag)	m_animationData += deltaTime * 1.2f;
-	else				m_animationData -= deltaTime * 1.2f;
+	if (m_hitMouseFlag)	m_animationData += deltaTime * LINE_SPEED;
+	else				m_animationData -= deltaTime * LINE_SPEED;
 
 	HitMouse();
 

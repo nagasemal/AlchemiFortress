@@ -230,6 +230,18 @@
     <Filter Include="Json\GameParameterData\Mission">
       <UniqueIdentifier>{1fac4e4a-d6de-452a-8991-f92accee520d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Json\GameParameterData\Option">
+      <UniqueIdentifier>{f6bdb588-d173-4a59-832d-1a2c3383b040}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Json\GameParameterData\Title">
+      <UniqueIdentifier>{39b94092-35fb-4ab0-9d5a-aab8406e71a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Json\GameParameterData\Result">
+      <UniqueIdentifier>{819ccc5c-43a4-4913-8694-4976005dbdca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Json\GameParameterData\Select">
+      <UniqueIdentifier>{e6679602-f917-46e1-8865-ea0dcfd46451}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -540,9 +552,6 @@
     </ClInclude>
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\StatePattern\IAM_MachineState.h">
       <Filter>Scene\PlayScene\AlchemicalMachine\Object\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\PlayScene\Enemy\EnemyMetaAI.h">
-      <Filter>Scene\PlayScene\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\PlayScene\Enemy\State\IEnemyState.h">
       <Filter>Scene\PlayScene\Enemy\EnemyState</Filter>
@@ -1055,83 +1064,125 @@
     <None Include="Resources\Shader\3DUI.hlsli">
       <Filter>Shader\UI</Filter>
     </None>
-    <None Include="Resources\Json\GameParameter\UILayout_GaugeCrystal.json">
-      <Filter>Json\GameParameterData\Gauge</Filter>
-    </None>
-    <None Include="Resources\Json\GameParameter\UILayout_GaugeHP.json">
-      <Filter>Json\GameParameterData\Gauge</Filter>
-    </None>
-    <None Include="Resources\Json\GameParameter\UILayout_GaugeMP.json">
-      <Filter>Json\GameParameterData\Gauge</Filter>
-    </None>
-    <None Include="Resources\Json\GameParameter\UILayout_GaugeOffset.json">
-      <Filter>Json\GameParameterData\Gauge</Filter>
-    </None>
-    <None Include="Resources\Json\GameParameter\UILayout_AlchemiLeft.json">
-      <Filter>Json\GameParameterData\Alchemi</Filter>
-    </None>
-    <None Include="Resources\Json\GameParameter\UILayout_AlchemiMiddle.json">
-      <Filter>Json\GameParameterData\Alchemi</Filter>
-    </None>
-    <None Include="Resources\Json\GameParameter\UILayout_AlchemiRight.json">
-      <Filter>Json\GameParameterData\Alchemi</Filter>
-    </None>
-    <None Include="Resources\Json\GameParameter\UILayout_GaugeBaseLv.json">
-      <Filter>Json\GameParameterData\Gauge</Filter>
-    </None>
     <None Include="Resources\Shader\PostProcess.hlsli">
       <Filter>Shader\PostProcess</Filter>
     </None>
     <None Include="Resources\Shader\ShadowDepth.hlsli">
       <Filter>Shader\Deapth</Filter>
     </None>
-    <None Include="Resources\Json\GameParameter\UILayout_ExplanationOffset.json">
-      <Filter>Json\GameParameterData\Explanation</Filter>
+    <None Include="Resources\Json\GameParameter\UILayout_OptionDouble.json">
+      <Filter>Json\GameParameterData\Option</Filter>
     </None>
-    <None Include="Resources\Json\GameParameter\UILayout_ExplanationBack.json">
-      <Filter>Json\GameParameterData\Explanation</Filter>
+    <None Include="Resources\Json\GameParameter\UILayout_OptionExplanation.json">
+      <Filter>Json\GameParameterData\Option</Filter>
     </None>
-    <None Include="Resources\Json\GameParameter\UILayout_ExplanationSpawn.json">
-      <Filter>Json\GameParameterData\Explanation</Filter>
+    <None Include="Resources\Json\GameParameter\UILayout_OptionOffset.json">
+      <Filter>Json\GameParameterData\Option</Filter>
     </None>
-    <None Include="Resources\Json\GameParameter\UILayout_ExplanationNext.json">
-      <Filter>Json\GameParameterData\Explanation</Filter>
+    <None Include="Resources\Json\GameParameter\Title\UILayout_TitleButton.json">
+      <Filter>Json\GameParameterData\Title</Filter>
     </None>
-    <None Include="Resources\Json\GameParameter\UILayout_ExplanationDestory.json">
-      <Filter>Json\GameParameterData\Explanation</Filter>
+    <None Include="Resources\Json\GameParameter\Title\UILayout_TitleLogo.json">
+      <Filter>Json\GameParameterData\Title</Filter>
     </None>
-    <None Include="Resources\Json\GameParameter\UILayout_ExplanationLvUp.json">
-      <Filter>Json\GameParameterData\Explanation</Filter>
+    <None Include="Resources\Json\GameParameter\Title\UILayout_TitleVeil.json">
+      <Filter>Json\GameParameterData\Title</Filter>
     </None>
-    <None Include="Resources\Json\GameParameter\UILayout_ExplanationRepair.json">
-      <Filter>Json\GameParameterData\Explanation</Filter>
-    </None>
-    <None Include="Resources\Json\GameParameter\UILayout_AlchemiOffset.json">
-      <Filter>Json\GameParameterData\Alchemi</Filter>
-    </None>
-    <None Include="Resources\Json\GameParameter\UILayout_AlchemiCrystal.json">
-      <Filter>Json\GameParameterData\Alchemi</Filter>
-    </None>
-    <None Include="Resources\Json\GameParameter\UILayout_AlchemiNum.json">
-      <Filter>Json\GameParameterData\Alchemi</Filter>
-    </None>
-    <None Include="Resources\Json\GameParameter\UILayout_AlchemiMP.json">
-      <Filter>Json\GameParameterData\Alchemi</Filter>
-    </None>
-    <None Include="Resources\Json\GameParameter\UILayout_AlchemiMachineIcon.json">
-      <Filter>Json\GameParameterData\Alchemi</Filter>
-    </None>
-    <None Include="Resources\Json\GameParameter\UILayout_MissionTimer.json">
+    <None Include="Resources\Json\GameParameter\Mission\UILayout_MissionArrow.json">
       <Filter>Json\GameParameterData\Mission</Filter>
     </None>
-    <None Include="Resources\Json\GameParameter\UILayout_MissionOffset.json">
+    <None Include="Resources\Json\GameParameter\Mission\UILayout_MissionOffset.json">
       <Filter>Json\GameParameterData\Mission</Filter>
     </None>
-    <None Include="Resources\Json\GameParameter\UILayout_MissionText.json">
+    <None Include="Resources\Json\GameParameter\Mission\UILayout_MissionText.json">
       <Filter>Json\GameParameterData\Mission</Filter>
     </None>
-    <None Include="Resources\Json\GameParameter\UILayout_MissionArrow.json">
+    <None Include="Resources\Json\GameParameter\Mission\UILayout_MissionTimer.json">
       <Filter>Json\GameParameterData\Mission</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Gauge\UILayout_GaugeBaseLv.json">
+      <Filter>Json\GameParameterData\Gauge</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Gauge\UILayout_GaugeCrystal.json">
+      <Filter>Json\GameParameterData\Gauge</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Gauge\UILayout_GaugeHP.json">
+      <Filter>Json\GameParameterData\Gauge</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Gauge\UILayout_GaugeMP.json">
+      <Filter>Json\GameParameterData\Gauge</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Gauge\UILayout_GaugeOffset.json">
+      <Filter>Json\GameParameterData\Gauge</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Explanation\UILayout_ExplanationBack.json">
+      <Filter>Json\GameParameterData\Explanation</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Explanation\UILayout_ExplanationDestory.json">
+      <Filter>Json\GameParameterData\Explanation</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Explanation\UILayout_ExplanationLvUp.json">
+      <Filter>Json\GameParameterData\Explanation</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Explanation\UILayout_ExplanationNext.json">
+      <Filter>Json\GameParameterData\Explanation</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Explanation\UILayout_ExplanationOffset.json">
+      <Filter>Json\GameParameterData\Explanation</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Explanation\UILayout_ExplanationRepair.json">
+      <Filter>Json\GameParameterData\Explanation</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Explanation\UILayout_ExplanationSpawn.json">
+      <Filter>Json\GameParameterData\Explanation</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Alchemi\UILayout_AlchemiCrystal.json">
+      <Filter>Json\GameParameterData\Alchemi</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Alchemi\UILayout_AlchemiLeft.json">
+      <Filter>Json\GameParameterData\Alchemi</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Alchemi\UILayout_AlchemiMachineIcon.json">
+      <Filter>Json\GameParameterData\Alchemi</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Alchemi\UILayout_AlchemiMiddle.json">
+      <Filter>Json\GameParameterData\Alchemi</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Alchemi\UILayout_AlchemiMP.json">
+      <Filter>Json\GameParameterData\Alchemi</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Alchemi\UILayout_AlchemiNum.json">
+      <Filter>Json\GameParameterData\Alchemi</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Alchemi\UILayout_AlchemiOffset.json">
+      <Filter>Json\GameParameterData\Alchemi</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Alchemi\UILayout_AlchemiRight.json">
+      <Filter>Json\GameParameterData\Alchemi</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Select\UILayout_SelectLeft.json">
+      <Filter>Json\GameParameterData\Select</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Select\UILayout_SelectMiddle.json">
+      <Filter>Json\GameParameterData\Select</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Select\UILayout_SelectMission.json">
+      <Filter>Json\GameParameterData\Select</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Select\UILayout_SelectNumber.json">
+      <Filter>Json\GameParameterData\Select</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Select\UILayout_SelectRight.json">
+      <Filter>Json\GameParameterData\Select</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Result\UILayout_ResultRetry.json">
+      <Filter>Json\GameParameterData\Result</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Result\UILayout_ResultNext.json">
+      <Filter>Json\GameParameterData\Result</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Result\UILayout_ResultSelect.json">
+      <Filter>Json\GameParameterData\Result</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

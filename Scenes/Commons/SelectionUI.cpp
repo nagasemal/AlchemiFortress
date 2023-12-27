@@ -10,14 +10,19 @@
 
 #include <random>
 
+// âÊëúÉTÉCÉYÇÃècâ°ÇÃëÂÇ´Ç≥
+#define SPRITE_RAGE 64
+
+// é∏îséûêUìÆÇÃëÂÇ´Ç≥
+#define SHAKE_RAGE 2.0f
+
 SelectionUI::SelectionUI() :
 	m_selectFlag(),
 	m_hitMouseFlag(),
-	m_luminousFlag(),
 	m_keySelectFlag(),
 	m_layer(),
 	m_activeFlag(true),
-	m_rect{ 0,0,64,64 },
+	m_rect{ 0,0,SPRITE_RAGE,SPRITE_RAGE },
 	m_vibrationTime(),
 	m_holdTime(),
 	m_keys()
@@ -58,7 +63,10 @@ bool SelectionUI::HitMouse(bool layerCheck)
 
 	for (auto& key : m_keys)
 	{
-		m_keySelectFlag += pINP.GetKeybordState().IsKeyPressed(key);
+		if (!m_keySelectFlag)
+		{
+			m_keySelectFlag = pINP.GetKeybordState().IsKeyPressed(key);
+		}
 	}
 
 	if (m_hitMouseFlag) pINP.HitUI();
@@ -68,7 +76,7 @@ bool SelectionUI::HitMouse(bool layerCheck)
 	{
 		std::uniform_real_distribution<> dist_enemyType(-m_vibrationTime, m_vibrationTime);
 		std::random_device rd;
-		float vibrationRand = static_cast<float>(dist_enemyType(rd)) * 2.0f;
+		float vibrationRand = static_cast<float>(dist_enemyType(rd)) * SHAKE_RAGE;
 
 		m_vibrationTime -= DeltaTime::GetInstance().GetNomalDeltaTime();
 
@@ -154,7 +162,7 @@ bool SelectionUI::ExitMouse()
 
 	if (m_hitMouseFlag)
 	{
-		exitFlag = !HitObject_RageSet(pINP.GetMousePosScreen(), 64, 64, m_data.rage);
+		exitFlag = !HitObject_RageSet(pINP.GetMousePosScreen(), SPRITE_RAGE, SPRITE_RAGE, m_data.rage);
 	}
 
 	return exitFlag;

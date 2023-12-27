@@ -29,8 +29,6 @@ public:
 	// マウスが離れた処理
 	bool ExitMouse();
 
-
-
 	// 現在触れる状態か
 	bool GetActiveFlag() { return m_activeFlag; }
 	// 色情報を返す
@@ -50,7 +48,6 @@ public:
 
 	// 色を自由に変えられます。(ボックスを強調したい際などに使用)
 	void SetColor(SimpleMath::Color color) { m_boxColor = color; }
-	void SetLuminousFlag(bool flag) { m_luminousFlag = flag; };
 
 	void SetRect(RECT rect) { m_rect = rect; }
 
@@ -72,7 +69,6 @@ protected:
 	bool m_keySelectFlag; // キーボード上にて選択されたことを示すフラグ
 
 	SimpleMath::Color m_boxColor;
-	bool m_luminousFlag;
 
 	bool m_activeFlag; //現在触れる状態か
 

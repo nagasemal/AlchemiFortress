@@ -54,6 +54,9 @@ public:
 	// マシンUIを動かすボタンのアクティブフラグを変更する
 	void LRButtonLock(bool flag);
 
+	// マシンを錬金するボタンのアクティブフラグを変更する
+	void AlchemiButtonLock(bool flag);
+
 	// UI群のアルファ値を変え、無効化する
 	void TransparentUI(float transparentVal);
 
@@ -107,6 +110,8 @@ private:
 
 	bool m_selectBoxAll;
 	bool m_manufacturingFlag;
+
+	bool m_alchemiActiveFlag;
 
 	// フィールド上のNoneを選択した際に、全てのMachineSelectの選択Boxの色を変更する
 	bool m_selectNoneFlag;

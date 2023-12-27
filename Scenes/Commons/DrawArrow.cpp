@@ -5,13 +5,15 @@
 
 #include "Scenes/Commons/DrawKey.h"
 
+#define TEXTURE_SIZE 64
+
 DrawArrow::DrawArrow(SimpleMath::Vector2 pos, SimpleMath::Vector2 rage,int direction)
 {
 	m_saveData.pos = m_data.pos = pos;
 	m_saveData.rage = m_data.rage = rage;
 	m_direction = direction;
 
-	m_boxColor = { 1.0f,1.0f,1.0f,1.0f };
+	m_boxColor = SimpleMath::Color(Colors::White);
 
 	m_drawKey = std::make_unique<DrawKey>(this);
 
@@ -37,14 +39,12 @@ void DrawArrow::Draw()
 	auto pSL = &SpriteLoder::GetInstance();
 
 	// ‰æ‘œ‚ÌƒTƒCƒY
-	RECT srcRect = { 0, 0, 64, 64 };
-	SimpleMath::Color colour = { 1.0f,1.0f,1.0f,m_boxColor.A()};
+	RECT srcRect = { 0, 0, TEXTURE_SIZE, TEXTURE_SIZE };
+	SimpleMath::Color colour = m_boxColor;
 
-	if (m_luminousFlag) colour = m_boxColor;
+	if (m_hitMouseFlag) colour = m_boxColor * Colors::LightGray;
 
-	if (m_hitMouseFlag) colour = { 0.9f,0.9f,0.9f,m_boxColor.A() };
-
-	if (HoldMouse()) colour = { 0.7f, 0.7f, 0.7f, m_boxColor.A() };
+	if (HoldMouse()) colour = m_boxColor * Colors::Gray;
 
 
 	pSB->Begin(DirectX::SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
@@ -55,7 +55,7 @@ void DrawArrow::Draw()
 		&srcRect,
 		colour,
 		XMConvertToRadians(90.0f * m_direction),
-		DirectX::XMFLOAT2(64 / 2, 64 / 2),
+		DirectX::XMFLOAT2(TEXTURE_SIZE / 2, TEXTURE_SIZE / 2),
 		m_data.rage);
 
 	pSB->End();

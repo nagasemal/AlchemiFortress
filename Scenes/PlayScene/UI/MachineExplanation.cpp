@@ -190,9 +190,6 @@ void MachineExplanation::Draw()
 
 void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* secondModel, AlchemicalMachineObject* object)
 {
-
-	if (m_spawnBox->GetColor().A() <= 0.0f) return;
-
 	ShareData& pSD = ShareData::GetInstance();
 	DX::DeviceResources* pDR = pSD.GetDeviceResources();
 
@@ -215,21 +212,27 @@ void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* se
 
 	modelData *= SimpleMath::Matrix::CreateTranslation(worldPos);
 
+	//　====================[　モデルの色変更　]
+	SimpleMath::Color modelColor = SimpleMath::Color(object->GetColor().R(),
+		object->GetColor().G(),
+		object->GetColor().B(),
+		m_spawnBox->GetColor().A());
+
 	model->UpdateEffects([&](IEffect* effect)
 		{
 			// ライト
 			auto lights = dynamic_cast<IEffectLights*>(effect);
 			// 色変更
-			lights->SetLightDiffuseColor(0, object->GetColor());
-			lights->SetLightDiffuseColor(1, object->GetColor());
-			lights->SetLightDiffuseColor(2, object->GetColor());
+			lights->SetLightDiffuseColor(0, modelColor);
+			lights->SetLightDiffuseColor(1, modelColor);
+			lights->SetLightDiffuseColor(2, modelColor);
 		});
 
 	model->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix(), false,[&]
 		{
 
 			// 出現時に使う時間変数は既に終わっているものとする
-			ModelShader::GetInstance().MachineDrawShader(object->GetColor(), SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f), SpriteLoder::GetInstance().GetRule());
+			ModelShader::GetInstance().MachineDrawShader(modelColor, SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f), SpriteLoder::GetInstance().GetRule());
 
 			pSD.GetContext()->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetMachineTextuer(object->GetElement()).GetAddressOf());
 			pSD.GetContext()->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetNormalMap(object->GetElement()).GetAddressOf());
@@ -239,7 +242,18 @@ void MachineExplanation::DisplayObject(DirectX::Model* model, DirectX::Model* se
 	// セカンドモデルが存在するならば実行
 	if (secondModel != nullptr)
 	{
-		secondModel->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
+		// セカンドモデル用の色設定
+		modelColor = SimpleMath::Color((float)object->GetPowerUpFlag(),(float)object->GetPowerUpFlag(),0.0f,m_spawnBox->GetColor().A());
+
+		secondModel->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix(), false, [&]
+			{
+				// 出現時に使う時間変数は既に終わっているものとする
+				ModelShader::GetInstance().MachineDrawShader(modelColor, SimpleMath::Vector4(1.0f, 0.0f, 0.0f, 1.0f), SpriteLoder::GetInstance().GetRule());
+
+				pSD.GetContext()->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetMachineTextuer(object->GetElement()).GetAddressOf());
+				pSD.GetContext()->PSSetShaderResources(2, 1, SpriteLoder::GetInstance().GetNormalMap(object->GetElement()).GetAddressOf());
+
+			});
 	}
 
 }

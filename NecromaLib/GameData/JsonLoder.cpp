@@ -326,7 +326,7 @@ Stage_Data Json::FileLoad_StageData(const std::string filePath)
 
 	for (picojson::array::iterator it = tutorialArray.begin(); it != tutorialArray.end(); it++)
 	{
-		Tutorial_Status tutorial;
+		Tutorial_Status tutorial = Tutorial_Status();
 
 		tutorial.type	= (int)it->get<picojson::object>()["NUMBER"].get<double>();
 		tutorial.val	= (int)it->get<picojson::object>()["VAL"].get<double>();
@@ -870,9 +870,9 @@ UI_Data Json::FileLoad_UIData(const std::string filePath)
 	for (picojson::array::iterator it = optionVals.begin(); it != optionVals.end(); it++)
 	{
 		std::string tagName = it->get<picojson::object>()["TAG"].get<std::string>();
-		float val = (float)it->get<picojson::object>()["VAL"].get<double>();
+		float optionVal		= (float)it->get<picojson::object>()["VAL"].get<double>();
 
-		uiData.option.insert(std::make_pair(tagName, val));
+		uiData.option.insert(std::make_pair(tagName, optionVal));
 	}
 
 	picojson::array keys = master["KEYS"].get<picojson::array>();

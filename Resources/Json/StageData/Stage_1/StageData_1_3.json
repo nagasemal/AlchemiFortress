@@ -30,7 +30,7 @@
     "MACHINE_DESTROY": [
       {
         "TYPE": "Attacker",
-        "VALUE": 2
+        "VALUE": 1
       }
     ]
   },
