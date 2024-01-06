@@ -8,7 +8,6 @@
 #include "Scenes/PlayScene/PlayScene.h"
 #include "Scenes/ResultScene/ResultScene.h"
 #include "Scenes/SelectScene/SelectScene.h"
-#include "Scenes/EditScene/EditScene.h"
 
 #include "NecromaLib/Singleton/SoundData.h"
 
@@ -109,9 +108,6 @@ void SceneManager::Update(const DX::StepTimer& timer)
 
 		//　ステージセレクトシーン
 		if (pINP.GetKeybordState().IsKeyReleased(Keyboard::D4))		m_NextScene = GAME_SCENE::SELECT;
-
-		//　エディットシーンへ
-		if (pINP.GetKeybordState().IsKeyReleased(Keyboard::D5))		m_NextScene = GAME_SCENE::EDIT;
 	}
 
 }
@@ -167,11 +163,6 @@ void SceneManager::CreateScene()
 	case GAME_SCENE::PLAY:
 	{
 		m_Scene = new PlayScene();
-		break;
-	}
-	case GAME_SCENE::EDIT:
-	{
-		m_Scene = new EditScene();
 		break;
 	}
 	case GAME_SCENE::RESULT:

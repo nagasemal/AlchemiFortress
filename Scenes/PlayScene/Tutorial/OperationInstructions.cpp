@@ -24,44 +24,32 @@
 #include "Scenes/SelectScene/MissionRender.h"
 #include "Scenes/PlayScene/Shadow/Particle.h"
 
-#define EXPLANATION_BUTTON		SimpleMath::Vector2(1220.0f,64.0f)
-#define TUTORIAL_EXIT_BUTTON	SimpleMath::Vector2(1280.0f / 1.05f,720.0f / 1.9f)
-
-#define TUTORIAL_TEXT_POS SimpleMath::Vector2(200.0f,400.0f)
-
-#define MACHINE_EXPLANATION 5
-
-#define TITLESCENE_BUTTON SimpleMath::Vector2(1.4f,3.8f)
-#define SELECTSCENE_BUTTON SimpleMath::Vector2(1.7f,3.8f)
-
-// 矢印のX座標指定
-#define ARROW_POS_X 350
 // 示すラインの大きさ
 #define LINE_RAGE SimpleMath::Vector2(50.0f,50.0f)
 
 const std::vector<const wchar_t*> OperationInstructions::FILENAME =
 {
-	{L"Resources/Textures/Explanation/None.png"},			//  0.None
-	{L"Resources/Textures/Explanation/Attacker.png"},		//  1.Attacker
-	{L"Resources/Textures/Explanation/Defencer.png"},		//  2.Defencer
-	{L"Resources/Textures/Explanation/Upper.png"},			//  3.Upper
-	{L"Resources/Textures/Explanation/Recovery.png"},		//  4.Recovery
-	{L"Resources/Textures/Explanation/Excavator.png"},		//  5.Excavator
-	{L"Resources/Textures/Explanation/MachineList.png"},	//  6.MachineList
-	{L"Resources/Textures/Explanation/RotateStop.png"},		//  7.RotateStop
-	{L"Resources/Textures/Explanation/MachineMenu.png"},	//  8.MachineMenu
-	{L"Resources/Textures/Explanation/Gauge_1.png"},		//  9.HPゲージ
-	{L"Resources/Textures/Explanation/Gauge_2.png"},		// 10.MPゲージ
-	{L"Resources/Textures/Explanation/Gauge_3.png"},		// 11.クリスタルゲージ
-	{L"Resources/Textures/Explanation/Mission.png"},		// 12.ミッション
-	{L"Resources/Textures/Explanation/Alchemical.png"},		// 13.錬金ボタン
-	{L"Resources/Textures/Explanation/CameraMove.png"},		// 14.カメラ移動
-	{L"Resources/Textures/Explanation/Instructions.png"},	// 15.チュートリアル(文字説明)
-	{L"Resources/Textures/Explanation/LineSet.png"},		// 16.ライン設定
-	{L"Resources/Textures/Explanation/None.png"},
-	{L"Resources/Textures/Explanation/None.png"},
-	{L"Resources/Textures/Explanation/None.png"},
-	{L"Resources/Textures/Explanation/None.png"},
+	{L"None.png"},			//  0.None
+	{L"Attacker.png"},		//  1.Attacker
+	{L"Defencer.png"},		//  2.Defencer
+	{L"Upper.png"},			//  3.Upper
+	{L"Recovery.png"},		//  4.Recovery
+	{L"Excavator.png"},		//  5.Excavator
+	{L"MachineList.png"},	//  6.MachineList
+	{L"RotateStop.png"},		//  7.RotateStop
+	{L"MachineMenu.png"},	//  8.MachineMenu
+	{L"Gauge_1.png"},		//  9.HPゲージ
+	{L"Gauge_2.png"},		// 10.MPゲージ
+	{L"Gauge_3.png"},		// 11.クリスタルゲージ
+	{L"Mission.png"},		// 12.ミッション
+	{L"Alchemical.png"},		// 13.錬金ボタン
+	{L"CameraMove.png"},		// 14.カメラ移動
+	{L"Instructions.png"},	// 15.チュートリアル(文字説明)
+	{L"LineSet.png"},		// 16.ライン設定
+	{L"None.png"},
+	{L"None.png"},
+	{L"None.png"},
+	{L"None.png"},
 };
 
 OperationInstructions::OperationInstructions():
@@ -82,24 +70,27 @@ void OperationInstructions::Initialize(std::vector<Tutorial_Status> tutorialNumb
 {
 	pPlayScene;
 	auto device = ShareData::GetInstance().GetDeviceResources();
-	int width = device->GetOutputSize().right;
-	int height = device->GetOutputSize().bottom;
 
 	// 取得
-	m_arrowL = std::make_unique<DrawArrow>(SimpleMath::Vector2((width / 2) + ARROW_POS_X + TUTORIAL_TEXT_POS.x, height / 2.2f + TUTORIAL_TEXT_POS.y), SimpleMath::Vector2(1.0f, 1.0f),2);
-	m_arrowR = std::make_unique<DrawArrow>(SimpleMath::Vector2((width / 2) - ARROW_POS_X + TUTORIAL_TEXT_POS.x, height / 2.2f + TUTORIAL_TEXT_POS.y), SimpleMath::Vector2(1.0f, 1.0f),4);
-
 	UI_Data uiData = ShareJsonData::GetInstance().GetUIData("OptionExplanation");
-	m_explanationButton  = std::make_unique<SelectionBox>(uiData.pos, uiData.rage);
+	m_explanationButton = std::make_unique<SelectionBox>(uiData.pos, uiData.rage);
 
-	m_titleSceneBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(width / TITLESCENE_BUTTON.x,height / TITLESCENE_BUTTON.y),SimpleMath::Vector2(2.0f,1.0f));
-	m_selectSceneBox = std::make_unique<SelectionBox>(SimpleMath::Vector2(width / SELECTSCENE_BUTTON.x, height / SELECTSCENE_BUTTON.y), SimpleMath::Vector2(2.0f, 1.0f));
+	uiData = ShareJsonData::GetInstance().GetUIData("OperationArrowL");
+	m_arrowL = std::make_unique<DrawArrow>(uiData.pos, uiData.rage,4);
 
+	uiData = ShareJsonData::GetInstance().GetUIData("OperationArrowR");
+	m_arrowR = std::make_unique<DrawArrow>(uiData.pos, uiData.rage,2);
+
+	uiData = ShareJsonData::GetInstance().GetUIData("OperationTitle");
+	m_titleSceneBox = std::make_unique<SelectionBox>(uiData.pos, uiData.rage);
+
+	uiData = ShareJsonData::GetInstance().GetUIData("OperationSelect");
+	m_selectSceneBox = std::make_unique<SelectionBox>(uiData.pos, uiData.rage);
 
 	CreateInterfase();
 
 	// 説明画像テクスチャの読み込み
-	m_textTexture->LoadTexture(FILENAME[0]);
+	m_textTexture->LoadTexture(FileNamePath(FILENAME[0]));
 
 }
 
@@ -132,19 +123,19 @@ void OperationInstructions::Update(PlayScene* pPlayScene, bool stopFlag)
 	// 左ボタンでm_selectNumber増加
 	if (m_arrowL->ClickMouse())
 	{
-		m_selectNumber++;
+		m_selectNumber--;
 		// 上限下限設定
-		m_selectNumber = std::min(std::max(m_selectNumber, 1), (const int)INSTRUCTION_TYPE::NUM);
-		m_textTexture->LoadTexture(FILENAME[m_selectNumber]);
+		m_selectNumber = std::min(std::max(m_selectNumber, 0), (const int)INSTRUCTION_TYPE::NUM);
+		m_textTexture->LoadTexture(FileNamePath(FILENAME[m_selectNumber]));
 	}
 
 	// 右ボタンでm_selectNumber増加
 	if (m_arrowR->ClickMouse())
 	{
-		m_selectNumber--;
+		m_selectNumber++;
 		// 上限下限設定
-		m_selectNumber = std::min(std::max(m_selectNumber, 1), (const int)INSTRUCTION_TYPE::NUM);
-		m_textTexture->LoadTexture(FILENAME[m_selectNumber]);
+		m_selectNumber = std::min(std::max(m_selectNumber, 0), (const int)INSTRUCTION_TYPE::NUM);
+		m_textTexture->LoadTexture(FileNamePath(FILENAME[m_selectNumber]));
 	}
 
 }
@@ -171,21 +162,13 @@ void OperationInstructions::Render()
 				  &rect,
 				  SimpleMath::Color(0.0f,0.0f,0.0f,0.3f),
 				  0.0f,
-				  DirectX::XMFLOAT2{800.0f / 2.0f,600.0f / 2.0f}, 2.0f);
+				  DirectX::XMFLOAT2{ rect.right / 2.0f,rect.bottom / 2.0f}, 2.0f);
 	
-		rect = SpriteCutter(64, 64, SpriteLoder::UIICON_TYPE::STOP, 0);
-	
-		// UIのアイコン(一旦停止用)を描画
-		pSB->Draw(pSL.GetUIIcons().Get(), SimpleMath::Vector2(width / 2.0f, height / 2.0f),
-			&rect,
-			SimpleMath::Color(0.0f, 0.0f, 0.0f, 0.8f),
-			0.0f,
-			DirectX::XMFLOAT2{ 64.0f / 2.0f,64.0f / 2.0f }, 10.0f);
 	
 		pSD.GetSpriteBatch()->End();
 
-		m_titleSceneBox		->DrawUI();
-		m_selectSceneBox	->DrawUI();
+		m_titleSceneBox		->DrawUI(pSL.GetResultTextTexture().Get(), SpriteCutter(128, 28, 3, 0), SimpleMath::Color(Colors::Black),1.0f, 128, 28);
+		m_selectSceneBox	->DrawUI(pSL.GetResultTextTexture().Get(), SpriteCutter(128, 28, 1, 0), SimpleMath::Color(Colors::Black),1.0f, 128, 28);
 
 	}
 	
@@ -203,8 +186,8 @@ void OperationInstructions::Render_Layer2()
 		m_textTexture	->Render();
 	
 		// 選択移動矢印の描画　(上限下限に達したら描画を切る)
-		if (m_selectNumber < m_maxSelectVal)	m_arrowL->Draw();
-		if (m_selectNumber > 0)					m_arrowR->Draw();
+		if (m_selectNumber < m_maxSelectVal)	m_arrowR->Draw();
+		if (m_selectNumber >= 1)				m_arrowL->Draw();
 
 	}
 }
@@ -216,23 +199,25 @@ void OperationInstructions::Finalize()
 void OperationInstructions::CreateInterfase()
 {
 	auto device = ShareData::GetInstance().GetDeviceResources();
-	float width = static_cast<float>(device->GetOutputSize().right);
-	float height = static_cast<float>(device->GetOutputSize().bottom);
 
 	// テクスチャを描画する際の位置情報と大きさ
-	SimpleMath::Vector2 pos{ TUTORIAL_TEXT_POS.x,TUTORIAL_TEXT_POS.y};
-	SimpleMath::Vector2 rage{ 0.25f,0.25f};
+	UI_Data uiData = ShareJsonData::GetInstance().GetUIData("OperationText");
 
 	m_textTexture	= std::make_unique<UserInterface>();
 	m_backFlame		= std::make_unique<UserInterface>();
 
-	m_textTexture->Create(device, L"Resources/Textures/Explanation/Attacker.png", pos, rage,UserInterface::MIDDLE_CENTER);
-	m_textTexture->SetWindowSize((const int)width,(const int)height);
+	m_textTexture->Create(device, L"Resources/Textures/Explanation/Attacker.png", uiData.pos, uiData.rage,UserInterface::MIDDLE_CENTER);
 
-	//pos		= { TUTORIAL_TEXT_POS.x,TUTORIAL_TEXT_POS.y};
-	//rage	= { 0.35f,0.3f };
-
-	m_backFlame->Create(device, L"Resources/Textures/Explanation/BackFlame.png", pos, rage, UserInterface::MIDDLE_CENTER);
-	m_backFlame->SetWindowSize((const int)width, (const int)height);
+	m_backFlame->Create(device, L"Resources/Textures/Explanation/BackFlame.png", uiData.pos,SimpleMath::Vector2(uiData.option["BACK_RAGE"]), UserInterface::MIDDLE_CENTER);
 	m_backFlame->SetColor(SimpleMath::Color(0.8f, 0.8f, 1.0f, 0.95f));
+}
+
+std::wstring OperationInstructions::FileNamePath(const wchar_t* path)
+{
+
+	std::wstring pathName = L"Resources/Textures/Explanation/";
+
+	pathName += path;
+
+	return pathName;
 }

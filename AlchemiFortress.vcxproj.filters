@@ -110,9 +110,6 @@
     <Filter Include="Json\EnemyData">
       <UniqueIdentifier>{e1d6a8ad-c43d-46e6-a623-6722c44dd67c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\PlayScene\Stage">
-      <UniqueIdentifier>{04298bc0-14b1-4814-b453-9b3036e93ecb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene\SelectScene">
       <UniqueIdentifier>{7395379b-a64a-4112-aa1c-b48eaad6e95c}</UniqueIdentifier>
     </Filter>
@@ -133,12 +130,6 @@
     </Filter>
     <Filter Include="NecromaLib\DesinPattern\Command">
       <UniqueIdentifier>{f5be055f-84e1-4947-8893-fe79099656c3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\ResultScene\UI">
-      <UniqueIdentifier>{fba29758-b9ca-4792-8ef4-63d5e4002bda}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\EditScene">
-      <UniqueIdentifier>{341033be-c045-4670-8a84-aeb161ffc7fd}</UniqueIdentifier>
     </Filter>
     <Filter Include="Scene\PlayScene\Enemy\EnemyMoveCommand">
       <UniqueIdentifier>{3e238bef-c636-455c-a750-796f24c29800}</UniqueIdentifier>
@@ -187,9 +178,6 @@
     </Filter>
     <Filter Include="Json\GameParameterData">
       <UniqueIdentifier>{74b14967-07a6-4fb7-8ff2-28fe4a891020}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\PlayScene\Tutorial\State">
-      <UniqueIdentifier>{f8458fb5-47b9-454c-a217-d5232e5bb5b2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Scene\PlayScene\Tutorial\command">
       <UniqueIdentifier>{47fa9a36-0762-46d1-a79b-04c512b7b1d1}</UniqueIdentifier>
@@ -241,6 +229,12 @@
     </Filter>
     <Filter Include="Json\GameParameterData\Select">
       <UniqueIdentifier>{e6679602-f917-46e1-8865-ea0dcfd46451}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Json\GameParameterData\Operation">
+      <UniqueIdentifier>{c3812cc7-30d9-41ff-909b-2edb2558db02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\PlayScene\Mission">
+      <UniqueIdentifier>{04298bc0-14b1-4814-b453-9b3036e93ecb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -436,8 +430,8 @@
     <ClInclude Include="NecromaLib\Singleton\ShareJsonData.h">
       <Filter>NecromaLib\DesinPattern\Singleton</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\PlayScene\Stage\MissionManager.h">
-      <Filter>Scene\PlayScene\Stage</Filter>
+    <ClInclude Include="Scenes\PlayScene\Mission\MissionManager.h">
+      <Filter>Scene\PlayScene\Mission</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\SelectScene\SelectScene.h">
       <Filter>Scene\SelectScene</Filter>
@@ -460,9 +454,6 @@
     <ClInclude Include="Scenes\Commons\SelectionUI.h">
       <Filter>Scene\Commons</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\ResultScene\ResultUIManager.h">
-      <Filter>Scene\ResultScene\UI</Filter>
-    </ClInclude>
     <ClInclude Include="NecromaLib\Command\ICommand_UI.h">
       <Filter>NecromaLib\DesinPattern\Command</Filter>
     </ClInclude>
@@ -471,9 +462,6 @@
     </ClInclude>
     <ClInclude Include="Scenes\Commons\UIKeyControl.h">
       <Filter>Scene\Commons</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\EditScene\EditScene.h">
-      <Filter>Scene\EditScene</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyList\ICommand_Enemy.h">
       <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand</Filter>
@@ -486,9 +474,6 @@
     </ClInclude>
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_MeanderingMove.h">
       <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand\MoveList</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\PlayScene\Enemy\EnemyCommand_Identifier.h">
-      <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\PlayScene\Tutorial\OperationInstructions.h">
       <Filter>Scene\PlayScene\Tutorial</Filter>
@@ -547,9 +532,6 @@
     <ClInclude Include="Scenes\PlayScene\UI\BaseLv.h">
       <Filter>Scene\PlayScene\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\ITutorialState.h">
-      <Filter>Scene\PlayScene\Tutorial\State</Filter>
-    </ClInclude>
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\StatePattern\IAM_MachineState.h">
       <Filter>Scene\PlayScene\AlchemicalMachine\Object\State</Filter>
     </ClInclude>
@@ -567,9 +549,6 @@
     </ClInclude>
     <ClInclude Include="Scenes\PlayScene\Tutorial\TutorialManager.h">
       <Filter>Scene\PlayScene\Tutorial</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\TutorialState.h">
-      <Filter>Scene\PlayScene\Tutorial\State</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\PlayScene\Tutorial\CommandPattern\ICommand_Tutorial.h">
       <Filter>Scene\PlayScene\Tutorial\command</Filter>
@@ -591,6 +570,9 @@
     </ClInclude>
     <ClInclude Include="Scenes\Commons\MissonAnimation.h">
       <Filter>Scene\Commons\Mission</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Mission\ClearVeil.h">
+      <Filter>Scene\PlayScene\Mission</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -774,8 +756,8 @@
     <ClCompile Include="NecromaLib\Singleton\ShareJsonData.cpp">
       <Filter>NecromaLib\DesinPattern\Singleton</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\PlayScene\Stage\MissionManager.cpp">
-      <Filter>Scene\PlayScene\Stage</Filter>
+    <ClCompile Include="Scenes\PlayScene\Mission\MissionManager.cpp">
+      <Filter>Scene\PlayScene\Mission</Filter>
     </ClCompile>
     <ClCompile Include="Scenes\SelectScene\SelectScene.cpp">
       <Filter>Scene\SelectScene</Filter>
@@ -801,14 +783,8 @@
     <ClCompile Include="NecromaLib\Command\Commander_UI.cpp">
       <Filter>NecromaLib\DesinPattern\Command</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\ResultScene\ResultUIManager.cpp">
-      <Filter>Scene\ResultScene\UI</Filter>
-    </ClCompile>
     <ClCompile Include="Scenes\Commons\UIKeyControl.cpp">
       <Filter>Scene\Commons</Filter>
-    </ClCompile>
-    <ClCompile Include="Scenes\EditScene\EditScene.cpp">
-      <Filter>Scene\EditScene</Filter>
     </ClCompile>
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyList\EnemyCommander.cpp">
       <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand</Filter>
@@ -818,9 +794,6 @@
     </ClCompile>
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_MeanderingMove.cpp">
       <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand\MoveList</Filter>
-    </ClCompile>
-    <ClCompile Include="Scenes\PlayScene\Enemy\EnemyCommand_Identifier.cpp">
-      <Filter>Scene\PlayScene\Enemy\EnemyMoveCommand</Filter>
     </ClCompile>
     <ClCompile Include="Scenes\PlayScene\Tutorial\OperationInstructions.cpp">
       <Filter>Scene\PlayScene\Tutorial</Filter>
@@ -885,9 +858,6 @@
     <ClCompile Include="Scenes\PlayScene\Tutorial\TutorialManager.cpp">
       <Filter>Scene\PlayScene\Tutorial</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\PlayScene\Tutorial\StatePattern\TutorialState.cpp">
-      <Filter>Scene\PlayScene\Tutorial\State</Filter>
-    </ClCompile>
     <ClCompile Include="Scenes\PlayScene\Tutorial\CommandPattern\TutorialCommands.cpp">
       <Filter>Scene\PlayScene\Tutorial\command</Filter>
     </ClCompile>
@@ -899,6 +869,9 @@
     </ClCompile>
     <ClCompile Include="Scenes\Commons\MissonAnimation.cpp">
       <Filter>Scene\Commons\Mission</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\PlayScene\Mission\ClearVeil.cpp">
+      <Filter>Scene\PlayScene\Mission</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1061,9 +1034,6 @@
     <None Include="Resources\Shader\ZoomUI.hlsli">
       <Filter>Shader\ZoomUI</Filter>
     </None>
-    <None Include="Resources\Shader\3DUI.hlsli">
-      <Filter>Shader\UI</Filter>
-    </None>
     <None Include="Resources\Shader\PostProcess.hlsli">
       <Filter>Shader\PostProcess</Filter>
     </None>
@@ -1184,6 +1154,24 @@
     <None Include="Resources\Json\GameParameter\Result\UILayout_ResultSelect.json">
       <Filter>Json\GameParameterData\Result</Filter>
     </None>
+    <None Include="Resources\Json\GameParameter\Operation\UILayout_OperationArrowL.json">
+      <Filter>Json\GameParameterData\Operation</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Operation\UILayout_OperationOffset.json">
+      <Filter>Json\GameParameterData\Operation</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Operation\UILayout_OperationSelect.json">
+      <Filter>Json\GameParameterData\Operation</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Operation\UILayout_OperationTitle.json">
+      <Filter>Json\GameParameterData\Operation</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Operation\UILayout_OperationArrowR.json">
+      <Filter>Json\GameParameterData\Operation</Filter>
+    </None>
+    <None Include="Resources\Json\GameParameter\Operation\UILayout_OperationText.json">
+      <Filter>Json\GameParameterData\Operation</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shader\Transition_GS.hlsl">
@@ -1299,15 +1287,6 @@
     </FxCompile>
     <FxCompile Include="Resources\Shader\ZoomUI_PS.hlsl">
       <Filter>Shader\ZoomUI</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shader\3DUI_GS.hlsl">
-      <Filter>Shader\UI</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shader\3DUI_PS.hlsl">
-      <Filter>Shader\UI</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shader\3DUI_VS.hlsl">
-      <Filter>Shader\UI</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shader\NomalModelShader_PS.hlsl">
       <Filter>Shader\Model</Filter>

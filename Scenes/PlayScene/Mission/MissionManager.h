@@ -7,7 +7,6 @@
 class AlchemicalMachineManager;
 class FieldObjectManager;
 class EnemyManager;
-struct Stage_Condition;
 class Number;
 class MissionRender;
 class DrawTimer;
@@ -15,6 +14,8 @@ class Veil;
 class UserInterface;
 class DrawArrow;
 class SelectionBox;
+class ClearVeil;
+struct Stage_Condition;
 
 class MissionManager
 {
@@ -41,7 +42,7 @@ public:
 	bool MissionUnable();
 
 	// 次のWAVEに進んだことを知らせるフラグ
-	bool NextWaveFlag() { return m_nextWaveFlag && m_waveAnimation.MaxCheck(); }
+	bool NextWaveFlag();
 
 	int GetStartTimer();
 
@@ -75,13 +76,14 @@ private:
 	// ミッション描画
 	std::unique_ptr<MissionRender> m_missionRender;
 
+	// ミッション内容開閉矢印ボタン
 	std::unique_ptr<DrawArrow> m_closeButton;
+
+	// ミッションクリア時演出クラス
+	std::unique_ptr<ClearVeil> m_clearVeil;
 
 	// 半透明幕(クリア時)の描画
 	std::unique_ptr<Veil> m_backVeil;
-
-	// NextWaveの文字描画
-	std::unique_ptr<UserInterface> m_nextWaveTexture;
 
 	// 時間経過記録変数 ゲーム全体
 	float m_gameTimer;
@@ -96,8 +98,7 @@ private:
 
 	// ステージクリアした際に流すアニメーション用変数
 	AnimationData m_clearAnimation;
-	// WAVEクリアした際に流すアニメーション用変数
-	AnimationData m_waveAnimation;
+
 
 	// 全ての条件を満たしたことを示すフラグ
 	bool m_allClearFlag;

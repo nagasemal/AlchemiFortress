@@ -72,8 +72,6 @@ void DrawSlider::Finalize()
 void DrawSlider::CreateBar(SimpleMath::Vector2 position, SimpleMath::Vector2 scale)
 {
     auto device = ShareData::GetInstance().GetDeviceResources();
-    int width = device->GetOutputSize().right;
-    int height = device->GetOutputSize().bottom;
 
     // ƒQ[ƒW‚Ì‘OŒã‰æ‘œ‚ğæ“¾
     m_gauge_Flont = std::make_unique<UserInterface>();
@@ -82,8 +80,6 @@ void DrawSlider::CreateBar(SimpleMath::Vector2 position, SimpleMath::Vector2 sca
         , position
         , scale
         , UserInterface::ANCHOR::MIDDLE_CENTER);
-    m_gauge_Flont->SetWindowSize(width, height);
-
 
     m_gauge_Back = std::make_unique<UserInterface>();
     m_gauge_Back->Create(device
@@ -91,7 +87,6 @@ void DrawSlider::CreateBar(SimpleMath::Vector2 position, SimpleMath::Vector2 sca
         , position
         , scale
         , UserInterface::ANCHOR::MIDDLE_CENTER);
-    m_gauge_Back->SetWindowSize(width, height);
 
     m_button = std::make_unique<SelectionBox>(position, DirectX::SimpleMath::Vector2(scale.y, scale.y));
 

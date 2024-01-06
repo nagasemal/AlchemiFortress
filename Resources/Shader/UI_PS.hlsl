@@ -16,7 +16,13 @@ float4 main(PS_INPUT input) : SV_TARGET
 	outputw.rgb *= input.color.rgb;
 
 	//@if•¶‚Ì•`‚«•û‚Æ“¯‚¶ Š„‡‚Åí‚é
-	outputw.a *= lerp(1.0f, 0.0f, step(input.color.a, input.tex.x));
+    float sharpen = 0.0f;
+	//@¶‰E‚Ç‚¿‚ç‚©‚çí‚é‚©‚Ìbool‚Ì‘ã‘Ö
+    float directionFlag = step(1.0f, windowSize.z);
+	
+    sharpen += lerp(1.0f, 0.0f, step(input.color.a, (colors.z * directionFlag) + (input.tex.x + (input.tex.x * -2.0f * directionFlag)))); // ¶‘¤
+    
+    outputw.a *= sharpen;
 
 	return outputw;
 }

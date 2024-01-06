@@ -1,0 +1,21 @@
+{
+
+  "UILAYOUT": {
+
+    "MASTER": {
+      "POS_X": 0.0,
+      "POS_Y": 0.0,
+      "RAGE_X": 0.5,
+      "RAGE_Y": 0.5,
+      "OPTION": [
+        {
+          "TAG": "BACK_RAGE",
+          "VAL": 0.7
+        }
+      ],
+      "KEYS": [
+      ]
+    }
+    }
+
+}

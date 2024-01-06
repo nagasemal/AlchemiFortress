@@ -364,6 +364,14 @@ void Game::ReloadUIData()
     pSJD.LoadingUIData("Mission","Text");
     pSJD.LoadingUIData("Mission","Offset");
 
+    //　====================[　用語説明系UI　]
+    pSJD.LoadingUIData("Operation", "Text");
+    pSJD.LoadingUIData("Operation", "ArrowL");
+    pSJD.LoadingUIData("Operation", "ArrowR");
+    pSJD.LoadingUIData("Operation", "Title");
+    pSJD.LoadingUIData("Operation", "Select");
+    pSJD.LoadingUIData("Operation", "Offset");
+
     //　====================[　その他UI　]
     pSJD.LoadingUIData("Option","Double");
     pSJD.LoadingUIData("Option","Explanation");

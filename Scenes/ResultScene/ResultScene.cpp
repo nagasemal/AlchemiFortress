@@ -145,9 +145,9 @@ void ResultScene::DrawUI()
 	SpriteLoder& pSL = SpriteLoder::GetInstance();
 
 	//@====================[@UI‚Ì•`‰æ@]
-	m_selectionBox_Next	->DrawUI(pSL.GetResultTextTexture().Get(), SpriteCutter(128, 28, 0, 0), SimpleMath::Color(Colors::Black));
-	m_selectionBox_Back	->DrawUI(pSL.GetResultTextTexture().Get(), SpriteCutter(128, 28, 1, 0), SimpleMath::Color(Colors::Black));
-	m_selectionBox_Retry->DrawUI(pSL.GetResultTextTexture().Get(), SpriteCutter(128, 28, 2, 0), SimpleMath::Color(Colors::Black));
+	m_selectionBox_Next	->DrawUI(pSL.GetResultTextTexture().Get(), SpriteCutter(128, 28, 0, 0), SimpleMath::Color(Colors::Black), 1.0f, 128, 28);
+	m_selectionBox_Back	->DrawUI(pSL.GetResultTextTexture().Get(), SpriteCutter(128, 28, 1, 0), SimpleMath::Color(Colors::Black), 1.0f, 128, 28);
+	m_selectionBox_Retry->DrawUI(pSL.GetResultTextTexture().Get(), SpriteCutter(128, 28, 2, 0), SimpleMath::Color(Colors::Black), 1.0f, 128, 28);
 }
 
 void ResultScene::Finalize()

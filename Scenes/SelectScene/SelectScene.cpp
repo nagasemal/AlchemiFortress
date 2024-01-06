@@ -18,15 +18,19 @@
 
 //　====================[　天球の情報　]
 #define SKY_ROTATION	SimpleMath::Vector3{8.0f, 7.0f, 90.0f}
-#define SKY_SCALE	1.5f
+#define SKY_SCALE	0.8f
 #define SKY_POS_Y	70.0f
 #define SKY_LIGHT SimpleMath::Color(0.2f, 0.2f, 0.4f, 0.8f)
+
+//　====================[　テクスチャの大きさ　]
+#define TEXTURE_W 256
+#define TEXTURE_H 64
+
 
 SelectScene::SelectScene():
 	m_selectStageNumber(1),
 	m_changeMachine(true)
 {
-
 }
 
 SelectScene::~SelectScene()
@@ -145,15 +149,15 @@ void SelectScene::Draw()
 	auto pSB = pSD.GetSpriteBatch();
 
 	SimpleMath::Matrix modelData = SimpleMath::Matrix::Identity;
-	modelData = SimpleMath::Matrix::CreateScale({ 1.8f,1.8f,1.8f });
-	modelData = SimpleMath::Matrix::CreateTranslation({ 0.0f,70.0f,0.0f });
+	modelData = SimpleMath::Matrix::CreateScale({ SKY_SCALE });
+	modelData = SimpleMath::Matrix::CreateTranslation({ 0.0f,SKY_POS_Y,0.0f });
 
 	// 天球描画
 	m_skySphere->Draw(pSD.GetContext(), *pSD.GetCommonStates(), modelData, pSD.GetView(), pSD.GetProjection(), false, [&]()
 		{
 
 			ModelShader::GetInstance().ModelDrawShader(
-				SimpleMath::Color(1.0f, 1.0f, 1.0f, 1.0f),
+				SimpleMath::Color(Colors::White),
 				SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f), SpriteLoder::GetInstance().GetMachineTextuer(4));
 
 			pSD.GetContext()->PSSetShaderResources(1, 1, SpriteLoder::GetInstance().GetMachineTextuer(4).GetAddressOf());
@@ -190,7 +194,7 @@ void SelectScene::DrawUI()
 
 	pSB->Begin(SpriteSortMode_Deferred, pSD.GetCommonStates()->NonPremultiplied());
 
-	RECT rect = { 0,0,256,64 };
+	RECT rect = { 0,0,TEXTURE_W,TEXTURE_H };
 	pSB->Draw(SpriteLoder::GetInstance().GetGameStartTexture().Get(), m_nextSceneBox->GetPos(),&rect,Colors::White,0.0f,SimpleMath::Vector2((float)rect.right / 2.0f, (float)rect.bottom / 2.0f));
 
 	pSB->End();

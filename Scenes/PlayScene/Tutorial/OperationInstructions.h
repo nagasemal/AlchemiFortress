@@ -82,8 +82,7 @@ public:
 
 private:
 
-	// NoneTypeを探し出し、その位置にカーソルボックスを出現させます。
-	//void NonePosSearch(PlayScene* pPlayScene);
+	std::wstring FileNamePath(const wchar_t* path);
 
 private:
 

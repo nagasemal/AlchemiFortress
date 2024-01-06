@@ -9,7 +9,6 @@
 
 MissionAnimation::MissionAnimation():
 	m_animationFlag(),
-	m_animPage(),
 	m_animTime()
 {
 }
@@ -23,18 +22,10 @@ void MissionAnimation::Update()
 
 	m_animTime += DeltaTime::GetInstance().GetDeltaTime();
 
-
 	if (m_animTime >= 1.0f)
 	{
 		m_animTime = 0.0f;
-		m_animPage++;
 	}
-
-	if (m_animPage)
-	{
-
-	}
-
 }
 
 void MissionAnimation::Render()

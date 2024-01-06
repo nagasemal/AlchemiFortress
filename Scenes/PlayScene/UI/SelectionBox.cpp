@@ -71,7 +71,7 @@ void SelectionBox::Draw()
 }
 
 void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsTexture,
-						  RECT rect,SimpleMath::Color pulsTextureCol)
+						  RECT rect,SimpleMath::Color pulsTextureCol, float pulsRage, int pulsWidth, int pulsHeight)
 {
 	ShareData& pSD = ShareData::GetInstance();
 	auto pSB = pSD.GetSpriteBatch();
@@ -93,7 +93,7 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsT
 	// 中に表示するテクスチャがある場合
 	if (pulsTexture)
 	{
-		pSB->Draw(pulsTexture.Get(), box_Pos, &rect, pulsTextureCol, 0.0f, DirectX::XMFLOAT2(64 / 2, 64 / 2), 0.8f);
+		pSB->Draw(pulsTexture.Get(), box_Pos, &rect, pulsTextureCol, 0.0f, DirectX::XMFLOAT2(pulsWidth / 2, pulsHeight / 2), pulsRage);
 	}
 
 	pSB->End();
@@ -187,7 +187,7 @@ void SelectionBox::DrawUI(int UInumber)
 
 void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture,
 						  Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsTexture,
-						  RECT rect, 
+						  RECT rect, float pulsRage,
 						  SimpleMath::Color pulsTextureCol,
 						  SimpleMath::Color nomalColor,
 						  SimpleMath::Color onColor,
@@ -216,7 +216,7 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textu
 	// 中に表示するテクスチャがある場合
 	if (pulsTexture)
 	{
-		pSB->Draw(pulsTexture.Get(),box_Pos, &rect, pulsTextureCol, 0.0f, DirectX::XMFLOAT2(64 / 2, 64 / 2), 0.8f);
+		pSB->Draw(pulsTexture.Get(),box_Pos, &rect, pulsTextureCol, 0.0f, DirectX::XMFLOAT2(rect.right / 2, rect.bottom / 2), pulsRage);
 	}
 
 	pSB->End();

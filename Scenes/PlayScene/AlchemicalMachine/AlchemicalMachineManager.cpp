@@ -42,6 +42,11 @@
 // バレットの大きさ
 #define BULLET_RAGE 0.75f
 
+// ワールド空間に出すUIの大きさ調整
+#define WORLD_UI_SIZE 0.01f
+
+// ワールド空間に出すUIの位置調整
+#define WORLD_UI_POSY 4.5f
 
 AlchemicalMachineManager::AlchemicalMachineManager() :
 	m_allHitObjectToMouse(),
@@ -602,10 +607,10 @@ void AlchemicalMachineManager::BillboardRenderUI(int index)
 	{	
 		// ワールド行列作成
 		SimpleMath::Matrix world =
-			SimpleMath::Matrix::CreateScale(0.01f) *
+			SimpleMath::Matrix::CreateScale(WORLD_UI_SIZE) *
 			invertY *
 			invView *
-			SimpleMath::Matrix::CreateTranslation(m_AMObject[index]->GetPos() + SimpleMath::Vector3(0.0f, 4.5f, 0.0f));
+			SimpleMath::Matrix::CreateTranslation(m_AMObject[index]->GetPos() + SimpleMath::Vector3(0.0f, WORLD_UI_POSY, 0.0f));
 
 		// エフェクトを適応する
 		m_effect->SetWorld(world);

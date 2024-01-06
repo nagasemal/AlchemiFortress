@@ -30,10 +30,12 @@ UserInterface::UserInterface()
 	, m_res(nullptr)
 	, m_scale(SimpleMath::Vector2::One)
 	, m_position(SimpleMath::Vector2::Zero)
-	, m_value(1)
+	, m_lightValue(1)
 	, m_anchor(ANCHOR::TOP_LEFT)
 	, m_renderRatio(1.0f)
-	, m_color(1.0f,1.0f,1.0f,1.0f)
+	, m_color(1.0f, 1.0f, 1.0f, 1.0f)
+	, m_sharpenW(false)
+	, m_sharpenH(false)
 {
 }
 
@@ -200,22 +202,30 @@ void UserInterface::CreateShader()
 // 描画関数
 void UserInterface::Render()
 {
+	//　====================[　デバイスと画面サイズの確保　]
+	auto device = ShareData::GetInstance().GetDeviceResources();
+	float width = static_cast<float>(device->GetOutputSize().right);
+	float height = static_cast<float>(device->GetOutputSize().bottom);
+
 	auto context = m_pDR->GetD3DDeviceContext();
 	// 頂点情報
 	// Position.xy	:拡縮用スケール
 	// Position.z	:アンカータイプ(0～8)の整数で指定
 	// Color.xy　	:アンカー座標(ピクセル指定:1280 ×720)
 	// Color.zw		:画像サイズ
-	// Tex.xy		:ウィンドウサイズ（バッファも同じ。こちらは未使用）
+	// Tex.xy		:削る量,明暗
 	VertexPositionColorTexture vertex[1] = {
 		VertexPositionColorTexture(SimpleMath::Vector3(m_scale.x, m_scale.y, static_cast<float>(m_anchor))
 		, SimpleMath::Vector4(m_position.x, m_position.y, static_cast<float>(m_textureWidth), static_cast<float>(m_textureHeight))
-		, SimpleMath::Vector2(m_renderRatio,m_value))
+		, SimpleMath::Vector2(m_renderRatio,m_lightValue))
 	};
 
 	//　====================[　シェーダーに渡す追加のバッファ　]
 	ConstBuffer cbuff;
-	cbuff.windowSize = SimpleMath::Vector4(static_cast<float>(m_windowWidth), static_cast<float>(m_windowHeight), 1, 1);
+	cbuff.windowSize = SimpleMath::Vector4(static_cast<float>(width),
+										   static_cast<float>(height),
+										   static_cast<float>(m_sharpenW),
+										   static_cast<float>(m_sharpenH));
 	cbuff.color = m_color;
 
 	//　====================[　バッファの更新　]
@@ -273,8 +283,8 @@ void UserInterface::Render()
 
 }
 
-void UserInterface::SetWindowSize(const int& width, const int& height)
-{
-	m_windowWidth = width;
-	m_windowHeight = height;
-}
+//void UserInterface::SetWindowSize(const int& width, const int& height)
+//{
+//	m_windowWidth = width;
+//	m_windowHeight = height;
+//}

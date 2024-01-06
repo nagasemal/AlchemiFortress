@@ -41,14 +41,9 @@ float4 ApplyLimLight(float3 normal)
 	float dotLE_3 = pow(max(dot(eyedif, normalize(LightDirection[2])), 1.0), 30.0);
 
 	return lerp(0, LimLightColor, rim  * dotLE_1 * dotLE_2 * dotLE_3);
-
 }
 
-// ノーマルマップの設定
-void ApplyNomalMap()
-{
-	//float3 normalMap = (texture2D(texture, vTextureCoord) * 2.0 - 1.0).rgb;
-}
+
 
 // グレースケール化
 float ChangeGray(float4 col)

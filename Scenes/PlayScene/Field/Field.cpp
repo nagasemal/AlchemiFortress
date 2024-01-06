@@ -11,7 +11,7 @@
 
 #define RAGE 120.f
 
-#define RAGE_Y 3.0f
+#define RAGE_Y 1.0f
 
 Field::Field():
 	m_hitMouseFlag()
@@ -24,7 +24,7 @@ Field::~Field()
 
 void Field::Initialize()
 {
-	m_data.pos		= SimpleMath::Vector3(0,-POS_Y,0);
+	m_data.pos		= SimpleMath::Vector3(0,POS_Y,0);
 	m_data.rage		= SimpleMath::Vector3(RAGE, RAGE_Y,RAGE);
 }
 

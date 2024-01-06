@@ -6,10 +6,6 @@ Texture2D rampTex   : register(t2);
 
 SamplerState samLinear : register(s0);
 
-static const float3 luminance = { 0.29891f, 0.58661f, 0.11448f }; // 輝度変換
-static const float overShoot = 0.6f; // オーバーシュート閾値
-static const float scaling = 2.0f; // ナイトビジョンとしてのスケーリング値
-
 float4 blur(float power,float2 uv)
 {
     float center = 1.0f - power * 9.0f;
@@ -97,9 +93,6 @@ float4 main(PS_INPUT input) : SV_TARGET
     // 暗度算出
     float v_2 = min(bigBlurTex.r, min(bigBlurTex.g, bigBlurTex.b));
     
-    // 光度計算
-    float l = luminance.x * bigBlurTex.x + luminance.y * bigBlurTex.y + luminance.z * bigBlurTex.z;
-    
     // オーバーレイ   ：   明るい位置に赤み(ややオレンジ)
     bigBlurTex += AddOverLay(bigBlurTex, float4(0.2, 0.25, 0.0, 0.2f)) * step(0.95, v);
     
@@ -112,10 +105,10 @@ float4 main(PS_INPUT input) : SV_TARGET
     // 距離フォグ
     bigBlurTex += float4(0.25f, 0.25f, 0.3f, 0.5f) * depthTex.b;
     
-    // 輪郭の抽出を行う
+    // 輪郭の抽出を行う (1.0以上ならばアウトラインとしない)
     float outlineFlag = step(AddOutLine(0.002f, input.Tex, 1.0f), 1.0f);
     
-    // 輪郭が存在する場合はテクスチャに乗算する
+    // 輪郭が存在する場合はテクスチャに0を乗算する
     bigBlurTex *= (float4)outlineFlag;
 
     return float4(bigBlurTex.xyz,1.0f);

@@ -230,7 +230,6 @@
     <ClInclude Include="Scenes\Commons\ShaderButton.h" />
     <ClInclude Include="Scenes\Commons\UIKeyControl.h" />
     <ClInclude Include="Scenes\DataManager.h" />
-    <ClInclude Include="Scenes\EditScene\EditScene.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineFilter.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineManager.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineObject.h" />
@@ -245,7 +244,6 @@
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\AM_Recovery.h" />
     <ClInclude Include="Scenes\PlayScene\AlchemicalMachine\StatePattern\IAM_MachineState.h" />
     <ClInclude Include="Scenes\PlayScene\Camera\MoveCamera.h" />
-    <ClInclude Include="Scenes\PlayScene\Enemy\EnemyCommand_Identifier.h" />
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyList\EnemyCommander.h" />
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_HoppingMove.h" />
     <ClInclude Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_MeanderingMove.h" />
@@ -259,19 +257,18 @@
     <ClInclude Include="Scenes\PlayScene\Field\Field.h" />
     <ClInclude Include="Scenes\PlayScene\Field\FieldObjectManager.h" />
     <ClInclude Include="Scenes\PlayScene\Field\FieldObjectType.h" />
+    <ClInclude Include="Scenes\PlayScene\Mission\ClearVeil.h" />
     <ClInclude Include="Scenes\PlayScene\Mouse\MousePointer.h" />
     <ClInclude Include="Scenes\PlayScene\PlayScene.h" />
     <ClInclude Include="Scenes\PlayScene\Shadow\DorpShadow.h" />
     <ClInclude Include="Scenes\PlayScene\Shadow\MagicCircle.h" />
     <ClInclude Include="Scenes\PlayScene\Shadow\Particle.h" />
     <ClInclude Include="Scenes\PlayScene\Shadow\ParticleUtility.h" />
-    <ClInclude Include="Scenes\PlayScene\Stage\MissionManager.h" />
+    <ClInclude Include="Scenes\PlayScene\Mission\MissionManager.h" />
     <ClInclude Include="Scenes\PlayScene\Tutorial\CommandPattern\Commander_Tutorial.h" />
     <ClInclude Include="Scenes\PlayScene\Tutorial\CommandPattern\ICommand_Tutorial.h" />
     <ClInclude Include="Scenes\PlayScene\Tutorial\CommandPattern\TutorialCommands.h" />
     <ClInclude Include="Scenes\PlayScene\Tutorial\Explanation.h" />
-    <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\ITutorialState.h" />
-    <ClInclude Include="Scenes\PlayScene\Tutorial\StatePattern\TutorialState.h" />
     <ClInclude Include="Scenes\PlayScene\Tutorial\OperationInstructions.h" />
     <ClInclude Include="Scenes\PlayScene\Tutorial\TutorialManager.h" />
     <ClInclude Include="Scenes\PlayScene\UI\BaseLv.h" />
@@ -286,7 +283,6 @@
     <ClInclude Include="Scenes\PlayScene\UI\Number.h" />
     <ClInclude Include="Scenes\ResultScene\Camera\ResultCamera.h" />
     <ClInclude Include="Scenes\ResultScene\ResultScene.h" />
-    <ClInclude Include="Scenes\ResultScene\ResultUIManager.h" />
     <ClInclude Include="Scenes\SelectScene\MissionRender.h" />
     <ClInclude Include="Scenes\SelectScene\SelectCamera.h" />
     <ClInclude Include="Scenes\SelectScene\SelectScene.h" />
@@ -349,7 +345,6 @@
     <ClCompile Include="Scenes\Commons\ShaderButton.cpp" />
     <ClCompile Include="Scenes\Commons\UIKeyControl.cpp" />
     <ClCompile Include="Scenes\DataManager.cpp" />
-    <ClCompile Include="Scenes\EditScene\EditScene.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineFilter.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineManager.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\AlchemicalMachineObject.cpp" />
@@ -363,7 +358,6 @@
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\Bullet\BulletDataBase.cpp" />
     <ClCompile Include="Scenes\PlayScene\AlchemicalMachine\PlayerBase.cpp" />
     <ClCompile Include="Scenes\PlayScene\Camera\MoveCamera.cpp" />
-    <ClCompile Include="Scenes\PlayScene\Enemy\EnemyCommand_Identifier.cpp" />
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyList\EnemyCommander.cpp" />
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_HoppingMove.cpp" />
     <ClCompile Include="Scenes\PlayScene\Enemy\EnemyList\Enemy_MeanderingMove.cpp" />
@@ -375,16 +369,16 @@
     <ClCompile Include="Scenes\PlayScene\Field\Field.cpp" />
     <ClCompile Include="Scenes\PlayScene\Field\FieldObjectManager.cpp" />
     <ClCompile Include="Scenes\PlayScene\Field\FieldObjectType.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Mission\ClearVeil.cpp" />
     <ClCompile Include="Scenes\PlayScene\Mouse\MousePointer.cpp" />
     <ClCompile Include="Scenes\PlayScene\PlayScene.cpp" />
     <ClCompile Include="Scenes\PlayScene\Shadow\DorpShadow.cpp" />
     <ClCompile Include="Scenes\PlayScene\Shadow\MagicCircle.cpp" />
     <ClCompile Include="Scenes\PlayScene\Shadow\Particle.cpp" />
     <ClCompile Include="Scenes\PlayScene\Shadow\ParticleUtility.cpp" />
-    <ClCompile Include="Scenes\PlayScene\Stage\MissionManager.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Mission\MissionManager.cpp" />
     <ClCompile Include="Scenes\PlayScene\Tutorial\CommandPattern\TutorialCommands.cpp" />
     <ClCompile Include="Scenes\PlayScene\Tutorial\Explanation.cpp" />
-    <ClCompile Include="Scenes\PlayScene\Tutorial\StatePattern\TutorialState.cpp" />
     <ClCompile Include="Scenes\PlayScene\Tutorial\OperationInstructions.cpp" />
     <ClCompile Include="Scenes\PlayScene\Tutorial\TutorialManager.cpp" />
     <ClCompile Include="Scenes\PlayScene\UI\BaseLv.cpp" />
@@ -398,7 +392,6 @@
     <ClCompile Include="Scenes\PlayScene\UI\SelectionBox.cpp" />
     <ClCompile Include="Scenes\ResultScene\Camera\ResultCamera.cpp" />
     <ClCompile Include="Scenes\ResultScene\ResultScene.cpp" />
-    <ClCompile Include="Scenes\ResultScene\ResultUIManager.cpp" />
     <ClCompile Include="Scenes\SelectScene\MissionRender.cpp" />
     <ClCompile Include="Scenes\SelectScene\SelectCamera.cpp" />
     <ClCompile Include="Scenes\SelectScene\SelectScene.cpp" />
@@ -455,6 +448,12 @@
     <None Include="Resources\Json\GameParameter\Mission\UILayout_MissionOffset.json" />
     <None Include="Resources\Json\GameParameter\Mission\UILayout_MissionText.json" />
     <None Include="Resources\Json\GameParameter\Mission\UILayout_MissionTimer.json" />
+    <None Include="Resources\Json\GameParameter\Operation\UILayout_OperationArrowL.json" />
+    <None Include="Resources\Json\GameParameter\Operation\UILayout_OperationOffset.json" />
+    <None Include="Resources\Json\GameParameter\Operation\UILayout_OperationSelect.json" />
+    <None Include="Resources\Json\GameParameter\Operation\UILayout_OperationTitle.json" />
+    <None Include="Resources\Json\GameParameter\Operation\UILayout_OperationArrowR.json" />
+    <None Include="Resources\Json\GameParameter\Operation\UILayout_OperationText.json" />
     <None Include="Resources\Json\GameParameter\Result\UILayout_ResultNext.json" />
     <None Include="Resources\Json\GameParameter\Result\UILayout_ResultSelect.json" />
     <None Include="Resources\Json\GameParameter\Result\UILayout_ResultRetry.json" />
@@ -494,7 +493,6 @@
     <None Include="Resources\Json\StageData\Stage_3\StageData_3_1.json" />
     <None Include="Resources\Json\StageData\Stage_3\StageData_3_2.json" />
     <None Include="Resources\Json\StageData\Stage_3\StageData_3_3.json" />
-    <None Include="Resources\Shader\3DUI.hlsli" />
     <None Include="Resources\Shader\BaseLv.hlsli" />
     <None Include="Resources\Shader\Button.hlsli" />
     <None Include="Resources\Shader\CutTexture.hlsli" />
@@ -511,34 +509,6 @@
     <None Include="Resources\Shader\ZoomUI.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\Shader\3DUI_GS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
-    </FxCompile>
-    <FxCompile Include="Resources\Shader\3DUI_PS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
-    </FxCompile>
-    <FxCompile Include="Resources\Shader\3DUI_VS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
-    </FxCompile>
     <FxCompile Include="Resources\Shader\BaseLv_GS.hlsl">
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>

@@ -63,9 +63,9 @@ void EnemyObject::Update()
 	float deltaTime = DeltaTime::GetInstance().GetDeltaTime() * 1.3f;
 
 	// ŠgkƒAƒjƒ[ƒVƒ‡ƒ“
-	m_data.rage.y = Easing::EaseInCirc(0.25f, 0.30f, sinf(m_aliveTimer));
-	m_data.rage.x = Easing::EaseInCirc(0.25f, 0.30f, cosf(m_aliveTimer));
-	m_data.rage.z = Easing::EaseInCirc(0.25f, 0.30f, cosf(m_aliveTimer));
+	m_data.rage.y = Easing::EaseInCirc(ELASTICITY_MIN, ELASTICITY_MAX, sinf(m_aliveTimer));
+	m_data.rage.x = Easing::EaseInCirc(ELASTICITY_MIN, ELASTICITY_MAX, cosf(m_aliveTimer));
+	m_data.rage.z = Easing::EaseInCirc(ELASTICITY_MIN, ELASTICITY_MAX, cosf(m_aliveTimer));
 
 	// ‹——£‚ğæ“¾‚µ³‹K‰»‚·‚é
 	m_lengthVec = GetTargetPos() - GetData().pos;

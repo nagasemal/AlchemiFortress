@@ -14,7 +14,6 @@
 
 #define MAX_SPEED 4
 
-//
 #define SKYDORM_LIGHTCOLOR SimpleMath::Color(0.2f, 0.5f,3.3f, 1.0f)
 
 PlayScene::PlayScene()

@@ -80,7 +80,11 @@ private:
 	SimpleMath::Vector2 m_position;
 	SimpleMath::Color m_color;
 
-	float m_value;	// 明暗
+	// 明暗
+	float m_lightValue;
+
+	// 削る方向
+	bool m_sharpenW, m_sharpenH;
 
 	// 表示位置
 	ANCHOR m_anchor;
@@ -116,7 +120,7 @@ public:
 	// XY平面に出す
 	void Render();
 
-	void SetWindowSize(const int& width, const int& height);
+	//void SetWindowSize(const int& width, const int& height);
 
 	void SetScale(SimpleMath::Vector2 scale);
 	SimpleMath::Vector2 GetScale()					{ return m_scale; }
@@ -133,8 +137,14 @@ public:
 	void SetRenderRatio(float ratio)				{ m_renderRatio = ratio; }
 	float GetRenderRatio()							{ return m_renderRatio; }
 
-	void SetValue(float value)						{ m_value = value;}
-	float GetValue()								{ return m_value;}
+	// 明暗設定
+	void SetValue(float value)						{ m_lightValue = value;}
+	float GetValue()								{ return m_lightValue;}
+
+	// 削る方向設定 true = 右 false = 左
+	void SetSharpenW(bool direction)				{ m_sharpenW = direction; }
+	// 削る方向設定 true = 上 false = 下
+	void SetSharpenH(bool direction)				{ m_sharpenH = direction; }
 
 	void SetColor(const SimpleMath::Color color)	{ m_color = color;}
 	void SetColor(const DirectX::XMVECTORF32 color) { m_color = (SimpleMath::Color)color; }

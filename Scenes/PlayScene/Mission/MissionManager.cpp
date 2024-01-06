@@ -6,6 +6,7 @@
 #include "Scenes/PlayScene/Field/FieldObjectManager.h"
 #include "Scenes/PlayScene/UI/Number.h"
 #include "Scenes/PlayScene/UI/SelectionBox.h"
+#include "Scenes/PlayScene/Mission/ClearVeil.h"
 
 #include "Scenes/Commons/DrawArrow.h"
 
@@ -34,7 +35,6 @@ MissionManager::MissionManager() :
 	m_baseHP(),
 	m_lastWave(),
 	m_wave(1),
-	m_waveAnimation(),
 	m_nextWaveFlag(),
 	m_closeAnimation(),
 	m_closeMission(false),
@@ -89,16 +89,8 @@ void MissionManager::Initialize()
 	m_backVeil->SetScale(SimpleMath::Vector2((float)width, (float)height / 5.0f));
 	m_backVeil->SetPosition(SimpleMath::Vector2(0.0f, height / 2.5f));
 
-	//　====================[　Waveクリア時演出クラスの設定　]
-	m_nextWaveTexture = std::make_unique<UserInterface>();
-	m_nextWaveTexture->Create(device,
-							  L"Resources/Textures/NextWave.png",
-							  SimpleMath::Vector2(width / 1.3f,height / 1.1f),
-							  SimpleMath::Vector2(0.5f,0.5f),
-							  UserInterface::ANCHOR::MIDDLE_CENTER);
-	m_nextWaveTexture->SetWindowSize(width,height);
-	m_nextWaveTexture->SetColor(SimpleMath::Color(0.0f, 0.6f, 1.0f, 1.0f));
-
+	//　====================[　クリア時の演出　]
+	m_clearVeil = std::make_unique<ClearVeil>();
 
 	//　====================[　ステージ失敗成功時のアニメーション用変数　]
 	m_clearAnimation.max = 2.0f;
@@ -202,34 +194,22 @@ void MissionManager::Update(AlchemicalMachineManager* pAlchemicalManager, EnemyM
 		}
 	}
 
-	// WAVEクリア時に流す処理(最後のWaveの時は流さない)
-	if ( m_nextWaveFlag && !m_lastWave )
+	//　====================[　WAVEクリア時に流す処理(最後のWaveの時は流さない)　] 
+	m_clearVeil->Update(m_nextWaveFlag && !m_lastWave);
+	//　　|=>　次のWaveに移行
+	if (m_clearVeil->NextWave())
 	{
-
-		m_waveAnimation += pDeltaT->GetDeltaTime() * 0.5f;
-
-		if (m_waveAnimation.MaxCheck())
-		{
-			// waveを加算する
-			m_wave++;
-			// 次のWaveを読み込む
-			ShareJsonData::GetInstance().LoadingJsonFile_Stage(DataManager::GetInstance()->GetStageNum(), m_wave);
-		}
+		// Waveを加算する
+		m_wave++;
+		// 次のWaveを読み込む
+		ShareJsonData::GetInstance().LoadingJsonFile_Stage(DataManager::GetInstance()->GetStageNum(), m_wave);
 	}
-	else
-	{
-		m_waveAnimation -= pDeltaT->GetDeltaTime() * 0.8f;
-	}
-
-	m_nextWaveTexture->SetRenderRatio(Easing::EaseInOutQuad(0.0f,1.0f,m_waveAnimation));
-
 }
 
 void MissionManager::TimerUpdate()
 {
 	auto pDeltaT = &DeltaTime::GetInstance();
 	m_gameTimer += pDeltaT->GetDeltaTime();
-
 	m_waveTimer += pDeltaT->GetDeltaTime();
 
 	m_timeRender->Update(m_gameTimer);
@@ -279,8 +259,8 @@ void MissionManager::Render()
 	pSD.GetSpriteBatch()->End();
 
 	m_closeButton		->Draw();
-	m_nextWaveTexture	->Render();
 
+	m_clearVeil			->Render();
 }
 
 void MissionManager::ReloadWave()
@@ -550,4 +530,9 @@ void MissionManager::TimerMission()
 			
 		}
 	}
+}
+
+bool MissionManager::NextWaveFlag()
+{
+	return m_nextWaveFlag && m_clearVeil->NextWave();
 }

@@ -143,6 +143,8 @@ void ShareJsonData::LoadingUIData(std::string pathName,std::string tagName)
 		//　　|=>　抜き出したタグ名と同値のタグ名を検出
 		if (it->first.substr(0, tag.size()) == tag)
 		{
+			if (it->first.substr(tag.size()) == "Offset") continue;
+
 			//　　|=>　位置,大きさの情報を加算する
 			it->second.pos	+= m_uiDatas[tagPath].pos;
 			it->second.rage += m_uiDatas[tagPath].rage;

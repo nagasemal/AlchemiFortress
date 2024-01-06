@@ -25,7 +25,7 @@ public:
 
 	void DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsTexture = nullptr,
 		RECT rect = { 0,0,64,64 },
-		SimpleMath::Color pulsTextureCol = { 1.0f,1.0f,1.0f,1.0f });
+		SimpleMath::Color pulsTextureCol = { 1.0f,1.0f,1.0f,1.0f }, float pulsRage = 0.8f,int pulsWidth = 64, int pulsHeight = 64);
 
 	// âÊëúÇÃägëÂñ≥ÇµÉoÅ[ÉWÉáÉì
 	void DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture,float rotate);
@@ -35,7 +35,7 @@ public:
 
 	void DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture,
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsTexture = nullptr,
-		RECT rect = { 0,0,64,64 },
+		RECT rect = { 0,0,64,64 },float pulsRage = 0.8f,
 		SimpleMath::Color pulsTextureCol = {1.0f,1.0f,1.0f,1.0f},
 		SimpleMath::Color nomalColor	 = {1.0f,1.0f,1.0f,1.0f},
 		SimpleMath::Color onColor		 = {0.9f,0.9f,0.9f,1.0f},

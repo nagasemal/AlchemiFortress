@@ -15,7 +15,7 @@
         },
         {
           "TAG": "COLLIDER_Y",
-          "VAL": 1500.0
+          "VAL": 250.0
         },
         {
           "TAG": "NUMRENDER_RATE",

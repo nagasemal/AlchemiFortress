@@ -11,7 +11,12 @@
 #define  CORRECTION_VALUE 0.2f
 #define  MAX_SAVEWHELL -3500
 
-#define ROTATION 360.0f
+#define ROTATION 360.0f * 4.0f
+
+#define ANIMATION_SPEED 0.5f
+
+#define MIN_POS_Y 1.0f
+#define MAX_POS_Y 5.0f
 
 const float SelectCamera::DEFAULT_CAMERA_DISTANCE = 15.0f;
 
@@ -38,10 +43,10 @@ SelectCamera::~SelectCamera()
 
 void SelectCamera::Initialize()
 {
-	m_angleX = m_angleY = 0.0f;
-	m_prevX = m_prevY = 0;
-	m_scrollWheelValue = 0;
-	m_animationTimer_Start = 0.0f;
+	m_angleX = m_angleY		= 0.0f;
+	m_prevX = m_prevY		= 0;
+	m_scrollWheelValue		= 0;
+	m_animationTimer_Start	= 0.0f;
 	m_animationTimer_Select = 1.0f;
 	saveAngleY = 0;
 
@@ -57,11 +62,11 @@ void SelectCamera::Initialize()
 void SelectCamera::Update()
 {
 	// 開始時アニメーション
-	m_animationTimer_Start += 0.5f * DeltaTime::GetInstance().GetDeltaTime();
-	m_move.y = Easing::EaseInOutExpo(1.0f, 5.0f, m_animationTimer_Start);
+	m_animationTimer_Start += DeltaTime::GetInstance().GetDeltaTime() * ANIMATION_SPEED;
+	m_move.y = Easing::EaseInOutExpo(MIN_POS_Y, MAX_POS_Y, m_animationTimer_Start);
 
 	m_animationTimer_Select += DeltaTime::GetInstance().GetDeltaTime();
-	m_angleY = Easing::EaseOutCirc(saveAngleY, saveAngleY + ROTATION * 4.0f, m_animationTimer_Select);
+	m_angleY = Easing::EaseOutCirc(saveAngleY, saveAngleY + ROTATION, m_animationTimer_Select);
 
 	// ビュー行列の算出
 	CalculateViewMatrix();

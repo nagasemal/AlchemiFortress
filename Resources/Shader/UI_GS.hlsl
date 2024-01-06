@@ -38,9 +38,9 @@ void main(
 		float2 anchor;
 		anchor.x = (size.x) * (anc % 3u) * scale.x;
 		anchor.y = (size.y) * (anc / 3u) * scale.y;
-
+		
 		//頂点座標等から配置を決める
-		element.pos.xy = pos + scale * size * offset_array[i].xy * 2.0f - float2(1.0f, 1.0f);
+        element.pos.xy = pos + scale * size * offset_array[i].xy * 2.0f - float2(1.0f, 1.0f);
 		element.pos.xy -= anchor;
 		element.pos.y *= -1;
 
@@ -55,7 +55,7 @@ void main(
 		element.color = float4(input[0].tex.y, input[0].tex.y, input[0].tex.y, input[0].tex.x);
 
 		//テクスチャのUV座標
-		element.tex = offset_array[i].xy;
+        element.tex = offset_array[i].xy;
 
 		output.Append(element);
 	}

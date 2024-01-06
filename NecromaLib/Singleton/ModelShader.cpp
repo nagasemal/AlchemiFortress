@@ -304,7 +304,8 @@ void ModelShader::ModelDrawShader(SimpleMath::Color color, SimpleMath::Vector4 t
 	cbuff.Time = SimpleMath::Vector4(time.x,time.y,time.z,m_shaderTimer);
 	cbuff.PaintColor = color;
 	cbuff.eyes = SimpleMath::Vector4(pSD.GetCamera()->GetTargetPosition());
-	cbuff.LimLightColor = SimpleMath::Color(0.8f, 0.75f, 0.6f, 0.3f);
+	cbuff.LimLightColor = SimpleMath::Color(Colors::CadetBlue);
+	cbuff.LimLightColor.A(0.3f);
 	cbuff.LightPos = m_lightPos;
 	cbuff.mousePos = SimpleMath::Vector4(mousePos.x, mousePos.y, mousePos.z, 0.0f);
 
@@ -380,7 +381,8 @@ void ModelShader::ModelEffectShader(SimpleMath::Color color, SimpleMath::Vector4
 	cbuff.Time = time;
 	cbuff.PaintColor = color;
 	cbuff.eyes = SimpleMath::Vector4(pSD.GetCamera()->GetTargetPosition());
-	cbuff.LimLightColor = SimpleMath::Color(1.0f, 0.95f, 0.6f, 0.25f);
+	cbuff.LimLightColor = SimpleMath::Color(Colors::Bisque);
+	cbuff.LimLightColor.A(0.25f);
 
 	//　====================[　バッファの更新　]
 	//　　|=>　ConstBufferからID3D11Bufferへの変換
@@ -516,8 +518,6 @@ void ModelShader::ShadowModelDraw(bool outlineFlag)
 	pSD.GetContext()->OMSetBlendState(blendstate, nullptr, 0xFFFFFFFF);
 
 	//　====================[　ヴァーテックスシェーダーを適応　]
-	//pSD.GetContext()->VSSetShader(m_modelOutLineShader_VS.Get(), nullptr, 0);
-
 	pSD.GetContext()->VSSetShader(GetModelMyShader_VS().Get(), nullptr, 0);
 
 	//　====================[　ピクセルシェーダーに適応　]

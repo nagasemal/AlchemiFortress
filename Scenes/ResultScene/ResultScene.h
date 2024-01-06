@@ -47,7 +47,7 @@ private:
 
 	std::unique_ptr<ResultCamera> m_resultCamera;
 
-	std::unique_ptr<DirectX::Model> m_baseModel;	//  ‹’“_‚Ì3Dƒ‚ƒfƒ‹
+	std::unique_ptr<DirectX::Model> m_baseModel;
 
 	std::unique_ptr<DirectX::Model>	m_skySphere;
 

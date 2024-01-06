@@ -65,6 +65,7 @@ float4 main(PSInput input) : SV_TARGET0
     float4 pointLight_mouse = ApplyPointLight(input.Position.xyz, MousePosition.xyz, 1.0f, 1.0f);
    
     float4 pointLight_crystal = float4(0.0f, 0.0f, 0.0f, 1.0f);
+    
     // ƒNƒŠƒXƒ^ƒ‹‚ÌŽü•Ó‚ð”­Œõ‚³‚¹‚é
     for (int i = 0; i < 3; i++)
     {

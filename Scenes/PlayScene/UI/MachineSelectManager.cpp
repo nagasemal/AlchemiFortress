@@ -74,6 +74,8 @@ void MachineSelectManager::Initialize()
 	m_selectBoxAll		= false;
 	m_manufacturingFlag = false;
 
+	m_alchemiActiveFlag = true;
+
 	//　====================[　錬金ボタン選択時浮き出る魔法陣の取得　]
 	m_displayMagicCircle = std::make_unique<DisplayMagicCircle>();
 

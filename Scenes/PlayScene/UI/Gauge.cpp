@@ -200,9 +200,6 @@ void Gauge::Finalize()
 void Gauge::Add_Crystal(SimpleMath::Vector2 position, SimpleMath::Vector2 scale, UserInterface::ANCHOR anchor)
 {
     auto device = ShareData::GetInstance().GetDeviceResources();
-    int width = device->GetOutputSize().right;
-    int height = device->GetOutputSize().bottom;
-
     auto createGage = [&](UserInterface* object, bool base = false) {
 
         std::wstring name = L"Resources/Textures/Gauge_main.png";
@@ -214,8 +211,6 @@ void Gauge::Add_Crystal(SimpleMath::Vector2 position, SimpleMath::Vector2 scale,
             , position
             , scale
             , anchor);
-
-        object->SetWindowSize(width, height);
 
     };
 
@@ -236,8 +231,6 @@ void Gauge::Add_Crystal(SimpleMath::Vector2 position, SimpleMath::Vector2 scale,
 void Gauge::Add_Hp(SimpleMath::Vector2 position, SimpleMath::Vector2 scale, UserInterface::ANCHOR anchor)
 {
     auto device = ShareData::GetInstance().GetDeviceResources();
-    int width = device->GetOutputSize().right;
-    int height = device->GetOutputSize().bottom;
 
     auto createGage = [&](UserInterface* object,bool base = false){
         
@@ -250,9 +243,6 @@ void Gauge::Add_Hp(SimpleMath::Vector2 position, SimpleMath::Vector2 scale, User
             , position
             , scale
             , anchor);
-
-        object->SetWindowSize(width, height);
-
     };
 
     m_gauge_Hp = std::make_unique<UserInterface>();
@@ -273,8 +263,6 @@ void Gauge::Add_Hp(SimpleMath::Vector2 position, SimpleMath::Vector2 scale, User
 void Gauge::Add_MP(SimpleMath::Vector2 position, SimpleMath::Vector2 scale, UserInterface::ANCHOR anchor)
 {
     auto device = ShareData::GetInstance().GetDeviceResources();
-    int width = device->GetOutputSize().right;
-    int height = device->GetOutputSize().bottom;
 
     auto createGage = [&](UserInterface* object, bool base = false) {
 
@@ -287,9 +275,6 @@ void Gauge::Add_MP(SimpleMath::Vector2 position, SimpleMath::Vector2 scale, User
             , position
             , scale
             , anchor);
-
-        object->SetWindowSize(width, height);
-
     };
 
     m_gauge_Mp = std::make_unique<UserInterface>();
