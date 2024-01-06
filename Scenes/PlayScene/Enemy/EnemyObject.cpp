@@ -84,7 +84,7 @@ void EnemyObject::Update()
 	m_stateContext->Update(this);
 
 	// 座標の計算
-	m_data.pos += (m_lengthVec * m_accele) * deltaTime;
+	m_data.pos += m_lengthVec * m_accele * deltaTime;
 
 	// 重力と跳躍の計算
 	m_data.pos.y -= m_gravityScale * deltaTime;
@@ -181,15 +181,11 @@ void EnemyObject::SetEnemyData(Enemy_Data data, EnemyManager* manager)
 		ICommand_Enemy* command = manager->CreateEnemyMoveCommand(moveData.moveName);
 		// 値取得
 		MoveParameter moveParam = MoveParameter();
-
-		// 動きのパラメータを受け取る
 		moveParam.delay = moveData.delay;
 		moveParam.time	= moveData.time;
 		moveParam.value = moveData.value;
-
 		// コマンドクラスにパラメータを入れる
 		command->SetParam(moveParam);
-
 		// 要素分順番に入れる
 		m_moveCommands.push_back(command);
 	}

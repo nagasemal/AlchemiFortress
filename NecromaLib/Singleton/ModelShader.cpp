@@ -68,13 +68,12 @@ void ModelShader::CreateModelShader()
 	BinaryFile VSData_MyModel = BinaryFile::LoadFile(L"Resources/Shader/MyModelShader_VS.cso");
 	pSD.GetDevice()->CreateVertexShader(VSData_MyModel.GetData(), VSData_MyModel.GetSize(), NULL, m_modelMyShader_VS.ReleaseAndGetAddressOf());
 
-
 	//　　|=> 頂点情報受け渡し用のバーテックスシェーダー(アウトライン拡張用)
 	BinaryFile VSData_OutlineModel = BinaryFile::LoadFile(L"Resources/Shader/ModelOutLine_VS.cso");
 	pSD.GetDevice()->CreateVertexShader(VSData_OutlineModel.GetData(), VSData_OutlineModel.GetSize(), NULL, m_modelOutLineShader_VS.ReleaseAndGetAddressOf());
 
 	//　　|=> モデルを用いたエフェクト用のシェーダー
-	BinaryFile PSData_DepathShadowModel = BinaryFile::LoadFile(L"Resources/Shader/ShadowDepth_PS.cso");
+	BinaryFile PSData_DepathShadowModel = BinaryFile::LoadFile(L"Resources/Shader/PostProcessModel_PS.cso");
 	DX::ThrowIfFailed(
 		pSD.GetDevice()->CreatePixelShader(PSData_DepathShadowModel.GetData(), PSData_DepathShadowModel.GetSize(), NULL, m_depathShadowShader_PS.ReleaseAndGetAddressOf())
 	);
@@ -104,10 +103,11 @@ void ModelShader::CreateModelShader()
 	D3D11_DEPTH_STENCIL_DESC desc = {};
 
 	// 型抜かれる側(シルエットが描画される側)
+	//　====================[　シルエット描画　] 	
 	{
 		desc.DepthEnable = TRUE;									// 深度テストを行う
 		desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;			// 深度バッファを更新する
-		desc.DepthFunc = D3D11_COMPARISON_ALWAYS;			// 深度値以下なら更新する
+		desc.DepthFunc = D3D11_COMPARISON_ALWAYS;					// 深度値以下なら更新する
 
 		desc.StencilEnable		= TRUE;								// ステンシルテストを行う
 		desc.StencilReadMask	= 0xff;
@@ -138,7 +138,7 @@ void ModelShader::CreateModelShader()
 	}
 	//　====================[　影描画　] 
 	{
-		desc.DepthFunc = D3D11_COMPARISON_NOT_EQUAL;					// 常に更新
+		desc.DepthFunc = D3D11_COMPARISON_NOT_EQUAL;				// 常に更新
 		desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;			// 書き込まない
 
 		desc.StencilEnable = FALSE;
@@ -232,7 +232,7 @@ void ModelShader::MachineDrawShader(SimpleMath::Color color, SimpleMath::Vector4
 
 	cbuff.mousePos = SimpleMath::Vector4(mousePos.x, mousePos.y, mousePos.z,0.0f);
 
-	auto crystalPos = ShareJsonData::GetInstance().GetStageData().crystalPos;
+	std::vector<SimpleMath::Vector2> crystalPos = ShareJsonData::GetInstance().GetStageData().crystalPos;
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -309,7 +309,7 @@ void ModelShader::ModelDrawShader(SimpleMath::Color color, SimpleMath::Vector4 t
 	cbuff.LightPos = m_lightPos;
 	cbuff.mousePos = SimpleMath::Vector4(mousePos.x, mousePos.y, mousePos.z, 0.0f);
 
-	auto crystalPos = ShareJsonData::GetInstance().GetStageData().crystalPos;
+	std::vector<SimpleMath::Vector2> crystalPos = ShareJsonData::GetInstance().GetStageData().crystalPos;
 
 	for (int i = 0; i < 10; i++)
 	{

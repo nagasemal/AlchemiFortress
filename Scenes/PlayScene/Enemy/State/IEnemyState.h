@@ -9,6 +9,7 @@
  // 前方宣言
 class EnemyObject;
 class EnemyStateContext;
+
 class IEnemyState
 {
 public:
@@ -26,9 +27,9 @@ public:
 protected:
 
 	// 現在の状態
-	EnemyStateContext* m_enemyContext;
+	EnemyStateContext* m_enemyContext = nullptr;
 
-	ENEMY_STATE m_state;
+	ENEMY_STATE m_state = ENEMY_STATE::Idoling;
 
 public:
 
@@ -83,12 +84,15 @@ public:
 	/// </summary>
 	void Update(EnemyObject* object) { this->m_enemyState->Update(object); }
 
-
 	/// <summary>
 	/// 状態に応じて変わる描画処理
 	/// </summary>
 	void Render(EnemyObject* object,Model* model) { this->m_enemyState->Render(object,model); }
 
+	/// <summary>
+	/// 状態を可視化するアイコンを描画
+	/// </summary>
+	/// <param name="object"></param>
 	void RenderIcon(EnemyObject* object) { this->m_enemyState->RenderIcon(object); }
 
 	/// <summary>

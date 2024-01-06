@@ -2,11 +2,11 @@
 
 #include "ICommand_Enemy.h"
 
-class Enemy_StanderMove : public ICommand_Enemy
+class Enemy_StanderdMove : public ICommand_Enemy
 {
 public:
-	Enemy_StanderMove();
-	~Enemy_StanderMove();
+	Enemy_StanderdMove();
+	~Enemy_StanderdMove();
 
 	// é¿çs
 	void Execute()override;

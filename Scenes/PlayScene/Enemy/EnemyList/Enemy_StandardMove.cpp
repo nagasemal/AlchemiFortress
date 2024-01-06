@@ -5,7 +5,7 @@
 #include "NecromaLib/GameData/Easing.h"
 #include "NecromaLib/Singleton/DeltaTime.h"
 
-Enemy_StanderMove::Enemy_StanderMove() :
+Enemy_StanderdMove::Enemy_StanderdMove() :
 	m_completion(),
 	m_time(),
 	m_enemyPtr(nullptr),
@@ -13,11 +13,11 @@ Enemy_StanderMove::Enemy_StanderMove() :
 {
 }
 
-Enemy_StanderMove::~Enemy_StanderMove()
+Enemy_StanderdMove::~Enemy_StanderdMove()
 {
 }
 
-void Enemy_StanderMove::Execute()
+void Enemy_StanderdMove::Execute()
 {
 	m_time += DeltaTime::GetInstance().GetDeltaTime();
 
@@ -33,36 +33,34 @@ void Enemy_StanderMove::Execute()
 	m_completion = m_time >= m_param.time;
 }
 
-MoveParameter Enemy_StanderMove::GetParam()
+MoveParameter Enemy_StanderdMove::GetParam()
 {
 	return m_param;
 }
 
-bool Enemy_StanderMove::GetCompletion()
+bool Enemy_StanderdMove::GetCompletion()
 {
 	return m_completion;
 }
 
-void Enemy_StanderMove::SetCompletion(bool flag)
+void Enemy_StanderdMove::SetCompletion(bool flag)
 {
 	m_completion = flag;
 }
 
-void Enemy_StanderMove::SetParam(MoveParameter param)
+void Enemy_StanderdMove::SetParam(MoveParameter param)
 {
 	m_param.delay = param.delay;
 	m_param.time = param.time;
 	m_param.value = param.value;
 }
 
-void Enemy_StanderMove::SetEnemyPtr(EnemyObject& object)
+void Enemy_StanderdMove::SetEnemyPtr(EnemyObject& object)
 {
 	m_enemyPtr = &object;
 }
 
-void Enemy_StanderMove::Reset()
+void Enemy_StanderdMove::Reset()
 {
-
 	m_time = 0.0f;
-
 }

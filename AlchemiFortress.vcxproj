@@ -182,8 +182,6 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="imaseLib\DebugCamera.h" />
     <ClInclude Include="imaseLib\DebugFont.h" />
-    <ClInclude Include="NecromaLib\Command\Commander_UI.h" />
-    <ClInclude Include="NecromaLib\Command\ICommand_UI.h" />
     <ClInclude Include="NecromaLib\GameData\Animation.h" />
     <ClInclude Include="NecromaLib\GameData\Audio\BGMs.h" />
     <ClInclude Include="NecromaLib\GameData\Audio\SEs.h" />
@@ -299,7 +297,6 @@
     <ClCompile Include="imaseLib\DebugCamera.cpp" />
     <ClCompile Include="imaseLib\DebugFont.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="NecromaLib\Command\Commander_UI.cpp" />
     <ClCompile Include="NecromaLib\GameData\Audio\SEs.cpp" />
     <ClCompile Include="NecromaLib\GameData\BinaryFile.cpp" />
     <ClCompile Include="NecromaLib\GameData\Camera.cpp" />
@@ -705,7 +702,7 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Resources/Shader/%(Filename).cso</ObjectFileOutput>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\ShadowDepth_PS.hlsl">
+    <FxCompile Include="Resources\Shader\PostProcessModel_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>

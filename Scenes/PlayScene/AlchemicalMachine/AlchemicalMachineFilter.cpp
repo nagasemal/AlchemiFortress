@@ -91,12 +91,12 @@ Model* AlchemicalMachineFilter::GetRingModel(MACHINE_TYPE type)
 void AlchemicalMachineFilter::Finalize()
 {
 	// ƒŠƒ\[ƒX‚Ì‰ğ•ú
-	m_model[MACHINE_TYPE::NONE].reset();
-	m_model[MACHINE_TYPE::ATTACKER].reset();
-	m_model[MACHINE_TYPE::DEFENSER].reset();
-	m_model[MACHINE_TYPE::MINING].reset();
-	m_model[MACHINE_TYPE::RECOVERY].reset();
-	m_model[MACHINE_TYPE::UPPER].reset();
+	m_model[MACHINE_TYPE::NONE]		.reset();
+	m_model[MACHINE_TYPE::ATTACKER]	.reset();
+	m_model[MACHINE_TYPE::DEFENSER]	.reset();
+	m_model[MACHINE_TYPE::MINING]	.reset();
+	m_model[MACHINE_TYPE::RECOVERY]	.reset();
+	m_model[MACHINE_TYPE::UPPER]	.reset();
 	
 	m_model->reset();
 }

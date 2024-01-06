@@ -18,26 +18,28 @@ void EnemyCommander::AddCommand(ICommand_Enemy* command)
 
 void EnemyCommander::Execute_ALL()
 {
-
+	// 全てのコマンドを実行
 	for (auto& command : m_commands)
 	{
 		command->Execute();
 	}
-
 }
 
 void EnemyCommander::Execute_One()
 {
+	// 現在のコマンド番号
 	int counter = 0;
 
+	// 稼働時間を満たしていたら加算
 	for (auto& command : m_commands)
 	{
 		counter += command->GetCompletion();
 	}
 
+	// コマンド量より多くなった場合は0に戻す
 	if (m_commands.size() <= counter)
 	{
-		// 全ての完了済みフラグを解除する
+		// 全ての稼働完了済みコマンドをリセットする
 		for (auto& command : m_commands)
 		{
 			command->SetCompletion(false);
@@ -47,6 +49,7 @@ void EnemyCommander::Execute_One()
 		counter = 0;
 	}
 
+	// 実行
 	m_commands[counter]->Execute();
 
 }

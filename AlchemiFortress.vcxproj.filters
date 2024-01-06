@@ -128,9 +128,6 @@
     <Filter Include="NecromaLib\DesinPattern\Singleton">
       <UniqueIdentifier>{d4a4b601-55c3-41ba-8510-1d18ef9346a7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NecromaLib\DesinPattern\Command">
-      <UniqueIdentifier>{f5be055f-84e1-4947-8893-fe79099656c3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene\PlayScene\Enemy\EnemyMoveCommand">
       <UniqueIdentifier>{3e238bef-c636-455c-a750-796f24c29800}</UniqueIdentifier>
     </Filter>
@@ -391,9 +388,6 @@
     <ClInclude Include="Scenes\PlayScene\Shadow\Particle.h">
       <Filter>Scene\PlayScene\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\PlayScene\Shadow\ParticleUtility.h">
-      <Filter>Scene\PlayScene\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="Scenes\PlayScene\UI\Gauge.h">
       <Filter>Scene\PlayScene\UI</Filter>
     </ClInclude>
@@ -453,12 +447,6 @@
     </ClInclude>
     <ClInclude Include="Scenes\Commons\SelectionUI.h">
       <Filter>Scene\Commons</Filter>
-    </ClInclude>
-    <ClInclude Include="NecromaLib\Command\ICommand_UI.h">
-      <Filter>NecromaLib\DesinPattern\Command</Filter>
-    </ClInclude>
-    <ClInclude Include="NecromaLib\Command\Commander_UI.h">
-      <Filter>NecromaLib\DesinPattern\Command</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\Commons\UIKeyControl.h">
       <Filter>Scene\Commons</Filter>
@@ -573,6 +561,9 @@
     </ClInclude>
     <ClInclude Include="Scenes\PlayScene\Mission\ClearVeil.h">
       <Filter>Scene\PlayScene\Mission</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\PlayScene\Shadow\ParticleUtility.h">
+      <Filter>Scene\PlayScene\Tutorial</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -779,9 +770,6 @@
     </ClCompile>
     <ClCompile Include="Scenes\Commons\SelectionUI.cpp">
       <Filter>Scene\Commons</Filter>
-    </ClCompile>
-    <ClCompile Include="NecromaLib\Command\Commander_UI.cpp">
-      <Filter>NecromaLib\DesinPattern\Command</Filter>
     </ClCompile>
     <ClCompile Include="Scenes\Commons\UIKeyControl.cpp">
       <Filter>Scene\Commons</Filter>
@@ -1297,7 +1285,7 @@
     <FxCompile Include="Resources\Shader\PostProcess_PS.hlsl">
       <Filter>Shader\PostProcess</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shader\ShadowDepth_PS.hlsl">
+    <FxCompile Include="Resources\Shader\PostProcessModel_PS.hlsl">
       <Filter>Shader\Model</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shader\ModelShadow_PS.hlsl">

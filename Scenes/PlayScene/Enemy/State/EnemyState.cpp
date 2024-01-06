@@ -65,8 +65,8 @@ void Enemy_IdlingState::Update(EnemyObject* object)
 
 void Enemy_IdlingState::Render(EnemyObject* object,Model* model)
 {
-	model;
 	object;
+	model;
 
 	m_magicCircle->CreateWorld();
 	m_magicCircle->Render(ENEMY_MAGICCIRCLE_NUM);

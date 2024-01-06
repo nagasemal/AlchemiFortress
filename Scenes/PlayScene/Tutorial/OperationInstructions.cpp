@@ -36,26 +36,22 @@ const std::vector<const wchar_t*> OperationInstructions::FILENAME =
 	{L"Recovery.png"},		//  4.Recovery
 	{L"Excavator.png"},		//  5.Excavator
 	{L"MachineList.png"},	//  6.MachineList
-	{L"RotateStop.png"},		//  7.RotateStop
+	{L"RotateStop.png"},	//  7.RotateStop
 	{L"MachineMenu.png"},	//  8.MachineMenu
 	{L"Gauge_1.png"},		//  9.HPゲージ
 	{L"Gauge_2.png"},		// 10.MPゲージ
 	{L"Gauge_3.png"},		// 11.クリスタルゲージ
 	{L"Mission.png"},		// 12.ミッション
-	{L"Alchemical.png"},		// 13.錬金ボタン
-	{L"CameraMove.png"},		// 14.カメラ移動
-	{L"Instructions.png"},	// 15.チュートリアル(文字説明)
-	{L"LineSet.png"},		// 16.ライン設定
-	{L"None.png"},
-	{L"None.png"},
-	{L"None.png"},
-	{L"None.png"},
+	{L"Alchemical.png"},	// 13.錬金ボタン
+	{L"CameraMove.png"},	// 14.カメラ移動
+	//{L"Instructions.png"},	// 15.チュートリアル(文字説明)
+	{L"LineSet.png"}		// 16.ライン設定
 };
 
 OperationInstructions::OperationInstructions():
 	m_explanationFlag(false),
 	m_cameraFlag(false),
-	m_selectNumber(1),
+	m_selectNumber(0),
 	m_maxSelectVal(),
 	m_tutorialTime(0)
 {
@@ -69,8 +65,6 @@ OperationInstructions::~OperationInstructions()
 void OperationInstructions::Initialize(std::vector<Tutorial_Status> tutorialNumber, PlayScene* pPlayScene)
 {
 	pPlayScene;
-	auto device = ShareData::GetInstance().GetDeviceResources();
-
 	// 取得
 	UI_Data uiData = ShareJsonData::GetInstance().GetUIData("OptionExplanation");
 	m_explanationButton = std::make_unique<SelectionBox>(uiData.pos, uiData.rage);
@@ -118,14 +112,12 @@ void OperationInstructions::Update(PlayScene* pPlayScene, bool stopFlag)
 	m_titleSceneBox->HitMouse();
 	m_selectSceneBox->HitMouse();
 
-	m_maxSelectVal = INSTRUCTION_TYPE::NUM;
-
 	// 左ボタンでm_selectNumber増加
 	if (m_arrowL->ClickMouse())
 	{
 		m_selectNumber--;
 		// 上限下限設定
-		m_selectNumber = std::min(std::max(m_selectNumber, 0), (const int)INSTRUCTION_TYPE::NUM);
+		m_selectNumber = std::min(std::max(m_selectNumber, 0), (const int)FILENAME.size() - 1);
 		m_textTexture->LoadTexture(FileNamePath(FILENAME[m_selectNumber]));
 	}
 
@@ -134,7 +126,7 @@ void OperationInstructions::Update(PlayScene* pPlayScene, bool stopFlag)
 	{
 		m_selectNumber++;
 		// 上限下限設定
-		m_selectNumber = std::min(std::max(m_selectNumber, 0), (const int)INSTRUCTION_TYPE::NUM);
+		m_selectNumber = std::min(std::max(m_selectNumber, 0), (const int)FILENAME.size() - 1);
 		m_textTexture->LoadTexture(FileNamePath(FILENAME[m_selectNumber]));
 	}
 
@@ -186,8 +178,8 @@ void OperationInstructions::Render_Layer2()
 		m_textTexture	->Render();
 	
 		// 選択移動矢印の描画　(上限下限に達したら描画を切る)
-		if (m_selectNumber < m_maxSelectVal)	m_arrowR->Draw();
-		if (m_selectNumber >= 1)				m_arrowL->Draw();
+		if (m_selectNumber < (const int)FILENAME.size() - 1)	m_arrowR->Draw();
+		if (m_selectNumber >= 1)								m_arrowL->Draw();
 
 	}
 }

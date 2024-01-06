@@ -17,7 +17,6 @@
 #define START_PROCESSING 0.35f	// 処理を開始するまでの時間
 
 //　====================[　天球の情報　]
-#define SKY_ROTATION	SimpleMath::Vector3{8.0f, 7.0f, 90.0f}
 #define SKY_SCALE	0.8f
 #define SKY_POS_Y	70.0f
 #define SKY_LIGHT SimpleMath::Color(0.2f, 0.2f, 0.4f, 0.8f)

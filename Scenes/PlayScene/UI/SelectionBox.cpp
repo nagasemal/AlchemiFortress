@@ -93,7 +93,7 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pulsT
 	// 中に表示するテクスチャがある場合
 	if (pulsTexture)
 	{
-		pSB->Draw(pulsTexture.Get(), box_Pos, &rect, pulsTextureCol, 0.0f, DirectX::XMFLOAT2(pulsWidth / 2, pulsHeight / 2), pulsRage);
+		pSB->Draw(pulsTexture.Get(), box_Pos, &rect, pulsTextureCol, 0.0f, DirectX::XMFLOAT2(pulsWidth / 2.0f, pulsHeight / 2.0f), pulsRage);
 	}
 
 	pSB->End();
@@ -216,7 +216,7 @@ void SelectionBox::DrawUI(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textu
 	// 中に表示するテクスチャがある場合
 	if (pulsTexture)
 	{
-		pSB->Draw(pulsTexture.Get(),box_Pos, &rect, pulsTextureCol, 0.0f, DirectX::XMFLOAT2(rect.right / 2, rect.bottom / 2), pulsRage);
+		pSB->Draw(pulsTexture.Get(),box_Pos, &rect, pulsTextureCol, 0.0f, DirectX::XMFLOAT2(static_cast<float>(rect.right / 2), static_cast<float>(rect.bottom / 2)), pulsRage);
 	}
 
 	pSB->End();

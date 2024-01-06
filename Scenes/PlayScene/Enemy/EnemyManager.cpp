@@ -371,7 +371,7 @@ int EnemyManager::GetNockDownEnemyExp()
 
 ICommand_Enemy* EnemyManager::CreateEnemyMoveCommand(const std::string moveName)
 {
-	if (moveName == "Standard")		return new Enemy_StanderMove();
+	if (moveName == "Standard")		return new Enemy_StanderdMove();
 	if (moveName == "Meandering")	return new Enemy_MeanderingMove();
 	if (moveName == "Hopping")		return new Enemy_HoppingMove();
 

@@ -72,7 +72,6 @@ public:
 private:
 
 	SimpleMath::Vector3 m_knockBackVec;
-	float m_knockBackPower;
 
 };
 

@@ -4,9 +4,9 @@ class EnemyObject;
 
 struct MoveParameter
 {
-	float delay;		// コマンド移行する際に止める場合は記述
-	float time;			// 稼働時間
-	float value;		// 行動に置ける強さ
+	float delay = 0;		// コマンド移行する際に止める場合は記述
+	float time	= 0;		// 稼働時間
+	float value = 0;		// 行動に置ける強さ
 };
 
 class ICommand_Enemy

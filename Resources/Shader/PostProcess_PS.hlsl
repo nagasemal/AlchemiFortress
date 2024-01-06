@@ -92,21 +92,22 @@ float4 main(PS_INPUT input) : SV_TARGET
     
     // 暗度算出
     float v_2 = min(bigBlurTex.r, min(bigBlurTex.g, bigBlurTex.b));
-    
+        
     // オーバーレイ   ：   明るい位置に赤み(ややオレンジ)
-    bigBlurTex += AddOverLay(bigBlurTex, float4(0.2, 0.25, 0.0, 0.2f)) * step(0.95, v);
+    bigBlurTex += AddOverLay(bigBlurTex, float4(0.3, 0.35, 0.0, 1.0f)) * step(0.86, v);
     
     // オーバーレイ   ：   暗い位置に青み(やや紫)
-    bigBlurTex += AddOverLay(bigBlurTex, float4(0.2, 0.0, 0.25, 0.2f)) * step(v_2, 0.1);
+    bigBlurTex += AddOverLay(bigBlurTex, float4(0.2, 0.0, 0.45, 1.0f)) * step(v_2, 0.14);
     
     // 乗算           :    青み(やや紫)を乗算
-    bigBlurTex = bigBlurTex * (float4(0.97, 1.0, 0.96, 0.2f));
+    bigBlurTex = bigBlurTex * (float4(0.98, 0.97, 1.0, 0.001f));
     
     // 距離フォグ
     bigBlurTex += float4(0.25f, 0.25f, 0.3f, 0.5f) * depthTex.b;
     
     // 輪郭の抽出を行う (1.0以上ならばアウトラインとしない)
-    float outlineFlag = step(AddOutLine(0.002f, input.Tex, 1.0f), 1.0f);
+    float linePower = 0.002f;
+    float outlineFlag = step(AddOutLine(linePower, input.Tex, 1.0f), 1.0f);
     
     // 輪郭が存在する場合はテクスチャに0を乗算する
     bigBlurTex *= (float4)outlineFlag;
